@@ -1,5 +1,6 @@
 package frc.robot.leds;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
@@ -10,6 +11,8 @@ import java.util.List;
 import lombok.Getter;
 
 // This file is too long we should probably move some of it to the SpectrumLib
+
+@Logged
 public class LEDs extends SpectrumLEDs {
     @Getter private LEDsConfig config;
 

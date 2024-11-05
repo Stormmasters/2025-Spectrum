@@ -1,5 +1,6 @@
 package frc.robot.pilot;
 
+import edu.wpi.first.epilogue.Logged;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
 import frc.robot.climber.ClimberCommands;
@@ -11,6 +12,7 @@ import frc.spectrumLib.gamepads.Gamepad;
 import lombok.Getter;
 import lombok.Setter;
 
+@Logged
 public class Pilot extends Gamepad {
     public static class PilotConfig extends Config {
 
