@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public class RollerSim {
 
     private MechanismRoot2d rollerAxle;
-    private MechanismLigament2d[] rollerBackground; // TODO should figure out why we don't use this
+    private MechanismLigament2d[] rollerBackground; // TODO: should figure out why we don't use this
     private MechanismLigament2d rollerViz;
 
     private FlywheelSim rollerSim;

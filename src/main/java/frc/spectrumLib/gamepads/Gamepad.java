@@ -26,6 +26,12 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
     @Getter protected final ExpCurve rightStickCurve;
     @Getter protected final ExpCurve triggersCurve;
 
+    protected Trigger teleop = new Trigger(DriverStation::isTeleopEnabled);
+    protected Trigger auto = new Trigger(DriverStation::isAutonomousEnabled);
+    protected Trigger test = new Trigger(DriverStation::isTestEnabled);
+    protected Trigger disabled = new Trigger(DriverStation::isDisabled);
+    protected Trigger falseTrigger = new Trigger(() -> false);
+
     public static class Config {
         @Getter private String name;
         @Getter private int port; // USB port on the DriverStation app

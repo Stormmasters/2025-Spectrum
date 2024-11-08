@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -27,6 +30,7 @@ import frc.robot.vision.VisionSystem;
 import frc.spectrumLib.util.CrashTracker;
 import lombok.Getter;
 
+@Logged(strategy = Logged.Strategy.OPT_IN)
 public class Robot extends TimedRobot {
     @Getter private static RobotConfig robotConfig;
     @Getter private static ConfigHolder config;
@@ -37,6 +41,7 @@ public class Robot extends TimedRobot {
     @Getter private static RobotSim robotSim;
     @Getter private static Swerve swerve;
     @Getter private static Climber climber;
+
     @Getter private static Elevator elevator;
     @Getter private static Launcher launcher;
     @Getter private static LEDs leds;
@@ -45,8 +50,15 @@ public class Robot extends TimedRobot {
     @Getter private static VisionSystem visionSystem;
     @Getter private static Auton auton;
 
+    public static double num = 0;
+
     @SuppressWarnings("unused")
     private Command m_autonomousCommand;
+
+    public Robot() {
+        DataLogManager.start();
+        Epilogue.bind(this);
+    }
 
     /**
      * This method cancels all commands and returns subsystems to their default commands and the
@@ -60,6 +72,7 @@ public class Robot extends TimedRobot {
         // Reset Config for all gamepads and other button bindings
         pilot.resetConfig();
 
+        ElevatorCommands.bindTriggers();
         LEDsCommands.setupLEDTriggers();
         RobotCommands.setupRobotTriggers();
     }
@@ -146,6 +159,8 @@ public class Robot extends TimedRobot {
             CrashTracker.logThrowableCrash(t);
             throw t;
         }
+
+        SmartDashboard.putBoolean("PilotTelopEnabled", pilot.getExtend().getAsBoolean());
     }
 
     @Override

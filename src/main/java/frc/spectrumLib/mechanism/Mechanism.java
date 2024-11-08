@@ -35,7 +35,7 @@ import lombok.*;
  * Closed-loop & Motion Magic Docs:
  * https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/closed-loop-guide.html
  */
-public abstract class Mechanism implements Subsystem, NTSendable {
+public class Mechanism implements Subsystem, NTSendable {
     @Getter protected TalonFX motor;
     @Getter protected TalonFX[] followerMotors;
     public Config config;

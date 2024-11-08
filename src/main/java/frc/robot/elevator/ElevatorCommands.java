@@ -1,6 +1,7 @@
 package frc.robot.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.spectrumLib.util.TuneValue;
@@ -13,6 +14,15 @@ public class ElevatorCommands {
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(
                 holdPosition().ignoringDisable(true).withName("Elevator.default"));
+    }
+
+    public static void bindTriggers() {
+        Robot.getPilot()
+                .getExtend()
+                .whileTrue(
+                        fullExtend()
+                                .alongWith(new PrintCommand("EXTENDING"))
+                                .ignoringDisable(true));
     }
 
     public static Command runElevator(DoubleSupplier speed) {

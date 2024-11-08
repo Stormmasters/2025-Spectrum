@@ -54,6 +54,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
     private final SwerveRequest.ApplyChassisSpeeds AutoRequest =
             new SwerveRequest.ApplyChassisSpeeds();
 
+    /**
+     * Constructs a new Swerve drive subsystem.
+     *
+     * @param config The configuration object containing drivetrain constants and module
+     *     configurations.
+     */
     public Swerve(SwerveConfig config) {
         super(config.getDrivetrainConstants(), config.getModules());
         this.config = config;
@@ -69,11 +75,21 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
         RobotTelemetry.print(getName() + " Subsystem Initialized: ");
     }
 
+    /**
+     * This method is called periodically and is used to update the pilot's perspective. It ensures
+     * that the swerve drive system is aligned correctly based on the pilot's view.
+     */
     @Override
     public void periodic() {
         setPilotPerspective();
     }
 
+    /**
+     * The `initSendable` function sets up properties for a SmartDashboard type "SwerveDrive" with
+     * position and velocity double values.
+     *
+     * @param builder The `builder` parameter is an instance of the `NTSendableBuilder` class
+     */
     @Override
     public void initSendable(NTSendableBuilder builder) {
         builder.setSmartDashboardType("SwerveDrive");
@@ -81,8 +97,12 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
         builder.addDoubleProperty("Velocity", () -> 4, null);
     }
 
-    // This allows us to keep the robot pose on the sim field
-    // May need to make this only change the pose if we are in Sim
+    /**
+     * The function `getRobotPose` returns the robot's pose after checking and updating it.
+     *
+     * @return The `getRobotPose` method is returning the robot's current pose after calling the
+     *     `seedCheckedPose` method with the current pose as an argument.
+     */
     public Pose2d getRobotPose() {
         Pose2d pose = getState().Pose;
         seedCheckedPose(pose);
@@ -277,6 +297,15 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
                 this); // Subsystem for requirements
     }
 
+    /**
+     * The function `getAutoPath` returns a new `PathPlannerAuto` command based on the provided
+     * `pathName`.
+     *
+     * @param pathName The `pathName` parameter is a String that represents the name or identifier
+     *     of a specific path that you want to retrieve or generate using the `getAutoPath` method.
+     * @return An instance of the `PathPlannerAuto` class with the specified `pathName` is being
+     *     returned.
+     */
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }

@@ -1,5 +1,6 @@
 package frc.robot.pilot;
 
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
 import frc.robot.climber.ClimberCommands;
@@ -35,6 +36,8 @@ public class Pilot extends Gamepad {
     @Getter @Setter private boolean isTurboMode = false;
     @Getter @Setter private boolean isFieldOriented = true;
 
+    @Getter public Trigger extend = falseTrigger;
+
     /** Create a new Pilot with the default name and port. */
     public Pilot(PilotConfig config) {
         super(config);
@@ -45,14 +48,15 @@ public class Pilot extends Gamepad {
     /** Setup the Buttons for telop mode. */
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simualation */
     public void setupTeleopTriggers() {
-        b().whileTrue(ElevatorCommands.fullExtend());
+        // b().whileTrue(ElevatorCommands.fullExtend());
+        extend = teleop.and(b());
         x().whileTrue(ElevatorCommands.home());
         y().whileTrue(ElevatorCommands.runElevator(() -> getLeftY()));
 
-        b().whileTrue(LauncherCommands.runVelocity(Robot.getConfig().launcher::getMaxVelocity));
+        b().whileTrue(LauncherCommands.runVelocity(Robot.getConfig().launcher::getMaxVelocityRpm));
         x().whileTrue(
                         LauncherCommands.runVelocity(
-                                () -> -1 * Robot.getConfig().launcher.getMaxVelocity()));
+                                () -> -1 * Robot.getConfig().launcher.getMaxVelocityRpm()));
         b().whileTrue(PivotCommands.subwoofer());
         x().whileTrue(PivotCommands.home());
         b().whileTrue(ClimberCommands.fullExtend());
