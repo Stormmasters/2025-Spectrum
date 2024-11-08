@@ -22,6 +22,10 @@ import java.util.function.BooleanSupplier;
  * #and(BooleanSupplier)}, {@link #or(BooleanSupplier)}, {@link #negate()} operators.
  *
  * <p>This class is provided by the NewCommands VendorDep
+ *
+ * <p>Spectrum modified in Fall 2024 to allow triggers to default start condition of false, so if
+ * something is already true when bound it will activie the trigger. We needed this for a trigger to
+ * activate only if Teleop was enabled.
  */
 public class Trigger implements BooleanSupplier {
     private final BooleanSupplier m_condition;

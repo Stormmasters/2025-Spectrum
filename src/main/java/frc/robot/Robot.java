@@ -73,6 +73,10 @@ public class Robot extends TimedRobot {
         pilot.resetConfig();
 
         ElevatorCommands.bindTriggers();
+        SwerveCommands.bindTriggers();
+        LauncherCommands.bindTriggers();
+        ClimberCommands.bindTriggers();
+        PivotCommands.bindTriggers();
         LEDsCommands.setupLEDTriggers();
         RobotCommands.setupRobotTriggers();
     }

@@ -18,7 +18,9 @@ public class ElevatorCommands {
     }
 
     public static void bindTriggers() {
-        pilot.getExtend().whileTrue(fullExtend());
+        pilot.getActivate().whileTrue(fullExtend());
+        pilot.getRetract().whileTrue(home());
+        pilot.getManual().whileTrue(runElevator(pilot::getElevatorManualAxis));
     }
 
     public static Command runElevator(DoubleSupplier speed) {

@@ -1,12 +1,8 @@
 package frc.robot.pilot;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
-import frc.robot.climber.ClimberCommands;
 import frc.robot.elevator.ElevatorCommands;
-import frc.robot.launcher.LauncherCommands;
-import frc.robot.pivot.PivotCommands;
 import frc.spectrumLib.gamepads.Gamepad;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,10 +31,18 @@ public class Pilot extends Gamepad {
     @Getter @Setter private boolean isTurboMode = false;
     @Getter @Setter private boolean isFieldOriented = true;
 
-    // Triggers
-    @Getter private Trigger extend, retract;
+    // Triggers, these would be robot states such as ampReady, intake, visionAim, subwooferShot,
+    // launch, etc.
+    @Getter private Trigger activate, retract;
     @Getter private Trigger intake;
+    @Getter private Trigger manual;
     @Getter private Trigger upReorient, leftReorient, downReorient, rightReorient;
+    @Getter private Trigger stickSteer;
+    @Getter
+    private Trigger fn,
+            noFn,
+            scoreFn; // These are our function keys to overload buttons, these allow us to easily
+    // change the function of buttons
 
     /** Create a new Pilot with the default name and port. */
     public Pilot(PilotConfig config) {
@@ -50,38 +54,30 @@ public class Pilot extends Gamepad {
     /** Setup the Buttons for telop mode. */
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simualation */
     public void setupTriggers() {
-        extend = B.and(leftBumper().not(), teleop);
-        intake = A.and(noBumpers(), teleop);
-        retract = x().and(noBumpers(), teleop);
+        fn = leftBumperOnly;
+        noFn = fn.not();
+        scoreFn = fn.or(bothBumpers);
+
+        intake = A.and(noFn, teleop);
+        activate = B.and(noFn, teleop);
+        retract = X.and(noFn, teleop);
+        manual = Y.and(noFn, teleop);
 
         // Drive Triggers
-        upReorient = upDpad().and(teleop, leftBumperOnly());
-        leftReorient = leftDpad().and(teleop, leftBumperOnly());
-        downReorient = downDpad().and(teleop, leftBumperOnly());
-        rightReorient = rightDpad().and(teleop, leftBumperOnly());
+        upReorient = upDpad.and(fn, teleop);
+        leftReorient = leftDpad.and(fn, teleop);
+        downReorient = downDpad.and(fn, teleop);
+        rightReorient = rightDpad.and(fn, teleop);
 
         // TEST TRIGGERS
         testMode.and(B).whileTrue(ElevatorCommands.tuneElevator());
 
-        // OLD TRIGGERS
-        x().whileTrue(ElevatorCommands.home());
-        y().whileTrue(ElevatorCommands.runElevator(() -> getLeftY()));
-
-        B.whileTrue(LauncherCommands.runVelocity(Robot.getConfig().launcher::getMaxVelocityRpm));
-        x().whileTrue(
-                        LauncherCommands.runVelocity(
-                                () -> -1 * Robot.getConfig().launcher.getMaxVelocityRpm()));
-        B.whileTrue(PivotCommands.subwoofer());
-        x().whileTrue(PivotCommands.home());
-        B.whileTrue(ClimberCommands.fullExtend());
-        x().whileTrue(ClimberCommands.home());
-
         /* Use the right stick to set a cardinal direction to aim at */
-        (leftBumperOnly().negate())
-                .and(
-                        rightXTrigger(ThresholdType.ABS_GREATER_THAN, 0.5)
-                                .or(rightYTrigger(ThresholdType.ABS_GREATER_THAN, 0.5)))
-                .whileTrue(PilotCommands.stickSteerDrive());
+        stickSteer =
+                noFn.and(
+                                rightXTrigger(ThresholdType.ABS_GREATER_THAN, 0.5)
+                                        .or(rightYTrigger(ThresholdType.ABS_GREATER_THAN, 0.5)))
+                        .whileTrue(PilotCommands.stickSteerDrive());
     };
 
     public void setMaxVelocity(double maxVelocity) {
@@ -90,6 +86,10 @@ public class Pilot extends Gamepad {
 
     public void setMaxRotationalVelocity(double maxRotationalVelocity) {
         triggersCurve.setScalar(maxRotationalVelocity);
+    }
+
+    public double getElevatorManualAxis() {
+        return getLeftY();
     }
 
     // Positive is forward, up on the left stick is positive
