@@ -8,12 +8,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.crescendo.Field;
 import frc.robot.Robot;
 import frc.robot.RobotConfig.RobotType;
+import frc.robot.pilot.Pilot;
 import frc.robot.pilot.PilotCommands;
 import java.util.function.DoubleSupplier;
 
 public class SwerveCommands {
     static Swerve swerve = Robot.getSwerve();
     static SwerveConfig config = Robot.getConfig().swerve;
+    static Pilot pilot = Robot.getPilot();
 
     public static void setupDefaultCommand(RobotType robotType) {
         if (robotType == RobotType.PM) {
@@ -27,6 +29,13 @@ public class SwerveCommands {
                         .andThen(PilotCommands.headingLockDrive())
                         .ignoringDisable(true)
                         .withName("SwerveCommands.default"));
+    }
+
+    public static void bindTriggers() {
+        pilot.getUpReorient().onTrue(SwerveCommands.reorientForward());
+        pilot.getLeftReorient().onTrue(SwerveCommands.reorientLeft());
+        pilot.getDownReorient().onTrue(SwerveCommands.reorientBack());
+        pilot.getRightReorient().onTrue(SwerveCommands.reorientRight());
     }
 
     private static SwerveRequest.FieldCentric fieldCentricDrive =

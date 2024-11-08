@@ -26,11 +26,11 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
     @Getter protected final ExpCurve rightStickCurve;
     @Getter protected final ExpCurve triggersCurve;
 
-    protected Trigger teleop = new Trigger(DriverStation::isTeleopEnabled);
-    protected Trigger auto = new Trigger(DriverStation::isAutonomousEnabled);
-    protected Trigger test = new Trigger(DriverStation::isTestEnabled);
-    protected Trigger disabled = new Trigger(DriverStation::isDisabled);
-    protected Trigger falseTrigger = new Trigger(() -> false);
+    @Getter protected Trigger teleop = new Trigger(DriverStation::isTeleopEnabled);
+    @Getter protected Trigger auto = new Trigger(DriverStation::isAutonomousEnabled);
+    @Getter protected Trigger testMode = new Trigger(DriverStation::isTestEnabled);
+    @Getter protected Trigger disabled = new Trigger(DriverStation::isDisabled);
+    @Getter protected Trigger falseTrigger = new Trigger(() -> false);
 
     public static class Config {
         @Getter private String name;
@@ -75,7 +75,7 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
      * @param emulatedPS5Port emulated port for PS5 controller so we can rumble PS5 controllers.
      */
     public Gamepad(Config config) {
-        super(config.getPort(), config.isXbox(), config.getEmulatedPS5Port(), config.getAttached());
+        super(config.getPort(), config.getAttached());
         this.config = config;
         // Curve objects that we use to configure the controller axis ojbects
         leftStickCurve =
@@ -117,13 +117,7 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
                 }
 
                 // Configure button bindings once the driver controller is connected
-                if (DriverStation.isTest()) {
-                    setupTestTriggers();
-                } else if (DriverStation.isDisabled()) {
-                    setupDisabledTriggers();
-                } else {
-                    setupTeleopTriggers();
-                }
+                setupTriggers();
                 configured = true;
 
                 Telemetry.print("## " + getName() + ": gamepad is connected ##");
@@ -441,9 +435,5 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
         return command.alongWith(rumbleCommand(1, 0.5)).withName(command.getName());
     }
 
-    public abstract void setupTeleopTriggers();
-
-    public abstract void setupDisabledTriggers();
-
-    public abstract void setupTestTriggers();
+    public abstract void setupTriggers();
 }

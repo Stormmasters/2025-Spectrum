@@ -159,8 +159,6 @@ public class Robot extends TimedRobot {
             CrashTracker.logThrowableCrash(t);
             throw t;
         }
-
-        SmartDashboard.putBoolean("PilotTelopEnabled", pilot.getExtend().getAsBoolean());
     }
 
     @Override

@@ -7,7 +7,6 @@ import frc.robot.climber.ClimberCommands;
 import frc.robot.elevator.ElevatorCommands;
 import frc.robot.launcher.LauncherCommands;
 import frc.robot.pivot.PivotCommands;
-import frc.robot.swerve.SwerveCommands;
 import frc.spectrumLib.gamepads.Gamepad;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +35,10 @@ public class Pilot extends Gamepad {
     @Getter @Setter private boolean isTurboMode = false;
     @Getter @Setter private boolean isFieldOriented = true;
 
-    @Getter public Trigger extend = falseTrigger;
+    // Triggers
+    @Getter private Trigger extend, retract;
+    @Getter private Trigger intake;
+    @Getter private Trigger upReorient, leftReorient, downReorient, rightReorient;
 
     /** Create a new Pilot with the default name and port. */
     public Pilot(PilotConfig config) {
@@ -47,26 +49,32 @@ public class Pilot extends Gamepad {
 
     /** Setup the Buttons for telop mode. */
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simualation */
-    public void setupTeleopTriggers() {
-        // b().whileTrue(ElevatorCommands.fullExtend());
-        extend = teleop.and(b());
+    public void setupTriggers() {
+        extend = B.and(leftBumper().not(), teleop);
+        intake = A.and(noBumpers(), teleop);
+        retract = x().and(noBumpers(), teleop);
+
+        // Drive Triggers
+        upReorient = upDpad().and(teleop, leftBumperOnly());
+        leftReorient = leftDpad().and(teleop, leftBumperOnly());
+        downReorient = downDpad().and(teleop, leftBumperOnly());
+        rightReorient = rightDpad().and(teleop, leftBumperOnly());
+
+        // TEST TRIGGERS
+        testMode.and(B).whileTrue(ElevatorCommands.tuneElevator());
+
+        // OLD TRIGGERS
         x().whileTrue(ElevatorCommands.home());
         y().whileTrue(ElevatorCommands.runElevator(() -> getLeftY()));
 
-        b().whileTrue(LauncherCommands.runVelocity(Robot.getConfig().launcher::getMaxVelocityRpm));
+        B.whileTrue(LauncherCommands.runVelocity(Robot.getConfig().launcher::getMaxVelocityRpm));
         x().whileTrue(
                         LauncherCommands.runVelocity(
                                 () -> -1 * Robot.getConfig().launcher.getMaxVelocityRpm()));
-        b().whileTrue(PivotCommands.subwoofer());
+        B.whileTrue(PivotCommands.subwoofer());
         x().whileTrue(PivotCommands.home());
-        b().whileTrue(ClimberCommands.fullExtend());
+        B.whileTrue(ClimberCommands.fullExtend());
         x().whileTrue(ClimberCommands.home());
-
-        /* Reorient commands */
-        upDpad().and(leftBumperOnly()).whileTrue(rumbleCommand(SwerveCommands.reorientForward()));
-        leftDpad().and(leftBumperOnly()).whileTrue(rumbleCommand(SwerveCommands.reorientLeft()));
-        downDpad().and(leftBumperOnly()).whileTrue(rumbleCommand(SwerveCommands.reorientBack()));
-        rightDpad().and(leftBumperOnly()).whileTrue(rumbleCommand(SwerveCommands.reorientRight()));
 
         /* Use the right stick to set a cardinal direction to aim at */
         (leftBumperOnly().negate())
@@ -74,16 +82,6 @@ public class Pilot extends Gamepad {
                         rightXTrigger(ThresholdType.ABS_GREATER_THAN, 0.5)
                                 .or(rightYTrigger(ThresholdType.ABS_GREATER_THAN, 0.5)))
                 .whileTrue(PilotCommands.stickSteerDrive());
-    };
-
-    /** Setup the Buttons for Disabled mode. */
-    public void setupDisabledTriggers() {};
-
-    /** Setup the Buttons for Test mode. */
-    public void setupTestTriggers() {
-        // This is just for training, robots may have different buttons during test
-        // setupTeleopButtons();
-        b().whileTrue(ElevatorCommands.tuneElevator());
     };
 
     public void setMaxVelocity(double maxVelocity) {
