@@ -256,6 +256,19 @@ public class Trigger implements BooleanSupplier {
         return this;
     }
 
+    /**
+     * Run a command while true. Also runs a command for a certain timeout when released.
+     *
+     * @param trigger
+     * @param runCommand
+     * @param endCommand
+     */
+    public Trigger runWithEndSequence(Command runCommand, Command endCommand, double endTimeout) {
+        this.whileTrue(runCommand);
+        this.onFalse(endCommand.withTimeout(endTimeout).withName(endCommand.getName()));
+        return this;
+    }
+
     @Override
     public boolean getAsBoolean() {
         return m_condition.getAsBoolean();
@@ -319,6 +332,11 @@ public class Trigger implements BooleanSupplier {
         return new Trigger(m_loop, () -> !m_condition.getAsBoolean());
     }
 
+    /**
+     * renameed negate
+     *
+     * @return the negated trigger
+     */
     public Trigger not() {
         return negate();
     }

@@ -1,5 +1,7 @@
 package frc.spectrumLib.util;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.List;
 
 /** From 254 lib imported from 1678-2024 Contains basic functions that are used often. */
@@ -63,4 +65,9 @@ public class Util {
         }
         return result;
     }
+
+    public static final Trigger teleop = new Trigger(DriverStation::isTeleopEnabled);
+    public static final Trigger autoMode = new Trigger(DriverStation::isAutonomousEnabled);
+    public static final Trigger testMode = new Trigger(DriverStation::isTestEnabled);
+    public static final Trigger disabled = new Trigger(DriverStation::isDisabled);
 }

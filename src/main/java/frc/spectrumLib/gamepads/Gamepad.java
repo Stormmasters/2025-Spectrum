@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.ExpCurve;
+import frc.spectrumLib.util.Util;
 import java.util.function.DoubleSupplier;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,9 +38,8 @@ public abstract class Gamepad implements Subsystem {
     public Trigger leftDpad = Trigger.kFalse;
     public Trigger rightDpad = Trigger.kFalse;
 
-    /** Setup modifier bumper and trigger buttons */
+    // Setup function bumper and trigger buttons
     public Trigger noBumpers = rightBumper.negate().and(leftBumper.negate());
-
     public Trigger leftBumperOnly = leftBumper.and(rightBumper.negate());
     public Trigger rightBumperOnly = rightBumper.and(leftBumper.negate());
     public Trigger bothBumpers = rightBumper.and(leftBumper);
@@ -60,11 +60,10 @@ public abstract class Gamepad implements Subsystem {
     @Getter protected final ExpCurve rightStickCurve;
     @Getter protected final ExpCurve triggersCurve;
 
-    @Getter protected Trigger teleop = new Trigger(DriverStation::isTeleopEnabled);
-    @Getter protected Trigger auto = new Trigger(DriverStation::isAutonomousEnabled);
-    @Getter protected Trigger testMode = new Trigger(DriverStation::isTestEnabled);
-    @Getter protected Trigger disabled = new Trigger(DriverStation::isDisabled);
-    @Getter protected Trigger falseTrigger = new Trigger(() -> false);
+    protected Trigger teleop = Util.teleop;
+    protected Trigger autoMode = Util.autoMode;
+    protected Trigger testMode = Util.testMode;
+    protected Trigger disabled = Util.disabled;
 
     public static class Config {
         @Getter private String name;
@@ -304,19 +303,19 @@ public abstract class Gamepad implements Subsystem {
         }
     }
 
-    public Trigger leftYTrigger(ThresholdType t, double threshold) {
+    public Trigger leftYTrigger(Threshold t, double threshold) {
         return axisTrigger(t, threshold, () -> getLeftY());
     }
 
-    public Trigger leftXTrigger(ThresholdType t, double threshold) {
+    public Trigger leftXTrigger(Threshold t, double threshold) {
         return axisTrigger(t, threshold, () -> getLeftX());
     }
 
-    public Trigger rightYTrigger(ThresholdType t, double threshold) {
+    public Trigger rightYTrigger(Threshold t, double threshold) {
         return axisTrigger(t, threshold, () -> getRightY());
     }
 
-    public Trigger rightXTrigger(ThresholdType t, double threshold) {
+    public Trigger rightXTrigger(Threshold t, double threshold) {
         return axisTrigger(t, threshold, () -> getRightX());
     }
 
@@ -334,16 +333,16 @@ public abstract class Gamepad implements Subsystem {
                 });
     }
 
-    private Trigger axisTrigger(ThresholdType t, double threshold, DoubleSupplier v) {
+    private Trigger axisTrigger(Threshold t, double threshold, DoubleSupplier v) {
         return new Trigger(
                 () -> {
                     double value = v.getAsDouble();
                     switch (t) {
-                        case GREATER_THAN:
+                        case GREATER:
                             return value > threshold;
-                        case LESS_THAN:
+                        case LESS:
                             return value < threshold;
-                        case ABS_GREATER_THAN: // Also called Deadband
+                        case ABS_GREATER: // Also called Deadband
                             return Math.abs(value) > threshold;
                         default:
                             return false;
@@ -351,10 +350,10 @@ public abstract class Gamepad implements Subsystem {
                 });
     }
 
-    public static enum ThresholdType {
-        GREATER_THAN,
-        LESS_THAN,
-        ABS_GREATER_THAN;
+    public static enum Threshold {
+        GREATER,
+        LESS,
+        ABS_GREATER;
     }
 
     private void rumble(double leftIntensity, double rightIntensity) {
@@ -372,20 +371,6 @@ public abstract class Gamepad implements Subsystem {
 
     public Command rumbleCommand(double intensity, double durationSeconds) {
         return rumbleCommand(intensity, intensity, durationSeconds);
-    }
-
-    /**
-     * Run a command while a button/trigger is held down. Also runs a command for a certain timeout
-     * when the button/trigger is released.
-     *
-     * @param trigger
-     * @param runCommand
-     * @param endCommand
-     */
-    public void runWithEndSequence(
-            Trigger trigger, Command runCommand, Command endCommand, double endTimeout) {
-        trigger.whileTrue(runCommand);
-        trigger.onFalse(endCommand.withTimeout(endTimeout).withName(endCommand.getName()));
     }
 
     /**

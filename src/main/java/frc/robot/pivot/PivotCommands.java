@@ -19,8 +19,8 @@ public class PivotCommands {
 
     public static void bindTriggers() {
         // missing bindTriggers
-        pilot.getActivate().whileTrue(subwoofer());
-        pilot.getRetract().whileTrue(home());
+        pilot.getActivate_B().whileTrue(subwoofer());
+        pilot.getRetract_X().whileTrue(home());
     }
 
     // missing distance based pivot commands

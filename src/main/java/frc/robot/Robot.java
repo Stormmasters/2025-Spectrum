@@ -15,7 +15,6 @@ import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
 import frc.robot.climber.ClimberCommands;
 import frc.robot.elevator.Elevator;
-import frc.robot.elevator.ElevatorCommands;
 import frc.robot.launcher.Launcher;
 import frc.robot.launcher.LauncherCommands;
 import frc.robot.leds.LEDs;
@@ -72,7 +71,7 @@ public class Robot extends TimedRobot {
         // Reset Config for all gamepads and other button bindings
         pilot.resetConfig();
 
-        ElevatorCommands.bindTriggers();
+        RobotCommands.bindTriggers();
         SwerveCommands.bindTriggers();
         LauncherCommands.bindTriggers();
         ClimberCommands.bindTriggers();
@@ -124,7 +123,8 @@ public class Robot extends TimedRobot {
              */
             SwerveCommands.setupDefaultCommand(robotConfig.getRobotType());
             ClimberCommands.setupDefaultCommand();
-            ElevatorCommands.setupDefaultCommand();
+            // ElevatorCommands.setupDefaultCommand();
+            RobotCommands.setupDefaultCommands();
             LauncherCommands.setupDefaultCommand();
             LEDsCommands.setupDefaultCommand();
             PilotCommands.setupDefaultCommand();

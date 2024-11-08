@@ -1,6 +1,7 @@
 package frc.robot;
 
-import frc.robot.leds.LEDsCommands;
+import frc.spectrumLib.mechanism.MechanismCommands;
+import java.util.ArrayList;
 
 /**
  * This class is used for commands that use multiple subsystems and don't directly call a gamepad.
@@ -8,8 +9,28 @@ import frc.robot.leds.LEDsCommands;
  * called this MechanismCommands.java
  */
 public class RobotCommands {
-    public static void setupRobotTriggers() {
-        // Example trigger, sets the LEDs to orange when the elevator is up
-        Robot.getElevator().isUp().whileTrue(LEDsCommands.solidOrangeLED());
+
+    public static void setupRobotTriggers() {}
+
+    protected static ArrayList<MechanismCommands> mechanismCommands =
+            new ArrayList<MechanismCommands>();
+
+    public static void addMechanismCommand(MechanismCommands mechanismCommand) {
+        mechanismCommands.add(mechanismCommand);
+    }
+
+    public static void setupDefaultCommands() {
+        for (MechanismCommands mechanismCommand : mechanismCommands) {
+            mechanismCommand.setupDefaultCommand();
+        }
+    }
+
+    public static void bindTriggers() {
+
+        RobotTelemetry.print("Binding Triggers Robot Commands 2: " + mechanismCommands.size());
+        for (MechanismCommands mechanismCommand : mechanismCommands) {
+            mechanismCommand.bindTriggers();
+            RobotTelemetry.print("Binding Triggers Robot Commands");
+        }
     }
 }
