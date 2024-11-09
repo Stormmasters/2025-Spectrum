@@ -163,21 +163,6 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
-    /**
-     * Applies the specified control request to this swerve drivetrain.
-     *
-     * @param request Request to apply
-     */
-    public void writeSetpoints(SwerveModuleState[] setpoints) {
-        try {
-            m_stateLock.lock();
-
-            this.setpoints = setpoints;
-        } finally {
-            m_stateLock.unlock();
-        }
-    }
-
     private void setPilotPerspective() {
         /* Periodically try to apply the operator perspective */
         /* If we haven't applied the operator perspective before, then we should apply it regardless of DS state */

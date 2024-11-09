@@ -33,13 +33,4 @@ public class PilotCommands {
     public static Command turboMode() {
         return Commands.startEnd(() -> pilot.setTurboMode(true), () -> pilot.setTurboMode(false));
     }
-
-    /**
-     * Command that can be used to turn on the FPV mode. FPV sets field oriented or not. We don't
-     * want this command to require the pilot subsystem so we use Commands.startend()
-     */
-    public static Command fpvMode() {
-        return Commands.startEnd(
-                () -> pilot.setFieldOriented(false), () -> pilot.setFieldOriented(true));
-    }
 }
