@@ -3,14 +3,16 @@ package frc.robot.leds;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
 import frc.robot.leds.LEDsConfig.Section;
+import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.leds.SpectrumLEDs;
 import java.util.List;
 import lombok.Getter;
 
 // This file is too long we should probably move some of it to the SpectrumLib
-public class LEDs extends SpectrumLEDs {
+public class LEDs extends SpectrumLEDs implements SpectrumSubsystem {
     @Getter private LEDsConfig config;
 
     @Getter private long countdownStartTimeMS = System.currentTimeMillis();
@@ -22,7 +24,14 @@ public class LEDs extends SpectrumLEDs {
         super(config.port, LEDsConfig.getLength() * 2);
         this.config = config;
 
+        Robot.subsystems.add(this);
         RobotTelemetry.print("LEDs Subsystem Initialized: ");
+    }
+
+    public void bindTriggers() {};
+
+    public void setupDefaultCommand() {
+        LEDsCommands.setupDefaultCommand();
     }
 
     // LED Patterns

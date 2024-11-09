@@ -81,6 +81,14 @@ public class Climber extends Mechanism {
     @Override
     public void periodic() {}
 
+    public void bindTriggers() {
+        ClimberCommands.bindTriggers();
+    }
+
+    public void setupDefaultCommand() {
+        ClimberCommands.setupDefaultCommand();
+    }
+
     /*-------------------
     initSendable
     Use # to denote items that are settable

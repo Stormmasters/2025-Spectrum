@@ -25,11 +25,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.crescendo.Field;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.SpectrumSubsystem;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import lombok.Getter;
@@ -38,11 +40,12 @@ import lombok.Getter;
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
  * in command-based projects easily.
  */
-public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
+public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSendable {
     private SwerveConfig config;
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private RotationController rotationController;
+    public Field2d fieldSim = new Field2d();
 
     @Getter
     protected SwerveModuleState[] setpoints =
@@ -62,6 +65,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
      */
     public Swerve(SwerveConfig config) {
         super(config.getDrivetrainConstants(), config.getModules());
+        // this.robotConfig = robotConfig;
         this.config = config;
         configurePathPlanner();
 
@@ -72,6 +76,8 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
         }
 
         SendableRegistry.add(this, "SwerveDrive");
+        Robot.subsystems.add(this);
+        SmartDashboard.putData("Swerve Field", fieldSim);
         RobotTelemetry.print(getName() + " Subsystem Initialized: ");
     }
 
@@ -82,7 +88,16 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
     @Override
     public void periodic() {
         setPilotPerspective();
+        fieldSim.setRobotPose(getRobotPose());
     }
+
+    public void bindTriggers() {
+        SwerveCommands.bindTriggers();
+    };
+
+    public void setupDefaultCommand() {
+        SwerveCommands.setupDefaultCommand();
+    };
 
     /**
      * The `initSendable` function sets up properties for a SmartDashboard type "SwerveDrive" with
@@ -264,13 +279,13 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
 
         ModuleConfig moduleConfig =
                 new ModuleConfig(
-                        Units.inchesToMeters(config.getWheelRadiusInches()),
-                        config.getSpeedAt12VoltsMps(),
+                        config.getWheelRadius(),
+                        config.getSpeedAt12Volts(),
                         1,
                         DCMotor.getKrakenX60(1),
-                        config.getSlipCurrentA(),
+                        config.getSlipCurrent(),
                         1);
-        RobotConfig robotConfig =
+        RobotConfig robotConfig = // Have directly call this to avoid name space problem
                 new RobotConfig(
                         Units.lbsToKilograms(150),
                         1,

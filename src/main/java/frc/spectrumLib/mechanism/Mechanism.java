@@ -22,7 +22,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.Robot;
+import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.talonFX.TalonFXFactory;
 import frc.spectrumLib.util.CanDeviceId;
 import frc.spectrumLib.util.Conversions;
@@ -35,7 +36,7 @@ import lombok.*;
  * Closed-loop & Motion Magic Docs:
  * https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/closed-loop-guide.html
  */
-public class Mechanism implements Subsystem, NTSendable {
+public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     @Getter protected TalonFX motor;
     @Getter protected TalonFX[] followerMotors;
     public Config config;
@@ -55,6 +56,7 @@ public class Mechanism implements Subsystem, NTSendable {
                                 config.followerConfigs[i].opposeLeader);
             }
         }
+        Robot.subsystems.add(this);
         CommandScheduler.getInstance().registerSubsystem(this);
     }
 

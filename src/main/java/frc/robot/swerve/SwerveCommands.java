@@ -1,5 +1,7 @@
 package frc.robot.swerve;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,27 +16,26 @@ public class SwerveCommands {
     static SwerveConfig config = Robot.getConfig().swerve;
     static Pilot pilot = Robot.getPilot();
 
-    public static void setupDefaultCommand(RobotType robotType) {
-        if (robotType == RobotType.PM) {
+    protected static void setupDefaultCommand() {
+        if (Robot.getRobotConfig().getRobotType() == RobotType.PM) {
             // Use this to set a different command based on robotType
             // Robot.swerve.setDefaultCommand(PhotonPilotCommands.pilotDrive());
             // return;
         }
-        swerve.setDefaultCommand(
-                pilotDrive()
-                        .withTimeout(0.5)
-                        .andThen(headingLockDrive())
-                        .ignoringDisable(true)
-                        .withName("SwerveCommands.default"));
+        swerve.setDefaultCommand(pilotDrive());
+        // .withTimeout(0.5)
+        // .andThen(headingLockDrive())
+        // .ignoringDisable(true)
+        // .withName("SwerveCommands.default"));
     }
 
-    public static void bindTriggers() {
+    protected static void bindTriggers() {
         pilot.getStickSteer().whileTrue(stickSteerDrive());
 
-        pilot.getUpReorient().onTrue(SwerveCommands.reorientForward());
-        pilot.getLeftReorient().onTrue(SwerveCommands.reorientLeft());
-        pilot.getDownReorient().onTrue(SwerveCommands.reorientBack());
-        pilot.getRightReorient().onTrue(SwerveCommands.reorientRight());
+        pilot.getUpReorient().onTrue(reorientForward());
+        pilot.getLeftReorient().onTrue(reorientLeft());
+        pilot.getDownReorient().onTrue(reorientBack());
+        pilot.getRightReorient().onTrue(reorientRight());
     }
 
     /**
@@ -89,7 +90,8 @@ public class SwerveCommands {
 
     private static SwerveRequest.FieldCentric fieldCentricDrive =
             new SwerveRequest.FieldCentric()
-                    .withDeadband(config.getSpeedAt12VoltsMps() * config.getDeadband())
+                    .withDeadband(
+                            config.getSpeedAt12Volts().in(MetersPerSecond) * config.getDeadband())
                     .withRotationalDeadband(config.getMaxAngularRate() * config.getDeadband())
                     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
@@ -145,8 +147,8 @@ public class SwerveCommands {
     }
 
     /**
-     * ************************************************************************* Reorient Commands
-     * ************************************************************************
+     * *******************************************************************************************
+     * Reorient Commands
      */
     protected static Command reorientForward() {
         return swerve.reorientPilotAngle(0).withName("Swerve.reorientForward");

@@ -1,6 +1,7 @@
 package frc.robot.pilot;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
 import frc.spectrumLib.gamepads.Gamepad;
 import lombok.Getter;
@@ -49,7 +50,16 @@ public class Pilot extends Gamepad {
     public Pilot(PilotConfig config) {
         super(config);
         this.config = config;
+        Robot.subsystems.add(this);
         RobotTelemetry.print("Pilot Subsystem Initialized: ");
+    }
+
+    public void bindTriggers() {
+        // Left Blank so we can bind when the controller is connected
+    }
+
+    public void setupDefaultCommand() {
+        PilotCommands.setupDefaultCommand();
     }
 
     /** Setup the Buttons for telop mode. */

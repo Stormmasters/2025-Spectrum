@@ -52,6 +52,14 @@ public class Launcher extends Mechanism {
         RobotTelemetry.print(getName() + " Subsystem Initialized");
     }
 
+    public void bindTriggers() {
+        LauncherCommands.bindTriggers();
+    }
+
+    public void setupDefaultCommand() {
+        LauncherCommands.setupDefaultCommand();
+    }
+
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {

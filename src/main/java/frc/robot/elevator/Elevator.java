@@ -81,12 +81,19 @@ public class Elevator extends Mechanism {
 
         simulationInit();
         telemetryInit();
-        new ElevatorCommands();
         RobotTelemetry.print(getName() + " Subsystem Initialized");
     }
 
     @Override
     public void periodic() {}
+
+    public void bindTriggers() {
+        ElevatorCommands.bindTriggers();
+    }
+
+    public void setupDefaultCommand() {
+        ElevatorCommands.setupDefaultCommand();
+    }
 
     /*-------------------
     initSendable

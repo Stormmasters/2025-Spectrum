@@ -17,7 +17,7 @@ public class LEDsCommands {
         leds.setDefaultCommand(defaultCommand());
     }
 
-    public static void setupLEDTriggers() {
+    public static void bindTriggers() {
         Trigger coastMode = new Trigger(() -> leds.isCoastModeLED());
         Trigger launchReady = new Trigger(() -> leds.isLaunchReadyLED());
         // Trigger visionValid = new Trigger(() -> Vision.isPresent);

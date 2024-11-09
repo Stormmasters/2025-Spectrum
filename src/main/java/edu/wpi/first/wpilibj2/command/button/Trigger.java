@@ -64,7 +64,7 @@ public class Trigger implements BooleanSupplier {
         requireNonNullParam(command, "command", "onChange");
         m_loop.bind(
                 new Runnable() {
-                    private boolean m_pressedLast = false;
+                    private boolean m_pressedLast = m_condition.getAsBoolean();
 
                     @Override
                     public void run() {
@@ -116,7 +116,7 @@ public class Trigger implements BooleanSupplier {
         requireNonNullParam(command, "command", "onFalse");
         m_loop.bind(
                 new Runnable() {
-                    private boolean m_pressedLast = false;
+                    private boolean m_pressedLast = true;
 
                     @Override
                     public void run() {
@@ -178,7 +178,7 @@ public class Trigger implements BooleanSupplier {
         requireNonNullParam(command, "command", "whileFalse");
         m_loop.bind(
                 new Runnable() {
-                    private boolean m_pressedLast = false;
+                    private boolean m_pressedLast = true;
 
                     @Override
                     public void run() {
@@ -236,7 +236,7 @@ public class Trigger implements BooleanSupplier {
         requireNonNullParam(command, "command", "toggleOnFalse");
         m_loop.bind(
                 new Runnable() {
-                    private boolean m_pressedLast = false;
+                    private boolean m_pressedLast = true;
 
                     @Override
                     public void run() {

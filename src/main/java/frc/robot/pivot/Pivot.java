@@ -154,6 +154,14 @@ public class Pivot extends Mechanism {
     @Override
     public void periodic() {}
 
+    public void bindTriggers() {
+        PivotCommands.bindTriggers();
+    }
+
+    public void setupDefaultCommand() {
+        PivotCommands.setupDefaultCommand();
+    }
+
     /*-------------------
     initSendable
     Use # to denote items that are settable
