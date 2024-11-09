@@ -3,19 +3,37 @@ package frc.robot.elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.elevator.Elevator.ElevatorConfig;
+import frc.robot.leds.LEDsCommands;
+import frc.robot.pilot.Pilot;
 import frc.spectrumLib.util.TuneValue;
+import frc.spectrumLib.util.Util;
 import java.util.function.DoubleSupplier;
 
 public class ElevatorCommands {
     private static Elevator elevator = Robot.getElevator();
     private static ElevatorConfig config = Robot.getConfig().elevator;
+    private static Pilot pilot = Robot.getPilot();
 
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(
                 holdPosition().ignoringDisable(true).withName("Elevator.default"));
     }
 
+    public static void bindTriggers() {
+        // pilot = Robot.getPilot();
+        pilot.getActivate_B().whileTrue(fullExtend());
+        pilot.getRetract_X().whileTrue(home());
+        pilot.getManual_Y().whileTrue(runElevator(pilot::getElevatorManualAxis));
+
+        // LED Commands
+        elevator.isUp().and(Util.teleop).whileTrue(LEDsCommands.solidOrangeLED());
+
+        // Test Mode Buttons
+        pilot.getTuneElevator().whileTrue(tuneElevator());
+    }
+
     public static Command runElevator(DoubleSupplier speed) {
+
         return elevator.runPercentage(speed).withName("Elevator.runElevator");
     }
 

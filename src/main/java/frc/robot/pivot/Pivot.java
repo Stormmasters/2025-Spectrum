@@ -11,7 +11,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -156,6 +155,14 @@ public class Pivot extends Mechanism {
 
     @Override
     public void periodic() {}
+
+    public void bindTriggers() {
+        PivotCommands.bindTriggers();
+    }
+
+    public void setupDefaultCommand() {
+        PivotCommands.setupDefaultCommand();
+    }
 
     /*-------------------
     initSendable

@@ -87,6 +87,14 @@ public class Elevator extends Mechanism {
     @Override
     public void periodic() {}
 
+    public void bindTriggers() {
+        ElevatorCommands.bindTriggers();
+    }
+
+    public void setupDefaultCommand() {
+        ElevatorCommands.setupDefaultCommand();
+    }
+
     /*-------------------
     initSendable
     Use # to denote items that are settable

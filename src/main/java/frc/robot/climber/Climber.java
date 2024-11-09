@@ -1,7 +1,6 @@
 package frc.robot.climber;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
-
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendableBuilder;
@@ -83,6 +82,14 @@ public class Climber extends Mechanism {
 
     @Override
     public void periodic() {}
+
+    public void bindTriggers() {
+        ClimberCommands.bindTriggers();
+    }
+
+    public void setupDefaultCommand() {
+        ClimberCommands.setupDefaultCommand();
+    }
 
     /*-------------------
     initSendable

@@ -1,22 +1,17 @@
 package frc.robot.pilot;
 
-import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
-import frc.robot.climber.ClimberCommands;
-import frc.robot.elevator.ElevatorCommands;
-import frc.robot.launcher.LauncherCommands;
-import frc.robot.pivot.PivotCommands;
-import frc.robot.swerve.SwerveCommands;
 import frc.spectrumLib.gamepads.Gamepad;
 import lombok.Getter;
 import lombok.Setter;
 
-@Logged
 public class Pilot extends Gamepad {
     public static class PilotConfig extends Config {
 
         @Getter @Setter private double slowModeScalor = 0.45;
+        @Getter @Setter private double defaultTurnScalor = 0.75;
         @Getter @Setter private double turboModeScalor = 1;
 
         public PilotConfig() {
@@ -26,9 +21,13 @@ public class Pilot extends Gamepad {
             setLeftStickExp(2.0);
             setLeftStickScalor(6);
 
+            setRightStickDeadzone(0);
+            setRightStickExp(2.0);
+            setRightStickScalor(3);
+
             setTriggersDeadzone(0);
-            setTriggersExp(2.0);
-            setTriggersScalor(3);
+            setTriggersExp(1);
+            setTriggersScalor(1);
         }
     }
 
@@ -37,59 +36,67 @@ public class Pilot extends Gamepad {
     @Getter @Setter private boolean isTurboMode = false;
     @Getter @Setter private boolean isFieldOriented = true;
 
+    // Triggers, these would be robot states such as ampReady, intake, visionAim, subwooferShot,
+    // launch, etc.
+    @Getter private Trigger fn, noFn, scoreFn; // These are our function keys to overload buttons
+    @Getter private Trigger activate_B, retract_X;
+    @Getter private Trigger intake_A;
+    @Getter private Trigger manual_Y;
+    @Getter private Trigger upReorient, leftReorient, downReorient, rightReorient;
+    @Getter private Trigger stickSteer;
+    @Getter private Trigger tuneElevator;
+
     /** Create a new Pilot with the default name and port. */
     public Pilot(PilotConfig config) {
         super(config);
         this.config = config;
+        Robot.subsystems.add(this);
         RobotTelemetry.print("Pilot Subsystem Initialized: ");
+    }
+
+    public void bindTriggers() {
+        // Left Blank so we can bind when the controller is connected
+    }
+
+    public void setupDefaultCommand() {
+        PilotCommands.setupDefaultCommand();
     }
 
     /** Setup the Buttons for telop mode. */
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simualation */
-    public void setupTeleopTriggers() {
-        b().whileTrue(ElevatorCommands.fullExtend());
-        x().whileTrue(ElevatorCommands.home());
-        y().whileTrue(ElevatorCommands.runElevator(() -> getLeftY()));
+    public void setupTriggers() {
+        fn = leftBumperOnly;
+        noFn = fn.not();
+        scoreFn = fn.or(bothBumpers);
 
-        b().whileTrue(LauncherCommands.runVelocity(Robot.getConfig().launcher::getMaxVelocity));
-        x().whileTrue(
-                        LauncherCommands.runVelocity(
-                                () -> -1 * Robot.getConfig().launcher.getMaxVelocity()));
-        b().whileTrue(PivotCommands.subwoofer());
-        x().whileTrue(PivotCommands.home());
-        b().whileTrue(ClimberCommands.fullExtend());
-        x().whileTrue(ClimberCommands.home());
+        intake_A = A.and(noFn, teleop);
+        activate_B = B.and(noFn, teleop);
+        retract_X = X.and(noFn, teleop);
+        manual_Y = Y.and(noFn, teleop);
 
-        /* Reorient commands */
-        upDpad().and(leftBumperOnly()).whileTrue(rumbleCommand(SwerveCommands.reorientForward()));
-        leftDpad().and(leftBumperOnly()).whileTrue(rumbleCommand(SwerveCommands.reorientLeft()));
-        downDpad().and(leftBumperOnly()).whileTrue(rumbleCommand(SwerveCommands.reorientBack()));
-        rightDpad().and(leftBumperOnly()).whileTrue(rumbleCommand(SwerveCommands.reorientRight()));
+        // Drive Triggers
+        upReorient = upDpad.and(fn, teleop);
+        leftReorient = leftDpad.and(fn, teleop);
+        downReorient = downDpad.and(fn, teleop);
+        rightReorient = rightDpad.and(fn, teleop);
+
+        // TEST TRIGGERS
+        tuneElevator = testMode.and(B);
 
         /* Use the right stick to set a cardinal direction to aim at */
-        (leftBumperOnly().negate())
-                .and(
-                        rightXTrigger(ThresholdType.ABS_GREATER_THAN, 0.5)
-                                .or(rightYTrigger(ThresholdType.ABS_GREATER_THAN, 0.5)))
-                .whileTrue(PilotCommands.stickSteerDrive());
+        stickSteer =
+                fn.and(
+                        rightXTrigger(Threshold.ABS_GREATER, 0.5)
+                                .or(rightYTrigger(Threshold.ABS_GREATER, 0.5)));
     };
 
-    /** Setup the Buttons for Disabled mode. */
-    public void setupDisabledTriggers() {};
-
-    /** Setup the Buttons for Test mode. */
-    public void setupTestTriggers() {
-        // This is just for training, robots may have different buttons during test
-        // setupTeleopButtons();
-        b().whileTrue(ElevatorCommands.tuneElevator());
-    };
-
+    // DRIVE METHODS
     public void setMaxVelocity(double maxVelocity) {
         leftStickCurve.setScalar(maxVelocity);
     }
 
     public void setMaxRotationalVelocity(double maxRotationalVelocity) {
-        triggersCurve.setScalar(maxRotationalVelocity);
+        rightStickCurve.setScalar(maxRotationalVelocity);
     }
 
     // Positive is forward, up on the left stick is positive
@@ -115,12 +122,19 @@ public class Pilot extends Gamepad {
     // Positive is counter-clockwise, left Trigger is positive
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveCCWPositive() {
-        double ccwPositive = triggersCurve.calculate(getTwist());
+        double ccwPositive = rightStickCurve.calculate(getRightX());
         if (isSlowMode) {
             ccwPositive *= Math.abs(config.getSlowModeScalor());
         } else if (isTurboMode) {
             ccwPositive *= Math.abs(config.getTurboModeScalor());
+        } else {
+            ccwPositive *= Math.abs(config.getDefaultTurnScalor());
         }
         return ccwPositive;
+    }
+
+    // ELEVATOR METHODS
+    public double getElevatorManualAxis() {
+        return getLeftY();
     }
 }

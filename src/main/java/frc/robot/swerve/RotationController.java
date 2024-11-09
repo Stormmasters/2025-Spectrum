@@ -9,8 +9,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
  * within a certain tolerance of the goal angle, a PID controller is used to hold the robot at that
  * angle.
  */
-
-
 public class RotationController {
     Swerve swerve;
     SwerveConfig config;

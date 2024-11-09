@@ -1,7 +1,6 @@
 package frc.robot.launcher;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
-
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -17,7 +16,7 @@ import lombok.Getter;
 public class Launcher extends Mechanism {
 
     public static class LauncherConfig extends Config {
-        @Getter private double maxVelocity = 5600;
+        @Getter private double maxVelocityRpm = 5600;
 
         /* LeftLauncher config values */
         @Getter private double currentLimit = 60;
@@ -53,6 +52,14 @@ public class Launcher extends Mechanism {
         simulationInit();
         telemetryInit();
         RobotTelemetry.print(getName() + " Subsystem Initialized");
+    }
+
+    public void bindTriggers() {
+        LauncherCommands.bindTriggers();
+    }
+
+    public void setupDefaultCommand() {
+        LauncherCommands.setupDefaultCommand();
     }
 
     @Override
