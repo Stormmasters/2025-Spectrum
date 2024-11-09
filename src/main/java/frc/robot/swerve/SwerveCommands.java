@@ -61,17 +61,26 @@ public class SwerveCommands {
                         pilot::getDriveFwdPositive,
                         pilot::getDriveLeftPositive,
                         pilot::getDriveCCWPositive)
-                .withName("PilotDrive");
+                .withName("Swerve.PilotDrive");
+    }
+
+    protected static Command fpvDrive() {
+        return fpvDrive(
+                        pilot::getDriveFwdPositive,
+                        pilot::getDriveLeftPositive,
+                        pilot::getDriveCCWPositive)
+                .withName("Swerve.PilotFPVDrive");
     }
 
     protected static Command headingLockDrive() {
         return headingLock(pilot::getDriveFwdPositive, pilot::getDriveLeftPositive)
-                .withName("PilotHeadingLockDrive");
+                .withName("Swerve.PilotHeadingLockDrive");
     }
 
     /** Turn the swerve wheels to an X to prevent the robot from moving */
     protected static Command xBrake() {
-        return Xbrake.run().withName("Swerve.Xbrake");
+        return swerve.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())
+                .withName("Swerve.Xbrake");
     }
 
     /**
@@ -88,7 +97,7 @@ public class SwerveCommands {
                 .withName("SetTargetHeading");
     }
 
-    private static SwerveRequest.FieldCentric fieldCentricDrive =
+    private static final SwerveRequest.FieldCentric fieldCentricDrive =
             new SwerveRequest.FieldCentric()
                     .withDeadband(
                             config.getSpeedAt12Volts().in(MetersPerSecond) * config.getDeadband())
@@ -101,6 +110,19 @@ public class SwerveCommands {
         return swerve.applyRequest(
                 () ->
                         fieldCentricDrive
+                                .withVelocityX(fwdPositive.getAsDouble())
+                                .withVelocityY(leftPositive.getAsDouble())
+                                .withRotationalRate(ccwPositive.getAsDouble()));
+    }
+
+    private static final SwerveRequest.RobotCentric robotCentric =
+            new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+    private static Command fpvDrive(
+            DoubleSupplier fwdPositive, DoubleSupplier leftPositive, DoubleSupplier ccwPositive) {
+        return swerve.applyRequest(
+                () ->
+                        robotCentric
                                 .withVelocityX(fwdPositive.getAsDouble())
                                 .withVelocityY(leftPositive.getAsDouble())
                                 .withRotationalRate(ccwPositive.getAsDouble()));

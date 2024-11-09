@@ -34,7 +34,6 @@ public class Pilot extends Gamepad {
     private PilotConfig config;
     @Getter @Setter private boolean isSlowMode = false;
     @Getter @Setter private boolean isTurboMode = false;
-    @Getter @Setter private boolean isFieldOriented = true;
 
     // Triggers, these would be robot states such as ampReady, intake, visionAim, subwooferShot,
     // launch, etc.
