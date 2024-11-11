@@ -1,6 +1,8 @@
 package frc.robot.auton;
 
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -9,9 +11,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotTelemetry;
+import frc.robot.swerve.Swerve;
 
 public class Auton {
     public static final SendableChooser<Command> autonChooser = new SendableChooser<>();
+
+    public static Swerve swerve;
+
     public static boolean trackNote = false;
     public static boolean trackSpeaker = false;
     public static boolean noteIntaked = false;
@@ -38,11 +44,14 @@ public class Auton {
         RobotTelemetry.print("Auton Subsystem Initialized: ");
     }
 
+    public static Pose2d autoStartingPos;
+
     public static Command getAutonomousCommand() {
         // return new CharacterizeLauncher(Robot.launcher);
         Command auton = autonChooser.getSelected(); // sees what auto is chosen on shuffleboard
-        // Command auton = new PathPlannerAuto("Madtown");
         if (auton != null) {
+            autoStartingPos = new PathPlannerAuto(auton.getName()).getStartingPose(); // Get the starting pose of the selected auto
+            // SwerveDrivetrain.seedFieldRelative(autoStartingPos);
             return auton; // checks to make sure there is an auto and if there is it runs an auto
         } else {
             return new PrintCommand(
@@ -52,6 +61,7 @@ public class Auton {
             // something
         }
     }
+
 
     /** Called in RobotPeriodic and displays the duration of the auton command Based on 6328 code */
     public static void printAutoDuration() {

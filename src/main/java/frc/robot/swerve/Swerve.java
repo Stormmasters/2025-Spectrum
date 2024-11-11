@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.crescendo.Field;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
+import frc.robot.auton.Auton;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import lombok.Getter;
@@ -280,6 +281,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }
+
 
     // --------------------------------------------------------------------------------
     // Simulation
