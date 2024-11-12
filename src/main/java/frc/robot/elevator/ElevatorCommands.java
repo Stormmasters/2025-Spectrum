@@ -23,9 +23,6 @@ public class ElevatorCommands {
         pilot.getRetract_X().whileTrue(home());
         pilot.getManual_Y().whileTrue(runElevator(pilot::getElevatorManualAxis));
 
-        // LED Commands
-        // elevator.isUp().and(Util.teleop).whileTrue(LEDsCommands.solidOrangeLED());
-
         // Test Mode Buttons
         pilot.getTuneElevator().whileTrue(tuneElevator());
     }

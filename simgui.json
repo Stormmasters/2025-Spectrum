@@ -19,12 +19,12 @@
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d"
     },
     "windows": {
-      "/FMSInfo": {
+      "/SmartDashboard/LeftView": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/LeftView": {
+      "/SmartDashboard/Scheduler": {
         "window": {
           "visible": true
         }
@@ -68,6 +68,9 @@
         "open": true
       },
       "SmartDashboard": {
+        "Auto Chooser": {
+          "open": true
+        },
         "open": true
       }
     }

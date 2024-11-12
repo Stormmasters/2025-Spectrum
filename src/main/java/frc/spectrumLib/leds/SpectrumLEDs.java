@@ -33,13 +33,15 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         // LED strip densitry
         @Getter @Setter private Distance ledSpacing = Meters.of(1 / 120.0);
 
-        @Getter final Color SPECTRUM_COLOR = new Color(130, 103, 185);
+        @Getter private final Color SPECTRUM_COLOR = new Color(130, 103, 185);
     }
 
     @Getter private Config config;
 
     @Getter protected final AddressableLED led;
     @Getter protected final AddressableLEDBuffer ledBuffer;
+    protected final LEDPattern defaultPattern =
+            LEDPattern.solid(Color.kOrange).blink(Seconds.of(1));
 
     @Getter protected final AddressableLEDBufferView firstHalf;
     @Getter protected final AddressableLEDBufferView secondHalf;
@@ -62,6 +64,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
 
         // Set the data
         led.setData(ledBuffer);
+        defaultPattern.applyTo(ledBuffer);
         led.start();
 
         firstHalf = ledBuffer.createView(0, ledBuffer.getLength() / 2);
@@ -91,29 +94,14 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     }
 
     public Command setPattern(LEDPattern pattern) {
-        return run(() -> pattern.applyTo(ledBuffer)).ignoringDisable(true);
+        return run(() -> pattern.applyTo(ledBuffer))
+                .ignoringDisable(true)
+                .withName("LEDs.setPattern");
     }
 
     public Command setPattern(LEDPattern pattern, AddressableLEDBufferView view) {
-        return run(() -> pattern.applyTo(view)).ignoringDisable(true);
+        return run(() -> pattern.applyTo(view)).ignoringDisable(true).withName("LEDSs.setPattern");
     }
-
-    // reversed()
-    // offsetBy(int offset)
-    // scrollAtAbsoluteSpeed(Distance speed, Distance spacing)
-    // scrollAtRelativeSpeed(Frequency velocity)
-    // blink(Time onTime, Time offTime)
-    // synchronizedBlink(BooleanSupplier signal)
-    // breathe(Time period)
-    // overlayOn(LEDPattern base)
-    // blend(LEDPattern other)
-    // mask(LEDPattern mask)
-    // atBrightness(Dimensionless relativeBrightness)
-    // solid(Color color)
-    // progressMaskLayer(DoubleSupplier progressSupplier)
-    // steps(Map<? extends Number, Color> steps)
-    // gradient(GradientType type, Color... colors)
-    // rainbow(int saturation, int value)
 
     @Override
     public void bindTriggers() {
@@ -133,15 +121,37 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         return LEDPattern.steps(Map.of(0.00, color1, percent, color2));
     }
 
-    public LEDPattern scroll(LEDPattern pattern, double speed) {
-        return pattern.scrollAtAbsoluteSpeed(MetersPerSecond.of(speed), config.getLedSpacing());
+    /**
+     * Scrolls the given LED pattern at the specified speed.
+     *
+     * @param pattern the LEDPattern to be scrolled
+     * @param speedMps the speed at which the pattern should scroll, in meters per second
+     * @return a new LEDPattern that represents the scrolled pattern
+     */
+    public LEDPattern scroll(LEDPattern pattern, double speedMps) {
+        return pattern.scrollAtAbsoluteSpeed(MetersPerSecond.of(speedMps), config.getLedSpacing());
     }
 
+    /**
+     * Creates an LED chase pattern with the specified color, percentage, and speed.
+     *
+     * @param color1 The color to be used in the chase pattern.
+     * @param percent The percentage of the pattern that will be the specified color.
+     * @param speed The speed at which the pattern will scroll, in Hertz.
+     * @return An LEDPattern object representing the chase pattern.
+     */
     public LEDPattern chase(Color color1, double percent, double speed) {
         return LEDPattern.steps(Map.of(0.00, color1, percent, Color.kBlack))
                 .scrollAtRelativeSpeed(Frequency.ofBaseUnits(speed, Hertz));
     }
 
+    /**
+     * Creates a bouncing LED pattern with the specified color and duration.
+     *
+     * @param c the color of the bouncing LED
+     * @param durationInSeconds the duration of one complete bounce cycle in seconds
+     * @return an LEDPattern that applies the bouncing effect to the LEDs
+     */
     public LEDPattern bounce(Color c, double durationInSeconds) {
         return new LEDPattern() {
             @Override
@@ -174,6 +184,13 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         };
     }
 
+    /**
+     * Creates an ombre LED pattern that transitions smoothly between two colors.
+     *
+     * @param startColor The starting color of the ombre effect.
+     * @param endColor The ending color of the ombre effect.
+     * @return An LEDPattern that applies the ombre effect to the LED strip.
+     */
     public LEDPattern ombre(Color startColor, Color endColor) {
         return new LEDPattern() {
             @Override
@@ -211,6 +228,16 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         };
     }
 
+    /**
+     * Creates a wave LED pattern that transitions between two colors over a specified cycle length
+     * of LEDs and duration.
+     *
+     * @param c1 The first color in the wave pattern.
+     * @param c2 The second color in the wave pattern.
+     * @param cycleLength The length of the wave cycle in terms of LEDs.
+     * @param durationSecs The duration of the entire wave pattern in seconds.
+     * @return An LEDPattern that applies the wave effect to the LEDs.
+     */
     public LEDPattern wave(Color c1, Color c2, double cycleLength, double durationSecs) {
         return new LEDPattern() {
             @Override
@@ -241,6 +268,16 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         };
     }
 
+    /**
+     * Creates an LEDPattern that represents a countdown effect. The countdown starts from a
+     * specified time and lasts for a given duration. During the countdown, the LEDs transition from
+     * yellow to red, and progressively turn off from the end of the strip towards the beginning.
+     *
+     * @param countStartTimeSec A DoubleSupplier that provides the start time of the countdown in
+     *     seconds.
+     * @param durationInSeconds The total duration of the countdown in seconds.
+     * @return An LEDPattern that applies the countdown effect to the LEDs.
+     */
     public LEDPattern countdown(DoubleSupplier countStartTimeSec, double durationInSeconds) {
         double startTime = countStartTimeSec.getAsDouble();
         return new LEDPattern() {
@@ -282,4 +319,22 @@ public class SpectrumLEDs implements SpectrumSubsystem {
             }
         };
     }
+
+    // LEDPattern Methods
+    // reversed()
+    // offsetBy(int offset)
+    // scrollAtAbsoluteSpeed(Distance speed, Distance spacing)
+    // scrollAtRelativeSpeed(Frequency velocity)
+    // blink(Time onTime, Time offTime)
+    // synchronizedBlink(BooleanSupplier signal)
+    // breathe(Time period)
+    // overlayOn(LEDPattern base)
+    // blend(LEDPattern other)
+    // mask(LEDPattern mask)
+    // atBrightness(Dimensionless relativeBrightness)
+    // solid(Color color)
+    // progressMaskLayer(DoubleSupplier progressSupplier)
+    // steps(Map<? extends Number, Color> steps)
+    // gradient(GradientType type, Color... colors)
+    // rainbow(int saturation, int value)
 }

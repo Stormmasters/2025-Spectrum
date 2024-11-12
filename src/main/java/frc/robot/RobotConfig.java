@@ -7,7 +7,7 @@ import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.configs.ULTRAVIOLET2024;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.launcher.Launcher.LauncherConfig;
-import frc.robot.leds.LEDs.LedsConfig;
+import frc.robot.leds.Led.LedsConfig;
 import frc.robot.pilot.Pilot.PilotConfig;
 import frc.robot.pivot.Pivot.PivotConfig;
 import frc.robot.swerve.SwerveConfig;
