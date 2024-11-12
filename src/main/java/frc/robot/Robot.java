@@ -12,7 +12,7 @@ import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
 import frc.robot.elevator.Elevator;
 import frc.robot.launcher.Launcher;
-import frc.robot.leds.Led;
+import frc.robot.leds.LedFull;
 import frc.robot.pilot.Pilot;
 import frc.robot.pivot.Pivot;
 import frc.robot.swerve.Swerve;
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
     @Getter private static Elevator elevator;
     @Getter private static Launcher launcher;
     // @Getter private static LEDs leds;
-    @Getter private static Led leds;
+    @Getter private static LedFull leds;
     @Getter private static Pilot pilot;
     @Getter private static Pivot pivot;
     @Getter private static VisionSystem visionSystem;
@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
              */
             double canInitDelay = 0.1; // Delay between any mechanism with motor/can configs
 
-            leds = new Led(config.leds);
+            leds = new LedFull(config.leds);
             pilot = new Pilot(config.pilot);
             swerve = new Swerve(config.swerve);
             Timer.delay(canInitDelay);

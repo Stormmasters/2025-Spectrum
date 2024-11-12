@@ -30,18 +30,51 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     public static class Config {
         @Getter private String name;
         @Getter @Setter private boolean attached = true;
-        @Getter @Setter private AddressableLED fullStrip;
+        @Getter @Setter private AddressableLED led;
+        @Getter @Setter private AddressableLEDBuffer buffer;
+        @Getter @Setter private AddressableLEDBufferView view;
+        @Getter @Setter private int startingIndex = 0;
+        @Getter @Setter private int endingIndex = 0;
         @Getter @Setter private int port = 0;
         @Getter @Setter private int length;
         // LED strip densitry
         @Getter @Setter private Distance ledSpacing = Meters.of(1 / 120.0);
+
+        public Config(String name, int length) {
+            this.name = name;
+            this.length = length;
+            this.startingIndex = 0;
+            this.endingIndex = length - 1;
+        }
+
+        public Config(
+                String name,
+                AddressableLED l,
+                AddressableLEDBuffer lb,
+                int statrtingIndex,
+                int endingIndex) {
+            this.name = name;
+            this.led = l;
+            this.buffer = lb;
+            this.startingIndex = statrtingIndex;
+            this.endingIndex = endingIndex;
+        }
     }
 
     @Getter private Config config;
 
     @Getter protected final AddressableLED led;
     @Getter protected final AddressableLEDBuffer ledBuffer;
-    protected final LEDPattern defaultPattern = solid(Color.kRed).blink(Seconds.of(1));
+    @Getter protected final AddressableLEDBufferView ledView;
+    private boolean mainView = false;
+
+    protected final LEDPattern defaultPattern = blink(Color.kOrange, 1);
+
+    @Getter
+    protected Command defaultCommand =
+            setPattern(defaultPattern, -1).withName("LEDs.defaultCommand");
+
+    public final Trigger defaultTrigger = new Trigger(() -> defaultCommand.isScheduled());
 
     @Getter @Setter private int commandPriority = 0;
 
@@ -52,17 +85,18 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         this.config = config;
 
         // Must be a PWM header, not MXP or DIO
-        if (config.getFullStrip() == null) {
+        if (config.getLed() == null) {
             led = new AddressableLED(config.port);
+            // Length is expensive to set, so only set it once, then just update data
+            ledBuffer = new AddressableLEDBuffer(config.length);
+            led.setLength(ledBuffer.getLength());
+            mainView = true;
         } else {
-            led = config.getFullStrip();
+            led = config.getLed();
+            ledBuffer = config.buffer;
         }
 
-        // Reuse buffer
-        // Default to a length of 60, start empty output
-        // Length is expensive to set, so only set it once, then just update data
-        ledBuffer = new AddressableLEDBuffer(config.length);
-        led.setLength(ledBuffer.getLength());
+        ledView = ledBuffer.createView(config.startingIndex, config.endingIndex);
 
         // Set the data
         led.setData(ledBuffer);
@@ -74,16 +108,14 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     }
 
     public void periodic() {
-        // Set the LEDs
-        led.setData(ledBuffer);
+        // Set the LEDs only if this is the main view
+        if (mainView) {
+            led.setData(ledBuffer);
+        }
     }
 
     public boolean isAttached() {
         return config.isAttached();
-    }
-
-    public AddressableLEDBufferView createView(int startingIndex, int endingIndex) {
-        return ledBuffer.createView(startingIndex, endingIndex);
     }
 
     public Trigger checkPriority(int priority) {
@@ -93,7 +125,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     public Command setPattern(LEDPattern pattern, int priority) {
         return run(() -> {
                     commandPriority = priority;
-                    pattern.applyTo(ledBuffer);
+                    pattern.applyTo(ledView);
                 })
                 .ignoringDisable(true)
                 .withName("LEDs.setPattern");

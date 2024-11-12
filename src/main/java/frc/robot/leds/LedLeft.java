@@ -2,32 +2,22 @@ package frc.robot.leds;
 
 import static edu.wpi.first.units.Units.*;
 
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.spectrumLib.leds.SpectrumLEDs;
-import lombok.Getter;
 
-public class Led extends SpectrumLEDs {
-
-    @Getter
-    private Command defaultCommand =
-            setPattern(blink(Color.kOrange, 1), -1).withName("LEDs.defaultCommand");
-
-    final Trigger defaultTrigger = new Trigger(() -> defaultCommand.isScheduled());
+public class LedLeft extends SpectrumLEDs {
 
     public static class LedConfig extends Config {
-        public LedConfig() {
-            super();
-            setPort(0);
-            setLength(29);
+        public LedConfig(AddressableLED l, AddressableLEDBuffer lb) {
+            super("LEDS Right", l, lb, 28, 57);
             setLedSpacing(Meters.of(1 / 120.0));
         }
     }
 
     protected LedConfig config;
 
-    public Led(LedConfig config) {
+    public LedLeft(LedConfig config) {
         super(config);
         this.config = config;
     }
@@ -38,7 +28,7 @@ public class Led extends SpectrumLEDs {
      */
     @Override
     public void bindTriggers() {
-        LedCommands.bindTriggers();
+        // LedCommands.bindTriggers();
     }
 
     /**
