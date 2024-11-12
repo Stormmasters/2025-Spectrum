@@ -11,23 +11,28 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotTelemetry;
 
 public class Auton {
-    public static final SendableChooser<Command> autonChooser = new SendableChooser<>();
-    public static boolean trackNote = false;
-    public static boolean trackSpeaker = false;
-    public static boolean noteIntaked = false;
-    public static boolean intakeCheck = false;
+    private static final SendableChooser<Command> autonChooser = new SendableChooser<>();
     private static boolean autoMessagePrinted = true;
     private static double autonStart = 0;
 
-    public static void setupSelectors() {
+    /**
+     * Sets up the autonomous mode selectors for the robot.
+     *
+     * <p>This method configures the available autonomous routines that can be selected from the
+     * SmartDashboard. It adds several options to the autonChooser, including: - "Basic Front 4":
+     * Runs the "Basic Front 4" autonomous routine. - "Madtown": Runs the "Madtown" autonomous
+     * routine. - "Do Nothing": Sets the default option to print "Do Nothing Auto ran".
+     *
+     * <p>The selected autonomous routine can be chosen from the SmartDashboard interface.
+     */
+    public void setupSelectors() {
         // Config Autos (Uncomment to use)
         // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto")); // Runs full Auto
         // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto")); // Runs full Auto
 
-        autonChooser.addOption(
-                "Basic Front 4", new PathPlannerAuto("Basic Front 4")); // Runs full Auto
-        autonChooser.addOption("Madtown", new PathPlannerAuto("Madtown")); // Runs full Auto
-        autonChooser.addOption(
+        autonChooser.addOption("Basic Front 4", SpectrumAuton("Basic Front 4")); // Runs full Auto
+        autonChooser.addOption("Madtown", SpectrumAuton("Madtown")); // Runs full Auto
+        autonChooser.setDefaultOption(
                 "Do Nothing", Commands.print("Do Nothing Auto ran")); // Runs full Auto
 
         SmartDashboard.putData("Auto Chooser", autonChooser);
@@ -38,10 +43,27 @@ public class Auton {
         RobotTelemetry.print("Auton Subsystem Initialized: ");
     }
 
-    public static Command getAutonomousCommand() {
-        // return new CharacterizeLauncher(Robot.launcher);
+    /**
+     * Creates a SpectrumAuton command sequence.
+     *
+     * <p>This method generates a command sequence that first waits for 0.01 seconds and then
+     * executes a PathPlannerAuto command with the specified autonomous routine name.
+     *
+     * @param autoName the name of the autonomous routine to execute
+     * @return a Command that represents the SpectrumAuton sequence
+     */
+    public Command SpectrumAuton(String autoName) {
+        return Commands.waitSeconds(0.01).andThen(new PathPlannerAuto(autoName));
+    }
+
+    /**
+     * Retrieves the autonomous command selected on the shuffleboard.
+     *
+     * @return the selected autonomous command if one is chosen; otherwise, returns a PrintCommand
+     *     indicating that the autonomous command is null.
+     */
+    public Command getAutonomousCommand() {
         Command auton = autonChooser.getSelected(); // sees what auto is chosen on shuffleboard
-        // Command auton = new PathPlannerAuto("Madtown");
         if (auton != null) {
             return auton; // checks to make sure there is an auto and if there is it runs an auto
         } else {
@@ -53,9 +75,15 @@ public class Auton {
         }
     }
 
+    /** This method is called in AutonInit */
+    public void startAutonTimer() {
+        autonStart = Timer.getFPGATimestamp();
+        autoMessagePrinted = false;
+    }
+
     /** Called in RobotPeriodic and displays the duration of the auton command Based on 6328 code */
-    public static void printAutoDuration() {
-        Command autoCommand = Auton.getAutonomousCommand();
+    public void printAutoDuration() {
+        Command autoCommand = getAutonomousCommand();
         if (autoCommand != null) {
             if (!autoCommand.isScheduled() && !autoMessagePrinted) {
                 if (DriverStation.isAutonomousEnabled()) {

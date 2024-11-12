@@ -1,79 +1,340 @@
 package frc.spectrumLib.leds;
 
+import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.AddressableLEDBufferView;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDReader;
+import edu.wpi.first.wpilibj.LEDWriter;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.Robot;
+import frc.spectrumLib.SpectrumSubsystem;
+import java.util.Map;
+import java.util.function.DoubleSupplier;
+import lombok.Getter;
+import lombok.Setter;
 
-public class SpectrumLEDs implements Subsystem {
-    // LED IO
-    private AddressableLED leds;
-    private SpectrumLEDBuffer buffer;
-    private boolean update = true;
-    private int counter = 0;
-    private double time = 0;
-    private int length = 0;
+public class SpectrumLEDs implements SpectrumSubsystem {
 
-    public SpectrumLEDs(int port, int length) {
-        leds = new AddressableLED(port);
-        this.length = length;
-        leds.setLength(length);
-        buffer = new SpectrumLEDBuffer(length);
-        leds.setData(buffer.getLEDBuffer());
-        leds.start();
+    // Example Animation List - https://github.com/Aircoookie/WLED/wiki/List-of-effects-and-palettes
+
+    public static class Config {
+        @Getter private String name;
+        @Getter @Setter private boolean attached = true;
+        @Getter @Setter private int port = 0;
+        @Getter @Setter private int length;
+        // LED strip densitry
+        @Getter @Setter private Distance ledSpacing = Meters.of(1 / 120.0);
+
+        @Getter private final Color SPECTRUM_COLOR = new Color(130, 103, 185);
+    }
+
+    @Getter private Config config;
+
+    @Getter protected final AddressableLED led;
+    @Getter protected final AddressableLEDBuffer ledBuffer;
+    protected final LEDPattern defaultPattern =
+            LEDPattern.solid(Color.kOrange).blink(Seconds.of(1));
+
+    @Getter protected final AddressableLEDBufferView firstHalf;
+    @Getter protected final AddressableLEDBufferView secondHalf;
+
+    @Getter protected final LEDPattern rainbow = LEDPattern.rainbow(255, 128);
+
+    @Getter protected final LEDPattern scrollingRainbow;
+
+    public SpectrumLEDs(Config config) {
+        this.config = config;
+
+        // Must be a PWM header, not MXP or DIO
+        led = new AddressableLED(config.port);
+
+        // Reuse buffer
+        // Default to a length of 60, start empty output
+        // Length is expensive to set, so only set it once, then just update data
+        ledBuffer = new AddressableLEDBuffer(config.length);
+        led.setLength(ledBuffer.getLength());
+
+        // Set the data
+        led.setData(ledBuffer);
+        defaultPattern.applyTo(ledBuffer);
+        led.start();
+
+        firstHalf = ledBuffer.createView(0, ledBuffer.getLength() / 2);
+        secondHalf = ledBuffer.createView(ledBuffer.getLength() / 2, ledBuffer.getLength() - 1);
+
+        // Create a new pattern that scrolls the rainbow pattern across the LED strip, moving at a
+        // speed
+        // of 1/4 meter per second.
+        scrollingRainbow =
+                rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.25), config.getLedSpacing());
+
+        Robot.subsystems.add(this);
         CommandScheduler.getInstance().registerSubsystem(this);
     }
 
-    /**
-     * Allows to reconfigure the LEDs after boot. This can be helpful if different robot
-     * configurations have different LEDs
-     */
-    public void setLEDsPortLength(int port, int length) {
-        leds.stop();
-        leds.close();
-        leds = new AddressableLED(port);
-        leds.setLength(length);
-        buffer = new SpectrumLEDBuffer(length);
-        leds.start();
-    }
-
     public void periodic() {
-        // Have our LEDs calculate only every other cycle
-        leds.setData(buffer.getLEDBuffer());
-
-        if (counter % 5 == 0) {
-            time = counter * 0.02;
-        }
-        counter++;
-        if (counter > 500) {
-            counter = 0;
-        }
+        // Set the LEDs
+        led.setData(ledBuffer);
     }
 
-    public void resetPriority() {
-        buffer.resetPriorityBuffer();
+    public boolean isAttached() {
+        return config.isAttached();
     }
 
-    public boolean getUpdate() {
-        return update;
+    public AddressableLEDBufferView createView(int startingIndex, int endingIndex) {
+        return ledBuffer.createView(startingIndex, endingIndex);
     }
 
-    public double getLEDTime() {
-        return time;
+    public Command setPattern(LEDPattern pattern) {
+        return run(() -> pattern.applyTo(ledBuffer))
+                .ignoringDisable(true)
+                .withName("LEDs.setPattern");
     }
 
-    public void setLED(int i, Color c, int priority) {
-        buffer.setLED(i, c, priority);
-        buffer.setLED(i + length / 2, c, priority);
+    public Command setPattern(LEDPattern pattern, AddressableLEDBufferView view) {
+        return run(() -> pattern.applyTo(view)).ignoringDisable(true).withName("LEDSs.setPattern");
     }
 
-    public void setLED(int i, int r, int g, int b, int priority) {
-        buffer.setLED(i, new Color(r, g, b), priority);
-        buffer.setLED(i + length / 2, new Color(r, g, b), priority);
+    @Override
+    public void bindTriggers() {
+        // TODO Auto-generated method stub
     }
 
-    public void setHSV(int i, int h, int s, int v, int priority) {
-        buffer.setHSV(i, h, s, v, priority);
-        buffer.setHSV(i + length / 2, h, s, v, priority);
+    @Override
+    public void setupDefaultCommand() {
+        setDefaultCommand(setPattern(scrollingRainbow));
     }
+
+    /**
+     * LED Patter Stripe, takes in a double perecent and sets the first length number of LEDs to one
+     * color and the rest of the strip to another
+     */
+    public LEDPattern stripe(double percent, Color color1, Color color2) {
+        return LEDPattern.steps(Map.of(0.00, color1, percent, color2));
+    }
+
+    /**
+     * Scrolls the given LED pattern at the specified speed.
+     *
+     * @param pattern the LEDPattern to be scrolled
+     * @param speedMps the speed at which the pattern should scroll, in meters per second
+     * @return a new LEDPattern that represents the scrolled pattern
+     */
+    public LEDPattern scroll(LEDPattern pattern, double speedMps) {
+        return pattern.scrollAtAbsoluteSpeed(MetersPerSecond.of(speedMps), config.getLedSpacing());
+    }
+
+    /**
+     * Creates an LED chase pattern with the specified color, percentage, and speed.
+     *
+     * @param color1 The color to be used in the chase pattern.
+     * @param percent The percentage of the pattern that will be the specified color.
+     * @param speed The speed at which the pattern will scroll, in Hertz.
+     * @return An LEDPattern object representing the chase pattern.
+     */
+    public LEDPattern chase(Color color1, double percent, double speed) {
+        return LEDPattern.steps(Map.of(0.00, color1, percent, Color.kBlack))
+                .scrollAtRelativeSpeed(Frequency.ofBaseUnits(speed, Hertz));
+    }
+
+    /**
+     * Creates a bouncing LED pattern with the specified color and duration.
+     *
+     * @param c the color of the bouncing LED
+     * @param durationInSeconds the duration of one complete bounce cycle in seconds
+     * @return an LEDPattern that applies the bouncing effect to the LEDs
+     */
+    public LEDPattern bounce(Color c, double durationInSeconds) {
+        return new LEDPattern() {
+            @Override
+            public void applyTo(LEDReader reader, LEDWriter writer) {
+                int bufLen = reader.getLength();
+                long currentTime = System.currentTimeMillis();
+                double cycleTime =
+                        durationInSeconds
+                                * 1000; // Convert time to milliseconds for the entire cycle
+                double phase =
+                        (currentTime % cycleTime) / cycleTime; // Phase of the cycle from 0 to 1
+
+                // Determine direction and position based on the phase
+                boolean backwards = phase > 0.5;
+                double position = backwards ? 2 * (1 - phase) : 2 * phase;
+                int ledPosition = (int) (position * bufLen);
+
+                for (int led = 0; led < bufLen; led++) {
+                    if (led == ledPosition) {
+                        writer.setLED(led, c);
+                    } else if (led == ledPosition - 1 || led == ledPosition + 1) {
+                        writer.setLED(led, new Color(c.red * 0.66, c.green * 0.66, c.blue * 0.66));
+                    } else if (led == ledPosition - 2 || led == ledPosition + 2) {
+                        writer.setLED(led, new Color(c.red * 0.33, c.green * 0.33, c.blue * 0.33));
+                    } else {
+                        writer.setLED(led, Color.kBlack);
+                    }
+                }
+            };
+        };
+    }
+
+    /**
+     * Creates an ombre LED pattern that transitions smoothly between two colors.
+     *
+     * @param startColor The starting color of the ombre effect.
+     * @param endColor The ending color of the ombre effect.
+     * @return An LEDPattern that applies the ombre effect to the LED strip.
+     */
+    public LEDPattern ombre(Color startColor, Color endColor) {
+        return new LEDPattern() {
+            @Override
+            public void applyTo(LEDReader reader, LEDWriter writer) {
+                int bufLen = reader.getLength();
+                long currentTime = System.currentTimeMillis();
+                // The speed factor here determines how quickly the ombre moves along the strip
+                double phaseShift =
+                        (currentTime / 1000.0)
+                                * 0.58 // this is the speed, the higher the number the faster the
+                                // ombre moves
+                                % 1.0; // Modulo 1 to keep the phase within [0, 1]
+                for (int led = 0; led < bufLen; led++) {
+                    // Adjust ratio to include the phaseShift, causing the ombre to move
+                    double ratio =
+                            (double)
+                                    ((led + (bufLen * phaseShift))
+                                            / bufLen
+                                            % 1.0); // Modulo 1 to ensure the ratio loops within [0,
+                    // 1]
+
+                    // Interpolate the red, green, and blue components separately using double
+                    // precision
+                    double red = (startColor.red * (1 - ratio)) + (endColor.red * ratio);
+                    double green = (startColor.green * (1 - ratio)) + (endColor.green * ratio);
+                    double blue = (startColor.blue * (1 - ratio)) + (endColor.blue * ratio);
+
+                    // Create a new color for the current LED
+                    Color currentColor = new Color(red, green, blue);
+
+                    // Set the color of the current LED
+                    writer.setLED(led, currentColor);
+                }
+            };
+        };
+    }
+
+    /**
+     * Creates a wave LED pattern that transitions between two colors over a specified cycle length
+     * of LEDs and duration.
+     *
+     * @param c1 The first color in the wave pattern.
+     * @param c2 The second color in the wave pattern.
+     * @param cycleLength The length of the wave cycle in terms of LEDs.
+     * @param durationSecs The duration of the entire wave pattern in seconds.
+     * @return An LEDPattern that applies the wave effect to the LEDs.
+     */
+    public LEDPattern wave(Color c1, Color c2, double cycleLength, double durationSecs) {
+        return new LEDPattern() {
+            @Override
+            public void applyTo(LEDReader reader, LEDWriter writer) {
+                int bufLen = reader.getLength();
+                double currentTime = Timer.getFPGATimestamp();
+                double phase = (currentTime % durationSecs) / durationSecs;
+                double x = (1 - phase) * 2.0 * Math.PI;
+                double xDiffPerLed = (2.0 * Math.PI) / cycleLength;
+                double waveExponent = 0.4;
+
+                for (int led = 0; led < bufLen; led++) {
+                    x += xDiffPerLed;
+
+                    double ratio = (Math.pow(Math.sin(x), waveExponent) + 1.0) / 2.0;
+                    if (Double.isNaN(ratio)) {
+                        ratio = (-Math.pow(Math.sin(x + Math.PI), waveExponent) + 1.0) / 2.0;
+                    }
+                    if (Double.isNaN(ratio)) {
+                        ratio = 0.5;
+                    }
+                    double red = (c1.red * (1 - ratio)) + (c2.red * ratio);
+                    double green = (c1.green * (1 - ratio)) + (c2.green * ratio);
+                    double blue = (c1.blue * (1 - ratio)) + (c2.blue * ratio);
+                    writer.setLED(led, new Color(red, green, blue));
+                }
+            }
+        };
+    }
+
+    /**
+     * Creates an LEDPattern that represents a countdown effect. The countdown starts from a
+     * specified time and lasts for a given duration. During the countdown, the LEDs transition from
+     * yellow to red, and progressively turn off from the end of the strip towards the beginning.
+     *
+     * @param countStartTimeSec A DoubleSupplier that provides the start time of the countdown in
+     *     seconds.
+     * @param durationInSeconds The total duration of the countdown in seconds.
+     * @return An LEDPattern that applies the countdown effect to the LEDs.
+     */
+    public LEDPattern countdown(DoubleSupplier countStartTimeSec, double durationInSeconds) {
+        double startTime = countStartTimeSec.getAsDouble();
+        return new LEDPattern() {
+            @Override
+            public void applyTo(LEDReader reader, LEDWriter writer) {
+                int bufLen = reader.getLength();
+                double currentTimeSecs = Timer.getFPGATimestamp();
+                double elapsedTimeInSeconds = currentTimeSecs - startTime;
+
+                // Calculate the progress of the countdown
+                double progress = elapsedTimeInSeconds / durationInSeconds;
+
+                // Calculate the number of LEDs to turn off based on the progress
+                int ledsToTurnOff = (int) (bufLen * progress);
+
+                // Calculate the color transition from yellow to red based on the progress
+                // Yellow (255, 255, 0) to Red (255, 0, 0)
+                int red = 255; // Red component stays at 255
+                int green = (int) (255 * (1 - progress)); // Green component decreases to 0
+                Color countdownColor = new Color(red, green, 0);
+
+                // Update the LEDs from the end of the strip towards the beginning
+                for (int led = bufLen - 1; led >= 0; led--) {
+                    if (bufLen - led <= ledsToTurnOff) {
+                        // Turn off the LEDs progressively
+                        writer.setLED(led, Color.kBlack);
+                    } else {
+                        // Set the remaining LEDs to the countdown color
+                        writer.setLED(led, countdownColor);
+                    }
+                }
+
+                // If the countdown is complete, ensure all LEDs are turned off
+                if (progress >= 1.0) {
+                    for (int i = 0; i < bufLen; i++) {
+                        writer.setLED(i, Color.kBlack);
+                    }
+                }
+            }
+        };
+    }
+
+    // LEDPattern Methods
+    // reversed()
+    // offsetBy(int offset)
+    // scrollAtAbsoluteSpeed(Distance speed, Distance spacing)
+    // scrollAtRelativeSpeed(Frequency velocity)
+    // blink(Time onTime, Time offTime)
+    // synchronizedBlink(BooleanSupplier signal)
+    // breathe(Time period)
+    // overlayOn(LEDPattern base)
+    // blend(LEDPattern other)
+    // mask(LEDPattern mask)
+    // atBrightness(Dimensionless relativeBrightness)
+    // solid(Color color)
+    // progressMaskLayer(DoubleSupplier progressSupplier)
+    // steps(Map<? extends Number, Color> steps)
+    // gradient(GradientType type, Color... colors)
+    // rainbow(int saturation, int value)
 }
