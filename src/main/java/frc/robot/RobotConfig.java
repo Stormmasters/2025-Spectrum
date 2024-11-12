@@ -8,7 +8,7 @@ import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.configs.ULTRAVIOLET2024;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.launcher.Launcher.LauncherConfig;
-import frc.robot.leds.Led.LedConfig;
+import frc.robot.leds.LedFull.LedFullConfig;
 import frc.robot.pilot.Pilot.PilotConfig;
 import frc.robot.pivot.Pivot.PivotConfig;
 import frc.robot.swerve.SwerveConfig;
@@ -20,7 +20,7 @@ public class RobotConfig {
         public ClimberConfig climber;
         public ElevatorConfig elevator;
         public LauncherConfig launcher;
-        public LedConfig leds;
+        public LedFullConfig leds;
         public PilotConfig pilot;
         public PivotConfig pivot;
 
@@ -29,7 +29,7 @@ public class RobotConfig {
             climber = new ClimberConfig();
             elevator = new ElevatorConfig();
             launcher = new LauncherConfig();
-            leds = new LedConfig();
+            leds = new LedFullConfig();
             pilot = new PilotConfig();
             pivot = new PivotConfig();
         }
