@@ -16,7 +16,7 @@ public class Led extends SpectrumLEDs {
             setPattern(LEDPattern.solid(Color.kOrange).blink(Seconds.of(1)))
                     .withName("LEDs.defaultCommand");
 
-    final Trigger defaultTrigger;
+    final Trigger defaultTrigger = new Trigger(() -> defaultCommand.isScheduled());
 
     public static class LedConfig extends Config {
         public LedConfig() {
@@ -32,14 +32,15 @@ public class Led extends SpectrumLEDs {
     public Led(LedConfig config) {
         super(config);
         this.config = config;
-
-        defaultTrigger = new Trigger(() -> defaultCommand.isScheduled());
     }
 
+    /**
+     * Binds the triggers for the LED commands. This method overrides the bindTriggers method to
+     * ensure that the LED commands are properly bound to their respective triggers.
+     */
     @Override
     public void bindTriggers() {
         LedCommands.bindTriggers();
-        // TODO Auto-generated method stub
     }
 
     /**

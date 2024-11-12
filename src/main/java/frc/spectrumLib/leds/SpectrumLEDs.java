@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.LEDReader;
 import edu.wpi.first.wpilibj.LEDWriter;
 import edu.wpi.first.wpilibj.Timer;
@@ -32,23 +33,18 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         @Getter @Setter private int length;
         // LED strip densitry
         @Getter @Setter private Distance ledSpacing = Meters.of(1 / 120.0);
-
-        @Getter private final Color SPECTRUM_COLOR = new Color(130, 103, 185);
     }
 
     @Getter private Config config;
 
     @Getter protected final AddressableLED led;
     @Getter protected final AddressableLEDBuffer ledBuffer;
-    protected final LEDPattern defaultPattern =
-            LEDPattern.solid(Color.kOrange).blink(Seconds.of(1));
+    protected final LEDPattern defaultPattern = solid(Color.kOrange).blink(Seconds.of(1));
 
-    @Getter protected final AddressableLEDBufferView firstHalf;
-    @Getter protected final AddressableLEDBufferView secondHalf;
+    @Getter protected LEDPattern currentPattern = defaultPattern;
 
-    @Getter protected final LEDPattern rainbow = LEDPattern.rainbow(255, 128);
-
-    @Getter protected final LEDPattern scrollingRainbow;
+    public final Color purple = new Color(130, 103, 185);
+    public final Color white = Color.kWhite;
 
     public SpectrumLEDs(Config config) {
         this.config = config;
@@ -66,15 +62,6 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         led.setData(ledBuffer);
         defaultPattern.applyTo(ledBuffer);
         led.start();
-
-        firstHalf = ledBuffer.createView(0, ledBuffer.getLength() / 2);
-        secondHalf = ledBuffer.createView(ledBuffer.getLength() / 2, ledBuffer.getLength() - 1);
-
-        // Create a new pattern that scrolls the rainbow pattern across the LED strip, moving at a
-        // speed
-        // of 1/4 meter per second.
-        scrollingRainbow =
-                rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.25), config.getLedSpacing());
 
         Robot.subsystems.add(this);
         CommandScheduler.getInstance().registerSubsystem(this);
@@ -94,23 +81,20 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     }
 
     public Command setPattern(LEDPattern pattern) {
-        return run(() -> pattern.applyTo(ledBuffer))
+        currentPattern = pattern;
+        return run(() -> currentPattern.applyTo(ledBuffer))
                 .ignoringDisable(true)
                 .withName("LEDs.setPattern");
     }
 
-    public Command setPattern(LEDPattern pattern, AddressableLEDBufferView view) {
-        return run(() -> pattern.applyTo(view)).ignoringDisable(true).withName("LEDSs.setPattern");
-    }
-
     @Override
-    public void bindTriggers() {
-        // TODO Auto-generated method stub
-    }
+    public void bindTriggers() {}
 
     @Override
     public void setupDefaultCommand() {
-        setDefaultCommand(setPattern(scrollingRainbow));
+        setDefaultCommand(
+                setPattern(solid(Color.kOrange))
+                        .withName("SPECTRUM LED DEFAULT COMMAND SHOULD NOT BE RUNNING"));
     }
 
     /**
@@ -119,6 +103,71 @@ public class SpectrumLEDs implements SpectrumSubsystem {
      */
     public LEDPattern stripe(double percent, Color color1, Color color2) {
         return LEDPattern.steps(Map.of(0.00, color1, percent, color2));
+    }
+
+    /**
+     * Creates a solid LED pattern with the specified color.
+     *
+     * @param color the color to be used for the solid LED pattern
+     * @return an LEDPattern object representing the solid color pattern
+     */
+    public LEDPattern solid(Color color) {
+        return LEDPattern.solid(color);
+    }
+
+    /**
+     * Creates an LED pattern that blinks with the specified on-time duration.
+     *
+     * @param onTime the duration (in seconds) for which the LED stays on during each blink cycle
+     * @return an LEDPattern that blinks with the specified on-time duration
+     */
+    public LEDPattern blink(Color c, double onTime) {
+        return solid(c).blink(Seconds.of(onTime));
+    }
+
+    /**
+     * Creates a breathing LED pattern with the specified period.
+     *
+     * @param period The period of the breathing effect in seconds.
+     * @return An LEDPattern object representing the breathing effect.
+     */
+    public LEDPattern breathe(Color c, double period) {
+        return solid(c).breathe(Seconds.of(period));
+    }
+
+    /**
+     * Creates and returns a rainbow LED pattern with specified brightness and saturation.
+     *
+     * @return an LEDPattern object representing a rainbow pattern with maximum brightness (255) and
+     *     medium saturation (128).
+     */
+    public LEDPattern rainbow() {
+        return rainbow(255, 128);
+    }
+
+    public LEDPattern scrollingRainbow() {
+        return rainbow().scrollAtAbsoluteSpeed(MetersPerSecond.of(0.25), config.getLedSpacing());
+    }
+
+    /**
+     * Generates a rainbow LED pattern with the specified saturation and value.
+     *
+     * @param saturation the saturation level of the rainbow pattern (0-255)
+     * @param value the brightness value of the rainbow pattern (0-255)
+     * @return an LEDPattern object representing the rainbow pattern
+     */
+    public LEDPattern rainbow(int saturation, int value) {
+        return LEDPattern.rainbow(saturation, value);
+    }
+
+    /**
+     * Creates a gradient LED pattern using the specified colors.
+     *
+     * @param colors The array of colors to be used in the gradient pattern.
+     * @return An LEDPattern object representing the gradient pattern.
+     */
+    public LEDPattern gradient(Color... colors) {
+        return LEDPattern.gradient(GradientType.kContinuous, colors);
     }
 
     /**
@@ -332,9 +381,6 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     // blend(LEDPattern other)
     // mask(LEDPattern mask)
     // atBrightness(Dimensionless relativeBrightness)
-    // solid(Color color)
     // progressMaskLayer(DoubleSupplier progressSupplier)
     // steps(Map<? extends Number, Color> steps)
-    // gradient(GradientType type, Color... colors)
-    // rainbow(int saturation, int value)
 }
