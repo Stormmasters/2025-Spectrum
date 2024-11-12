@@ -17,27 +17,28 @@ public class LedCommands {
 
         // Elevator Led Commands
         Robot.getElevator().isUp().and(Util.teleop).whileTrue(LedCommands.elevatorUpPattern());
+        Robot.getPilot().X.and(Util.teleop).whileTrue(leds.setPattern(leds.rainbow(), 3));
     }
 
     static Command disabledPattern() {
-        return leds.setPattern(leds.ombre(leds.purple, leds.white))
+        return leds.setPattern(leds.ombre(leds.purple, leds.white), -1)
                 .withName("LEDs.disabledPattern");
     };
 
     static Command teleopPattern() {
-        return leds.setPattern(leds.bounce(leds.purple, 3)).withName("LEDs.teleopPattern");
+        return leds.setPattern(leds.bounce(leds.purple, 3), -1).withName("LEDs.teleopPattern");
     };
 
     static Command autoPattern() {
-        return leds.setPattern(leds.countdown(() -> Timer.getFPGATimestamp(), 15))
+        return leds.setPattern(leds.countdown(() -> Timer.getFPGATimestamp(), 15), -1)
                 .withName("LEDs.autoPattern");
     };
 
     static Command testModePattern() {
-        return leds.setPattern(leds.chase(Color.kRed, 0.2, 1)).withName("LEDs.testModePattern");
+        return leds.setPattern(leds.chase(Color.kRed, 0.2, 1), -1).withName("LEDs.testModePattern");
     }
 
     static Command elevatorUpPattern() {
-        return leds.setPattern(leds.blink(Color.kOrange, 0.25)).withName("LEDs.elevatorUpPattern");
+        return leds.setPattern(leds.blink(Color.kBlue, 0.25), 6).withName("LEDs.elevatorUpPattern");
     }
 }
