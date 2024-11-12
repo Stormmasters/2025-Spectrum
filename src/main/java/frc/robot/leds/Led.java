@@ -18,8 +18,8 @@ public class Led extends SpectrumLEDs {
 
     final Trigger defaultTrigger;
 
-    public static class LedsConfig extends Config {
-        public LedsConfig() {
+    public static class LedConfig extends Config {
+        public LedConfig() {
             super();
             setPort(0);
             setLength(29);
@@ -27,9 +27,9 @@ public class Led extends SpectrumLEDs {
         }
     }
 
-    protected LedsConfig config;
+    protected LedConfig config;
 
-    public Led(LedsConfig config) {
+    public Led(LedConfig config) {
         super(config);
         this.config = config;
 

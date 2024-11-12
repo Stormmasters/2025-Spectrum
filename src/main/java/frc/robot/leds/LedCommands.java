@@ -7,12 +7,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.leds.Led.LedsConfig;
+import frc.robot.leds.Led.LedConfig;
 import frc.spectrumLib.util.Util;
 
 public class LedCommands {
     private static Led leds = Robot.getLeds();
-    private static LedsConfig config = Robot.getConfig().leds;
+    private static LedConfig config = Robot.getConfig().leds;
 
     public static void bindTriggers() {
         leds.defaultTrigger.and(Util.disabled, Util.dsAttached).onTrue(disabledPattern());
