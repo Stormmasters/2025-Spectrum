@@ -29,11 +29,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Scheduler": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Swerve Field": {
         "bottom": 1476,
         "height": 8.210550308227539,

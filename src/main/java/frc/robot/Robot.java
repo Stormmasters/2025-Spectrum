@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
 
     @Getter private static Elevator elevator;
     @Getter private static Launcher launcher;
+    // @Getter private static LEDs leds;
     @Getter private static LEDs leds;
     @Getter private static Pilot pilot;
     @Getter private static Pivot pivot;

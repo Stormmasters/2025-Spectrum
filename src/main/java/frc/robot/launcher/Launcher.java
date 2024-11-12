@@ -1,7 +1,6 @@
 package frc.robot.launcher;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import frc.robot.RobotConfig;
@@ -12,7 +11,6 @@ import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
 import lombok.Getter;
 
-@Logged
 public class Launcher extends Mechanism {
 
     public static class LauncherConfig extends Config {
