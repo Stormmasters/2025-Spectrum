@@ -30,6 +30,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     public static class Config {
         @Getter private String name;
         @Getter @Setter private boolean attached = true;
+        @Getter @Setter private AddressableLED fullStrip;
         @Getter @Setter private int port = 0;
         @Getter @Setter private int length;
         // LED strip densitry
@@ -51,7 +52,11 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         this.config = config;
 
         // Must be a PWM header, not MXP or DIO
-        led = new AddressableLED(config.port);
+        if (config.getFullStrip() == null) {
+            led = new AddressableLED(config.port);
+        } else {
+            led = config.getFullStrip();
+        }
 
         // Reuse buffer
         // Default to a length of 60, start empty output
