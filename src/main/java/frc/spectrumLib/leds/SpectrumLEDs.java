@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.spectrumLib.SpectrumSubsystem;
 import java.util.Map;
@@ -39,10 +40,8 @@ public class SpectrumLEDs implements SpectrumSubsystem {
 
     @Getter protected final AddressableLED led;
     @Getter protected final AddressableLEDBuffer ledBuffer;
-    protected final LEDPattern defaultPattern = solid(Color.kOrange).blink(Seconds.of(1));
+    protected final LEDPattern defaultPattern = solid(Color.kRed).blink(Seconds.of(1));
 
-    @Getter @Setter private LEDPattern currentPattern = defaultPattern;
-    @Getter @Setter private Command currentCommand = null;
     @Getter @Setter private int commandPriority = 0;
 
     public final Color purple = new Color(130, 103, 185);
@@ -82,29 +81,15 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         return ledBuffer.createView(startingIndex, endingIndex);
     }
 
+    public Trigger checkPriority(int priority) {
+        return new Trigger(() -> commandPriority <= priority);
+    }
+
     public Command setPattern(LEDPattern pattern, int priority) {
         return run(() -> {
-                    if (priority < 0) {
-                        currentPattern = pattern;
-                        commandPriority = priority;
-                        currentCommand = this.getCurrentCommand();
-                        currentPattern.applyTo(ledBuffer);
-                    } else if (priority >= commandPriority) {
-                        currentPattern = pattern;
-                        commandPriority = priority;
-                        currentCommand = this.getCurrentCommand();
-                        currentPattern.applyTo(ledBuffer);
-                    } else {
-                        currentCommand.schedule();
-                    }
+                    commandPriority = priority;
+                    pattern.applyTo(ledBuffer);
                 })
-                .finallyDo(
-                        (interrupted) -> {
-                            if (!interrupted) {
-                                currentPattern = defaultPattern;
-                                commandPriority = 0;
-                            }
-                        })
                 .ignoringDisable(true)
                 .withName("LEDs.setPattern");
     }

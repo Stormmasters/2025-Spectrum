@@ -30,7 +30,6 @@ public class Led extends SpectrumLEDs {
     public Led(LedConfig config) {
         super(config);
         this.config = config;
-        setCurrentCommand(defaultCommand);
     }
 
     /**
