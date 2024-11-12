@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.spectrumLib.SpectrumSubsystem;
 import java.util.Map;
@@ -39,9 +40,9 @@ public class SpectrumLEDs implements SpectrumSubsystem {
 
     @Getter protected final AddressableLED led;
     @Getter protected final AddressableLEDBuffer ledBuffer;
-    protected final LEDPattern defaultPattern = solid(Color.kOrange).blink(Seconds.of(1));
+    protected final LEDPattern defaultPattern = solid(Color.kRed).blink(Seconds.of(1));
 
-    @Getter protected LEDPattern currentPattern = defaultPattern;
+    @Getter @Setter private int commandPriority = 0;
 
     public final Color purple = new Color(130, 103, 185);
     public final Color white = Color.kWhite;
@@ -60,7 +61,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
 
         // Set the data
         led.setData(ledBuffer);
-        defaultPattern.applyTo(ledBuffer);
+        setPattern(defaultPattern);
         led.start();
 
         Robot.subsystems.add(this);
@@ -80,11 +81,21 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         return ledBuffer.createView(startingIndex, endingIndex);
     }
 
-    public Command setPattern(LEDPattern pattern) {
-        currentPattern = pattern;
-        return run(() -> currentPattern.applyTo(ledBuffer))
+    public Trigger checkPriority(int priority) {
+        return new Trigger(() -> commandPriority <= priority);
+    }
+
+    public Command setPattern(LEDPattern pattern, int priority) {
+        return run(() -> {
+                    commandPriority = priority;
+                    pattern.applyTo(ledBuffer);
+                })
                 .ignoringDisable(true)
                 .withName("LEDs.setPattern");
+    }
+
+    public Command setPattern(LEDPattern pattern) {
+        return setPattern(pattern, 0);
     }
 
     @Override
@@ -93,7 +104,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     @Override
     public void setupDefaultCommand() {
         setDefaultCommand(
-                setPattern(solid(Color.kOrange))
+                setPattern(solid(Color.kOrange), 0)
                         .withName("SPECTRUM LED DEFAULT COMMAND SHOULD NOT BE RUNNING"));
     }
 
