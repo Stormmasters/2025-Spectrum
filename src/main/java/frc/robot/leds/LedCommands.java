@@ -18,7 +18,7 @@ public class LedCommands {
 
         // Elevator Led Commands
         elevatorUpLED(Robot.getElevator().isUp().and(Util.teleop), 6);
-        xButtonLED(Robot.getPilot().X.and(Util.teleop), 3);
+        xButtonLED(Robot.getPilot().X, 3);
     }
 
     /** Default LED commands for each mode */
@@ -53,10 +53,10 @@ public class LedCommands {
     }
 
     static void elevatorUpLED(Trigger trigger, int priority) {
-        ledCommand("LEDs.ElevatorUp", priority, leds.blink(Color.kBlue, 0.25), trigger);
+        ledCommand("LEDs.ElevatorUp", leds.blink(Color.kBlue, 0.25), priority, trigger);
     }
 
     static void xButtonLED(Trigger trigger, int priority) {
-        ledCommand("LEDs.XButton", priority, leds.rainbow(), trigger);
+        ledCommand("LEDs.XButton", leds.rainbow(), priority, trigger);
     }
 }
