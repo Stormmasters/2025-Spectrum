@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 public class AutoPaths {
     public static Command madtown() {
-        return AutonCommands.pathfindingCommandToPose(
+        return AutonStates.pathfindingCommandToPose(
                         1.410, 3.650, -180, 6,
                         6) // moves robot to auto starting pos (cords from pathplanner)
                 .andThen(Commands.waitSeconds(1)) // waits before starting desired auto

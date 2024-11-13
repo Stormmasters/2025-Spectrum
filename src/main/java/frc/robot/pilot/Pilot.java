@@ -42,7 +42,8 @@ public class Pilot extends Gamepad {
     public Trigger intake_A;
     public Trigger manual_Y;
     public Trigger upReorient, leftReorient, downReorient, rightReorient;
-    public Trigger stickSteer;
+    public Trigger stickSteer, fpv;
+    public Trigger coast;
     public Trigger tuneElevator;
 
     /** Create a new Pilot with the default name and port. */
@@ -53,12 +54,13 @@ public class Pilot extends Gamepad {
         RobotTelemetry.print("Pilot Subsystem Initialized: ");
     }
 
-    public void bindTriggers() {
-        // Left Blank so we can bind when the controller is connected
+    public void setupStates() {
+        // Used for setting rumble and control mode states only
+        PilotStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        PilotCommands.setupDefaultCommand();
+        PilotStates.setupDefaultCommand();
     }
 
     /** Setup the Buttons for telop mode. */
@@ -87,6 +89,10 @@ public class Pilot extends Gamepad {
                 fn.and(
                         rightXTrigger(Threshold.ABS_GREATER, 0.5)
                                 .or(rightYTrigger(Threshold.ABS_GREATER, 0.5)));
+
+        fpv = rightStick; // Remapped to Right back button
+
+        coast = B;
     };
 
     // DRIVE METHODS

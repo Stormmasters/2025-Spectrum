@@ -87,12 +87,12 @@ public class Elevator extends Mechanism {
     @Override
     public void periodic() {}
 
-    public void bindTriggers() {
-        ElevatorCommands.bindTriggers();
+    public void setupStates() {
+        ElevatorStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        ElevatorCommands.setupDefaultCommand();
+        ElevatorStates.setupDefaultCommand();
     }
 
     /*-------------------

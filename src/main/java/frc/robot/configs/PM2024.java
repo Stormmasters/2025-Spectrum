@@ -1,6 +1,6 @@
 package frc.robot.configs;
 
-public class PM2024 extends ULTRAVIOLET2024 {
+public class PM2024 extends FM2024 {
 
     // We should be able to configure default LED colors per robot, so we know the right config is
     // loading

@@ -1,6 +1,7 @@
 package frc.robot.swerve;
 
 import static edu.wpi.first.units.Units.*;
+import static frc.robot.RobotStates.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -11,7 +12,7 @@ import frc.robot.RobotConfig.RobotType;
 import frc.robot.pilot.Pilot;
 import java.util.function.DoubleSupplier;
 
-public class SwerveCommands {
+public class SwerveStates {
     static Swerve swerve = Robot.getSwerve();
     static SwerveConfig config = Robot.getConfig().swerve;
     static Pilot pilot = Robot.getPilot();
@@ -22,14 +23,23 @@ public class SwerveCommands {
             // Robot.swerve.setDefaultCommand(PhotonPilotCommands.pilotDrive());
             // return;
         }
-        swerve.setDefaultCommand(pilotDrive());
-        // .withTimeout(0.5)
-        // .andThen(headingLockDrive())
-        // .ignoringDisable(true)
-        // .withName("SwerveCommands.default"));
+        swerve.setDefaultCommand(
+                pilotDrive()
+                        .withTimeout(0.5)
+                        .andThen(headingLockDrive())
+                        .ignoringDisable(true)
+                        .withName("SwerveCommands.default"));
     }
 
-    protected static void bindTriggers() {
+    protected static void setStates() {
+
+        // TODO: Should have a method that flips the angle based on allinace color
+        ampReady.whileTrue(pilotAimDrive(() -> 90));
+
+        // TODO:Should replace with method that gives us angle to the speaker
+        preSpeaker.whileTrue(pilotAimDrive(() -> 0));
+
+        pilot.fpv.whileTrue(fpvDrive());
         pilot.stickSteer.whileTrue(stickSteerDrive());
 
         pilot.upReorient.onTrue(reorientForward());
@@ -38,10 +48,7 @@ public class SwerveCommands {
         pilot.rightReorient.onTrue(reorientRight());
     }
 
-    /**
-     * ************************************************************************* Pilot Commands
-     * ************************************************************************
-     */
+    /** Pilot Commands ************************************************************************ */
     /**
      * Drive the robot using left stick and control orientation using the right stick Only Cardinal
      * directions are allowed
@@ -70,6 +77,11 @@ public class SwerveCommands {
                         pilot::getDriveLeftPositive,
                         pilot::getDriveCCWPositive)
                 .withName("Swerve.PilotFPVDrive");
+    }
+
+    protected static Command pilotAimDrive(DoubleSupplier targetDegrees) {
+        return aimDrive(pilot::getDriveFwdPositive, pilot::getDriveLeftPositive, targetDegrees)
+                .withName("Swerve.PilotAimDrive");
     }
 
     // TODO: Snake Drive, where the robot moves in the direction of the left stick, but the

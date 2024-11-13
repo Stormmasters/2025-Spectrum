@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
-public class AutonCommands {
+public class AutonStates {
     public static Command followSinglePath(String PathName) {
         // Load the path you want to follow using its name in the GUI
         PathPlannerPath path;

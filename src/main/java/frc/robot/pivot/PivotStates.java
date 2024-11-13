@@ -1,26 +1,29 @@
 package frc.robot.pivot;
 
+import static frc.robot.RobotStates.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.pilot.Pilot;
 import frc.robot.pivot.Pivot.PivotConfig;
 import frc.spectrumLib.util.TuneValue;
 import java.util.function.DoubleSupplier;
 
-public class PivotCommands {
+public class PivotStates {
     private static Pivot pivot = Robot.getPivot();
     private static PivotConfig config = Robot.getConfig().pivot;
-    private static Pilot pilot = Robot.getPilot();
 
     public static void setupDefaultCommand() {
         pivot.setDefaultCommand(
                 pivot.runHoldPivot().ignoringDisable(true).withName("Pivot.default"));
     }
 
-    public static void bindTriggers() {
+    public static void setupStates() {
         // missing bindTriggers
-        pilot.amp_B.whileTrue(subwoofer());
-        pilot.retract_X.whileTrue(home());
+        intaking.whileTrue(subwoofer());
+        ampReady.whileTrue(home());
+
+        coast.get().whileTrue(coastMode());
+        brake.whileTrue(ensureBrakeMode());
     }
 
     // missing distance based pivot commands

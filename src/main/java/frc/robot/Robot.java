@@ -109,8 +109,8 @@ public class Robot extends TimedRobot {
         pilot.resetConfig();
 
         // Bind Triggers for all subsystmes
-        subsystems.forEach(SpectrumSubsystem::bindTriggers);
-        States.setupStatesTriggers();
+        subsystems.forEach(SpectrumSubsystem::setupStates);
+        RobotStates.setupStates();
     }
 
     public void clearCommandsAndButtons() {
@@ -118,8 +118,8 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().getActiveButtonLoop().clear();
 
         // Bind Triggers for all subsystmes
-        subsystems.forEach(SpectrumSubsystem::bindTriggers);
-        States.setupStatesTriggers();
+        subsystems.forEach(SpectrumSubsystem::setupStates);
+        RobotStates.setupStates();
     }
 
     @Override // Depricated

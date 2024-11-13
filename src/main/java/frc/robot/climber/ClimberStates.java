@@ -7,7 +7,7 @@ import frc.robot.pilot.Pilot;
 import frc.spectrumLib.util.TuneValue;
 import java.util.function.DoubleSupplier;
 
-public class ClimberCommands {
+public class ClimberStates {
     private static Climber climber = Robot.getClimber();
     private static ClimberConfig config = Robot.getConfig().climber;
     private static Pilot pilot = Robot.getPilot();
@@ -16,7 +16,7 @@ public class ClimberCommands {
         climber.setDefaultCommand(holdPosition().ignoringDisable(true).withName("Climber.default"));
     }
 
-    public static void bindTriggers() {
+    public static void setStates() {
         // missing bindTriggers
         pilot.amp_B.whileTrue(fullExtend());
         pilot.retract_X.whileTrue(home());

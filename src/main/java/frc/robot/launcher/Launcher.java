@@ -52,12 +52,12 @@ public class Launcher extends Mechanism {
         RobotTelemetry.print(getName() + " Subsystem Initialized");
     }
 
-    public void bindTriggers() {
-        LauncherCommands.bindTriggers();
+    public void setupStates() {
+        LauncherStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        LauncherCommands.setupDefaultCommand();
+        LauncherStates.setupDefaultCommand();
     }
 
     @Override

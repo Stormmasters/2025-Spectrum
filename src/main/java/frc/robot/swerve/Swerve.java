@@ -91,12 +91,12 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         fieldSim.setRobotPose(getRobotPose());
     }
 
-    public void bindTriggers() {
-        SwerveCommands.bindTriggers();
+    public void setupStates() {
+        SwerveStates.setStates();
     };
 
     public void setupDefaultCommand() {
-        SwerveCommands.setupDefaultCommand();
+        SwerveStates.setupDefaultCommand();
     };
 
     /**
