@@ -3,11 +3,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.configs.ULTRAVIOLET2024;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.launcher.Launcher.LauncherConfig;
-import frc.robot.leds.LEDsConfig;
+import frc.robot.leds.LedFull.LedFullConfig;
 import frc.robot.operator.Operator.OperatorConfig;
 import frc.robot.pilot.Pilot.PilotConfig;
 import frc.robot.pivot.Pivot.PivotConfig;
@@ -20,7 +21,7 @@ public class RobotConfig {
         public ClimberConfig climber;
         public ElevatorConfig elevator;
         public LauncherConfig launcher;
-        public LEDsConfig leds;
+        public LedFullConfig leds;
         public OperatorConfig operator;
         public PilotConfig pilot;
         public PivotConfig pivot;
@@ -30,7 +31,7 @@ public class RobotConfig {
             climber = new ClimberConfig();
             elevator = new ElevatorConfig();
             launcher = new LauncherConfig();
-            leds = new LEDsConfig();
+            leds = new LedFullConfig();
             operator = new OperatorConfig();
             pilot = new PilotConfig();
             pivot = new PivotConfig();
@@ -43,6 +44,11 @@ public class RobotConfig {
     public final String ALPHA2024SERIAL = "032B1F69";
     public final String PM2024SERIAL = "03223839";
     public final String ULTRAVIOLET2024SERIAL = "032B1F69"; // "0329AD07";
+
+    // RobotType Triggers
+    public final Trigger PM = new Trigger(() -> getRobotType() == RobotType.PM);
+    public final Trigger ALPHA = new Trigger(() -> getRobotType() == RobotType.ALPHA);
+    public final Trigger ULTRAVIOLET = new Trigger(() -> getRobotType() == RobotType.ULTRAVIOLET);
 
     public static final String CANIVORE = "*"; // CANbus name is 3847
     public static final String RIO_CANBUS = "rio";

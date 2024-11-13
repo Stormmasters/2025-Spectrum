@@ -23,12 +23,9 @@ public class AutonCommands {
             // markers.
             return AutoBuilder.followPath(path);
         } catch (FileVersionException | IOException | ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return new PrintCommand(
-                "ERROR LOADING PATH"); // TODO Check if this is right from a pathplanner template or
-        // something
+        return new PrintCommand("ERROR LOADING PATH");
     }
 
     public static Command pathfindingCommandToPose(

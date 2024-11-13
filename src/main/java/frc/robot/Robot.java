@@ -7,13 +7,12 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotConfig.ConfigHolder;
 import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
 import frc.robot.elevator.Elevator;
 import frc.robot.launcher.Launcher;
-import frc.robot.leds.LEDs;
+import frc.robot.leds.LedFull;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.pivot.Pivot;
@@ -38,7 +37,8 @@ public class Robot extends TimedRobot {
     @Getter private static Climber climber;
     @Getter private static Elevator elevator;
     @Getter private static Launcher launcher;
-    @Getter private static LEDs leds;
+    // @Getter private static LEDs leds;
+    @Getter private static LedFull leds;
     @Getter private static Operator operator;
     @Getter private static Pilot pilot;
     @Getter private static Pivot pivot;
@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
              */
             double canInitDelay = 0.1; // Delay between any mechanism with motor/can configs
 
-            leds = new LEDs(config.leds);
+            leds = new LedFull(config.leds);
             operator = new Operator(config.operator);
             pilot = new Pilot(config.pilot);
             swerve = new Swerve(config.swerve);
@@ -118,6 +118,10 @@ public class Robot extends TimedRobot {
     public void clearCommandsAndButtons() {
         CommandScheduler.getInstance().cancelAll(); // Disable any currently running commands
         CommandScheduler.getInstance().getActiveButtonLoop().clear();
+
+        // Bind Triggers for all subsystmes
+        subsystems.forEach(SpectrumSubsystem::bindTriggers);
+        RobotCommands.setupRobotTriggers();
     }
 
     @Override // Depricated
@@ -152,15 +156,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         RobotTelemetry.print("### Disabled Init Starting ### ");
-
         resetCommandsAndButtons();
-
-        /*if (!AutonConfig.commandInit) {
-            Command AutonStartCommand =
-                    FollowPathCommand.warmupCommand().andThen(PathfindingCommand.warmupCommand());
-            AutonStartCommand.schedule();
-            AutonConfig.commandInit = true;
-        }*/
 
         RobotTelemetry.print("### Disabled Init Complete ### ");
     }
@@ -187,11 +183,11 @@ public class Robot extends TimedRobot {
         try {
             RobotTelemetry.print("@@@ Auton Init Starting @@@ ");
             clearCommandsAndButtons();
-            Command autonCommand = Commands.waitSeconds(0.01).andThen(Auton.getAutonomousCommand());
+            Command autonCommand = auton.getAutonomousCommand();
 
             if (autonCommand != null) {
                 autonCommand.schedule();
-                // Auton.startAutonTimer();
+                auton.startAutonTimer();
             } else {
                 RobotTelemetry.print("No Auton Command Found");
             }
@@ -211,6 +207,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousExit() {
+        auton.printAutoDuration();
         RobotTelemetry.print("@@@ Auton Exit @@@ ");
     }
 
