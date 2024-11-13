@@ -51,8 +51,7 @@ public class SysID {
                                 (roationalRate) ->
                                         swerve.setControl(
                                                 RotationCharacterization.withRotationalRate(
-                                                        roationalRate
-                                                                .baseUnitMagnitude())),
+                                                        roationalRate.baseUnitMagnitude())),
                                 // it actual
                                 // rotational rate
                                 null,

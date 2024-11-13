@@ -25,8 +25,7 @@ public class AutonCommands {
         } catch (FileVersionException | IOException | ParseException e) {
             e.printStackTrace();
         }
-        return new PrintCommand(
-                "ERROR LOADING PATH");
+        return new PrintCommand("ERROR LOADING PATH");
     }
 
     public static Command pathfindingCommandToPose(
