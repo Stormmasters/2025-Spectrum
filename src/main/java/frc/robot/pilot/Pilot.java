@@ -37,13 +37,13 @@ public class Pilot extends Gamepad {
 
     // Triggers, these would be robot states such as ampReady, intake, visionAim, subwooferShot,
     // launch, etc.
-    @Getter private Trigger fn, noFn, scoreFn; // These are our function keys to overload buttons
-    @Getter private Trigger activate_B, retract_X;
-    @Getter private Trigger intake_A;
-    @Getter private Trigger manual_Y;
-    @Getter private Trigger upReorient, leftReorient, downReorient, rightReorient;
-    @Getter private Trigger stickSteer;
-    @Getter private Trigger tuneElevator;
+    public Trigger fn, noFn, scoreFn; // These are our function keys to overload buttons
+    public Trigger amp_B, retract_X;
+    public Trigger intake_A;
+    public Trigger manual_Y;
+    public Trigger upReorient, leftReorient, downReorient, rightReorient;
+    public Trigger stickSteer;
+    public Trigger tuneElevator;
 
     /** Create a new Pilot with the default name and port. */
     public Pilot(PilotConfig config) {
@@ -69,7 +69,7 @@ public class Pilot extends Gamepad {
         scoreFn = fn.or(bothBumpers);
 
         intake_A = A.and(noFn, teleop);
-        activate_B = B.and(noFn, teleop);
+        amp_B = B.and(noFn, teleop);
         retract_X = X.and(noFn, teleop);
         manual_Y = Y.and(noFn, teleop);
 

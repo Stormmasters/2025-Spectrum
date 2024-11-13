@@ -110,7 +110,7 @@ public class Robot extends TimedRobot {
 
         // Bind Triggers for all subsystmes
         subsystems.forEach(SpectrumSubsystem::bindTriggers);
-        RobotCommands.setupRobotTriggers();
+        States.setupStatesTriggers();
     }
 
     public void clearCommandsAndButtons() {
@@ -119,7 +119,7 @@ public class Robot extends TimedRobot {
 
         // Bind Triggers for all subsystmes
         subsystems.forEach(SpectrumSubsystem::bindTriggers);
-        RobotCommands.setupRobotTriggers();
+        States.setupStatesTriggers();
     }
 
     @Override // Depricated

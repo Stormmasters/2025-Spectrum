@@ -18,8 +18,8 @@ public class ClimberCommands {
 
     public static void bindTriggers() {
         // missing bindTriggers
-        pilot.getActivate_B().whileTrue(fullExtend());
-        pilot.getRetract_X().whileTrue(home());
+        pilot.amp_B.whileTrue(fullExtend());
+        pilot.retract_X.whileTrue(home());
     }
 
     public static Command runClimber(DoubleSupplier speed) {

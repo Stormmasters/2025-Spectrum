@@ -30,12 +30,12 @@ public class SwerveCommands {
     }
 
     protected static void bindTriggers() {
-        pilot.getStickSteer().whileTrue(stickSteerDrive());
+        pilot.stickSteer.whileTrue(stickSteerDrive());
 
-        pilot.getUpReorient().onTrue(reorientForward());
-        pilot.getLeftReorient().onTrue(reorientLeft());
-        pilot.getDownReorient().onTrue(reorientBack());
-        pilot.getRightReorient().onTrue(reorientRight());
+        pilot.upReorient.onTrue(reorientForward());
+        pilot.leftReorient.onTrue(reorientLeft());
+        pilot.downReorient.onTrue(reorientBack());
+        pilot.rightReorient.onTrue(reorientRight());
     }
 
     /**

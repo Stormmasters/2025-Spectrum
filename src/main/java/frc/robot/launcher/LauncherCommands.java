@@ -16,8 +16,8 @@ public class LauncherCommands {
     }
 
     public static void bindTriggers() {
-        pilot.getActivate_B().whileTrue(runVelocity(config::getMaxVelocityRpm));
-        pilot.getRetract_X().whileTrue(runVelocity(() -> -1 * config.getMaxVelocityRpm()));
+        pilot.amp_B.whileTrue(runVelocity(config::getMaxVelocityRpm));
+        pilot.retract_X.whileTrue(runVelocity(() -> -1 * config.getMaxVelocityRpm()));
     }
 
     public static Command runVelocity(DoubleSupplier velocityRPM) {

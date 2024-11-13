@@ -19,12 +19,12 @@ public class ElevatorCommands {
 
     public static void bindTriggers() {
         // pilot = Robot.getPilot();
-        pilot.getActivate_B().whileTrue(fullExtend());
-        pilot.getRetract_X().whileTrue(home());
-        pilot.getManual_Y().whileTrue(runElevator(pilot::getElevatorManualAxis));
+        pilot.amp_B.whileTrue(fullExtend());
+        pilot.retract_X.whileTrue(home());
+        pilot.manual_Y.whileTrue(runElevator(pilot::getElevatorManualAxis));
 
         // Test Mode Buttons
-        pilot.getTuneElevator().whileTrue(tuneElevator());
+        pilot.tuneElevator.whileTrue(tuneElevator());
     }
 
     public static Command runElevator(DoubleSupplier speed) {
