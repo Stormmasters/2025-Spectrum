@@ -72,6 +72,10 @@ public class SwerveCommands {
                 .withName("Swerve.PilotFPVDrive");
     }
 
+    // TODO: Snake Drive, where the robot moves in the direction of the left stick, but the
+    // orientation is controlled by the direction the left stick is pointing, so intake is always
+    // pointing where the robot is moving
+
     protected static Command headingLockDrive() {
         return headingLock(pilot::getDriveFwdPositive, pilot::getDriveLeftPositive)
                 .withName("Swerve.PilotHeadingLockDrive");

@@ -274,7 +274,7 @@ public class Limelight {
         return LimelightHelpers.getLatestResults(config.name);
     }
 
-    /** @param pipelineIndex use pipeline indexes in {@link VisionConfig} //TODO: come back */
+    /** @param pipelineIndex use pipeline indexes in {@link VisionConfig} */
     public void setLimelightPipeline(int pipelineIndex) {
         if (!isAttached()) {
             return;
