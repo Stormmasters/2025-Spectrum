@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.elevator.ElevatorStates;
 import frc.spectrumLib.leds.SpectrumLEDs;
 import frc.spectrumLib.util.Util;
 
@@ -20,7 +21,7 @@ public class LedCommands {
         testModePattern(Util.testMode.and(Util.dsAttached));
 
         // Elevator Led Commands
-        elevatorUpLED(Robot.getElevator().isUp().and(Util.teleop), 6);
+        elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
         xButtonLED(Robot.getPilot().X, 3);
     }
 

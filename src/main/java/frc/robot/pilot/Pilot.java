@@ -8,33 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Pilot extends Gamepad {
-    public static class PilotConfig extends Config {
-
-        @Getter @Setter private double slowModeScalor = 0.45;
-        @Getter @Setter private double defaultTurnScalor = 0.75;
-        @Getter @Setter private double turboModeScalor = 1;
-        private double deadzone = 0.001;
-
-        public PilotConfig() {
-            super("Pilot", 0);
-
-            setLeftStickDeadzone(deadzone);
-            setLeftStickExp(2.0);
-            setLeftStickScalor(6);
-
-            setRightStickDeadzone(deadzone);
-            setRightStickExp(2.0);
-            setRightStickScalor(12);
-
-            setTriggersDeadzone(deadzone);
-            setTriggersExp(1);
-            setTriggersScalor(1);
-        }
-    }
-
-    private PilotConfig config;
-    @Getter @Setter private boolean isSlowMode = false;
-    @Getter @Setter private boolean isTurboMode = false;
 
     // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
     // If tirggers need any of the config values set them in the constructor
@@ -73,6 +46,34 @@ public class Pilot extends Gamepad {
 
     // TEST TRIGGERS
     public final Trigger tuneElevator_tB = testMode.and(B);
+
+    public static class PilotConfig extends Config {
+
+        @Getter @Setter private double slowModeScalor = 0.45;
+        @Getter @Setter private double defaultTurnScalor = 0.75;
+        @Getter @Setter private double turboModeScalor = 1;
+        private double deadzone = 0.001;
+
+        public PilotConfig() {
+            super("Pilot", 0);
+
+            setLeftStickDeadzone(deadzone);
+            setLeftStickExp(2.0);
+            setLeftStickScalor(6);
+
+            setRightStickDeadzone(deadzone);
+            setRightStickExp(2.0);
+            setRightStickScalor(12);
+
+            setTriggersDeadzone(deadzone);
+            setTriggersExp(1);
+            setTriggersScalor(1);
+        }
+    }
+
+    private PilotConfig config;
+    @Getter @Setter private boolean isSlowMode = false;
+    @Getter @Setter private boolean isTurboMode = false;
 
     /** Create a new Pilot with the default name and port. */
     public Pilot(PilotConfig config) {

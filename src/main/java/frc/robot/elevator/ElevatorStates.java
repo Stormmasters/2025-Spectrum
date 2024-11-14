@@ -3,6 +3,8 @@ package frc.robot.elevator;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.pilot.Pilot;
@@ -14,16 +16,30 @@ public class ElevatorStates {
     private static ElevatorConfig config = Robot.getConfig().elevator;
     private static Pilot pilot = Robot.getPilot();
 
+    /* Check Elevator States */
+    // Is Amp Height
+    public static final Trigger isAtAmp =
+            new Trigger(
+                    () -> {
+                        double ampThreshold = config.getAmp() * config.getAmpTolerance();
+                        return elevator.getMotorPosition() > ampThreshold;
+                    });
+
+    public static final Trigger isUp =
+            new Trigger(() -> (elevator.getMotorPosition() >= config.getElevatorUpHeight()));
+
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(
                 holdPosition().ignoringDisable(true).withName("Elevator.default"));
     }
 
     public static void setStates() {
-        // pilot = Robot.getPilot();
-        ampPrep.whileTrue(fullExtend());
+        // Test statements to show how these triggers work
+        isAtAmp.onTrue(Commands.print("At Amp Height"));
+        isUp.onTrue(Commands.print("Elevator Up"));
+
+        ampPrep.whileTrue(amp());
         score.onFalse(home()); // Return home whne we stop the scoring action
-        // pilot.manual_Y.whileTrue(runElevator(pilot::getElevatorManualAxis));
 
         // Test Mode Buttons
         pilot.tuneElevator_tB.whileTrue(tuneElevator());
