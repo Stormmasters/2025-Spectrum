@@ -20,10 +20,9 @@ public class PivotStates {
     public static void setupStates() {
         // missing bindTriggers
         intaking.whileTrue(subwoofer());
-        ampReady.whileTrue(home());
+        ampPrep.whileTrue(home());
 
-        coast.get().whileTrue(coastMode());
-        brake.whileTrue(ensureBrakeMode());
+        coastMode.whileTrue(coastMode());
     }
 
     // missing distance based pivot commands

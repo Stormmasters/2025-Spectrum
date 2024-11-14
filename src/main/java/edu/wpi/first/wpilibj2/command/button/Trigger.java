@@ -31,6 +31,7 @@ public class Trigger implements BooleanSupplier {
     private final BooleanSupplier m_condition;
     private final EventLoop m_loop;
     public static final Trigger kFalse = new Trigger(() -> false);
+    public static final Trigger kTrue = new Trigger(() -> true);
 
     /**
      * Creates a new trigger based on the given condition.

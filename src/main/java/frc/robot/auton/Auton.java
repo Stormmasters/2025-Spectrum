@@ -1,6 +1,14 @@
 package frc.robot.auton;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -9,38 +17,55 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotTelemetry;
+import java.io.IOException;
+import org.json.simple.parser.ParseException;
 
 public class Auton {
-    private static final SendableChooser<Command> autonChooser = new SendableChooser<>();
-    private static boolean autoMessagePrinted = true;
-    private static double autonStart = 0;
+
+    // Setup EventTriggers
+    // Should all be public static final
+    public static final EventTrigger autonIntake = new EventTrigger("intake");
+    public static final EventTrigger autonSpitReady = new EventTrigger("spitReady");
+    public static final EventTrigger autonScore = new EventTrigger("score");
+
+    private final SendableChooser<Command> pathChooser = new SendableChooser<>();
+    private boolean autoMessagePrinted = true;
+    private double autonStart = 0;
 
     /**
-     * Sets up the autonomous mode selectors for the robot.
-     *
-     * <p>This method configures the available autonomous routines that can be selected from the
-     * SmartDashboard. It adds several options to the autonChooser, including: - "Basic Front 4":
-     * Runs the "Basic Front 4" autonomous routine. - "Madtown": Runs the "Madtown" autonomous
-     * routine. - "Do Nothing": Sets the default option to print "Do Nothing Auto ran".
-     *
-     * <p>The selected autonomous routine can be chosen from the SmartDashboard interface.
+     * This method configures the available autonomous routines that can be selected from the
+     * SmartDashboard.
      */
     public void setupSelectors() {
-        // Config Autos (Uncomment to use)
-        // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto")); // Runs full Auto
-        // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto")); // Runs full Auto
 
-        autonChooser.addOption("Basic Front 4", SpectrumAuton("Basic Front 4")); // Runs full Auto
-        autonChooser.addOption("Madtown", SpectrumAuton("Madtown")); // Runs full Auto
-        autonChooser.setDefaultOption(
-                "Do Nothing", Commands.print("Do Nothing Auto ran")); // Runs full Auto
+        pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
+        // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto"));
+        // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto"));
 
-        SmartDashboard.putData("Auto Chooser", autonChooser);
+        pathChooser.addOption("Basic Front 4", SpectrumAuton("Basic Front 4"));
+        pathChooser.addOption("Madtown", SpectrumAuton("Madtown"));
+
+        SmartDashboard.putData("Auto Chooser", pathChooser);
     }
 
     public Auton() {
         setupSelectors(); // runs the command to start the chooser for auto on shuffleboard
         RobotTelemetry.print("Auton Subsystem Initialized: ");
+    }
+
+    public void init() {
+        Command autonCommand = getAutonomousCommand();
+
+        if (autonCommand != null) {
+            autonCommand.schedule();
+            startAutonTimer();
+        } else {
+            RobotTelemetry.print("No Auton Command Found");
+        }
+    }
+
+    public void exit() {
+        printAutoDuration();
     }
 
     /**
@@ -63,7 +88,7 @@ public class Auton {
      *     indicating that the autonomous command is null.
      */
     public Command getAutonomousCommand() {
-        Command auton = autonChooser.getSelected(); // sees what auto is chosen on shuffleboard
+        Command auton = pathChooser.getSelected(); // sees what auto is chosen on shuffleboard
         if (auton != null) {
             return auton; // checks to make sure there is an auto and if there is it runs an auto
         } else {
@@ -81,7 +106,7 @@ public class Auton {
         autoMessagePrinted = false;
     }
 
-    /** Called in RobotPeriodic and displays the duration of the auton command Based on 6328 code */
+    /** Called at AutonExit and displays the duration of the auton command Based on 6328 code */
     public void printAutoDuration() {
         Command autoCommand = getAutonomousCommand();
         if (autoCommand != null) {
@@ -100,5 +125,40 @@ public class Auton {
                 autoMessagePrinted = true;
             }
         }
+    }
+
+    public static Command followSinglePath(String PathName) {
+        // Load the path you want to follow using its name in the GUI
+        PathPlannerPath path;
+        try {
+            path = PathPlannerPath.fromPathFile(PathName);
+
+            // Create a path following command using AutoBuilder. This will also trigger event
+            // markers.
+            return AutoBuilder.followPath(path);
+        } catch (FileVersionException | IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        return new PrintCommand("ERROR LOADING PATH");
+    }
+
+    public static Command pathfindingCommandToPose(
+            double xPos, double yPos, double rotation, double vel, double accel) {
+        // Since we are using a holonomic drivetrain, the rotation component of this pose
+        // represents the goal holonomic rotation
+        Pose2d targetPose = new Pose2d(xPos, yPos, Rotation2d.fromDegrees(rotation));
+
+        // Create the constraints to use while pathfinding
+        PathConstraints constraints =
+                new PathConstraints(
+                        vel, accel, Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+        // Since AutoBuilder is configured, we can use it to build pathfinding commands
+        Command pathfindingCommand =
+                AutoBuilder.pathfindToPoseFlipped(
+                        targetPose, constraints, 0.0 // Goal end velocity in meters/sec
+                        );
+
+        return pathfindingCommand;
     }
 }

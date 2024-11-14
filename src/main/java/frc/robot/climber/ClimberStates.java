@@ -1,5 +1,7 @@
 package frc.robot.climber;
 
+import static frc.robot.RobotStates.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.climber.Climber.ClimberConfig;
@@ -17,8 +19,7 @@ public class ClimberStates {
     }
 
     public static void setStates() {
-        // missing bindTriggers
-        pilot.amp_B.whileTrue(fullExtend());
+        ampPrep.whileTrue(fullExtend());
         pilot.retract_X.whileTrue(home());
     }
 

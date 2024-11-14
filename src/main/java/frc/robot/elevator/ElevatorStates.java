@@ -21,15 +21,15 @@ public class ElevatorStates {
 
     public static void setStates() {
         // pilot = Robot.getPilot();
-        ampReady.whileTrue(amp());
+        ampPrep.whileTrue(fullExtend());
         score.onFalse(home()); // Return home whne we stop the scoring action
         // pilot.manual_Y.whileTrue(runElevator(pilot::getElevatorManualAxis));
 
         // Test Mode Buttons
-        pilot.tuneElevator.whileTrue(tuneElevator());
+        pilot.tuneElevator_tB.whileTrue(tuneElevator());
 
-        coast.get().onTrue(coastMode());
-        coast.get().onFalse(ensureBrakeMode());
+        coastMode.onTrue(coastMode());
+        coastMode.onFalse(ensureBrakeMode());
     }
 
     public static Command runElevator(DoubleSupplier speed) {

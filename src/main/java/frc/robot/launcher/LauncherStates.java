@@ -19,8 +19,8 @@ public class LauncherStates {
         intaking.whileTrue(runVelocity(config::getMaxVelocityRpm));
         ejecting.whileTrue(runVelocity(() -> -1 * config.getMaxVelocityRpm()));
 
-        coast.get().onTrue(coastMode());
-        coast.get().onFalse(ensureBrakeMode());
+        coastMode.onTrue(coastMode());
+        coastMode.onFalse(ensureBrakeMode());
     }
 
     public static Command runVelocity(DoubleSupplier velocityRPM) {

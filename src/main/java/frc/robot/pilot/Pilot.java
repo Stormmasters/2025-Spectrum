@@ -13,19 +13,20 @@ public class Pilot extends Gamepad {
         @Getter @Setter private double slowModeScalor = 0.45;
         @Getter @Setter private double defaultTurnScalor = 0.75;
         @Getter @Setter private double turboModeScalor = 1;
+        private double deadzone = 0.001;
 
         public PilotConfig() {
             super("Pilot", 0);
 
-            setLeftStickDeadzone(0);
+            setLeftStickDeadzone(deadzone);
             setLeftStickExp(2.0);
             setLeftStickScalor(6);
 
-            setRightStickDeadzone(0);
+            setRightStickDeadzone(deadzone);
             setRightStickExp(2.0);
-            setRightStickScalor(3);
+            setRightStickScalor(12);
 
-            setTriggersDeadzone(0);
+            setTriggersDeadzone(deadzone);
             setTriggersExp(1);
             setTriggersScalor(1);
         }
@@ -35,22 +36,57 @@ public class Pilot extends Gamepad {
     @Getter @Setter private boolean isSlowMode = false;
     @Getter @Setter private boolean isTurboMode = false;
 
-    // Triggers, these would be robot states such as ampReady, intake, visionAim, subwooferShot,
-    // launch, etc.
-    public Trigger fn, noFn, scoreFn; // These are our function keys to overload buttons
-    public Trigger amp_B, retract_X;
-    public Trigger intake_A;
-    public Trigger manual_Y;
-    public Trigger upReorient, leftReorient, downReorient, rightReorient;
-    public Trigger stickSteer, fpv;
-    public Trigger coast;
-    public Trigger tuneElevator;
+    // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
+    // If tirggers need any of the config values set them in the constructor
+    /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simualation */
+    public final Trigger fn = leftBumper;
+    public final Trigger noFn = fn.not();
+    public final Trigger intake_A = A.and(noFn, teleop);
+    public final Trigger eject_fA = A.and(fn, teleop);
+    public final Trigger ampPrep_B = B; // .and(noFn, teleop);
+    public final Trigger score_RB = rightBumper.and(teleop);
+    public final Trigger launchPrep_RT = rightTrigger.and(noFn, teleop);
+    public final Trigger subwooferPrep_fRT = rightTrigger.and(fn, teleop);
+    public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
+    public final Trigger climbRoutine_start = start.and(noFn, teleop);
+
+    public final Trigger retract_X = X.and(noFn, teleop);
+    public final Trigger manual_Y = Y.and(noFn, teleop);
+
+    // Drive Triggers
+    public final Trigger upReorient = upDpad.and(fn, teleop);
+    public final Trigger leftReorient = leftDpad.and(fn, teleop);
+    public final Trigger downReorient = downDpad.and(fn, teleop);
+    public final Trigger rightReorient = rightDpad.and(fn, teleop);
+
+    /* Use the right stick to set a cardinal direction to aim at */
+    public final Trigger driving;
+    public final Trigger steer;
+
+    public final Trigger snapSteer = Trigger.kFalse;
+
+    public final Trigger fpv_rs = rightStick.and(teleop); // Remapped to Right back button
+
+    // DISABLED TRIGGERS
+    public final Trigger coastOn_dB = disabled.and(B);
+    public final Trigger coastOff_dA = disabled.and(A);
+
+    // TEST TRIGGERS
+    public final Trigger tuneElevator_tB = testMode.and(B);
 
     /** Create a new Pilot with the default name and port. */
     public Pilot(PilotConfig config) {
         super(config);
         this.config = config;
         Robot.subsystems.add(this);
+
+        driving =
+                leftXTrigger(Threshold.ABS_GREATER, config.deadzone)
+                        .or(leftYTrigger(Threshold.ABS_GREATER, config.deadzone));
+        steer =
+                rightXTrigger(Threshold.ABS_GREATER, config.deadzone)
+                        .or(rightYTrigger(Threshold.ABS_GREATER, config.deadzone));
+
         RobotTelemetry.print("Pilot Subsystem Initialized: ");
     }
 
@@ -62,38 +98,6 @@ public class Pilot extends Gamepad {
     public void setupDefaultCommand() {
         PilotStates.setupDefaultCommand();
     }
-
-    /** Setup the Buttons for telop mode. */
-    /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simualation */
-    public void setupTriggers() {
-        fn = leftBumperOnly;
-        noFn = fn.not();
-        scoreFn = fn.or(bothBumpers);
-
-        intake_A = A.and(noFn, teleop);
-        amp_B = B.and(noFn, teleop);
-        retract_X = X.and(noFn, teleop);
-        manual_Y = Y.and(noFn, teleop);
-
-        // Drive Triggers
-        upReorient = upDpad.and(fn, teleop);
-        leftReorient = leftDpad.and(fn, teleop);
-        downReorient = downDpad.and(fn, teleop);
-        rightReorient = rightDpad.and(fn, teleop);
-
-        // TEST TRIGGERS
-        tuneElevator = testMode.and(B);
-
-        /* Use the right stick to set a cardinal direction to aim at */
-        stickSteer =
-                fn.and(
-                        rightXTrigger(Threshold.ABS_GREATER, 0.5)
-                                .or(rightYTrigger(Threshold.ABS_GREATER, 0.5)));
-
-        fpv = rightStick; // Remapped to Right back button
-
-        coast = B;
-    };
 
     // DRIVE METHODS
     public void setMaxVelocity(double maxVelocity) {
@@ -135,7 +139,7 @@ public class Pilot extends Gamepad {
         } else {
             ccwPositive *= Math.abs(config.getDefaultTurnScalor());
         }
-        return ccwPositive;
+        return -1 * ccwPositive; // invert the value
     }
 
     // ELEVATOR METHODS
