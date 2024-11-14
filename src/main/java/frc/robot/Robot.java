@@ -51,6 +51,8 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         DataLogManager.start();
+        DataLogManager.logNetworkTables(true);
+        DataLogManager.logConsoleOutput(true);
         DriverStation.silenceJoystickConnectionWarning(true);
         try {
             RobotTelemetry.print("--- Robot Init Starting ---");
