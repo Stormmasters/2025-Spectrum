@@ -136,7 +136,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     }
 
     @Override
-    public void bindTriggers() {}
+    public void setupStates() {}
 
     @Override
     public void setupDefaultCommand() {

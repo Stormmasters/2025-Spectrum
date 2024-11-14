@@ -1,5 +1,7 @@
 package frc.robot.elevator;
 
+import static frc.robot.RobotStates.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.elevator.Elevator.ElevatorConfig;
@@ -7,7 +9,7 @@ import frc.robot.pilot.Pilot;
 import frc.spectrumLib.util.TuneValue;
 import java.util.function.DoubleSupplier;
 
-public class ElevatorCommands {
+public class ElevatorStates {
     private static Elevator elevator = Robot.getElevator();
     private static ElevatorConfig config = Robot.getConfig().elevator;
     private static Pilot pilot = Robot.getPilot();
@@ -17,14 +19,17 @@ public class ElevatorCommands {
                 holdPosition().ignoringDisable(true).withName("Elevator.default"));
     }
 
-    public static void bindTriggers() {
+    public static void setStates() {
         // pilot = Robot.getPilot();
-        pilot.getActivate_B().whileTrue(fullExtend());
-        pilot.getRetract_X().whileTrue(home());
-        pilot.getManual_Y().whileTrue(runElevator(pilot::getElevatorManualAxis));
+        ampPrep.whileTrue(fullExtend());
+        score.onFalse(home()); // Return home whne we stop the scoring action
+        // pilot.manual_Y.whileTrue(runElevator(pilot::getElevatorManualAxis));
 
         // Test Mode Buttons
-        pilot.getTuneElevator().whileTrue(tuneElevator());
+        pilot.tuneElevator_tB.whileTrue(tuneElevator());
+
+        coastMode.onTrue(coastMode());
+        coastMode.onFalse(ensureBrakeMode());
     }
 
     public static Command runElevator(DoubleSupplier speed) {

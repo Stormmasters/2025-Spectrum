@@ -154,12 +154,12 @@ public class Pivot extends Mechanism {
     @Override
     public void periodic() {}
 
-    public void bindTriggers() {
-        PivotCommands.bindTriggers();
+    public void setupStates() {
+        PivotStates.setupStates();
     }
 
     public void setupDefaultCommand() {
-        PivotCommands.setupDefaultCommand();
+        PivotStates.setupDefaultCommand();
     }
 
     /*-------------------

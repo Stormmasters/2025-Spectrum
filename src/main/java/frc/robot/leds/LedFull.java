@@ -31,7 +31,7 @@ public class LedFull extends SpectrumLEDs {
      * ensure that the LED commands are properly bound to their respective triggers.
      */
     @Override
-    public void bindTriggers() {
+    public void setupStates() {
         LedCommands.bindTriggers();
     }
 

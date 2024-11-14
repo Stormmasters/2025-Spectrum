@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -141,6 +142,8 @@ public abstract class Gamepad implements SpectrumSubsystem {
             leftDpad = xboxController.povLeft();
             rightDpad = xboxController.povRight();
         }
+
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     @Override
@@ -161,10 +164,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
                     return;
                 }
 
-                // Configure button bindings once the driver controller is connected
-                setupTriggers();
                 configured = true;
-
                 Telemetry.print("## " + getName() + ": gamepad is connected ##");
             }
         }
@@ -462,6 +462,4 @@ public abstract class Gamepad implements SpectrumSubsystem {
         getRumbleHID().setRumble(RumbleType.kLeftRumble, leftIntensity);
         getRumbleHID().setRumble(RumbleType.kRightRumble, rightIntensity);
     }
-
-    public abstract void setupTriggers();
 }

@@ -10,6 +10,7 @@ package frc.crescendo;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import lombok.Getter;
 
 /**
@@ -26,7 +27,9 @@ import lombok.Getter;
 public class Field {
 
     @Getter private static final double fieldLength = Units.inchesToMeters(651.223);
+    @Getter private static final double halfLengh = fieldLength / 2.0;
     @Getter private static final double fieldWidth = Units.inchesToMeters(323.277);
+    @Getter private static final double halfWidth = fieldWidth / 2.0;
     @Getter private static final double wingX = Units.inchesToMeters(229.201);
     @Getter private static final double podiumX = Units.inchesToMeters(126.75);
     @Getter private static final double startingLineX = Units.inchesToMeters(74.111);
@@ -165,14 +168,14 @@ public class Field {
 
         @Getter
         private static final Pose2d ampClimb =
-                new Pose2d(12.265, 5.042, Rotation2d.fromDegrees(Field.flipAngleIfBlue(60)));
+                new Pose2d(12.265, 5.042, Rotation2d.fromDegrees(Field.flipAimAngleIfBlue(60)));
 
         @Getter
         private static final Pose2d centerClimb =
                 new Pose2d(
                         ampLeg.getX(),
                         center.getY(),
-                        Rotation2d.fromDegrees(Field.flipAngleIfBlue(180)));
+                        Rotation2d.fromDegrees(Field.flipAimAngleIfBlue(180)));
     }
 
     @Getter private static final double aprilTagWidth = Units.inchesToMeters(6.50);
@@ -189,12 +192,31 @@ public class Field {
         return !isBlue();
     }
 
+    public static final Trigger red = new Trigger(() -> isRed());
+    public static final Trigger blue = new Trigger(() -> isBlue());
+
     // Flip the angle if we are blue, as we are setting things for a red driver station angle
-    public static double flipAngleIfBlue(double redAngleDegs) {
+    // This flips the left and right side for aiming purposes
+    public static double flipAimAngleIfBlue(double redAngleDegs) {
         if (Field.isBlue()) {
             return 180 - redAngleDegs;
         }
         return redAngleDegs;
+    }
+
+    // This flips the true angle of the robot if we are blue
+    public static double flipTrueAngleIfBlue(double redAngleDegs) {
+        if (Field.isBlue()) {
+            return (180 + redAngleDegs) % 360;
+        }
+        return redAngleDegs;
+    }
+
+    public static double flipTrueAngleIfRed(double blueAngleDegs) {
+        if (Field.isRed()) {
+            return (180 + blueAngleDegs) % 360;
+        }
+        return blueAngleDegs;
     }
 
     public static Rotation2d flipAngleIfRed(Rotation2d blue) {
@@ -226,6 +248,14 @@ public class Field {
         return xCoordinate;
     }
 
+    // If we are red flip the y pose to the other side of the field
+    public static double flipYifRed(double yCoordinate) {
+        if (Field.isRed()) {
+            return Field.fieldWidth - yCoordinate;
+        }
+        return yCoordinate;
+    }
+
     public static boolean poseOutOfField(Pose2d pose2D) {
         double x = pose2D.getX();
         double y = pose2D.getY();
@@ -235,10 +265,4 @@ public class Field {
     public static boolean poseOutOfField(Pose3d pose3D) {
         return poseOutOfField(pose3D.toPose2d());
     }
-
-    // public static final AprilTagFieldLayout aprilTags;
-
-    // static {
-    //   aprilTags = Constants.aprilTagType.getLayoutSupplier().get();
-    // }
 }

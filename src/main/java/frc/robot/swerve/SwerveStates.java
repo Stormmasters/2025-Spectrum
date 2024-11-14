@@ -1,20 +1,28 @@
 package frc.robot.swerve;
 
 import static edu.wpi.first.units.Units.*;
+import static frc.robot.RobotStates.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.crescendo.Field;
 import frc.robot.Robot;
 import frc.robot.RobotConfig.RobotType;
+import frc.robot.RobotTelemetry;
 import frc.robot.pilot.Pilot;
+import frc.spectrumLib.SpectrumState;
 import java.util.function.DoubleSupplier;
 
-public class SwerveCommands {
+public class SwerveStates {
     static Swerve swerve = Robot.getSwerve();
     static SwerveConfig config = Robot.getConfig().swerve;
     static Pilot pilot = Robot.getPilot();
+
+    static Command pilotSteerCommand =
+            pilotDrive().ignoringDisable(true).withName("SwerveCommands.pilotSteer");
+    static SpectrumState steeringLock = new SpectrumState("SteeringLock");
 
     protected static void setupDefaultCommand() {
         if (Robot.getRobotConfig().getRobotType() == RobotType.PM) {
@@ -22,33 +30,42 @@ public class SwerveCommands {
             // Robot.swerve.setDefaultCommand(PhotonPilotCommands.pilotDrive());
             // return;
         }
-        swerve.setDefaultCommand(pilotDrive());
-        // .withTimeout(0.5)
-        // .andThen(headingLockDrive())
-        // .ignoringDisable(true)
-        // .withName("SwerveCommands.default"));
+        swerve.setDefaultCommand(pilotSteerCommand);
     }
 
-    protected static void bindTriggers() {
-        pilot.getStickSteer().whileTrue(stickSteerDrive());
+    protected static void setStates() {
 
-        pilot.getUpReorient().onTrue(reorientForward());
-        pilot.getLeftReorient().onTrue(reorientLeft());
-        pilot.getDownReorient().onTrue(reorientBack());
-        pilot.getRightReorient().onTrue(reorientRight());
+        pilot.steer.whileTrue(pilotSteerCommand); // Force back to manual steering when we steer
+
+        // When driving and have never steered, it doesn't lock
+        // When driving, and we stop steering it locks
+        // When not driving it stops locking
+        pilot.steer.and(pilot.driving).onTrue(steeringLock.setTrue());
+        pilot.driving.onFalse(steeringLock.setFalse());
+        steeringLock.and(pilot.steer.not()).onTrue(lockToClosest45degDrive());
+
+        ampPrep.whileTrue(pilotAimDrive(() -> Field.flipAimAngleIfBlue(270)));
+
+        // TODO:Should replace with method that gives us angle to the speaker
+        speakerPrep.whileTrue(pilotAimDrive(() -> 0));
+
+        pilot.fpv_rs.whileTrue(fpvDrive());
+        pilot.snapSteer.whileTrue(snapSteerDrive());
+
+        pilot.upReorient.onTrue(reorientForward());
+        pilot.leftReorient.onTrue(reorientLeft());
+        pilot.downReorient.onTrue(reorientBack());
+        pilot.rightReorient.onTrue(reorientRight());
     }
 
-    /**
-     * ************************************************************************* Pilot Commands
-     * ************************************************************************
-     */
+    /** Pilot Commands ************************************************************************ */
     /**
      * Drive the robot using left stick and control orientation using the right stick Only Cardinal
      * directions are allowed
      *
      * @return
      */
-    protected static Command stickSteerDrive() {
+    protected static Command snapSteerDrive() {
         return drive(
                         pilot::getDriveFwdPositive,
                         pilot::getDriveLeftPositive,
@@ -72,6 +89,11 @@ public class SwerveCommands {
                 .withName("Swerve.PilotFPVDrive");
     }
 
+    protected static Command pilotAimDrive(DoubleSupplier targetDegrees) {
+        return aimDrive(pilot::getDriveFwdPositive, pilot::getDriveLeftPositive, targetDegrees)
+                .withName("Swerve.PilotAimDrive");
+    }
+
     // TODO: Snake Drive, where the robot moves in the direction of the left stick, but the
     // orientation is controlled by the direction the left stick is pointing, so intake is always
     // pointing where the robot is moving
@@ -79,6 +101,11 @@ public class SwerveCommands {
     protected static Command headingLockDrive() {
         return headingLock(pilot::getDriveFwdPositive, pilot::getDriveLeftPositive)
                 .withName("Swerve.PilotHeadingLockDrive");
+    }
+
+    protected static Command lockToClosest45degDrive() {
+        return lockToClosest45deg(pilot::getDriveFwdPositive, pilot::getDriveLeftPositive)
+                .withName("Swerve.PilotLockTo45degDrive");
     }
 
     /** Turn the swerve wheels to an X to prevent the robot from moving */
@@ -160,16 +187,35 @@ public class SwerveCommands {
                         drive(
                                 velocityX,
                                 velocityY,
-                                () -> {
-                                    if (velocityX.getAsDouble() == 0
-                                            && velocityY.getAsDouble() == 0) {
-                                        return 0;
-                                    } else {
-                                        return swerve.calculateRotationController(
-                                                () -> config.getTargetHeading());
-                                    }
-                                }))
+                                rotateToHeadingWhenMoving(
+                                        velocityX, velocityY, () -> config.getTargetHeading())))
                 .withName("Swerve.HeadingLock");
+    }
+
+    protected static Command lockToClosest45deg(
+            DoubleSupplier velocityX, DoubleSupplier velocityY) {
+        return resetTurnController()
+                .andThen(
+                        setTargetHeading(() -> swerve.getClosest45()),
+                        drive(
+                                velocityX,
+                                velocityY,
+                                rotateToHeadingWhenMoving(
+                                        velocityX, velocityY, () -> swerve.getClosest45())))
+                .withName("Swerve.LockTo45deg");
+    }
+
+    private static DoubleSupplier rotateToHeadingWhenMoving(
+            DoubleSupplier velocityX, DoubleSupplier velocityY, DoubleSupplier heading) {
+        return () -> {
+            if (Math.abs(velocityX.getAsDouble()) < 0.5
+                    && Math.abs(velocityY.getAsDouble()) < 0.5) {
+                RobotTelemetry.print("Output zero");
+                return 0;
+            } else {
+                return swerve.calculateRotationController(() -> heading.getAsDouble());
+            }
+        };
     }
 
     /**
