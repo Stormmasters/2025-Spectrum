@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
@@ -29,7 +28,7 @@ public class Elevator extends Mechanism {
         @Getter private double amp = 15;
         @Getter private double trap = 5;
 
-        @Getter private double ampTriggerHeightPct = 0.8;
+        @Getter private double ampTolerance = 0.8;
         @Getter private double elevatorUpHeight = 5;
 
         /* Elevator config settings */
@@ -87,6 +86,14 @@ public class Elevator extends Mechanism {
     @Override
     public void periodic() {}
 
+    public void setupStates() {
+        ElevatorStates.setStates();
+    }
+
+    public void setupDefaultCommand() {
+        ElevatorStates.setupDefaultCommand();
+    }
+
     /*-------------------
     initSendable
     Use # to denote items that are settable
@@ -98,17 +105,6 @@ public class Elevator extends Mechanism {
             builder.addDoubleProperty("Velocity", this::getMotorVelocityRPM, null);
             builder.addDoubleProperty("#FullExtend", config::getFullExtend, config::setFullExtend);
         }
-    }
-
-    /* Check Elevator States */
-    // Is Amp Height
-    public Trigger isAtAmp() {
-        return new Trigger(
-                () -> (getMotorPosition() > config.getAmp() * config.getAmpTriggerHeightPct()));
-    }
-
-    public Trigger isUp() {
-        return new Trigger(() -> (getMotorPosition() >= config.getElevatorUpHeight()));
     }
 
     // --------------------------------------------------------------------------------

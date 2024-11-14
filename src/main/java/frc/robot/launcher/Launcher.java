@@ -14,7 +14,7 @@ import lombok.Getter;
 public class Launcher extends Mechanism {
 
     public static class LauncherConfig extends Config {
-        @Getter private double maxVelocity = 5600;
+        @Getter private double maxVelocityRpm = 5600;
 
         /* LeftLauncher config values */
         @Getter private double currentLimit = 60;
@@ -50,6 +50,14 @@ public class Launcher extends Mechanism {
         simulationInit();
         telemetryInit();
         RobotTelemetry.print(getName() + " Subsystem Initialized");
+    }
+
+    public void setupStates() {
+        LauncherStates.setStates();
+    }
+
+    public void setupDefaultCommand() {
+        LauncherStates.setupDefaultCommand();
     }
 
     @Override
