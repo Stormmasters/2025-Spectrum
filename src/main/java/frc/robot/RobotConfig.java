@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.configs.ULTRAVIOLET2024;
 import frc.robot.elevator.Elevator.ElevatorConfig;
@@ -18,6 +19,7 @@ public class RobotConfig {
 
     public static class ConfigHolder {
         public SwerveConfig swerve;
+        public AmpTrapConfig ampTrap;
         public ClimberConfig climber;
         public ElevatorConfig elevator;
         public LauncherConfig launcher;
@@ -28,6 +30,7 @@ public class RobotConfig {
 
         public ConfigHolder() {
             swerve = new SwerveConfig();
+            ampTrap = new AmpTrapConfig();
             climber = new ClimberConfig();
             elevator = new ElevatorConfig();
             launcher = new LauncherConfig();

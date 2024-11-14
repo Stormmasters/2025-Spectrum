@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotConfig.ConfigHolder;
+import frc.robot.amptrap.AmpTrap;
 import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
 import frc.robot.elevator.Elevator;
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
 
     @Getter private static RobotSim robotSim;
     @Getter private static Swerve swerve;
+    @Getter private static AmpTrap ampTrap;
     @Getter private static Climber climber;
     @Getter private static Elevator elevator;
     @Getter private static Launcher launcher;
@@ -72,6 +74,8 @@ public class Robot extends TimedRobot {
             operator = new Operator(config.operator);
             pilot = new Pilot(config.pilot);
             swerve = new Swerve(config.swerve);
+            Timer.delay(canInitDelay);
+            ampTrap = new AmpTrap(config.ampTrap);
             Timer.delay(canInitDelay);
             climber = new Climber(config.climber);
             Timer.delay(canInitDelay);
