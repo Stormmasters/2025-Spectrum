@@ -50,6 +50,7 @@ public class Auton {
 
     public Auton() {
         setupSelectors(); // runs the command to start the chooser for auto on shuffleboard
+
         RobotTelemetry.print("Auton Subsystem Initialized: ");
     }
 
@@ -92,7 +93,9 @@ public class Auton {
     public Command getAutonomousCommand() {
         Command auton = pathChooser.getSelected(); // sees what auto is chosen on shuffleboard
         if (auton != null) {
-            autoStartingPos = new PathPlannerAuto(auton.getName()).getStartingPose(); // Get the starting pose of the selected auto
+            autoStartingPos =
+                    new PathPlannerAuto(auton.getName())
+                            .getStartingPose(); // Get the starting pose of the selected auto
             // SwerveDrivetrain.seedFieldRelative(autoStartingPos);
             return auton; // checks to make sure there is an auto and if there is it runs an auto
         } else {
