@@ -56,7 +56,7 @@ public class RollerSim {
                         rollerAxle);
     }
 
-    public void simulationPeriodic(double x, double y) {
+    public void simulationPeriodic() { // double x, double y) {
         // ------ Update sim based on motor output
         rollerSim.setInput(rollerMotorSim.getMotorVoltage());
         rollerSim.update(TimedRobot.kDefaultPeriod);
@@ -71,7 +71,13 @@ public class RollerSim {
         rollerMotorSim.addRotorPosition(rotationsPerSecond * TimedRobot.kDefaultPeriod);
 
         // Update the axle as the robot moves
-        rollerAxle.setPosition(x, y);
+        if (config.isAttached()) {
+            rollerAxle.setPosition(
+                    config.getAttachmentSim().getDisplacementX(config.getInitialX()),
+                    config.getAttachmentSim().getDisplacementY(config.getInitialY()));
+        } else {
+            rollerAxle.setPosition(config.getInitialX(), config.getInitialY());
+        }
 
         // Scale down the angular velocity so we can actually see what is happening
         double rpm = rollerSim.getAngularVelocityRPM() / 2;

@@ -133,13 +133,18 @@ public class Intake extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic(config.intakeX, config.intakeY);
+            sim.simulationPeriodic();
         }
     }
 
     class IntakeSim extends RollerSim {
         public IntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
-            super(new RollerConfig(config.wheelDiameter), mech, rollerMotorSim, config.getName());
+            super(
+                    new RollerConfig(config.wheelDiameter)
+                            .setPosition(config.intakeX, config.intakeY),
+                    mech,
+                    rollerMotorSim,
+                    config.getName());
         }
     }
 }

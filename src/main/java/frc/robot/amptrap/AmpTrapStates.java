@@ -20,6 +20,7 @@ public class AmpTrapStates {
 
     public static void setStates() {
         intaking.whileTrue(intake());
+        ampPrep.whileTrue(amp()); // remove later
     }
 
     public static Command runFull() {

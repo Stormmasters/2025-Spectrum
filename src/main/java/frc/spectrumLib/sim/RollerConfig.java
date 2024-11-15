@@ -12,6 +12,10 @@ public class RollerConfig {
     @Getter private Color8Bit offColor = new Color8Bit(Color.kBlack);
     @Getter private Color8Bit fwdColor = new Color8Bit(Color.kGreen);
     @Getter private Color8Bit revColor = new Color8Bit(Color.kRed);
+    @Getter private double initialX = 0;
+    @Getter private double initialY = 0;
+    @Getter private boolean attached = false;
+    @Getter private LinearSim attachmentSim;
 
     public RollerConfig(double diameterInches) {
         rollerDiameterInches = diameterInches;
@@ -24,6 +28,18 @@ public class RollerConfig {
 
     public RollerConfig setSimMOI(double moi) {
         simMOI = moi;
+        return this;
+    }
+
+    public RollerConfig setPosition(double x, double y) {
+        initialX = x;
+        initialY = y;
+        return this;
+    }
+
+    public RollerConfig setAttached(LinearSim sim) {
+        attached = true;
+        attachmentSim = sim;
         return this;
     }
 }

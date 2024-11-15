@@ -82,13 +82,17 @@ public class Launcher extends Mechanism {
     // if roller position changes configure x and y to set position.
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic(0.5, 0.5);
+            sim.simulationPeriodic();
         }
     }
 
     class LauncherSim extends RollerSim {
         public LauncherSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
-            super(new RollerConfig(config.wheelDiameter), mech, rollerMotorSim, config.getName());
+            super(
+                    new RollerConfig(config.wheelDiameter).setPosition(0.5, 0.5),
+                    mech,
+                    rollerMotorSim,
+                    config.getName());
         }
     }
 }

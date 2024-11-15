@@ -30,8 +30,8 @@
         88,
         67,
         86,
-        -1,
-        -1,
+        70,
+        71,
         -1,
         -1,
         -1,
@@ -103,8 +103,7 @@
   ],
   "robotJoysticks": [
     {
-      "guid": "78696e70757401000000000000000000",
-      "useGamepad": true
+      "guid": "Keyboard0"
     },
     {
       "useGamepad": true

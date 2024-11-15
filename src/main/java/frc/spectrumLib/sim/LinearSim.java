@@ -83,4 +83,14 @@ public class LinearSim {
                 config.getInitialY()
                         + (displacement * Math.sin(Math.toRadians(config.getAngle()))));
     }
+
+    public double getDisplacementX(double initialX) {
+        return initialX
+                + (elevatorSim.getPositionMeters() * Math.cos(Math.toRadians(config.getAngle())));
+    }
+
+    public double getDisplacementY(double initialY) {
+        return initialY
+                + (elevatorSim.getPositionMeters() * Math.sin(Math.toRadians(config.getAngle())));
+    }
 }

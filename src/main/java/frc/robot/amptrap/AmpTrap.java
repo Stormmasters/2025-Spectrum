@@ -4,6 +4,7 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
@@ -117,13 +118,19 @@ public class AmpTrap extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic(config.ampTrapX, config.ampTrapY);
+            sim.simulationPeriodic(); // config.ampTrapX, config.ampTrapY);
         }
     }
 
     class AmpTrapSim extends RollerSim {
         public AmpTrapSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
-            super(new RollerConfig(config.wheelDiameter), mech, rollerMotorSim, config.getName());
+            super(
+                    new RollerConfig(config.wheelDiameter)
+                            .setPosition(config.ampTrapX, config.ampTrapY)
+                            .setAttached(Robot.getElevator().getSim()),
+                    mech,
+                    rollerMotorSim,
+                    config.getName());
         }
     }
 }
