@@ -63,8 +63,8 @@ public class AmpTrap extends Mechanism {
     @Override
     public void periodic() {}
 
-    public void bindTriggers() {
-        AmpTrapStates.bindTriggers();
+    public void setupStates() {
+        AmpTrapStates.setStates();
     }
 
     public void setupDefaultCommand() {

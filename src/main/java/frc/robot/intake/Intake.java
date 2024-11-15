@@ -58,8 +58,8 @@ public class Intake extends Mechanism {
     @Override
     public void periodic() {}
 
-    public void bindTriggers() {
-        IntakeStates.bindTriggers();
+    public void setupStates() {
+        IntakeStates.setStates();
     }
 
     public void setupDefaultCommand() {

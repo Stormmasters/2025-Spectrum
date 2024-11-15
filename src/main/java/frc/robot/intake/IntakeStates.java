@@ -14,7 +14,7 @@ public class IntakeStates {
         intake.setDefaultCommand(intake.runStop().ignoringDisable(true).withName("Intake.default"));
     }
 
-    public static void bindTriggers() {}
+    public static void setStates() {}
 
     public static Command runFull() {
         return intake.runVelocityTCFOCrpm(config::getMaxSpeed).withName("Intake.runFull");

@@ -18,7 +18,7 @@ public class AmpTrapStates {
                 ampTrap.runStop().ignoringDisable(true).withName("AmpTrap.default"));
     }
 
-    public static void bindTriggers() {}
+    public static void setStates() {}
 
     public static Command runFull() {
         return ampTrap.runVelocity(config::getMaxSpeed).withName("AmpTrap.runFull");

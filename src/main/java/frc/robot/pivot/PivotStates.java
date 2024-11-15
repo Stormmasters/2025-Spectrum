@@ -17,7 +17,7 @@ public class PivotStates {
                 pivot.runHoldPivot().ignoringDisable(true).withName("Pivot.default"));
     }
 
-    public static void setupStates() {
+    public static void setStates() {
         // missing bindTriggers
         intaking.whileTrue(subwoofer());
         ampPrep.whileTrue(home());

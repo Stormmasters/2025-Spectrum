@@ -17,7 +17,7 @@ public class FeederStates {
         feeder.setDefaultCommand(feeder.runStop().ignoringDisable(true).withName("Feeder.default"));
     }
 
-    public static void bindTriggers() {}
+    public static void setStates() {}
 
     public static Command runFull() {
         return feeder.runVelocity(config::getMaxSpeed).withName("Feeder.runFull");

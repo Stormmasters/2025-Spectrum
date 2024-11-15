@@ -155,7 +155,7 @@ public class Pivot extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        PivotStates.setupStates();
+        PivotStates.setStates();
     }
 
     public void setupDefaultCommand() {

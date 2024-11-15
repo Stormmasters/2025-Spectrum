@@ -34,7 +34,7 @@ public class Operator extends Gamepad {
         RobotTelemetry.print("Operator Subsystem Initialized: ");
     }
 
-    public void bindTriggers() {
+    public void setupStates() {
         // Left Blank so we can bind when the controller is connected
     }
 
