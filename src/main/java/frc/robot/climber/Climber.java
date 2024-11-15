@@ -81,12 +81,12 @@ public class Climber extends Mechanism {
     @Override
     public void periodic() {}
 
-    public void bindTriggers() {
-        ClimberCommands.bindTriggers();
+    public void setupStates() {
+        ClimberStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        ClimberCommands.setupDefaultCommand();
+        ClimberStates.setupDefaultCommand();
     }
 
     /*-------------------

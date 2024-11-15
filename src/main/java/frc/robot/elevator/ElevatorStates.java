@@ -1,30 +1,51 @@
 package frc.robot.elevator;
 
+import static frc.robot.RobotStates.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.util.TuneValue;
 import java.util.function.DoubleSupplier;
 
-public class ElevatorCommands {
+public class ElevatorStates {
     private static Elevator elevator = Robot.getElevator();
     private static ElevatorConfig config = Robot.getConfig().elevator;
     private static Pilot pilot = Robot.getPilot();
+
+    /* Check Elevator States */
+    // Is Amp Height
+    public static final Trigger isAtAmp =
+            new Trigger(
+                    () -> {
+                        double ampThreshold = config.getAmp() * config.getAmpTolerance();
+                        return elevator.getMotorPosition() > ampThreshold;
+                    });
+
+    public static final Trigger isUp =
+            new Trigger(() -> (elevator.getMotorPosition() >= config.getElevatorUpHeight()));
 
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(
                 holdPosition().ignoringDisable(true).withName("Elevator.default"));
     }
 
-    public static void bindTriggers() {
-        // pilot = Robot.getPilot();
-        pilot.getActivate_B().whileTrue(fullExtend());
-        pilot.getRetract_X().whileTrue(home());
-        pilot.getManual_Y().whileTrue(runElevator(pilot::getElevatorManualAxis));
+    public static void setStates() {
+        // Test statements to show how these triggers work
+        isAtAmp.onTrue(Commands.print("At Amp Height"));
+        isUp.onTrue(Commands.print("Elevator Up"));
+
+        ampPrep.whileTrue(amp());
+        score.onFalse(home()); // Return home whne we stop the scoring action
 
         // Test Mode Buttons
-        pilot.getTuneElevator().whileTrue(tuneElevator());
+        pilot.tuneElevator_tB.whileTrue(tuneElevator());
+
+        coastMode.onTrue(coastMode());
+        coastMode.onFalse(ensureBrakeMode());
     }
 
     public static Command runElevator(DoubleSupplier speed) {

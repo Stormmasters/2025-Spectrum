@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         DataLogManager.start();
-
+        DriverStation.silenceJoystickConnectionWarning(true);
         try {
             RobotTelemetry.print("--- Robot Init Starting ---");
             robotSim = new RobotSim();
@@ -123,8 +123,8 @@ public class Robot extends TimedRobot {
         pilot.resetConfig();
 
         // Bind Triggers for all subsystmes
-        subsystems.forEach(SpectrumSubsystem::bindTriggers);
-        RobotCommands.setupRobotTriggers();
+        subsystems.forEach(SpectrumSubsystem::setupStates);
+        RobotStates.setupStates();
     }
 
     public void clearCommandsAndButtons() {
@@ -132,8 +132,8 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().getActiveButtonLoop().clear();
 
         // Bind Triggers for all subsystmes
-        subsystems.forEach(SpectrumSubsystem::bindTriggers);
-        RobotCommands.setupRobotTriggers();
+        subsystems.forEach(SpectrumSubsystem::setupStates);
+        RobotStates.setupStates();
     }
 
     @Override // Depricated
@@ -195,16 +195,8 @@ public class Robot extends TimedRobot {
         try {
             RobotTelemetry.print("@@@ Auton Init Starting @@@ ");
             clearCommandsAndButtons();
-            Command autonCommand = auton.getAutonomousCommand();
 
-            if (autonCommand != null) {
-                autonCommand.schedule();
-                auton.startAutonTimer();
-            } else {
-                RobotTelemetry.print("No Auton Command Found");
-            }
-
-            // LEDsCommands.countdown(15, 10).schedule();
+            auton.init();
 
             RobotTelemetry.print("@@@ Auton Init Complete @@@ ");
         } catch (Throwable t) {
@@ -219,7 +211,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousExit() {
-        auton.printAutoDuration();
+        auton.exit();
         RobotTelemetry.print("@@@ Auton Exit @@@ ");
     }
 
@@ -229,16 +221,6 @@ public class Robot extends TimedRobot {
             RobotTelemetry.print("!!! Teleop Init Starting !!! ");
             resetCommandsAndButtons();
 
-            // flip pilot's forward based on what alliance robot is
-            /*             swerve.setDriverPerspective(
-            Rotation2d.fromDegrees(
-                    DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue
-                            ? 0
-                            : 180)); */
-
-            // if(DriverStation.isFMSAttached()) {
-            //     ClimberCommands.safeClimb().withTimeout(2).schedule();
-            // }
             RobotTelemetry.print("!!! Teleop Init Complete !!! ");
         } catch (Throwable t) {
             // intercept error and log it

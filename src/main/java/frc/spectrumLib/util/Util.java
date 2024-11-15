@@ -3,6 +3,7 @@ package frc.spectrumLib.util;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.List;
+import java.util.function.DoubleSupplier;
 
 /** From 254 lib imported from 1678-2024 Contains basic functions that are used often. */
 public class Util {
@@ -28,6 +29,10 @@ public class Util {
     /** Checks if the given input is within the range (min, max), both exclusive. */
     public static boolean inRange(double v, double min, double max) {
         return v > min && v < max;
+    }
+
+    public static boolean inRange(DoubleSupplier v, DoubleSupplier min, DoubleSupplier max) {
+        return v.getAsDouble() > min.getAsDouble() && v.getAsDouble() < max.getAsDouble();
     }
 
     public static double interpolate(double a, double b, double x) {
