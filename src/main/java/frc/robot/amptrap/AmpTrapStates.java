@@ -4,27 +4,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.pilot.Pilot;
-import java.util.function.DoubleSupplier;
 
 public class AmpTrapStates {
     private static AmpTrap ampTrap;
     private static AmpTrapConfig config;
     private static Pilot pilot = Robot.getPilot();
 
+    // TODO: implement amptrap states
+    /* Check AmpTrap States */
+
     public static void setupDefaultCommand() {
-        ampTrap.setDefaultCommand(ampTrap.runStop());
+        ampTrap.setDefaultCommand(
+                ampTrap.runStop().ignoringDisable(true).withName("AmpTrap.default"));
     }
 
-    public static void bindTriggers() {
-
-    }
-
-    public static Command runVelocity(DoubleSupplier velocityRPM) {
-        return ampTrap.runVelocity(velocityRPM).withName("AmpTrap.runVelocity");
-    }
+    public static void bindTriggers() {}
 
     public static Command runFull() {
-        return runVelocity(config::getMaxSpeed).withName("AmpTrap.runFull");
+        return ampTrap.runVelocity(config::getMaxSpeed).withName("AmpTrap.runFull");
     }
 
     public static Command feed() {

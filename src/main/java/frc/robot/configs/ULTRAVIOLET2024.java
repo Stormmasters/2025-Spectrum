@@ -9,8 +9,10 @@ public class ULTRAVIOLET2024 extends ConfigHolder {
         swerve.configEncoderOffsets(0, 0, 0, 0);
 
         // Attached Mechanisms
+        ampTrap.setAttached(true);
         climber.setAttached(true);
         elevator.setAttached(true);
+        feeder.setAttached(true);
         launcher.setAttached(true);
         operator.setAttached(true);
         pivot.setAttached(true);

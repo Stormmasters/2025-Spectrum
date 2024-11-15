@@ -12,6 +12,7 @@ import frc.robot.amptrap.AmpTrap;
 import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
 import frc.robot.elevator.Elevator;
+import frc.robot.feeder.Feeder;
 import frc.robot.launcher.Launcher;
 import frc.robot.leds.LedFull;
 import frc.robot.operator.Operator;
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
     @Getter private static AmpTrap ampTrap;
     @Getter private static Climber climber;
     @Getter private static Elevator elevator;
+    @Getter private static Feeder feeder;
     @Getter private static Launcher launcher;
     // @Getter private static LEDs leds;
     @Getter private static LedFull leds;
@@ -80,6 +82,8 @@ public class Robot extends TimedRobot {
             climber = new Climber(config.climber);
             Timer.delay(canInitDelay);
             elevator = new Elevator(config.elevator);
+            Timer.delay(canInitDelay);
+            feeder = new Feeder(config.feeder);
             Timer.delay(canInitDelay);
             launcher = new Launcher(config.launcher);
             Timer.delay(canInitDelay);
