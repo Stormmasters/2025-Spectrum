@@ -38,6 +38,7 @@ public class RobotConfig {
             climber = new ClimberConfig();
             elevator = new ElevatorConfig();
             feeder = new FeederConfig();
+            intake = new IntakeConfig();
             launcher = new LauncherConfig();
             leds = new LedFullConfig();
             operator = new OperatorConfig();

@@ -75,12 +75,12 @@ public class Feeder extends Mechanism {
     @Override
     public void periodic() {}
 
-    public void setupDefaultCommand() {
-        FeederStates.setupDefaultCommand();
-    }
-
     public void bindTriggers() {
         FeederStates.bindTriggers();
+    }
+
+    public void setupDefaultCommand() {
+        FeederStates.setupDefaultCommand();
     }
 
     /*-------------------

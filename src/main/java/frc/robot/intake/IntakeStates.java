@@ -6,8 +6,8 @@ import frc.robot.intake.Intake.IntakeConfig;
 import frc.robot.pilot.Pilot;
 
 public class IntakeStates {
-    private static Intake intake;
-    private static IntakeConfig config;
+    private static Intake intake = Robot.getIntake();
+    private static IntakeConfig config = Robot.getConfig().intake;
     private static Pilot pilot = Robot.getPilot();
 
     public static void setupDefaultCommand() {
@@ -17,8 +17,7 @@ public class IntakeStates {
     public static void bindTriggers() {}
 
     public static Command runFull() {
-        return intake.runVelocityTCFOCrpm(config::getMaxSpeed)
-                .withName("Intake.runFull");
+        return intake.runVelocityTCFOCrpm(config::getMaxSpeed).withName("Intake.runFull");
     }
 
     public static Command intake() {
@@ -26,8 +25,7 @@ public class IntakeStates {
     }
 
     public static Command slowIntake() {
-        return intake.runVelocityTCFOCrpm(config::getSlowIntake)
-                .withName("Intake.slowIntake");
+        return intake.runVelocityTCFOCrpm(config::getSlowIntake).withName("Intake.slowIntake");
     }
 
     public static Command eject() {

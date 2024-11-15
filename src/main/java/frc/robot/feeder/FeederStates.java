@@ -6,8 +6,8 @@ import frc.robot.feeder.Feeder.FeederConfig;
 import frc.robot.pilot.Pilot;
 
 public class FeederStates {
-    private static Feeder feeder;
-    private static FeederConfig config;
+    private static Feeder feeder = Robot.getFeeder();
+    private static FeederConfig config = Robot.getConfig().feeder;
     private static Pilot pilot = Robot.getPilot();
 
     // TODO: implement feeder states
@@ -56,6 +56,10 @@ public class FeederStates {
         return feeder.runVelocity(config::getIntake).withName("Feeder.intake");
     }
 
+    public static Command stopMotor() {
+        return feeder.runStop().withName("Feeder.stopMotor");
+    }
+
     public static Command feedToAmp() {
         return feeder.runVelocity(config::getFeedToAmp).withName("Feeder.feedToAmp");
     }
@@ -66,5 +70,13 @@ public class FeederStates {
 
     public static Command manualSource() {
         return feeder.runVelocity(config::getManualSource).withName("Feeder.manualSource");
+    }
+
+    public static Command coastMode() {
+        return feeder.coastMode();
+    }
+
+    public static Command ensureBrakeMode() {
+        return feeder.ensureBrakeMode();
     }
 }

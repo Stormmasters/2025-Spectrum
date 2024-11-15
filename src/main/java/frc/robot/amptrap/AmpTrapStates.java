@@ -6,8 +6,8 @@ import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.pilot.Pilot;
 
 public class AmpTrapStates {
-    private static AmpTrap ampTrap;
-    private static AmpTrapConfig config;
+    private static AmpTrap ampTrap = Robot.getAmpTrap();
+    private static AmpTrapConfig config = Robot.getConfig().ampTrap;
     private static Pilot pilot = Robot.getPilot();
 
     // TODO: implement amptrap states
@@ -44,7 +44,20 @@ public class AmpTrapStates {
         return ampTrap.runVelocity(config::getEject).withName("AmpTrap.eject");
     }
 
+    public static Command stopMotor() {
+        return ampTrap.runStop().withName("AmpTrap.stopMotor");
+    }
+
+    public static Command coastMode() {
+        return ampTrap.coastMode();
+    }
+
+    /** Sets amptrap to coast mode. Does not automatically set it back to brake mode */
     public static Command stayCoastMode() {
         return ampTrap.stayCoastMode();
+    }
+
+    public static Command ensureBrakeMode() {
+        return ampTrap.ensureBrakeMode();
     }
 }
