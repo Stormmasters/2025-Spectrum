@@ -10,8 +10,8 @@ import lombok.Setter;
 public class Pilot extends Gamepad {
 
     // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
-    // If tirggers need any of the config values set them in the constructor
-    /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simualation */
+    // If triggers need any of the config values set them in the constructor
+    /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
     public final Trigger intake_A = A.and(noFn, teleop);

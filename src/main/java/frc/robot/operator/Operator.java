@@ -7,6 +7,21 @@ import frc.spectrumLib.gamepads.Gamepad;
 import lombok.Getter;
 
 public class Operator extends Gamepad {
+
+    // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
+    // If triggers need any of the config values set them in the constructor
+    /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
+    public final Trigger fn = leftBumper;
+    public final Trigger noFn = fn.not();
+    public final Trigger intake_A = A.and(noFn, teleop);
+    public final Trigger eject_fA = A.and(fn, teleop);
+
+    // DISABLED TRIGGERS
+    public final Trigger coastOn_dB = disabled.and(B);
+    public final Trigger coastOff_dA = disabled.and(A);
+
+    // TEST TRIGGERS
+
     public static class OperatorConfig extends Config {
 
         @Getter private final double triggersDeadzone = 0;
@@ -18,15 +33,6 @@ public class Operator extends Gamepad {
 
     private OperatorConfig config;
 
-    // Triggers, these would be robot states such as ampReady, intake, visionAim, subwooferShot,
-    // launch, etc.
-    @Getter private Trigger fn, noFn, scoreFn; // These are our function keys to overload buttons
-    @Getter private Trigger intake, ejectIntake;
-    @Getter private Trigger manualAmp, ejectAmp;
-    @Getter private Trigger feederForward, feederBackward;
-    @Getter private Trigger elevatorUp, elevatorHome;
-    @Getter private Trigger coastMode;
-
     public Operator(OperatorConfig config) {
         super(config);
         this.config = config;
@@ -36,29 +42,10 @@ public class Operator extends Gamepad {
 
     public void setupStates() {
         // Left Blank so we can bind when the controller is connected
+        OperatorStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        OperatorCommands.setupDefaultCommand();
+        OperatorStates.setupDefaultCommand();
     }
-
-    /** Setup the Buttons for telop mode. */
-    /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simualation */
-    public void setupTriggers() {
-        fn = leftBumperOnly;
-        noFn = fn.not();
-        scoreFn = fn.or(bothBumpers);
-
-        intake = A.and(noFn);
-        ejectIntake = A.and(fn, teleop);
-        manualAmp = B.and(noFn, teleop);
-        ejectAmp = B.and(fn, teleop);
-        feederForward = Y.and(noFn, teleop);
-        feederBackward = Y.and(fn, teleop);
-        elevatorUp = X.and(noFn, teleop);
-        elevatorHome = X.and(fn, teleop);
-
-        coastMode = B.and(disabled);
-        // TODO: Add manual climber and elevator
-    };
 }
