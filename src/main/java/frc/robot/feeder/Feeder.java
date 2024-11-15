@@ -66,6 +66,7 @@ public class Feeder extends Mechanism {
     public Feeder(FeederConfig config) {
         super(config);
         this.config = config;
+
         simulationInit();
         telemetryInit();
         RobotTelemetry.print(getName() + " Subsystem Initialized");
@@ -78,7 +79,14 @@ public class Feeder extends Mechanism {
         FeederStates.setupDefaultCommand();
     }
 
-    public void bindTriggers() {}
+    public void bindTriggers() {
+        FeederStates.bindTriggers();
+    }
+
+    /*-------------------
+    initSendable
+    Use # to denote items that are settable
+    ------------*/
 
     @Override
     public void initSendable(NTSendableBuilder builder) {

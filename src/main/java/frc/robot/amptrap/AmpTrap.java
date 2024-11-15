@@ -54,6 +54,7 @@ public class AmpTrap extends Mechanism {
     public AmpTrap(AmpTrapConfig config) {
         super(config);
         this.config = config;
+
         simulationInit();
         telemetryInit();
         RobotTelemetry.print(getName() + " Subsystem Initialized");
@@ -69,6 +70,11 @@ public class AmpTrap extends Mechanism {
     public void setupDefaultCommand() {
         AmpTrapStates.setupDefaultCommand();
     }
+
+    /*-------------------
+    initSendable
+    Use # to denote items that are settable
+    ------------*/
 
     @Override
     public void initSendable(NTSendableBuilder builder) {

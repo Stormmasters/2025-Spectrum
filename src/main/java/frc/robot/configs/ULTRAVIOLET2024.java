@@ -13,6 +13,7 @@ public class ULTRAVIOLET2024 extends ConfigHolder {
         climber.setAttached(true);
         elevator.setAttached(true);
         feeder.setAttached(true);
+        intake.setAttached(true);
         launcher.setAttached(true);
         operator.setAttached(true);
         pivot.setAttached(true);

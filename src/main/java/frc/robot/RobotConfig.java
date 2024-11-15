@@ -9,6 +9,7 @@ import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.configs.ULTRAVIOLET2024;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.feeder.Feeder.FeederConfig;
+import frc.robot.intake.Intake.IntakeConfig;
 import frc.robot.launcher.Launcher.LauncherConfig;
 import frc.robot.leds.LedFull.LedFullConfig;
 import frc.robot.operator.Operator.OperatorConfig;
@@ -24,6 +25,7 @@ public class RobotConfig {
         public ClimberConfig climber;
         public ElevatorConfig elevator;
         public FeederConfig feeder;
+        public IntakeConfig intake;
         public LauncherConfig launcher;
         public LedFullConfig leds;
         public OperatorConfig operator;
