@@ -1,14 +1,14 @@
 package frc.robot.feeder;
 
+import static frc.robot.RobotStates.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.feeder.Feeder.FeederConfig;
-import frc.robot.pilot.Pilot;
 
 public class FeederStates {
     private static Feeder feeder = Robot.getFeeder();
     private static FeederConfig config = Robot.getConfig().feeder;
-    private static Pilot pilot = Robot.getPilot();
 
     // TODO: implement feeder states
     /* Check Elevator States */
@@ -17,7 +17,9 @@ public class FeederStates {
         feeder.setDefaultCommand(feeder.runStop().ignoringDisable(true).withName("Feeder.default"));
     }
 
-    public static void setStates() {}
+    public static void setStates() {
+        intaking.whileTrue(intake());
+    }
 
     public static Command runFull() {
         return feeder.runVelocity(config::getMaxSpeed).withName("Feeder.runFull");

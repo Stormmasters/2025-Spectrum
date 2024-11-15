@@ -1,20 +1,23 @@
 package frc.robot.intake;
 
+import static frc.robot.RobotStates.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.intake.Intake.IntakeConfig;
-import frc.robot.pilot.Pilot;
 
 public class IntakeStates {
     private static Intake intake = Robot.getIntake();
     private static IntakeConfig config = Robot.getConfig().intake;
-    private static Pilot pilot = Robot.getPilot();
 
     public static void setupDefaultCommand() {
         intake.setDefaultCommand(intake.runStop().ignoringDisable(true).withName("Intake.default"));
     }
 
-    public static void setStates() {}
+    public static void setStates() {
+        intaking.whileTrue(intake());
+        ejecting.whileTrue(eject());
+    }
 
     public static Command runFull() {
         return intake.runVelocityTCFOCrpm(config::getMaxSpeed).withName("Intake.runFull");

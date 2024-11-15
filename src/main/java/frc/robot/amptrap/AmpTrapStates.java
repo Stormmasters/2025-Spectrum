@@ -1,14 +1,14 @@
 package frc.robot.amptrap;
 
+import static frc.robot.RobotStates.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
-import frc.robot.pilot.Pilot;
 
 public class AmpTrapStates {
     private static AmpTrap ampTrap = Robot.getAmpTrap();
     private static AmpTrapConfig config = Robot.getConfig().ampTrap;
-    private static Pilot pilot = Robot.getPilot();
 
     // TODO: implement amptrap states
     /* Check AmpTrap States */
@@ -18,7 +18,9 @@ public class AmpTrapStates {
                 ampTrap.runStop().ignoringDisable(true).withName("AmpTrap.default"));
     }
 
-    public static void setStates() {}
+    public static void setStates() {
+        intaking.whileTrue(intake());
+    }
 
     public static Command runFull() {
         return ampTrap.runVelocity(config::getMaxSpeed).withName("AmpTrap.runFull");

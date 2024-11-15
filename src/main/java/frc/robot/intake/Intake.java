@@ -1,15 +1,21 @@
 package frc.robot.intake;
 
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.RobotConfig;
+import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
 import frc.spectrumLib.mechanism.Mechanism;
+import frc.spectrumLib.sim.RollerConfig;
+import frc.spectrumLib.sim.RollerSim;
 import java.util.function.DoubleSupplier;
 import lombok.Getter;
 
 public class Intake extends Mechanism {
+
     public static class IntakeConfig extends Config {
 
         /* Revolutions per min Intake Output */
@@ -24,10 +30,14 @@ public class Intake extends Mechanism {
         /* Intake config values */
         @Getter private double currentLimit = 30;
         @Getter private double torqueCurrentLimit = 120;
-        @Getter private double threshold = 40;
         @Getter private double velocityKp = 12; // 0.156152;
         @Getter private double velocityKv = 0.2; // 0.12;
-        @Getter private double velocityKs = 14;
+        @Getter private double velocityKs = 14; // 0.24; // 14;
+
+        /* Sim Configs */
+        @Getter private double intakeX = 0.325;
+        @Getter private double intakeY = 0.05;
+        @Getter private double wheelDiameter = 4.0;
 
         public IntakeConfig() {
             super("Intake", 5, RobotConfig.CANIVORE);
@@ -35,9 +45,9 @@ public class Intake extends Mechanism {
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12 / 30);
             configSupplyCurrentLimit(currentLimit, true);
+            // configStatorCurrentLimit(30, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configStatorCurrentLimit(30, true);
             configNeutralBrakeMode(true);
             configClockwise_Positive();
             configMotionMagic(51, 205, 0);
@@ -45,6 +55,7 @@ public class Intake extends Mechanism {
     }
 
     private IntakeConfig config;
+    private RollerSim sim;
 
     public Intake(IntakeConfig config) {
         super(config);
@@ -110,8 +121,25 @@ public class Intake extends Mechanism {
     // Simulation
     // --------------------------------------------------------------------------------
 
-    public void simulationInit() {}
+    public void simulationInit() {
+        if (isAttached()) {
+            // Create a new RollerSim with the left view, the motor's sim state, and a 6 in diameter
+            sim = new IntakeSim(RobotSim.leftView, motor.getSimState());
+        }
+    }
 
+    // Must be called to enable the simulation
+    // if roller position changes configure x and y to set position.
     @Override
-    public void simulationPeriodic() {}
+    public void simulationPeriodic() {
+        if (isAttached()) {
+            sim.simulationPeriodic(config.intakeX, config.intakeY);
+        }
+    }
+
+    class IntakeSim extends RollerSim {
+        public IntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
+            super(new RollerConfig(config.wheelDiameter), mech, rollerMotorSim, config.getName());
+        }
+    }
 }

@@ -1,14 +1,20 @@
 package frc.robot.feeder;
 
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotConfig;
+import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
 import frc.spectrumLib.mechanism.Mechanism;
+import frc.spectrumLib.sim.RollerConfig;
+import frc.spectrumLib.sim.RollerSim;
 import java.util.function.DoubleSupplier;
 import lombok.Getter;
 
 public class Feeder extends Mechanism {
+
     public static class FeederConfig extends Config {
 
         /* Revolutions per min Feeder Output */
@@ -36,14 +42,16 @@ public class Feeder extends Mechanism {
         /* Feeder config values */
         @Getter private double currentLimit = 30;
         @Getter private double torqueCurrentLimit = 100;
-        @Getter private double threshold = 40;
         @Getter private double velocityKp = 0.156152;
         @Getter private double velocityKv = 0.12;
         @Getter private double velocityKs = 0.24;
         @Getter private double positionKp = 2;
         @Getter private double positionKv = 0.013;
 
-        /* Sim configs */
+        /* Sim Configs */
+        @Getter private double feederX = 0.475;
+        @Getter private double feederY = 0.075;
+        @Getter private double wheelDiameter = 4.0;
 
         public FeederConfig() {
             super("Feeder", 40, RobotConfig.CANIVORE);
@@ -62,6 +70,7 @@ public class Feeder extends Mechanism {
     }
 
     private FeederConfig config;
+    private RollerSim sim;
 
     public Feeder(FeederConfig config) {
         super(config);
@@ -115,8 +124,22 @@ public class Feeder extends Mechanism {
     // Simulation
     // --------------------------------------------------------------------------------
 
-    public void simulationInit() {}
+    public void simulationInit() {
+        if (isAttached()) {
+            sim = new FeederSim(RobotSim.leftView, motor.getSimState());
+        }
+    }
 
     @Override
-    public void simulationPeriodic() {}
+    public void simulationPeriodic() {
+        if (isAttached()) {
+            sim.simulationPeriodic(config.feederX, config.feederY);
+        }
+    }
+
+    class FeederSim extends RollerSim {
+        public FeederSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
+            super(new RollerConfig(config.wheelDiameter), mech, rollerMotorSim, config.getName());
+        }
+    }
 }

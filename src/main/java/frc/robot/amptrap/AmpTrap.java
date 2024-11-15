@@ -1,13 +1,19 @@
 package frc.robot.amptrap;
 
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotConfig;
+import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
 import frc.spectrumLib.mechanism.Mechanism;
+import frc.spectrumLib.sim.RollerConfig;
+import frc.spectrumLib.sim.RollerSim;
 import lombok.Getter;
 
 public class AmpTrap extends Mechanism {
+
     public static class AmpTrapConfig extends Config {
 
         /* Revolutions per min AmpTrap Output */
@@ -24,7 +30,6 @@ public class AmpTrap extends Mechanism {
         /* AmpTrap config values */
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
-        @Getter private final double threshold = 40;
         @Getter private final double velocityKp = 0.156152;
         @Getter private final double velocityKv = 0.12;
         @Getter private final double velocityKs = 0.24;
@@ -32,7 +37,10 @@ public class AmpTrap extends Mechanism {
         @Getter private final double hasNoteDistance = 300;
         @Getter private final double topHasNoteDistance = 150;
 
-        /* Sim configs */
+        /* Sim Configs */
+        @Getter private double ampTrapX = 0.25;
+        @Getter private double ampTrapY = 0.4;
+        @Getter private double wheelDiameter = 4.0;
 
         public AmpTrapConfig() {
             super("AmpTrap", 51, RobotConfig.RIO_CANBUS);
@@ -49,6 +57,7 @@ public class AmpTrap extends Mechanism {
     }
 
     private AmpTrapConfig config;
+    private RollerSim sim;
     // TODO: add lasercans
 
     public AmpTrap(AmpTrapConfig config) {
@@ -99,8 +108,22 @@ public class AmpTrap extends Mechanism {
     // Simulation
     // --------------------------------------------------------------------------------
 
-    public void simulationInit() {}
+    public void simulationInit() {
+        if (isAttached()) {
+            sim = new AmpTrapSim(RobotSim.leftView, motor.getSimState());
+        }
+    }
 
     @Override
-    public void simulationPeriodic() {}
+    public void simulationPeriodic() {
+        if (isAttached()) {
+            sim.simulationPeriodic(config.ampTrapX, config.ampTrapY);
+        }
+    }
+
+    class AmpTrapSim extends RollerSim {
+        public AmpTrapSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
+            super(new RollerConfig(config.wheelDiameter), mech, rollerMotorSim, config.getName());
+        }
+    }
 }
