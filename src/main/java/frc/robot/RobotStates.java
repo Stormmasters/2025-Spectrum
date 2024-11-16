@@ -5,6 +5,7 @@ import static frc.robot.auton.Auton.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.crescendo.Field;
 import frc.robot.RobotConfig.RobotType;
+import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.swerve.Swerve;
 import frc.spectrumLib.SpectrumState;
@@ -12,6 +13,7 @@ import frc.spectrumLib.SpectrumState;
 public class RobotStates {
     private static final RobotConfig config = Robot.getRobotConfig();
     private static final Pilot pilot = Robot.getPilot();
+    private static final Operator operator = Robot.getOperator();
     private static final Swerve swerve = Robot.getSwerve();
 
     // Define Robot States here and how they can be triggered
@@ -25,8 +27,9 @@ public class RobotStates {
     public static final Trigger sim = new Trigger(() -> config.getRobotType() == RobotType.SIM);
 
     public static final Trigger visionIntaking = Trigger.kFalse;
-    public static final Trigger intaking = pilot.intake_A.or(visionIntaking, autonIntake);
-    public static final Trigger ejecting = pilot.eject_fA;
+    public static final Trigger intaking =
+            pilot.intake_A.or(visionIntaking, autonIntake, operator.intake_A);
+    public static final Trigger ejecting = pilot.eject_fA.or(operator.eject_fA);
 
     public static final Trigger ampZone =
             swerve.inXzoneAlliance(0, Field.getHalfLengh() / 2)

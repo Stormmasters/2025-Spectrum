@@ -62,7 +62,7 @@ public class Climber extends Mechanism {
             configReverseSoftLimit(getMinRotation(), true);
             configNeutralBrakeMode(true);
             // configMotionMagicPosition(0.12);
-            configCounterClockwise_Positive();
+            configCounterClockwise_Positive(); // might be different on actual robot
         }
     }
 
