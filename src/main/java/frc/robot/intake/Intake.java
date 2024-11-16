@@ -32,7 +32,7 @@ public class Intake extends Mechanism {
         @Getter private double torqueCurrentLimit = 120;
         @Getter private double velocityKp = 12; // 0.156152;
         @Getter private double velocityKv = 0.2; // 0.12;
-        @Getter private double velocityKs = 14; // 0.24; // 14;
+        @Getter private double velocityKs = 14;
 
         /* Sim Configs */
         @Getter private double intakeX = 0.325;
@@ -40,16 +40,16 @@ public class Intake extends Mechanism {
         @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {
-            super("Intake", 5, RobotConfig.CANIVORE);
+            super("Intake", 8, RobotConfig.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12 / 30);
             configSupplyCurrentLimit(currentLimit, true);
-            // configStatorCurrentLimit(30, true);
+            configStatorCurrentLimit(30, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configNeutralBrakeMode(true);
-            configClockwise_Positive();
+            configCounterClockwise_Positive(); // might be different on actual robot
             configMotionMagic(51, 205, 0);
         }
     }
