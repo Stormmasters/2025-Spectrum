@@ -11,7 +11,6 @@ public class FeederStates {
     private static FeederConfig config = Robot.getConfig().feeder;
 
     // TODO: implement feeder states
-    /* Check Elevator States */
 
     public static void setupDefaultCommand() {
         feeder.setDefaultCommand(feeder.runStop().ignoringDisable(true).withName("Feeder.default"));

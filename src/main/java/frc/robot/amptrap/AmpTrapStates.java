@@ -11,7 +11,6 @@ public class AmpTrapStates {
     private static AmpTrapConfig config = Robot.getConfig().ampTrap;
 
     // TODO: implement amptrap states
-    /* Check AmpTrap States */
 
     public static void setupDefaultCommand() {
         ampTrap.setDefaultCommand(
