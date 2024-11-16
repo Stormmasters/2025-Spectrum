@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class ArmSim {
+public class ArmSim implements LinkSim {
     private SingleJointedArmSim armSim;
     private ArmConfig config;
 
@@ -69,5 +69,28 @@ public class ArmSim {
 
     public double getAngleRads() {
         return armSim.getAngleRads();
+    }
+
+    public double getAttachedX() {
+        return (config.getInitialAttachedX() - config.getPivotX()) * Math.cos(getAngleRads())
+                - (config.getInitialAttachedY() - config.getPivotY()) * Math.sin(getAngleRads())
+                + config.getPivotX();
+    }
+
+    public double getAttachedY() {
+        return (config.getInitialAttachedX() - config.getPivotX()) * Math.sin(getAngleRads())
+                + (config.getInitialAttachedY() - config.getPivotY()) * Math.cos(getAngleRads())
+                + config.getPivotY();
+    }
+
+    public void setAttached(double initialX, double initialY) {
+        config.setInitialAttachedX(initialX);
+        config.setInitialAttachedY(initialY);
+    }
+
+    public double getAttachedDistance() {
+        return Math.sqrt(
+                Math.pow(config.getPivotX() - config.getInitialAttachedX(), 2)
+                        + Math.pow(config.getPivotY() - config.getInitialAttachedY(), 2));
     }
 }

@@ -81,6 +81,8 @@ public class Robot extends TimedRobot {
             Timer.delay(canInitDelay);
             elevator = new Elevator(config.elevator);
             Timer.delay(canInitDelay);
+            pivot = new Pivot(config.pivot);
+            Timer.delay(canInitDelay);
             ampTrap = new AmpTrap(config.ampTrap);
             Timer.delay(canInitDelay);
             climber = new Climber(config.climber);
@@ -90,8 +92,6 @@ public class Robot extends TimedRobot {
             intake = new Intake(config.intake);
             Timer.delay(canInitDelay);
             launcher = new Launcher(config.launcher);
-            Timer.delay(canInitDelay);
-            pivot = new Pivot(config.pivot);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
 

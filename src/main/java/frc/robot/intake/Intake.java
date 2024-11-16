@@ -37,7 +37,7 @@ public class Intake extends Mechanism {
         /* Sim Configs */
         @Getter private double intakeX = 0.325;
         @Getter private double intakeY = 0.05;
-        @Getter private double wheelDiameter = 4.0;
+        @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {
             super("Intake", 5, RobotConfig.CANIVORE);

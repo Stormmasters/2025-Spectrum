@@ -73,8 +73,7 @@ public class RollerSim {
         // Update the axle as the robot moves
         if (config.isAttached()) {
             rollerAxle.setPosition(
-                    config.getAttachmentSim().getDisplacementX(config.getInitialX()),
-                    config.getAttachmentSim().getDisplacementY(config.getInitialY()));
+                    config.getAttachment().getAttachedX(), config.getAttachment().getAttachedY());
         } else {
             rollerAxle.setPosition(config.getInitialX(), config.getInitialY());
         }

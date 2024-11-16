@@ -4,6 +4,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import lombok.Getter;
+import lombok.Setter;
 
 public class LinearConfig {
     @Getter private int numMotors = 1;
@@ -23,6 +24,8 @@ public class LinearConfig {
     @Getter private double initialY = 0;
     @Getter private double staticLength = 20;
     @Getter private double movingLength = 20;
+    @Getter @Setter private double initialAttachedX;
+    @Getter @Setter private double initialAttachedY;
 
     public LinearConfig(double x, double y, double gearing, double drumRadius) {
         this.initialX = x;

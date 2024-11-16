@@ -35,6 +35,7 @@ public class RobotConfig {
         public ConfigHolder() {
             swerve = new SwerveConfig();
             elevator = new ElevatorConfig();
+            pivot = new PivotConfig();
             ampTrap = new AmpTrapConfig();
             climber = new ClimberConfig();
             feeder = new FeederConfig();
@@ -43,7 +44,6 @@ public class RobotConfig {
             leds = new LedFullConfig();
             operator = new OperatorConfig();
             pilot = new PilotConfig();
-            pivot = new PivotConfig();
         }
     }
 

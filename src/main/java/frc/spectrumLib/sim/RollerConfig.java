@@ -15,7 +15,9 @@ public class RollerConfig {
     @Getter private double initialX = 0;
     @Getter private double initialY = 0;
     @Getter private boolean attached = false;
-    @Getter private LinearSim attachmentSim;
+    // @Getter private LinearSim linearAttachment;
+    // @Getter private ArmSim armAttachment;
+    @Getter private LinkSim attachment;
 
     public RollerConfig(double diameterInches) {
         rollerDiameterInches = diameterInches;
@@ -39,7 +41,15 @@ public class RollerConfig {
 
     public RollerConfig setAttached(LinearSim sim) {
         attached = true;
-        attachmentSim = sim;
+        attachment = sim;
+        sim.setAttached(initialX, initialY);
+        return this;
+    }
+
+    public RollerConfig setAttached(ArmSim sim) {
+        attached = true;
+        attachment = sim;
+        sim.setAttached(initialX, initialY);
         return this;
     }
 }

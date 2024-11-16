@@ -16,6 +16,8 @@ public class ArmConfig {
     @Getter @Setter private double maxAngle = Math.toRadians(90);
     @Getter @Setter private double startingAngle = Math.toRadians(90);
     @Getter @Setter private boolean simulateGravity = true;
+    @Getter @Setter private double initialAttachedX;
+    @Getter @Setter private double initialAttachedY;
 
     public ArmConfig(
             double pivotX,

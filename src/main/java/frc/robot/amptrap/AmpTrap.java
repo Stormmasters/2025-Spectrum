@@ -41,7 +41,7 @@ public class AmpTrap extends Mechanism {
         /* Sim Configs */
         @Getter private double ampTrapX = 0.25;
         @Getter private double ampTrapY = 0.4;
-        @Getter private double wheelDiameter = 4.0;
+        @Getter private double wheelDiameter = 5.0;
 
         public AmpTrapConfig() {
             super("AmpTrap", 51, RobotConfig.RIO_CANBUS);

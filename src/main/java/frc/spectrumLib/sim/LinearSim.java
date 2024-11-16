@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class LinearSim {
+public class LinearSim implements LinkSim {
     private ElevatorSim elevatorSim;
 
     private final MechanismRoot2d staticRoot;
@@ -84,13 +84,18 @@ public class LinearSim {
                         + (displacement * Math.sin(Math.toRadians(config.getAngle()))));
     }
 
-    public double getDisplacementX(double initialX) {
-        return initialX
+    public double getAttachedX() {
+        return config.getInitialAttachedX()
                 + (elevatorSim.getPositionMeters() * Math.cos(Math.toRadians(config.getAngle())));
     }
 
-    public double getDisplacementY(double initialY) {
-        return initialY
+    public double getAttachedY() {
+        return config.getInitialAttachedY()
                 + (elevatorSim.getPositionMeters() * Math.sin(Math.toRadians(config.getAngle())));
+    }
+
+    public void setAttached(double initialX, double initialY) {
+        config.setInitialAttachedX(initialX);
+        config.setInitialAttachedY(initialY);
     }
 }

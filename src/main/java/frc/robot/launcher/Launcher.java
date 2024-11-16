@@ -3,6 +3,7 @@ package frc.robot.launcher;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import frc.robot.Robot;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
@@ -25,6 +26,8 @@ public class Launcher extends Mechanism {
 
         /* Sim Configs */
         @Getter private double wheelDiameter = 6.0;
+        @Getter private double launcherX = 0.95;
+        @Getter private double launcherY = 0.1;
 
         public LauncherConfig() {
             super("Launcher", 42, RobotConfig.CANIVORE);
@@ -89,7 +92,9 @@ public class Launcher extends Mechanism {
     class LauncherSim extends RollerSim {
         public LauncherSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
             super(
-                    new RollerConfig(config.wheelDiameter).setPosition(0.5, 0.5),
+                    new RollerConfig(config.wheelDiameter)
+                            .setPosition(config.launcherX, config.launcherY)
+                            .setAttached(Robot.getPivot().getSim()),
                     mech,
                     rollerMotorSim,
                     config.getName());

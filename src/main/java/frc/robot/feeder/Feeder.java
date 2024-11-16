@@ -51,7 +51,7 @@ public class Feeder extends Mechanism {
         /* Sim Configs */
         @Getter private double feederX = 0.475;
         @Getter private double feederY = 0.075;
-        @Getter private double wheelDiameter = 4.0;
+        @Getter private double wheelDiameter = 5.0;
 
         public FeederConfig() {
             super("Feeder", 40, RobotConfig.CANIVORE);
