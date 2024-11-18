@@ -1,7 +1,7 @@
 package frc.spectrumLib.sim;
 
 public interface Mount {
-    
+
     public enum MountType {
         LINEAR,
         ARM,

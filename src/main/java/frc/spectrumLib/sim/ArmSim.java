@@ -14,7 +14,7 @@ import lombok.Getter;
 
 public class ArmSim implements Mount {
     private SingleJointedArmSim armSim;
-    private ArmConfig config;
+    @Getter private ArmConfig config;
 
     private MechanismRoot2d armPivot;
     private MechanismLigament2d armMech2d;
@@ -84,16 +84,5 @@ public class ArmSim implements Mount {
 
     public double getAngle() {
         return getAngleRads();
-    }
-
-    public void setAttached(double initialX, double initialY) {
-        config.setInitialAttachedX(initialX);
-        config.setInitialAttachedY(initialY);
-    }
-
-    public double getAttachedDistance() {
-        return Math.sqrt(
-                Math.pow(config.getPivotX() - config.getInitialAttachedX(), 2)
-                        + Math.pow(config.getPivotY() - config.getInitialAttachedY(), 2));
     }
 }

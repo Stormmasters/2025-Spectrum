@@ -16,6 +16,8 @@ public class RollerConfig {
     @Getter private double initialY = 0;
     @Getter private boolean mounted = false;
     @Getter private Mount mount;
+    @Getter private double mountX;
+    @Getter private double mountY;
 
     public RollerConfig(double diameterInches) {
         rollerDiameterInches = diameterInches;
@@ -40,12 +42,16 @@ public class RollerConfig {
     public RollerConfig setMount(LinearSim sim) {
         mounted = true;
         mount = sim;
+        mountX = sim.getConfig().getInitialX();
+        mountY = sim.getConfig().getInitialY();
         return this;
     }
 
     public RollerConfig setMount(ArmSim sim) {
         mounted = true;
         mount = sim;
+        mountX = sim.getConfig().getInitialX();
+        mountY = sim.getConfig().getInitialY();
         return this;
     }
 }

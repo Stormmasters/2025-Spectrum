@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import frc.spectrumLib.sim.Mount.MountType;
 
 public class RollerSim {
 
@@ -73,8 +72,7 @@ public class RollerSim {
 
         // Update the axle as the robot moves
         if (config.isMounted()) {
-            rollerAxle.setPosition(
-                    getDisplacedX(), getDisplacedY());
+            rollerAxle.setPosition(getUpdatedX(), getUpdatedY());
         } else {
             rollerAxle.setPosition(config.getInitialX(), config.getInitialY());
         }
@@ -93,31 +91,39 @@ public class RollerSim {
         }
     }
 
-    public double getDisplacedX() {
+    public double getUpdatedX() {
         switch (config.getMount().getMountType()) {
             case LINEAR:
                 return config.getInitialX() + config.getMount().getDisplacementX();
             case ARM:
-                return
-                (config.getInitialX() - config.getMount().getDisplacementX()) * Math.cos(config.getMount().getAngle())
-                - (config.getInitialY() - config.getMount().getDisplacementY()) * Math.sin(config.getMount().getAngle())
-                + config.getMount().getDisplacementX();
+                return Math.sqrt(
+                                        Math.pow(config.getInitialX() - config.getMountX(), 2)
+                                                + Math.pow(
+                                                        config.getInitialY() - config.getMountY(),
+                                                        2))
+                                * Math.cos(config.getMount().getAngle())
+                        + config.getMount().getDisplacementX()
+                        + config.getMountX();
             default:
-            return 0;
+                return 0;
         }
     }
 
-    public double getDisplacedY() {
+    public double getUpdatedY() {
         switch (config.getMount().getMountType()) {
             case LINEAR:
                 return config.getInitialY() + config.getMount().getDisplacementY();
             case ARM:
-                return 
-                (config.getInitialX() - config.getMount().getDisplacementX()) * Math.sin(config.getMount().getAngle())
-                + (config.getInitialY() - config.getMount().getDisplacementY()) * Math.cos(config.getMount().getAngle())
-                + config.getMount().getDisplacementY();
+                return Math.sqrt(
+                                        Math.pow(config.getInitialX() - config.getMountX(), 2)
+                                                + Math.pow(
+                                                        config.getInitialY() - config.getMountY(),
+                                                        2))
+                                * Math.sin(config.getMount().getAngle())
+                        + config.getMount().getDisplacementY()
+                        + config.getMountY();
             default:
-            return 0;
+                return 0;
         }
     }
 

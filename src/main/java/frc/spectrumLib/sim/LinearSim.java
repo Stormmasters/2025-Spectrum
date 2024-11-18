@@ -17,7 +17,7 @@ public class LinearSim implements Mount {
     private final MechanismRoot2d staticRoot;
     private final MechanismRoot2d root;
     private final MechanismLigament2d m_elevatorMech2d;
-    LinearConfig config;
+    @Getter private LinearConfig config;
     private TalonFXSimState linearMotorSim;
 
     @Getter private MountType mountType = MountType.LINEAR;
