@@ -16,12 +16,14 @@ public class RobotStates {
     private static final Operator operator = Robot.getOperator();
     private static final Swerve swerve = Robot.getSwerve();
 
-    // Define Robot States here and how they can be triggered
-    // States should be triggers that command multiple mechanism or can be used in teleop or auton
-    // Use onTrue/whileTrue to run a command when entering the state
-    // Use onFalse/whileFalse to run a command when leaving the state
-    // RobotType Triggers
+    /**
+     * Define Robot States here and how they can be triggered States should be triggers that command
+     * multiple mechanism or can be used in teleop or auton Use onTrue/whileTrue to run a command
+     * when entering the state Use onFalse/whileFalse to run a command when leaving the state
+     * RobotType Triggers
+     */
     public static final Trigger pm = new Trigger(() -> config.getRobotType() == RobotType.PM);
+
     public static final Trigger am = new Trigger(() -> config.getRobotType() == RobotType.AM);
     public static final Trigger fm = new Trigger(() -> config.getRobotType() == RobotType.FM);
     public static final Trigger sim = new Trigger(() -> config.getRobotType() == RobotType.SIM);

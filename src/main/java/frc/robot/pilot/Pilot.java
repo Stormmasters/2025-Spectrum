@@ -72,7 +72,10 @@ public class Pilot extends Gamepad {
     }
 
     private PilotConfig config;
-    @Getter @Setter private boolean isSlowMode = false;
+
+    @Getter @Setter
+    private boolean isSlowMode = false; // TODO: change slow and turbo to SpectrumStates
+
     @Getter @Setter private boolean isTurboMode = false;
 
     /** Create a new Pilot with the default name and port. */

@@ -178,8 +178,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledExit() {
-        // RobotCommands.ensureBrakeMode().schedule(); // sets all motors to brake mode if not
-        // already
+        RobotStates.coastMode.setFalse(); // Ensure motors are in brake mode
         RobotTelemetry.print("### Disabled Exit### ");
     }
 

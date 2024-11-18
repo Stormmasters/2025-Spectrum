@@ -9,7 +9,10 @@ public class OperatorStates {
 
     /** Set default command to turn off the rumble */
     public static void setupDefaultCommand() {
-        operator.setDefaultCommand(rumble(0, 1)); // .repeatedly().withName("Operator.default"));
+        operator.setDefaultCommand(
+                rumble(0, 1)
+                        .withName(
+                                "Operator.noRmble")); // .repeatedly().withName("Operator.default"));
     }
 
     /** Set the states for the operator controller */
@@ -17,6 +20,6 @@ public class OperatorStates {
 
     /** Command that can be used to rumble the operator controller */
     public static Command rumble(double intensity, double durationSeconds) {
-        return operator.rumbleCommand(intensity, durationSeconds);
+        return operator.rumbleCommand(intensity, durationSeconds).withName("Operator.rumble");
     }
 }
