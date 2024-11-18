@@ -8,11 +8,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotConfig.ConfigHolder;
+import frc.robot.amptrap.AmpTrap;
 import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
 import frc.robot.elevator.Elevator;
+import frc.robot.feeder.Feeder;
+import frc.robot.intake.Intake;
 import frc.robot.launcher.Launcher;
 import frc.robot.leds.LedFull;
+import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.pivot.Pivot;
 import frc.robot.swerve.Swerve;
@@ -33,12 +37,15 @@ public class Robot extends TimedRobot {
 
     @Getter private static RobotSim robotSim;
     @Getter private static Swerve swerve;
+    @Getter private static AmpTrap ampTrap;
     @Getter private static Climber climber;
-
     @Getter private static Elevator elevator;
+    @Getter private static Feeder feeder;
+    @Getter private static Intake intake;
     @Getter private static Launcher launcher;
     // @Getter private static LEDs leds;
     @Getter private static LedFull leds;
+    @Getter private static Operator operator;
     @Getter private static Pilot pilot;
     @Getter private static Pivot pivot;
     @Getter private static VisionSystem visionSystem;
@@ -68,12 +75,19 @@ public class Robot extends TimedRobot {
             double canInitDelay = 0.1; // Delay between any mechanism with motor/can configs
 
             leds = new LedFull(config.leds);
+            operator = new Operator(config.operator);
             pilot = new Pilot(config.pilot);
             swerve = new Swerve(config.swerve);
+            Timer.delay(canInitDelay);
+            ampTrap = new AmpTrap(config.ampTrap);
             Timer.delay(canInitDelay);
             climber = new Climber(config.climber);
             Timer.delay(canInitDelay);
             elevator = new Elevator(config.elevator);
+            Timer.delay(canInitDelay);
+            feeder = new Feeder(config.feeder);
+            Timer.delay(canInitDelay);
+            intake = new Intake(config.intake);
             Timer.delay(canInitDelay);
             launcher = new Launcher(config.launcher);
             Timer.delay(canInitDelay);
@@ -164,8 +178,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledExit() {
-        // RobotCommands.ensureBrakeMode().schedule(); // sets all motors to brake mode if not
-        // already
+        RobotStates.coastMode.setFalse(); // Ensure motors are in brake mode
         RobotTelemetry.print("### Disabled Exit### ");
     }
 

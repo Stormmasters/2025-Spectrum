@@ -92,7 +92,7 @@ public class Pivot extends Mechanism {
             configReverseSoftLimit(getMinRotation(), true);
             configForwardSoftLimit(getMaxRotation(), true);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive();
+            configCounterClockwise_Positive(); // might be different on actual robot
             setRatio(Math.abs(172.8)); // getGearRatio()));
         }
 
@@ -155,7 +155,7 @@ public class Pivot extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        PivotStates.setupStates();
+        PivotStates.setStates();
     }
 
     public void setupDefaultCommand() {
