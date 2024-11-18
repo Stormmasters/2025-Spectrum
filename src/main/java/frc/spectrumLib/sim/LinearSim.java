@@ -9,8 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import lombok.Getter;
 
-public class LinearSim implements LinkSim {
+public class LinearSim implements Mount {
     private ElevatorSim elevatorSim;
 
     private final MechanismRoot2d staticRoot;
@@ -18,6 +19,8 @@ public class LinearSim implements LinkSim {
     private final MechanismLigament2d m_elevatorMech2d;
     LinearConfig config;
     private TalonFXSimState linearMotorSim;
+
+    @Getter private MountType mountType = MountType.LINEAR;
 
     public LinearSim(
             LinearConfig config, Mechanism2d mech, TalonFXSimState linearMotorSim, String name) {
@@ -84,18 +87,15 @@ public class LinearSim implements LinkSim {
                         + (displacement * Math.sin(Math.toRadians(config.getAngle()))));
     }
 
-    public double getAttachedX() {
-        return config.getInitialAttachedX()
-                + (elevatorSim.getPositionMeters() * Math.cos(Math.toRadians(config.getAngle())));
+    public double getDisplacementX() {
+        return elevatorSim.getPositionMeters() * Math.cos(Math.toRadians(config.getAngle()));
     }
 
-    public double getAttachedY() {
-        return config.getInitialAttachedY()
-                + (elevatorSim.getPositionMeters() * Math.sin(Math.toRadians(config.getAngle())));
+    public double getDisplacementY() {
+        return elevatorSim.getPositionMeters() * Math.sin(Math.toRadians(config.getAngle()));
     }
 
-    public void setAttached(double initialX, double initialY) {
-        config.setInitialAttachedX(initialX);
-        config.setInitialAttachedY(initialY);
+    public double getAngle() {
+        return config.getAngle();
     }
 }

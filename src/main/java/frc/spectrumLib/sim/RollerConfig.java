@@ -14,10 +14,8 @@ public class RollerConfig {
     @Getter private Color8Bit revColor = new Color8Bit(Color.kRed);
     @Getter private double initialX = 0;
     @Getter private double initialY = 0;
-    @Getter private boolean attached = false;
-    // @Getter private LinearSim linearAttachment;
-    // @Getter private ArmSim armAttachment;
-    @Getter private LinkSim attachment;
+    @Getter private boolean mounted = false;
+    @Getter private Mount mount;
 
     public RollerConfig(double diameterInches) {
         rollerDiameterInches = diameterInches;
@@ -39,17 +37,15 @@ public class RollerConfig {
         return this;
     }
 
-    public RollerConfig setAttached(LinearSim sim) {
-        attached = true;
-        attachment = sim;
-        sim.setAttached(initialX, initialY);
+    public RollerConfig setMount(LinearSim sim) {
+        mounted = true;
+        mount = sim;
         return this;
     }
 
-    public RollerConfig setAttached(ArmSim sim) {
-        attached = true;
-        attachment = sim;
-        sim.setAttached(initialX, initialY);
+    public RollerConfig setMount(ArmSim sim) {
+        mounted = true;
+        mount = sim;
         return this;
     }
 }

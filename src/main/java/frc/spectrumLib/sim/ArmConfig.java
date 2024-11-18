@@ -6,6 +6,8 @@ import lombok.Setter;
 public class ArmConfig {
 
     @Getter @Setter private int numMotors = 1;
+    @Getter @Setter private double initialX = 0.7;
+    @Getter @Setter private double initialY = 0.3;
     @Getter @Setter private double pivotX = 0.7;
     @Getter @Setter private double pivotY = 0.3;
     @Getter @Setter private double ratio = 50;

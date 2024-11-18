@@ -10,14 +10,17 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import lombok.Getter;
 
-public class ArmSim implements LinkSim {
+public class ArmSim implements Mount {
     private SingleJointedArmSim armSim;
     private ArmConfig config;
 
     private MechanismRoot2d armPivot;
     private MechanismLigament2d armMech2d;
     private TalonFXSimState armMotorSim;
+
+    @Getter private MountType mountType = MountType.ARM;
 
     public ArmSim(ArmConfig config, Mechanism2d mech, TalonFXSimState armMotorSim, String name) {
         this.config = config;
@@ -71,16 +74,16 @@ public class ArmSim implements LinkSim {
         return armSim.getAngleRads();
     }
 
-    public double getAttachedX() {
-        return (config.getInitialAttachedX() - config.getPivotX()) * Math.cos(getAngleRads())
-                - (config.getInitialAttachedY() - config.getPivotY()) * Math.sin(getAngleRads())
-                + config.getPivotX();
+    public double getDisplacementX() {
+        return config.getPivotX() - config.getInitialX();
     }
 
-    public double getAttachedY() {
-        return (config.getInitialAttachedX() - config.getPivotX()) * Math.sin(getAngleRads())
-                + (config.getInitialAttachedY() - config.getPivotY()) * Math.cos(getAngleRads())
-                + config.getPivotY();
+    public double getDisplacementY() {
+        return config.getPivotY() - config.getInitialY();
+    }
+
+    public double getAngle() {
+        return getAngleRads();
     }
 
     public void setAttached(double initialX, double initialY) {

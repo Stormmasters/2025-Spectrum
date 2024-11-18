@@ -127,7 +127,7 @@ public class AmpTrap extends Mechanism {
             super(
                     new RollerConfig(config.wheelDiameter)
                             .setPosition(config.ampTrapX, config.ampTrapY)
-                            .setAttached(Robot.getElevator().getSim()),
+                            .setMount(Robot.getElevator().getSim()),
                     mech,
                     rollerMotorSim,
                     config.getName());

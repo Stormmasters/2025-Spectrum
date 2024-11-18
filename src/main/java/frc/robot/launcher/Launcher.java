@@ -94,7 +94,7 @@ public class Launcher extends Mechanism {
             super(
                     new RollerConfig(config.wheelDiameter)
                             .setPosition(config.launcherX, config.launcherY)
-                            .setAttached(Robot.getPivot().getSim()),
+                            .setMount(Robot.getPivot().getSim()),
                     mech,
                     rollerMotorSim,
                     config.getName());

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.spectrumLib.sim.Mount.MountType;
 
 public class RollerSim {
 
@@ -71,9 +72,9 @@ public class RollerSim {
         rollerMotorSim.addRotorPosition(rotationsPerSecond * TimedRobot.kDefaultPeriod);
 
         // Update the axle as the robot moves
-        if (config.isAttached()) {
+        if (config.isMounted()) {
             rollerAxle.setPosition(
-                    config.getAttachment().getAttachedX(), config.getAttachment().getAttachedY());
+                    getDisplacedX(), getDisplacedY());
         } else {
             rollerAxle.setPosition(config.getInitialX(), config.getInitialY());
         }
@@ -89,6 +90,34 @@ public class RollerSim {
             roller.setBackgroundColor(config.getFwdColor());
         } else {
             roller.setBackgroundColor(config.getOffColor());
+        }
+    }
+
+    public double getDisplacedX() {
+        switch (config.getMount().getMountType()) {
+            case LINEAR:
+                return config.getInitialX() + config.getMount().getDisplacementX();
+            case ARM:
+                return
+                (config.getInitialX() - config.getMount().getDisplacementX()) * Math.cos(config.getMount().getAngle())
+                - (config.getInitialY() - config.getMount().getDisplacementY()) * Math.sin(config.getMount().getAngle())
+                + config.getMount().getDisplacementX();
+            default:
+            return 0;
+        }
+    }
+
+    public double getDisplacedY() {
+        switch (config.getMount().getMountType()) {
+            case LINEAR:
+                return config.getInitialY() + config.getMount().getDisplacementY();
+            case ARM:
+                return 
+                (config.getInitialX() - config.getMount().getDisplacementX()) * Math.sin(config.getMount().getAngle())
+                + (config.getInitialY() - config.getMount().getDisplacementY()) * Math.cos(config.getMount().getAngle())
+                + config.getMount().getDisplacementY();
+            default:
+            return 0;
         }
     }
 
