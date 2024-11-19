@@ -8,6 +8,8 @@ import lombok.Getter;
 
 public class Operator extends Gamepad {
 
+    //TODO: Testing Github Profiles
+
     // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
     // If triggers need any of the config values set them in the constructor
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
