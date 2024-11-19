@@ -8,7 +8,6 @@ import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.configs.FM2024;
 import frc.robot.configs.PM2024;
 import frc.robot.elevator.Elevator.ElevatorConfig;
-import frc.robot.fakeArm.FakeArm.FakeArmConfig;
 import frc.robot.feeder.Feeder.FeederConfig;
 import frc.robot.intake.Intake.IntakeConfig;
 import frc.robot.launcher.Launcher.LauncherConfig;
@@ -25,7 +24,6 @@ public class RobotConfig {
         public AmpTrapConfig ampTrap;
         public ClimberConfig climber;
         public ElevatorConfig elevator;
-        public FakeArmConfig fakeArm;
         public FeederConfig feeder;
         public IntakeConfig intake;
         public LauncherConfig launcher;
@@ -38,7 +36,6 @@ public class RobotConfig {
             swerve = new SwerveConfig();
             elevator = new ElevatorConfig();
             pivot = new PivotConfig();
-            fakeArm = new FakeArmConfig();
             ampTrap = new AmpTrapConfig();
             climber = new ClimberConfig();
             feeder = new FeederConfig();
