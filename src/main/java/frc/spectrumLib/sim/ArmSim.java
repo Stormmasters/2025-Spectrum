@@ -52,12 +52,6 @@ public class ArmSim implements Mount, Mountable {
         armSim.setInput(armMotorSim.getMotorVoltage());
         armSim.update(TimedRobot.kDefaultPeriod);
 
-        if (config.isMounted()) {
-            config.setPivotX(getUpdatedX());
-            config.setPivotY(getUpdatedY());
-        }
-
-        armPivot.setPosition(config.getPivotX(), config.getPivotY());
         // armMotorSim.setRawRotorPosition(
         //         (armSim.getAngleRads() - config.getStartingAngle())
         //                 * config.getRatio()
@@ -73,7 +67,15 @@ public class ArmSim implements Mount, Mountable {
                 Units.radiansToRotations(armSim.getVelocityRadPerSec()) * config.getRatio());
 
         // ------ Update viz based on sim
-        armMech2d.setAngle(Math.toDegrees(armSim.getAngleRads()));
+        if (config.isMounted()) {
+            config.setPivotX(getUpdatedX());
+            config.setPivotY(getUpdatedY());
+            armMech2d.setAngle(Math.toDegrees(armSim.getAngleRads()) + Math.toDegrees(config.getMount().getAngle()));
+        } else {
+            armMech2d.setAngle(Math.toDegrees(armSim.getAngleRads()));
+        }
+
+        armPivot.setPosition(config.getPivotX(), config.getPivotY());
     }
 
     public double getAngleRads() {
