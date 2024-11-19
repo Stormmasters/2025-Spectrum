@@ -28,5 +28,33 @@
   "java.test.defaultConfig": "WPIlibUnitTests",
   "java.compile.nullAnalysis.mode": "automatic",
   "java.debug.settings.onBuildFailureProceed": true,
-  "docwriter.style": "Javadoc"
+  "docwriter.style": "Javadoc",
+  "gitConfigUser.profiles": [
+    
+
+    {
+      "label": "Allen Gregory",
+      "email": "AllenGregoryIV@gmail.com",
+      "userName": "AllenGregoryIV",
+      "selected": true,
+      "id": "053e4351-e8bd-42a1-b6bd-3da49b48bcb3",
+      "signingKey": ""
+    },
+    {
+      "label": "Spectrum",
+      "email": "Spectrum3847@gmail.com",
+      "userName": "Spectrum",
+      "selected": false,
+      "id": "56fe7fb3-d449-4bf2-ae57-ab1ee11c171b",
+      "signingKey": ""
+    },
+    {
+      "label": "Alexis",
+      "email": "alexisvu77@gmail.com",
+      "userName": "cycIes",
+      "selected": false,
+      "id": "52b9fb79-a6ee-48a3-ae05-fdd70c4b599c",
+      "signingKey": ""
+    }
+  ]
 }
