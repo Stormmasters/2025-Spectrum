@@ -29,14 +29,18 @@ public abstract class Gamepad implements SpectrumSubsystem {
     public Trigger rightBumper = Trigger.kFalse;
     public Trigger leftTrigger = Trigger.kFalse;
     public Trigger rightTrigger = Trigger.kFalse;
-    public Trigger leftStick = Trigger.kFalse;
-    public Trigger rightStick = Trigger.kFalse;
+    public Trigger leftStickClick = Trigger.kFalse;
+    public Trigger rightStickClick = Trigger.kFalse;
     public Trigger start = Trigger.kFalse;
     public Trigger select = Trigger.kFalse;
     public Trigger upDpad = Trigger.kFalse;
     public Trigger downDpad = Trigger.kFalse;
     public Trigger leftDpad = Trigger.kFalse;
     public Trigger rightDpad = Trigger.kFalse;
+    public Trigger leftStickY = Trigger.kFalse;
+    public Trigger leftStickX = Trigger.kFalse;
+    public Trigger rightStickY = Trigger.kFalse;
+    public Trigger rightStickX = Trigger.kFalse;
 
     // Setup function bumper and trigger buttons
     public Trigger noBumpers = rightBumper.negate().and(leftBumper.negate());
@@ -72,15 +76,15 @@ public abstract class Gamepad implements SpectrumSubsystem {
         // A configured value to say if we should use this controller on this robot
         @Getter @Setter private Boolean attached;
 
-        @Getter @Setter double leftStickDeadzone = 0.0;
+        @Getter @Setter double leftStickDeadzone = 0.001;
         @Getter @Setter double leftStickExp = 1.0;
         @Getter @Setter double leftStickScalor = 1.0;
 
-        @Getter @Setter double rightStickDeadzone = 0.0;
+        @Getter @Setter double rightStickDeadzone = 0.001;
         @Getter @Setter double rightStickExp = 1.0;
         @Getter @Setter double rightStickScalor = 1.0;
 
-        @Getter @Setter double triggersDeadzone = 0.0;
+        @Getter @Setter double triggersDeadzone = 0.001;
         @Getter @Setter double triggersExp = 1.0;
         @Getter @Setter double triggersScalor = 1.0;
 
@@ -131,16 +135,24 @@ public abstract class Gamepad implements SpectrumSubsystem {
             Y = xboxController.y();
             leftBumper = xboxController.leftBumper();
             rightBumper = xboxController.rightBumper();
-            leftTrigger = xboxController.leftTrigger(0.5); // Assuming a default threshold of 0.5
-            rightTrigger = xboxController.rightTrigger(0.5); // Assuming a default threshold of 0.5
-            leftStick = xboxController.leftStick();
-            rightStick = xboxController.rightStick();
+            leftTrigger =
+                    xboxController.leftTrigger(
+                            config.triggersDeadzone); // Assuming a default threshold of 0.5
+            rightTrigger =
+                    xboxController.rightTrigger(
+                            config.triggersDeadzone); // Assuming a default threshold of 0.5
+            leftStickClick = xboxController.leftStick();
+            rightStickClick = xboxController.rightStick();
             start = xboxController.start();
             select = xboxController.back();
             upDpad = xboxController.povUp();
             downDpad = xboxController.povDown();
             leftDpad = xboxController.povLeft();
             rightDpad = xboxController.povRight();
+            leftStickY = leftYTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
+            leftStickX = leftXTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
+            rightStickY = rightYTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
+            rightStickX = rightXTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
         }
 
         CommandScheduler.getInstance().registerSubsystem(this);

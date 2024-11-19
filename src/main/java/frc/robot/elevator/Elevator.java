@@ -101,7 +101,7 @@ public class Elevator extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
+            builder.addDoubleProperty("Position", this::getMotorPositionRotations, null);
             builder.addDoubleProperty("Velocity", this::getMotorVelocityRPM, null);
             builder.addDoubleProperty("#FullExtend", config::getFullExtend, config::setFullExtend);
         }
@@ -125,12 +125,12 @@ public class Elevator extends Mechanism {
             @Override
             public void initialize() {
                 stop();
-                holdPosition = getMotorPosition();
+                holdPosition = getMotorPositionRotations();
             }
 
             @Override
             public void execute() {
-                double currentPosition = getMotorPosition();
+                double currentPosition = getMotorPositionRotations();
                 if (Math.abs(holdPosition - currentPosition) <= 5) {
                     setMMPosition(() -> holdPosition);
                 } else {

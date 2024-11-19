@@ -17,37 +17,25 @@ public class IntakeStates {
     public static void setStates() {
         intaking.whileTrue(intake());
         ejecting.whileTrue(eject());
+        score.whileTrue(intake());
+
+        coastMode.whileTrue(coastMode());
+        coastMode.onFalse(ensureBrakeMode());
     }
 
-    public static Command runFull() {
-        return intake.runVelocityTCFOCrpm(config::getMaxSpeed).withName("Intake.runFull");
-    }
-
-    public static Command intake() {
+    private static Command intake() {
         return intake.runVelocityTCFOCrpm(config::getIntake).withName("Intake.intake");
     }
 
-    public static Command slowIntake() {
-        return intake.runVelocityTCFOCrpm(config::getSlowIntake).withName("Intake.slowIntake");
-    }
-
-    public static Command eject() {
+    private static Command eject() {
         return intake.runVelocityTCFOCrpm(config::getEject).withName("Intake.eject");
     }
 
-    public static Command coastMode() {
+    private static Command coastMode() {
         return intake.coastMode();
     }
 
-    public static Command intakeWithoutCurrentLimit() {
-        return intake.intakeWithoutCurrentLimit();
-    }
-
-    public static Command stopMotor() {
-        return intake.runStop().withName("Intake.stopMotor");
-    }
-
-    public static Command ensureBrakeMode() {
+    private static Command ensureBrakeMode() {
         return intake.ensureBrakeMode();
     }
 }

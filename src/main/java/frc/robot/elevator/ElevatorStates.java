@@ -22,11 +22,12 @@ public class ElevatorStates {
             new Trigger(
                     () -> {
                         double ampThreshold = config.getAmp() * config.getAmpTolerance();
-                        return elevator.getMotorPosition() > ampThreshold;
+                        return elevator.getMotorPositionRotations() > ampThreshold;
                     });
 
     public static final Trigger isUp =
-            new Trigger(() -> (elevator.getMotorPosition() >= config.getElevatorUpHeight()));
+            new Trigger(
+                    () -> (elevator.getMotorPositionRotations() >= config.getElevatorUpHeight()));
 
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(
@@ -58,20 +59,19 @@ public class ElevatorStates {
     }
 
     public static Command fullExtend() {
-        return elevator.moveToPoseRevolutions(config::getFullExtend)
-                .withName("Elevator.fullExtend");
+        return elevator.moveToPoseRotations(config::getFullExtend).withName("Elevator.fullExtend");
     }
 
     public static Command amp() {
-        return elevator.moveToPoseRevolutions(config::getAmp).withName("Elevator.amp");
+        return elevator.moveToPoseRotations(config::getAmp).withName("Elevator.amp");
     }
 
     public static Command trap() {
-        return elevator.moveToPoseRevolutions(config::getTrap).withName("Elevator.trap");
+        return elevator.moveToPoseRotations(config::getTrap).withName("Elevator.trap");
     }
 
     public static Command home() {
-        return elevator.moveToPoseRevolutions(config::getHome).withName("Elevator.home");
+        return elevator.moveToPoseRotations(config::getHome).withName("Elevator.home");
     }
 
     public static Command zero() {
@@ -88,7 +88,7 @@ public class ElevatorStates {
 
     // Example of a TuneValue that is used to tune a single value in the code
     public static Command tuneElevator() {
-        return elevator.moveToPoseRevolutions(new TuneValue("Tune Elevator", 0).getSupplier())
+        return elevator.moveToPoseRotations(new TuneValue("Tune Elevator", 0).getSupplier())
                 .withName("Elevator.Tune");
     }
 }
