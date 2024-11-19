@@ -18,6 +18,7 @@ import java.util.function.DoubleSupplier;
 import lombok.Getter;
 import lombok.Setter;
 
+//Gamepad class
 public abstract class Gamepad implements SpectrumSubsystem {
 
     private CommandXboxController xboxController;
