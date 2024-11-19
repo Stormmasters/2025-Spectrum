@@ -96,7 +96,7 @@ public class LinearSim implements Mount {
     }
 
     public double getAngle() {
-        return 0; 
+        return 0;
         // unsure if this makes sense, but works for how arms link to elevators at the moment
         // return config.getAngle();
     }
