@@ -5,14 +5,11 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class RollerSim {
 
@@ -35,25 +32,17 @@ public class RollerSim {
                         kraken, config.getSimMOI(), config.getGearRatio());
         rollerSim = new FlywheelSim(flyWheelSystem, kraken);
 
-        rollerAxle = mech.getRoot(name + " Axle", 0.0, 0.0);
-
-        rollerViz =
-                rollerAxle.append(
-                        new MechanismLigament2d(
-                                name + " Roller",
-                                Units.inchesToMeters(config.getRollerDiameterInches()) / 2.0,
-                                0.0,
-                                5.0,
-                                new Color8Bit(Color.kWhite)));
+        
 
         rollerBackground = new MechanismLigament2d[config.getBackgroundLines()];
-
+                
+        
         roller =
                 new Circle(
                         config.getBackgroundLines(),
                         config.getRollerDiameterInches(),
                         name,
-                        rollerAxle);
+                        rollerAxle,mech);
     }
 
     public void simulationPeriodic(double x, double y) {
