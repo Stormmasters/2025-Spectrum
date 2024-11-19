@@ -70,7 +70,9 @@ public class ArmSim implements Mount, Mountable {
         if (config.isMounted()) {
             config.setPivotX(getUpdatedX());
             config.setPivotY(getUpdatedY());
-            armMech2d.setAngle(Math.toDegrees(armSim.getAngleRads()) + Math.toDegrees(config.getMount().getAngle()));
+            armMech2d.setAngle(
+                    Math.toDegrees(armSim.getAngleRads())
+                            + Math.toDegrees(config.getMount().getAngle()));
         } else {
             armMech2d.setAngle(Math.toDegrees(armSim.getAngleRads()));
         }
@@ -91,6 +93,9 @@ public class ArmSim implements Mount, Mountable {
     }
 
     public double getAngle() {
+        if (config.isMounted()) {
+            return getAngleRads() + config.getMount().getAngle();
+        }
         return getAngleRads();
     }
 
