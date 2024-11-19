@@ -96,11 +96,17 @@ public class RollerSim {
             case LINEAR:
                 return config.getInitialX() + config.getMount().getDisplacementX();
             case ARM:
-                return Math.sqrt(
-                                        Math.pow(config.getInitialX() - config.getMountX(), 2)
-                                                + Math.pow(
-                                                        config.getInitialY() - config.getMountY(),
-                                                        2))
+                return (Math.sqrt(
+                                                Math.pow(
+                                                                config.getInitialX()
+                                                                        - config.getMountX(),
+                                                                2)
+                                                        + Math.pow(
+                                                                config.getInitialY()
+                                                                        - config.getMountY(),
+                                                                2))
+                                        + Units.inchesToMeters(config.getRollerDiameterInches())
+                                                / 2.0)
                                 * Math.cos(config.getMount().getAngle())
                         + config.getMount().getDisplacementX()
                         + config.getMountX();
@@ -114,11 +120,17 @@ public class RollerSim {
             case LINEAR:
                 return config.getInitialY() + config.getMount().getDisplacementY();
             case ARM:
-                return Math.sqrt(
-                                        Math.pow(config.getInitialX() - config.getMountX(), 2)
-                                                + Math.pow(
-                                                        config.getInitialY() - config.getMountY(),
-                                                        2))
+                return (Math.sqrt(
+                                                Math.pow(
+                                                                config.getInitialX()
+                                                                        - config.getMountX(),
+                                                                2)
+                                                        + Math.pow(
+                                                                config.getInitialY()
+                                                                        - config.getMountY(),
+                                                                2))
+                                        + Units.inchesToMeters(config.getRollerDiameterInches())
+                                                / 2.0)
                                 * Math.sin(config.getMount().getAngle())
                         + config.getMount().getDisplacementY()
                         + config.getMountY();

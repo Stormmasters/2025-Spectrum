@@ -20,10 +20,14 @@ public class ArmConfig {
     @Getter @Setter private boolean simulateGravity = true;
     @Getter @Setter private double initialAttachedX;
     @Getter @Setter private double initialAttachedY;
+    @Getter private boolean mounted = false;
+    @Getter private Mount mount;
+    @Getter private double mountX;
+    @Getter private double mountY;
 
     public ArmConfig(
-            double pivotX,
-            double pivotY,
+            double initialX,
+            double initialY,
             double ratio,
             double length,
             double minAngleDegrees,
@@ -34,7 +38,25 @@ public class ArmConfig {
         this.minAngle = Math.toRadians(minAngleDegrees);
         this.maxAngle = Math.toRadians(maxAngleDegrees);
         this.startingAngle = Math.toRadians(startingAngleDegrees);
-        this.pivotX = pivotX;
-        this.pivotY = pivotY;
+        this.initialX = initialX;
+        this.initialY = initialY;
+        this.pivotX = initialX;
+        this.pivotY = initialY;
+    }
+
+    public ArmConfig setMount(LinearSim sim) {
+        mounted = true;
+        mount = sim;
+        mountX = sim.getConfig().getInitialX();
+        mountY = sim.getConfig().getInitialY();
+        return this;
+    }
+
+    public ArmConfig setMount(ArmSim sim) {
+        mounted = true;
+        mount = sim;
+        mountX = sim.getConfig().getInitialX();
+        mountY = sim.getConfig().getInitialY();
+        return this;
     }
 }

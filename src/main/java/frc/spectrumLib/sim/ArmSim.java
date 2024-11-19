@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import lombok.Getter;
 
-public class ArmSim implements Mount {
+public class ArmSim implements Mount, Mountable {
     private SingleJointedArmSim armSim;
     @Getter private ArmConfig config;
 
@@ -52,6 +52,12 @@ public class ArmSim implements Mount {
         armSim.setInput(armMotorSim.getMotorVoltage());
         armSim.update(TimedRobot.kDefaultPeriod);
 
+        if (config.isMounted()) {
+            config.setPivotX(getUpdatedX());
+            config.setPivotY(getUpdatedY());
+        }
+
+        armPivot.setPosition(config.getPivotX(), config.getPivotY());
         // armMotorSim.setRawRotorPosition(
         //         (armSim.getAngleRads() - config.getStartingAngle())
         //                 * config.getRatio()
@@ -84,5 +90,41 @@ public class ArmSim implements Mount {
 
     public double getAngle() {
         return getAngleRads();
+    }
+
+    public double getUpdatedX() {
+        switch (config.getMount().getMountType()) {
+            case LINEAR:
+                return config.getInitialX() + config.getMount().getDisplacementX();
+            case ARM:
+                return Math.sqrt(
+                                        Math.pow(config.getInitialX() - config.getMountX(), 2)
+                                                + Math.pow(
+                                                        config.getInitialY() - config.getMountY(),
+                                                        2))
+                                * Math.cos(config.getMount().getAngle())
+                        + config.getMount().getDisplacementX()
+                        + config.getMountX();
+            default:
+                return 0;
+        }
+    }
+
+    public double getUpdatedY() {
+        switch (config.getMount().getMountType()) {
+            case LINEAR:
+                return config.getInitialY() + config.getMount().getDisplacementY();
+            case ARM:
+                return Math.sqrt(
+                                        Math.pow(config.getInitialX() - config.getMountX(), 2)
+                                                + Math.pow(
+                                                        config.getInitialY() - config.getMountY(),
+                                                        2))
+                                * Math.sin(config.getMount().getAngle())
+                        + config.getMount().getDisplacementY()
+                        + config.getMountY();
+            default:
+                return 0;
+        }
     }
 }
