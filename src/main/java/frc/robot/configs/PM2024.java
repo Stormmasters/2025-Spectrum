@@ -1,13 +1,14 @@
 package frc.robot.configs;
 
-public class PM2024 extends FM2024 {
+import edu.wpi.first.wpilibj.util.Color;
 
-    // We should be able to configure default LED colors per robot, so we know the right config is
-    // loading
+public class PM2024 extends FM2024 {
 
     public PM2024() {
         super();
-        swerve.configEncoderOffsets(0.3, 0.3, 0.3, 0.3);
+        swerve.configEncoderOffsets(0.336426, -0.031006, -0.323730, 0.492188);
         launcher.setAttached(false);
+        pivot.setAttached(false);
+        leds.setPrimaryColor(Color.kPink);
     }
 }
