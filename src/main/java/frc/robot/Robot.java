@@ -51,11 +51,6 @@ public class Robot extends TimedRobot {
     @Getter private static VisionSystem visionSystem;
     @Getter private static Auton auton;
 
-    public static double num = 0;
-
-    @SuppressWarnings("unused")
-    private Command m_autonomousCommand;
-
     public Robot() {
         DataLogManager.start();
         DriverStation.silenceJoystickConnectionWarning(true);
