@@ -44,6 +44,7 @@ public class Auton {
 
         pathChooser.addOption("Basic Front 4", SpectrumAuton("Basic Front 4"));
         pathChooser.addOption("Madtown", SpectrumAuton("Madtown"));
+        pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward"));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
