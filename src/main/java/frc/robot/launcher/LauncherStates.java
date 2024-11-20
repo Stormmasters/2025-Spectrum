@@ -5,7 +5,6 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.amptrap.AmpTrapStates;
 import frc.robot.launcher.Launcher.LauncherConfig;
 import java.util.function.DoubleSupplier;
 
@@ -23,7 +22,6 @@ public class LauncherStates {
         subwooferPrep.whileTrue(subwooferRPM());
         speakerPrep.whileTrue(defaultLauncherRPM());
         ejecting.whileTrue(ejectRPM());
-        ampPrep.and(AmpTrapStates.noNote).whileTrue(ejectRPM());
         score.and(atZeroRPM).onTrue(spitRpm());
         score.onFalse(launcher.runStop());
 

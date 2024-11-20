@@ -92,13 +92,13 @@ public class RobotConfig {
             case AM:
                 config = new ConfigHolder();
                 break;
-            case SIM: // SIM runs FM config, move to sim other configs if needed
             case PM:
                 config = new PM2024();
                 break;
             case PHOTON:
                 config = new ConfigHolder();
                 break;
+            case SIM: // SIM runs FM config, move to sim other configs if needed
             case FM:
             default:
                 /* Set all the default configs */
