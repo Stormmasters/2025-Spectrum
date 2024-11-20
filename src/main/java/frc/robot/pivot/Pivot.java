@@ -15,7 +15,6 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import frc.robot.Robot;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
@@ -293,13 +292,13 @@ public class Pivot extends Mechanism {
         public PivotSim(TalonFXSimState pivotMotorSim, Mechanism2d mech) {
             super(
                     new ArmConfig(
-                                    config.pivotX,
-                                    config.pivotY,
-                                    config.ratio,
-                                    config.length,
-                                    config.getMinRotation(),
-                                    80, // config.getMaxRotation() * config.getRatio(),
-                                    config.getMinRotation()),
+                            config.pivotX,
+                            config.pivotY,
+                            config.ratio,
+                            config.length,
+                            config.getMinRotation(),
+                            80, // config.getMaxRotation() * config.getRatio(),
+                            config.getMinRotation()),
                     mech,
                     pivotMotorSim,
                     config.getName());

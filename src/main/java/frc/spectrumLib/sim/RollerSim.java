@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public class RollerSim implements Mountable {
 
     private MechanismRoot2d rollerAxle;
-    private MechanismLigament2d[] rollerBackground; // TODO: should figure out why we don't use this
     private MechanismLigament2d rollerViz;
 
     private FlywheelSim rollerSim;
@@ -45,8 +44,6 @@ public class RollerSim implements Mountable {
                                 0.0,
                                 5.0,
                                 new Color8Bit(Color.kWhite)));
-
-        rollerBackground = new MechanismLigament2d[config.getBackgroundLines()];
 
         roller =
                 new Circle(
@@ -90,20 +87,4 @@ public class RollerSim implements Mountable {
             roller.setBackgroundColor(config.getOffColor());
         }
     }
-
-    // public void setBackgroundColor(Color8Bit color8Bit) {
-    //     for (int i = 0; i < config.getBackgroundLines(); i++) {
-    //         rollerBackground[i].setColor(color8Bit);
-    //     }
-    // }
-
-    // public void setHalfBackground(Color8Bit color8Bit) {
-    //     for (int i = 0; i < config.getBackgroundLines(); i++) {
-    //         if (i % 2 == 0) {
-    //             rollerBackground[i].setColor(color8Bit);
-    //         } else {
-    //             rollerBackground[i].setColor(config.getOffColor());
-    //         }
-    //     }
-    // }
 }
