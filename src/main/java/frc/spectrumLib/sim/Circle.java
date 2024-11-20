@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Circle {
 
     private MechanismRoot2d rollerAxle;
-    @Getter private MechanismLigament2d rollerViz;
+    private MechanismLigament2d rollerViz;
     @Getter private MechanismLigament2d[] circleBackground;
     @Getter private int backgroundLines;
     private double diameterInches;
@@ -33,7 +33,6 @@ public class Circle {
         this.circleBackground = new MechanismLigament2d[this.backgroundLines];
         this.rollerAxle = mech.getRoot(name + " Axle", 0.0, 0.0);
         drawCircle();
-        drawViz();
     }
 
     public Circle(
@@ -62,7 +61,7 @@ public class Circle {
 
     public void drawViz() {
         rollerViz =
-                root.append(
+                rollerAxle.append(
                         new MechanismLigament2d(
                                 name + " Roller",
                                 Units.inchesToMeters(diameterInches) / 2.0,
