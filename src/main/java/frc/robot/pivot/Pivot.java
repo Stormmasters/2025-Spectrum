@@ -127,7 +127,7 @@ public class Pivot extends Mechanism {
 
     private PivotConfig config;
     private CANcoder m_CANcoder;
-    private PivotSim sim;
+    @Getter private PivotSim sim;
     CANcoderSimState canCoderSim;
 
     public Pivot(PivotConfig config) {

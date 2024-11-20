@@ -4,6 +4,7 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import frc.robot.Robot;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
@@ -30,6 +31,8 @@ public class Launcher extends Mechanism {
         @Getter private double velocityKs = 14;
 
         /* Sim Configs */
+        @Getter private double launcherX = 0.95;
+        @Getter private double launcherY = 0.1;
         @Getter private double wheelDiameterIn = 2;
 
         @Getter
@@ -101,13 +104,19 @@ public class Launcher extends Mechanism {
     // if roller position changes configure x and y to set position.
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic(0.5, 0.5);
+            sim.simulationPeriodic();
         }
     }
 
     class LauncherSim extends RollerSim {
         public LauncherSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
-            super(new RollerConfig(config.wheelDiameterIn), mech, rollerMotorSim, config.getName());
+            super(
+                    new RollerConfig(config.wheelDiameterIn)
+                            .setPosition(config.launcherX, config.launcherY)
+                            .setMount(Robot.getPivot().getSim()),
+                    mech,
+                    rollerMotorSim,
+                    config.getName());
         }
     }
 }

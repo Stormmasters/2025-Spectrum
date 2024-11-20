@@ -72,19 +72,19 @@ public class Robot extends TimedRobot {
             pilot = new Pilot(config.pilot);
             swerve = new Swerve(config.swerve);
             Timer.delay(canInitDelay);
-            ampTrap = new AmpTrap(config.ampTrap);
-            Timer.delay(canInitDelay);
             climber = new Climber(config.climber);
             Timer.delay(canInitDelay);
             elevator = new Elevator(config.elevator);
+            Timer.delay(canInitDelay);
+            pivot = new Pivot(config.pivot);
+            Timer.delay(canInitDelay);
+            ampTrap = new AmpTrap(config.ampTrap);
             Timer.delay(canInitDelay);
             feeder = new Feeder(config.feeder);
             Timer.delay(canInitDelay);
             intake = new Intake(config.intake);
             Timer.delay(canInitDelay);
             launcher = new Launcher(config.launcher);
-            Timer.delay(canInitDelay);
-            pivot = new Pivot(config.pivot);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
 

@@ -51,7 +51,7 @@ public class Feeder extends Mechanism {
         /* Sim Configs */
         @Getter private double feederX = 0.475;
         @Getter private double feederY = 0.075;
-        @Getter private double wheelDiameter = 4.0;
+        @Getter private double wheelDiameter = 5.0;
 
         public FeederConfig() {
             super("Feeder", 40, RobotConfig.CANIVORE);
@@ -133,13 +133,18 @@ public class Feeder extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic(config.feederX, config.feederY);
+            sim.simulationPeriodic();
         }
     }
 
     class FeederSim extends RollerSim {
         public FeederSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
-            super(new RollerConfig(config.wheelDiameter), mech, rollerMotorSim, config.getName());
+            super(
+                    new RollerConfig(config.wheelDiameter)
+                            .setPosition(config.feederX, config.feederY),
+                    mech,
+                    rollerMotorSim,
+                    config.getName());
         }
     }
 }

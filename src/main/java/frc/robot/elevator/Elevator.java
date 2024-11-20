@@ -72,7 +72,7 @@ public class Elevator extends Mechanism {
     }
 
     private ElevatorConfig config;
-    private ElevatorSim sim;
+    @Getter private ElevatorSim sim;
 
     public Elevator(ElevatorConfig config) {
         super(config);

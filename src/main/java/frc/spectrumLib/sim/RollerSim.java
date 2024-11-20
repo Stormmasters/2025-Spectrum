@@ -5,16 +5,18 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class RollerSim {
+public class RollerSim implements Mountable {
 
     private MechanismRoot2d rollerAxle;
-    private MechanismLigament2d[] rollerBackground; // TODO: should figure out why we don't use this
     private MechanismLigament2d rollerViz;
 
     private FlywheelSim rollerSim;
@@ -32,7 +34,16 @@ public class RollerSim {
                         kraken, config.getSimMOI(), config.getGearRatio());
         rollerSim = new FlywheelSim(flyWheelSystem, kraken);
 
-        rollerBackground = new MechanismLigament2d[config.getBackgroundLines()];
+        rollerAxle = mech.getRoot(name + " Axle", 0.0, 0.0);
+
+        rollerViz =
+                rollerAxle.append(
+                        new MechanismLigament2d(
+                                name + " Roller",
+                                Units.inchesToMeters(config.getRollerDiameterInches()) / 2.0,
+                                0.0,
+                                5.0,
+                                new Color8Bit(Color.kWhite)));
 
         roller =
                 new Circle(
@@ -43,7 +54,7 @@ public class RollerSim {
                         mech);
     }
 
-    public void simulationPeriodic(double x, double y) {
+    public void simulationPeriodic() { // double x, double y) {
         // ------ Update sim based on motor output
         rollerSim.setInput(rollerMotorSim.getMotorVoltage());
         rollerSim.update(TimedRobot.kDefaultPeriod);
@@ -58,7 +69,11 @@ public class RollerSim {
         rollerMotorSim.addRotorPosition(rotationsPerSecond * TimedRobot.kDefaultPeriod);
 
         // Update the axle as the robot moves
-        rollerAxle.setPosition(x, y);
+        if (config.isMounted()) {
+            rollerAxle.setPosition(getUpdatedX(config), getUpdatedY(config));
+        } else {
+            rollerAxle.setPosition(config.getInitialX(), config.getInitialY());
+        }
 
         // Scale down the angular velocity so we can actually see what is happening
         double rpm = rollerSim.getAngularVelocityRPM() / 2;
@@ -73,20 +88,4 @@ public class RollerSim {
             roller.setBackgroundColor(config.getOffColor());
         }
     }
-
-    // public void setBackgroundColor(Color8Bit color8Bit) {
-    //     for (int i = 0; i < config.getBackgroundLines(); i++) {
-    //         rollerBackground[i].setColor(color8Bit);
-    //     }
-    // }
-
-    // public void setHalfBackground(Color8Bit color8Bit) {
-    //     for (int i = 0; i < config.getBackgroundLines(); i++) {
-    //         if (i % 2 == 0) {
-    //             rollerBackground[i].setColor(color8Bit);
-    //         } else {
-    //             rollerBackground[i].setColor(config.getOffColor());
-    //         }
-    //     }
-    // }
 }

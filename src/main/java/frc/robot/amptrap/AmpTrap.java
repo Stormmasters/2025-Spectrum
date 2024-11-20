@@ -3,6 +3,7 @@ package frc.robot.amptrap;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import frc.robot.Robot;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
@@ -40,7 +41,7 @@ public class AmpTrap extends Mechanism {
         /* Sim Configs */
         @Getter private double ampTrapX = 0.25;
         @Getter private double ampTrapY = 0.4;
-        @Getter private double wheelDiameter = 4.0;
+        @Getter private double wheelDiameter = 5.0;
 
         public AmpTrapConfig() {
             super("AmpTrap", 51, RobotConfig.RIO_CANBUS);
@@ -112,13 +113,19 @@ public class AmpTrap extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic(config.ampTrapX, config.ampTrapY);
+            sim.simulationPeriodic(); // config.ampTrapX, config.ampTrapY);
         }
     }
 
     class AmpTrapSim extends RollerSim {
         public AmpTrapSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
-            super(new RollerConfig(config.wheelDiameter), mech, rollerMotorSim, config.getName());
+            super(
+                    new RollerConfig(config.wheelDiameter)
+                            .setPosition(config.ampTrapX, config.ampTrapY)
+                            .setMount(Robot.getElevator().getSim()),
+                    mech,
+                    rollerMotorSim,
+                    config.getName());
         }
     }
 }

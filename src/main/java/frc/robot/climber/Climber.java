@@ -67,7 +67,7 @@ public class Climber extends Mechanism {
     }
 
     private ClimberConfig config;
-    private ClimberSim sim;
+    @Getter private ClimberSim sim;
 
     public Climber(ClimberConfig config) {
         super(config); // unsure if we need this, may delete and test

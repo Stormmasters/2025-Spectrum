@@ -35,7 +35,7 @@ public class Intake extends Mechanism {
         /* Sim Configs */
         @Getter private double intakeX = 0.325;
         @Getter private double intakeY = 0.05;
-        @Getter private double wheelDiameter = 4.0;
+        @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {
             super("Intake", 8, RobotConfig.CANIVORE);
@@ -110,13 +110,18 @@ public class Intake extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic(config.intakeX, config.intakeY);
+            sim.simulationPeriodic();
         }
     }
 
     class IntakeSim extends RollerSim {
         public IntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
-            super(new RollerConfig(config.wheelDiameter), mech, rollerMotorSim, config.getName());
+            super(
+                    new RollerConfig(config.wheelDiameter)
+                            .setPosition(config.intakeX, config.intakeY),
+                    mech,
+                    rollerMotorSim,
+                    config.getName());
         }
     }
 }
