@@ -51,7 +51,7 @@ public class RobotConfig {
     public static final Double robotInitDelay = 2.0; // Seconds to wait before starting robot code
 
     public final String ALPHA2024SERIAL = "032B1F69";
-    public final String PM2024SERIAL = "03223839";
+    public final String PM2024SERIAL = "032B4BB3";
     public final String ULTRAVIOLET2024SERIAL = "032B1F69"; // "0329AD07";
     public final String PHOTON2024SERIAL = "0329AD07";
 
@@ -64,7 +64,7 @@ public class RobotConfig {
 
     public ConfigHolder config;
 
-    // Add aditional robot types here, need to add them to the checkRobotType method and
+    // Add additional robot types here, need to add them to the checkRobotType method and
     // the config switch statement
     public enum RobotType {
         AM,

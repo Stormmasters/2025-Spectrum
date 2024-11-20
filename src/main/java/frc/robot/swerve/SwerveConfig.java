@@ -125,36 +125,36 @@ public class SwerveConfig {
     @Getter private SwerveModuleConstantsFactory constantCreator;
 
     // Front Left
-    @Getter private int frontLeftDriveMotorId = 5;
-    @Getter private int frontLeftSteerMotorId = 4;
-    @Getter private int frontLeftEncoderId = 2;
+    @Getter private int frontLeftDriveMotorId = 1;
+    @Getter private int frontLeftSteerMotorId = 2;
+    @Getter private int frontLeftEncoderId = 3;
     @Getter private Angle frontLeftEncoderOffset = Rotations.of(-0.83544921875);
 
     @Getter private Distance frontLeftXPos = Inches.of(10.5);
     @Getter private Distance frontLeftYPos = Inches.of(10.5);
 
     // Front Right
-    @Getter private int frontRightDriveMotorId = 7;
-    @Getter private int frontRightSteerMotorId = 6;
-    @Getter private int frontRightEncoderId = 3;
+    @Getter private int frontRightDriveMotorId = 11;
+    @Getter private int frontRightSteerMotorId = 12;
+    @Getter private int frontRightEncoderId = 13;
     @Getter private Angle frontRightEncoderOffset = Rotations.of(-0.15234375);
 
     @Getter private Distance frontRightXPos = Inches.of(10.5);
     @Getter private Distance frontRightYPos = Inches.of(-10.5);
 
     // Back Left
-    @Getter private int backLeftDriveMotorId = 1;
-    @Getter private int backLeftSteerMotorId = 0;
-    @Getter private int backLeftEncoderId = 0;
+    @Getter private int backLeftDriveMotorId = 21;
+    @Getter private int backLeftSteerMotorId = 22;
+    @Getter private int backLeftEncoderId = 23;
     @Getter private Angle backLeftEncoderOffset = Rotations.of(-0.4794921875);
 
     @Getter private Distance backLeftXPos = Inches.of(-10.5);
     @Getter private Distance backLeftYPos = Inches.of(10.5);
 
     // Back Right
-    @Getter private int backRightDriveMotorId = 3;
-    @Getter private int backRightSteerMotorId = 2;
-    @Getter private int backRightEncoderId = 1;
+    @Getter private int backRightDriveMotorId = 31;
+    @Getter private int backRightSteerMotorId = 32;
+    @Getter private int backRightEncoderId = 33;
     @Getter private Angle backRightEncoderOffset = Rotations.of(-0.84130859375);
 
     @Getter private Distance backRightXPos = Inches.of(-10.5);
