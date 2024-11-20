@@ -34,10 +34,10 @@ public class RobotConfig {
 
         public ConfigHolder() {
             swerve = new SwerveConfig();
+            climber = new ClimberConfig();
             elevator = new ElevatorConfig();
             pivot = new PivotConfig();
             ampTrap = new AmpTrapConfig();
-            climber = new ClimberConfig();
             feeder = new FeederConfig();
             intake = new IntakeConfig();
             launcher = new LauncherConfig();

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import frc.robot.Robot;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
@@ -67,7 +68,7 @@ public class Climber extends Mechanism {
     }
 
     private ClimberConfig config;
-    private ClimberSim sim;
+    @Getter private ClimberSim sim;
 
     public Climber(ClimberConfig config) {
         super(config); // unsure if we need this, may delete and test

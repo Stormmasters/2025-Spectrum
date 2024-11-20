@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import lombok.Getter;
 
-public class LinearSim implements Mount {
+public class LinearSim implements Mount, Mountable {
     private ElevatorSim elevatorSim;
 
     private final MechanismRoot2d staticRoot;
@@ -81,18 +81,34 @@ public class LinearSim implements Mount {
         linearMotorSim.setRawRotorPosition(getRotations());
 
         double displacement = elevatorSim.getPositionMeters();
-        root.setPosition(
-                config.getInitialX() + (displacement * Math.cos(Math.toRadians(config.getAngle()))),
-                config.getInitialY()
-                        + (displacement * Math.sin(Math.toRadians(config.getAngle()))));
+
+        if (config.isMounted()) {
+            config.setStaticRootX(getUpdatedX(config));
+            config.setStaticRootY(getUpdatedY(config));
+            staticRoot.setPosition(config.getStaticRootX(), config.getStaticRootY());
+
+            root.setPosition(
+                    config.getStaticRootX()
+                            + (displacement * Math.cos(Math.toRadians(config.getAngle()))),
+                    config.getStaticRootY()
+                            + (displacement * Math.sin(Math.toRadians(config.getAngle()))));
+        } else {
+            root.setPosition(
+                    config.getInitialX()
+                            + (displacement * Math.cos(Math.toRadians(config.getAngle()))),
+                    config.getInitialY()
+                            + (displacement * Math.sin(Math.toRadians(config.getAngle()))));
+        }
     }
 
     public double getDisplacementX() {
-        return elevatorSim.getPositionMeters() * Math.cos(Math.toRadians(config.getAngle()));
+        return elevatorSim.getPositionMeters() * Math.cos(Math.toRadians(config.getAngle()))
+                + (config.getStaticRootX() - config.getInitialX());
     }
 
     public double getDisplacementY() {
-        return elevatorSim.getPositionMeters() * Math.sin(Math.toRadians(config.getAngle()));
+        return elevatorSim.getPositionMeters() * Math.sin(Math.toRadians(config.getAngle()))
+                + (config.getStaticRootY() - config.getInitialY());
     }
 
     public double getAngle() {

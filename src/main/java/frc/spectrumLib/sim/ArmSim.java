@@ -68,8 +68,8 @@ public class ArmSim implements Mount, Mountable {
 
         // ------ Update viz based on sim
         if (config.isMounted()) {
-            config.setPivotX(getUpdatedX());
-            config.setPivotY(getUpdatedY());
+            config.setPivotX(getUpdatedX(config));
+            config.setPivotY(getUpdatedY(config));
             armMech2d.setAngle(
                     Math.toDegrees(armSim.getAngleRads())
                             + Math.toDegrees(config.getMount().getAngle()));
@@ -97,41 +97,5 @@ public class ArmSim implements Mount, Mountable {
             return getAngleRads() + config.getMount().getAngle();
         }
         return getAngleRads();
-    }
-
-    public double getUpdatedX() {
-        switch (config.getMount().getMountType()) {
-            case LINEAR:
-                return config.getInitialX() + config.getMount().getDisplacementX();
-            case ARM:
-                return Math.sqrt(
-                                        Math.pow(config.getInitialX() - config.getMountX(), 2)
-                                                + Math.pow(
-                                                        config.getInitialY() - config.getMountY(),
-                                                        2))
-                                * Math.cos(config.getMount().getAngle())
-                        + config.getMount().getDisplacementX()
-                        + config.getMountX();
-            default:
-                return 0;
-        }
-    }
-
-    public double getUpdatedY() {
-        switch (config.getMount().getMountType()) {
-            case LINEAR:
-                return config.getInitialY() + config.getMount().getDisplacementY();
-            case ARM:
-                return Math.sqrt(
-                                        Math.pow(config.getInitialX() - config.getMountX(), 2)
-                                                + Math.pow(
-                                                        config.getInitialY() - config.getMountY(),
-                                                        2))
-                                * Math.sin(config.getMount().getAngle())
-                        + config.getMount().getDisplacementY()
-                        + config.getMountY();
-            default:
-                return 0;
-        }
     }
 }

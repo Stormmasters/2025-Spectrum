@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class RollerSim {
+public class RollerSim implements Mountable {
 
     private MechanismRoot2d rollerAxle;
     private MechanismLigament2d[] rollerBackground; // TODO: should figure out why we don't use this
@@ -72,7 +72,7 @@ public class RollerSim {
 
         // Update the axle as the robot moves
         if (config.isMounted()) {
-            rollerAxle.setPosition(getUpdatedX(), getUpdatedY());
+            rollerAxle.setPosition(getUpdatedX(config), getUpdatedY(config));
         } else {
             rollerAxle.setPosition(config.getInitialX(), config.getInitialY());
         }
@@ -88,42 +88,6 @@ public class RollerSim {
             roller.setBackgroundColor(config.getFwdColor());
         } else {
             roller.setBackgroundColor(config.getOffColor());
-        }
-    }
-
-    public double getUpdatedX() {
-        switch (config.getMount().getMountType()) {
-            case LINEAR:
-                return config.getInitialX() + config.getMount().getDisplacementX();
-            case ARM:
-                return (Math.sqrt(Math.pow(config.getInitialX() - config.getMountX(), 2)
-                                             + Math.pow(
-                                                config.getInitialY()
-                                                        - config.getMountY(),
-                                                2)))
-                                * Math.cos(config.getMount().getAngle())
-                        + config.getMount().getDisplacementX()
-                        + config.getMountX();
-            default:
-                return 0;
-        }
-    }
-
-    public double getUpdatedY() {
-        switch (config.getMount().getMountType()) {
-            case LINEAR:
-                return config.getInitialY() + config.getMount().getDisplacementY();
-            case ARM:
-                return (Math.sqrt(Math.pow(config.getInitialX() - config.getMountX(), 2)
-                                        + Math.pow(
-                                                config.getInitialY()
-                                                        - config.getMountY(),
-                                                2)))
-                                * Math.sin(config.getMount().getAngle())
-                        + config.getMount().getDisplacementY()
-                        + config.getMountY();
-            default:
-                return 0;
         }
     }
 

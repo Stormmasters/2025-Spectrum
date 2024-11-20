@@ -22,14 +22,22 @@ public class LinearConfig {
     @Getter private double lineWidth = 10;
     @Getter private double initialX = 0.5;
     @Getter private double initialY = 0;
+    @Getter @Setter private double staticRootX = 0.5;
+    @Getter @Setter private double staticRootY = 0;
     @Getter private double staticLength = 20;
     @Getter private double movingLength = 20;
     @Getter @Setter private double initialAttachedX;
     @Getter @Setter private double initialAttachedY;
+    @Getter private boolean mounted = false;
+    @Getter private Mount mount;
+    @Getter private double mountX;
+    @Getter private double mountY;
 
     public LinearConfig(double x, double y, double gearing, double drumRadius) {
         this.initialX = x;
         this.initialY = y;
+        staticRootX = initialX;
+        staticRootY = initialY;
         elevatorGearing = gearing;
         this.drumRadius = drumRadius;
     }
@@ -67,6 +75,22 @@ public class LinearConfig {
 
     public LinearConfig setMovingLength(double lengthInches) {
         this.movingLength = Units.inchesToMeters(lengthInches);
+        return this;
+    }
+
+    public LinearConfig setMount(LinearSim sim) {
+        mounted = true;
+        mount = sim;
+        mountX = sim.getConfig().getInitialX();
+        mountY = sim.getConfig().getInitialY();
+        return this;
+    }
+
+    public LinearConfig setMount(ArmSim sim) {
+        mounted = true;
+        mount = sim;
+        mountX = sim.getConfig().getInitialX();
+        mountY = sim.getConfig().getInitialY();
         return this;
     }
 }
