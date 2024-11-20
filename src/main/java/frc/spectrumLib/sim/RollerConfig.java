@@ -40,18 +40,24 @@ public class RollerConfig {
     }
 
     public RollerConfig setMount(LinearSim sim) {
-        mounted = true;
-        mount = sim;
-        mountX = sim.getConfig().getInitialX();
-        mountY = sim.getConfig().getInitialY();
+        if (sim != null) {
+            mounted = true;
+            mount = sim;
+            mountX = sim.getConfig().getInitialX();
+            mountY = sim.getConfig().getInitialY();
+        }
+
         return this;
     }
 
     public RollerConfig setMount(ArmSim sim) {
-        mounted = true;
-        mount = sim;
-        mountX = sim.getConfig().getInitialX();
-        mountY = sim.getConfig().getInitialY();
+        if (sim != null) {
+            mounted = true;
+            mount = sim;
+            mountX = sim.getConfig().getInitialX();
+            mountY = sim.getConfig().getInitialY();
+        }
+
         return this;
     }
 }

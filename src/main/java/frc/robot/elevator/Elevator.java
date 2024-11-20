@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import frc.robot.Robot;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
@@ -190,7 +191,8 @@ public class Elevator extends Mechanism {
                                     config.kElevatorDrumRadiusMeters)
                             .setAngle(config.angle)
                             .setMovingLength(config.getMovingLength())
-                            .setStaticLength(config.getStaticLength()),
+                            .setStaticLength(config.getStaticLength())
+                            .setMount(Robot.getPivot().getSim()),
                     mech,
                     elevatorMotorSim,
                     config.getName());
