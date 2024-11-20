@@ -5,14 +5,11 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class RollerSim implements Mountable {
 
@@ -33,18 +30,7 @@ public class RollerSim implements Mountable {
                 LinearSystemId.createFlywheelSystem(
                         kraken, config.getSimMOI(), config.getGearRatio());
         rollerSim = new FlywheelSim(flyWheelSystem, kraken);
-
-        rollerAxle = mech.getRoot(name + " Axle", 0.0, 0.0);
-
-        rollerViz =
-                rollerAxle.append(
-                        new MechanismLigament2d(
-                                name + " Roller",
-                                Units.inchesToMeters(config.getRollerDiameterInches()) / 2.0,
-                                0.0,
-                                5.0,
-                                new Color8Bit(Color.kWhite)));
-
+               
         roller =
                 new Circle(
                         config.getBackgroundLines(),
@@ -77,8 +63,10 @@ public class RollerSim implements Mountable {
 
         // Scale down the angular velocity so we can actually see what is happening
         double rpm = rollerSim.getAngularVelocityRPM() / 2;
-        rollerViz.setAngle(
-                rollerViz.getAngle() + Math.toDegrees(rpm) * TimedRobot.kDefaultPeriod * 0.1);
+        roller.getRollerViz()
+                .setAngle(
+                        roller.getRollerViz().getAngle()
+                                + Math.toDegrees(rpm) * TimedRobot.kDefaultPeriod * 0.1);
 
         if (rollerSim.getAngularVelocityRadPerSec() < -1) {
             roller.setHalfBackground(config.getRevColor(), config.getOffColor());
