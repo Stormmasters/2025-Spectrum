@@ -30,7 +30,7 @@ public class RollerSim implements Mountable {
                 LinearSystemId.createFlywheelSystem(
                         kraken, config.getSimMOI(), config.getGearRatio());
         rollerSim = new FlywheelSim(flyWheelSystem, kraken);
-
+               
         roller =
                 new Circle(
                         config.getBackgroundLines(),

@@ -59,7 +59,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
     private boolean configured =
             false; // Used to determine if we detected the gamepad is plugged and we have configured
     // it
-    private boolean printed = false; // Used to only print Gamepad Not Detected once
+    private boolean printed = false; // Used to only print Gamepad Not Deteceted once
 
     @Getter protected final ExpCurve leftStickCurve;
     @Getter protected final ExpCurve rightStickCurve;
@@ -108,7 +108,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
      */
     public Gamepad(Config config) {
         this.config = config;
-        // Curve objects that we use to configure the controller axis objects
+        // Curve objects that we use to configure the controller axis ojbects
         leftStickCurve =
                 new ExpCurve(
                         config.getLeftStickExp(),
@@ -167,7 +167,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
     // Configure the pilot controller
     public void configure() {
         if (config.getAttached()) {
-            // Detect whether the Xbox controller has been plugged in after start-up
+            // Detect whether the xbox controller has been plugged in after start-up
             if (!configured) {
                 if (!isConnected()) {
                     if (!printed) {
