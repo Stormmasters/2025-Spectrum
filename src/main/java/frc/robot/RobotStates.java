@@ -16,12 +16,14 @@ public class RobotStates {
     private static final Operator operator = Robot.getOperator();
     private static final Swerve swerve = Robot.getSwerve();
 
-    // Define Robot States here and how they can be triggered
-    // States should be triggers that command multiple mechanism or can be used in teleop or auton
-    // Use onTrue/whileTrue to run a command when entering the state
-    // Use onFalse/whileFalse to run a command when leaving the state
-    // RobotType Triggers
+    /**
+     * Define Robot States here and how they can be triggered States should be triggers that command
+     * multiple mechanism or can be used in teleop or auton Use onTrue/whileTrue to run a command
+     * when entering the state Use onFalse/whileFalse to run a command when leaving the state
+     * RobotType Triggers
+     */
     public static final Trigger pm = new Trigger(() -> config.getRobotType() == RobotType.PM);
+
     public static final Trigger am = new Trigger(() -> config.getRobotType() == RobotType.AM);
     public static final Trigger fm = new Trigger(() -> config.getRobotType() == RobotType.FM);
     public static final Trigger sim = new Trigger(() -> config.getRobotType() == RobotType.SIM);
@@ -35,8 +37,6 @@ public class RobotStates {
             swerve.inXzoneAlliance(0, Field.getHalfLengh() / 2)
                     .and(swerve.inYzone(Field.getHalfWidth(), Field.getFieldWidth()));
 
-    public static final Trigger ampPrep = pilot.ampPrep_B.and(ampZone);
-
     public static final Trigger score = pilot.score_RB;
 
     public static final Trigger speakerZone = swerve.inXzoneAlliance(0, Field.getHalfLengh() - 1);
@@ -48,6 +48,9 @@ public class RobotStates {
     public static final Trigger climbPrep = pilot.climbPrep_RDP;
     public static final Trigger climbRoutine =
             pilot.climbRoutine_start; // TODO: Add a check for hooks up
+
+    public static final Trigger ampPrep = pilot.ampPrep_B.and(ampZone);
+    public static final Trigger noteToAmp = pilot.ampPrep_B.or(operator.noteToAmp_B, climbPrep);
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.

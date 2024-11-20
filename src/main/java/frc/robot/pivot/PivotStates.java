@@ -23,6 +23,7 @@ public class PivotStates {
         ampPrep.whileTrue(home());
 
         coastMode.whileTrue(coastMode());
+        coastMode.onFalse(ensureBrakeMode());
     }
 
     // missing distance based pivot commands
@@ -32,43 +33,43 @@ public class PivotStates {
     }
 
     public static Command home() {
-        return pivot.moveToPosePercentage(config::getHome).withName("Pivot.home");
+        return pivot.moveToPercentage(config::getHome).withName("Pivot.home");
     }
 
     public static Command climbHome() {
-        return pivot.moveToPosePercentage(config::getClimbHome).withName("Pivot.climbHome");
+        return pivot.moveToPercentage(config::getClimbHome).withName("Pivot.climbHome");
     }
 
     public static Command manualFeed() {
-        return pivot.moveToPosePercentage(config::getManualFeed).withName("Pivot.manualFeed");
+        return pivot.moveToPercentage(config::getManualFeed).withName("Pivot.manualFeed");
     }
 
     /* Scoring positions */
 
     public static Command subwoofer() {
-        return pivot.moveToPosePercentage(config::getSubwoofer).withName("Pivot.subwoofer");
+        return pivot.moveToPercentage(config::getSubwoofer).withName("Pivot.subwoofer");
     }
 
     public static Command podium() {
-        return pivot.moveToPosePercentage(config::getPodium).withName("Pivot.podium");
+        return pivot.moveToPercentage(config::getPodium).withName("Pivot.podium");
     }
 
     public static Command ampWing() {
-        return pivot.moveToPosePercentage(config::getAmpWing).withName("Pivot.ampWing");
+        return pivot.moveToPercentage(config::getAmpWing).withName("Pivot.ampWing");
     }
 
     public static Command fromAmp() {
-        return pivot.moveToPosePercentage(config::getFromAmp).withName("Pivot.fromAmp");
+        return pivot.moveToPercentage(config::getFromAmp).withName("Pivot.fromAmp");
     }
 
     public static Command intoAmp() {
-        return pivot.moveToPosePercentage(config::getIntoAmp).withName("Pivot.intoAmp");
+        return pivot.moveToPercentage(config::getIntoAmp).withName("Pivot.intoAmp");
     }
 
     // missing auton pivot commands, add when auton is added
 
     public static Command intake() {
-        return pivot.moveToPosePercentage(config::getIntake).withName("Pivot.intake");
+        return pivot.moveToPercentage(config::getIntake).withName("Pivot.intake");
     }
 
     public static Command coastMode() {
@@ -112,7 +113,7 @@ public class PivotStates {
 
     // Tune value command
     public static Command tunePivot() {
-        return pivot.moveToPosePercentage(new TuneValue("Tune Pivot", 0).getSupplier())
+        return pivot.moveToPercentage(new TuneValue("Tune Pivot", 0).getSupplier())
                 .withName("Pivot.Tune");
     }
 }

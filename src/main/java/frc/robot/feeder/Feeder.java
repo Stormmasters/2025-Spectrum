@@ -100,8 +100,8 @@ public class Feeder extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
-            builder.addDoubleProperty("Velocity RPS", this::getMotorVelocityRPS, null);
+            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity RPS", this::getVelocityRPS, null);
         }
     }
 

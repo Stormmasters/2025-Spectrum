@@ -28,7 +28,7 @@ public class Elevator extends Mechanism {
         @Getter private double amp = 15;
         @Getter private double trap = 5;
 
-        @Getter private double ampTolerance = 0.8;
+        @Getter private double tolerance = 0.95;
         @Getter private double elevatorUpHeight = 5;
 
         /* Elevator config settings */
@@ -101,8 +101,8 @@ public class Elevator extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
-            builder.addDoubleProperty("Velocity", this::getMotorVelocityRPM, null);
+            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("#FullExtend", config::getFullExtend, config::setFullExtend);
         }
     }
@@ -125,12 +125,12 @@ public class Elevator extends Mechanism {
             @Override
             public void initialize() {
                 stop();
-                holdPosition = getMotorPosition();
+                holdPosition = getPositionRotations();
             }
 
             @Override
             public void execute() {
-                double currentPosition = getMotorPosition();
+                double currentPosition = getPositionRotations();
                 if (Math.abs(holdPosition - currentPosition) <= 5) {
                     setMMPosition(() -> holdPosition);
                 } else {

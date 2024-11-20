@@ -50,7 +50,8 @@ public class RollerSim implements Mountable {
                         config.getBackgroundLines(),
                         config.getRollerDiameterInches(),
                         name,
-                        rollerAxle);
+                        rollerAxle,
+                        mech);
     }
 
     public void simulationPeriodic() { // double x, double y) {

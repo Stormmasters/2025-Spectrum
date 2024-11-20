@@ -10,7 +10,10 @@ public class PilotStates {
 
     /** Set default command to turn off the rumble */
     public static void setupDefaultCommand() {
-        pilot.setDefaultCommand(rumble(0, 1)); // launchReadyRumble().withName("Pilot.default"));
+        pilot.setDefaultCommand(
+                rumble(0, 1)
+                        .withName(
+                                "Pilot.noRmble")); // launchReadyRumble().withName("Pilot.default"));
     }
 
     /** Set the states for the pilot controller */
@@ -22,7 +25,7 @@ public class PilotStates {
 
     /** Command that can be used to rumble the pilot controller */
     public static Command rumble(double intensity, double durationSeconds) {
-        return pilot.rumbleCommand(intensity, durationSeconds);
+        return pilot.rumbleCommand(intensity, durationSeconds).withName("Pilot.rumble");
     }
 
     /**
