@@ -92,7 +92,7 @@ public class Pivot extends Mechanism {
             configReverseSoftLimit(getMinRotation(), true);
             configForwardSoftLimit(getMaxRotation(), true);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive();
+            configCounterClockwise_Positive(); // might be different on actual robot
             setRatio(Math.abs(172.8)); // getGearRatio()));
         }
 
@@ -127,7 +127,7 @@ public class Pivot extends Mechanism {
 
     private PivotConfig config;
     private CANcoder m_CANcoder;
-    private PivotSim sim;
+    @Getter private PivotSim sim;
     CANcoderSimState canCoderSim;
 
     public Pivot(PivotConfig config) {
@@ -155,7 +155,7 @@ public class Pivot extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        PivotStates.setupStates();
+        PivotStates.setStates();
     }
 
     public void setupDefaultCommand() {
@@ -169,8 +169,8 @@ public class Pivot extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
-            builder.addDoubleProperty("Velocity", this::getMotorVelocityRPM, null);
+            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
         }
@@ -237,12 +237,12 @@ public class Pivot extends Mechanism {
 
             @Override
             public void initialize() {
-                holdPosition = getMotorPosition();
+                holdPosition = getPositionRotations();
             }
 
             @Override
             public void execute() {
-                moveToPoseRevolutions(() -> holdPosition);
+                moveToRotations(() -> holdPosition);
             }
 
             @Override
@@ -254,7 +254,7 @@ public class Pivot extends Mechanism {
 
     public boolean pivotHasError() {
         if (isAttached()) {
-            return getMotorPosition() > config.getMaxRotation();
+            return getPositionRotations() > config.getMaxRotation();
         }
         return false;
     }

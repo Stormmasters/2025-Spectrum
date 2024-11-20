@@ -11,6 +11,8 @@ import lombok.Setter;
 
 public class Circle {
 
+    private MechanismRoot2d rollerAxle;
+    @Getter private MechanismLigament2d rollerViz;
     @Getter private MechanismLigament2d[] circleBackground;
     @Getter private int backgroundLines;
     private double diameterInches;
@@ -18,13 +20,20 @@ public class Circle {
     @Setter private Color8Bit color = new Color8Bit(Color.kBlack);
     @Setter private String name;
 
-    public Circle(int backgroundLines, double diameterInches, String name, MechanismRoot2d root) {
+    public Circle(
+            int backgroundLines,
+            double diameterInches,
+            String name,
+            MechanismRoot2d root,
+            Mechanism2d mech) {
         this.backgroundLines = backgroundLines;
         this.diameterInches = diameterInches;
         this.name = name;
         this.root = root;
         this.circleBackground = new MechanismLigament2d[this.backgroundLines];
+        this.rollerAxle = mech.getRoot(name + " Axle", 0.0, 0.0);
         drawCircle();
+        drawViz();
     }
 
     public Circle(
@@ -34,7 +43,7 @@ public class Circle {
             String name,
             MechanismRoot2d root,
             Color8Bit color) {
-        this(backgroundLines, diameterInches, name, root);
+        this(backgroundLines, diameterInches, name, root, mech);
         this.color = color;
     }
 
@@ -49,6 +58,17 @@ public class Circle {
                                     diameterInches,
                                     color));
         }
+    }
+
+    public void drawViz() {
+        rollerViz =
+                root.append(
+                        new MechanismLigament2d(
+                                name + " Roller",
+                                Units.inchesToMeters(diameterInches) / 2.0,
+                                0.0,
+                                5.0,
+                                new Color8Bit(Color.kWhite)));
     }
 
     public void setBackgroundColor(Color8Bit color) {

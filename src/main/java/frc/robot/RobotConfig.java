@@ -3,12 +3,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.configs.FM2024;
 import frc.robot.configs.PM2024;
 import frc.robot.elevator.Elevator.ElevatorConfig;
+import frc.robot.feeder.Feeder.FeederConfig;
+import frc.robot.intake.Intake.IntakeConfig;
 import frc.robot.launcher.Launcher.LauncherConfig;
 import frc.robot.leds.LedFull.LedFullConfig;
+import frc.robot.operator.Operator.OperatorConfig;
 import frc.robot.pilot.Pilot.PilotConfig;
 import frc.robot.pivot.Pivot.PivotConfig;
 import frc.robot.swerve.SwerveConfig;
@@ -17,10 +21,14 @@ public class RobotConfig {
 
     public static class ConfigHolder {
         public SwerveConfig swerve;
+        public AmpTrapConfig ampTrap;
         public ClimberConfig climber;
         public ElevatorConfig elevator;
+        public FeederConfig feeder;
+        public IntakeConfig intake;
         public LauncherConfig launcher;
         public LedFullConfig leds;
+        public OperatorConfig operator;
         public PilotConfig pilot;
         public PivotConfig pivot;
 
@@ -28,10 +36,14 @@ public class RobotConfig {
             swerve = new SwerveConfig();
             climber = new ClimberConfig();
             elevator = new ElevatorConfig();
+            pivot = new PivotConfig();
+            ampTrap = new AmpTrapConfig();
+            feeder = new FeederConfig();
+            intake = new IntakeConfig();
             launcher = new LauncherConfig();
             leds = new LedFullConfig();
+            operator = new OperatorConfig();
             pilot = new PilotConfig();
-            pivot = new PivotConfig();
         }
     }
 
@@ -52,7 +64,7 @@ public class RobotConfig {
 
     public ConfigHolder config;
 
-    // Add aditional robot types here, need to add them to the checkRobotType method and
+    // Add additional robot types here, need to add them to the checkRobotType method and
     // the config switch statement
     public enum RobotType {
         AM,
@@ -80,13 +92,13 @@ public class RobotConfig {
             case AM:
                 config = new ConfigHolder();
                 break;
+            case SIM: // SIM runs FM config, move to sim other configs if needed
             case PM:
                 config = new PM2024();
                 break;
             case PHOTON:
                 config = new ConfigHolder();
                 break;
-            case SIM: // SIM runs FM config, move to sim other configs if needed
             case FM:
             default:
                 /* Set all the default configs */

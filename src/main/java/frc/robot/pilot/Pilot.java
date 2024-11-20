@@ -10,13 +10,13 @@ import lombok.Setter;
 public class Pilot extends Gamepad {
 
     // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
-    // If tirggers need any of the config values set them in the constructor
-    /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simualation */
+    // If triggers need any of the config values set them in the constructor
+    /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
     public final Trigger intake_A = A.and(noFn, teleop);
     public final Trigger eject_fA = A.and(fn, teleop);
-    public final Trigger ampPrep_B = B; // .and(noFn, teleop);
+    public final Trigger ampPrep_B = B.and(noFn, teleop);
     public final Trigger score_RB = rightBumper.and(teleop);
     public final Trigger launchPrep_RT = rightTrigger.and(noFn, teleop);
     public final Trigger subwooferPrep_fRT = rightTrigger.and(fn, teleop);
@@ -38,7 +38,7 @@ public class Pilot extends Gamepad {
 
     public final Trigger snapSteer = Trigger.kFalse;
 
-    public final Trigger fpv_rs = rightStick.and(teleop); // Remapped to Right back button
+    public final Trigger fpv_rs = rightStickClick.and(teleop); // Remapped to Right back button
 
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);
@@ -72,7 +72,10 @@ public class Pilot extends Gamepad {
     }
 
     private PilotConfig config;
-    @Getter @Setter private boolean isSlowMode = false;
+
+    @Getter @Setter
+    private boolean isSlowMode = false; // TODO: change slow and turbo to SpectrumStates
+
     @Getter @Setter private boolean isTurboMode = false;
 
     /** Create a new Pilot with the default name and port. */
@@ -81,12 +84,8 @@ public class Pilot extends Gamepad {
         this.config = config;
         Robot.subsystems.add(this);
 
-        driving =
-                leftXTrigger(Threshold.ABS_GREATER, config.deadzone)
-                        .or(leftYTrigger(Threshold.ABS_GREATER, config.deadzone));
-        steer =
-                rightXTrigger(Threshold.ABS_GREATER, config.deadzone)
-                        .or(rightYTrigger(Threshold.ABS_GREATER, config.deadzone));
+        driving = leftStickX.or(leftStickY);
+        steer = rightStickX.or(rightStickY);
 
         RobotTelemetry.print("Pilot Subsystem Initialized: ");
     }

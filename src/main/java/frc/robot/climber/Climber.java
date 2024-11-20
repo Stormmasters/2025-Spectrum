@@ -21,14 +21,14 @@ public class Climber extends Mechanism {
         @Getter private double fullExtend = 100;
         @Getter private double home = 0;
 
-        @Getter private double topClimb = 100;
         @Getter private double midClimb = 74;
         @Getter private double safeClimb = 60;
-        @Getter private double botClimb = 0;
 
-        /* Climber Percentage Output */
-        @Getter private double raisePercentage = 0.2;
-        @Getter private double lowerPercentage = -0.2;
+        @Getter private double tolerance = 2;
+
+        // /* Climber Percentage Output */
+        // @Getter private double raisePercentage = 0.2;
+        // @Getter private double lowerPercentage = -0.2;
 
         /* Climber config settings */
         @Getter private final double zeroSpeed = -0.2;
@@ -62,12 +62,12 @@ public class Climber extends Mechanism {
             configReverseSoftLimit(getMinRotation(), true);
             configNeutralBrakeMode(true);
             // configMotionMagicPosition(0.12);
-            configCounterClockwise_Positive();
+            configCounterClockwise_Positive(); // might be different on actual robot
         }
     }
 
     private ClimberConfig config;
-    private ClimberSim sim;
+    @Getter private ClimberSim sim;
 
     public Climber(ClimberConfig config) {
         super(config); // unsure if we need this, may delete and test
@@ -97,11 +97,11 @@ public class Climber extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
-            builder.addDoubleProperty("Velocity", this::getMotorVelocityRPM, null);
+            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Position Percentage",
-                    () -> getMotorPosition() / config.getMaxRotation() * 100,
+                    () -> getPositionRotations() / config.getMaxRotation() * 100,
                     null);
         }
     }
@@ -124,12 +124,12 @@ public class Climber extends Mechanism {
             @Override
             public void initialize() {
                 stop();
-                holdPosition = getMotorPosition();
+                holdPosition = getPositionRotations();
             }
 
             @Override
             public void execute() {
-                double currentPosition = getMotorPosition();
+                double currentPosition = getPositionRotations();
                 if (Math.abs(holdPosition - currentPosition) <= 5) {
                     setMMPosition(() -> holdPosition);
                 } else {

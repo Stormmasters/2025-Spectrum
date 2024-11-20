@@ -7,6 +7,13 @@
       "window": {
         "visible": true
       }
+    },
+    "Other Devices": {
+      "Talon FX (v6)[5]": {
+        "header": {
+          "open": true
+        }
+      }
     }
   },
   "NTProvider": {
@@ -94,7 +101,7 @@
         "open": true
       },
       "SmartDashboard": {
-        "Auto Chooser": {
+        "Pivot": {
           "open": true
         },
         "open": true
