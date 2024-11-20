@@ -45,6 +45,16 @@ public class ArmSim implements Mount, Mountable {
                                 config.getMinAngle(),
                                 5.0,
                                 new Color8Bit(Color.kBlue)));
+        
+
+        // Line arm = new Line(
+        //     config.getLength(),
+        //     5.0,
+        //     config.getMinAngle(),
+        //     config.getPivotX(),
+        //     config.getPivotY(),
+        //     name + " Arm Pivot",
+        //     new Color8Bit(Color.kBlue));
     }
 
     public void simulationPeriodic() {
