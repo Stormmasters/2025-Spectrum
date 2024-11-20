@@ -9,6 +9,7 @@
         "ms-vsliveshare.vsliveshare",
         "techer.open-in-browser",
         "ban.spellright",
-        "wpilibsuite.vscode-wpilib"
+        "wpilibsuite.vscode-wpilib",
+        "onlyutkarsh.git-config-user-profiles"
     ]
 }

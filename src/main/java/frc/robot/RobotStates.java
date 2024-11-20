@@ -37,8 +37,6 @@ public class RobotStates {
             swerve.inXzoneAlliance(0, Field.getHalfLengh() / 2)
                     .and(swerve.inYzone(Field.getHalfWidth(), Field.getFieldWidth()));
 
-    public static final Trigger ampPrep = pilot.ampPrep_B.and(ampZone);
-
     public static final Trigger score = pilot.score_RB;
 
     public static final Trigger speakerZone = swerve.inXzoneAlliance(0, Field.getHalfLengh() - 1);
@@ -50,6 +48,9 @@ public class RobotStates {
     public static final Trigger climbPrep = pilot.climbPrep_RDP;
     public static final Trigger climbRoutine =
             pilot.climbRoutine_start; // TODO: Add a check for hooks up
+
+    public static final Trigger ampPrep = pilot.ampPrep_B.and(ampZone);
+    public static final Trigger noteToAmp = pilot.ampPrep_B.or(operator.noteToAmp_B, climbPrep);
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.

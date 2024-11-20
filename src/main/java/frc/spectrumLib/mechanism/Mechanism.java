@@ -93,11 +93,30 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     /**
+     * Percentage to Rotations
+     *
+     * @return
+     */
+    public double percentToRotations(DoubleSupplier percent) {
+        return (percent.getAsDouble() / 100) * config.maxRotation;
+    }
+
+    /**
+     * Rotations to Percentage
+     *
+     * @param rotations
+     * @return
+     */
+    public double rotationsToPercent(DoubleSupplier rotations) {
+        return (rotations.getAsDouble() / config.maxRotation) * 100;
+    }
+
+    /**
      * Gets the position of the motor
      *
      * @return motor position in rotations
      */
-    public double getMotorPosition() {
+    public double getMotorPositionRotations() {
         if (config.attached) {
             return motor.getPosition().getValueAsDouble();
         }
@@ -125,10 +144,10 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     /**
      * Runs the Mechanism at a given velocity
      *
-     * @param velocity in revolutions per minute
+     * @param velocityRPM in revolutions per minute
      */
-    public Command runVelocity(DoubleSupplier velocity) {
-        return run(() -> setVelocity(() -> Conversions.RPMtoRPS(velocity)))
+    public Command runVelocity(DoubleSupplier velocityRPM) {
+        return run(() -> setVelocity(() -> Conversions.RPMtoRPS(velocityRPM)))
                 .withName(getName() + ".runVelocity");
     }
 
@@ -143,26 +162,26 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
                 .withName(getName() + ".runVelocityFOCrpm");
     }
 
-    public Command runPercentage(DoubleSupplier percentSupplier) {
-        return run(() -> setPercentOutput(percentSupplier)).withName(getName() + ".runPercentage");
+    public Command runPercentage(DoubleSupplier percent) {
+        return run(() -> setPercentOutput(percent)).withName(getName() + ".runPercentage");
     }
 
     /**
      * Run to the specified position.
      *
-     * @param position position in revolutions
+     * @param rotations position in revolutions
      */
-    public Command moveToPoseRevolutions(DoubleSupplier position) {
-        return run(() -> setMMPosition(position)).withName(getName() + ".runPoseRevolutions");
+    public Command moveToPoseRotations(DoubleSupplier rotations) {
+        return run(() -> setMMPosition(rotations)).withName(getName() + ".runPoseRevolutions");
     }
 
     /**
      * Move to the specified position.
      *
-     * @param position position in percentage of max revolutions
+     * @param percent position in percentage of max revolutions
      */
-    public Command moveToPosePercentage(DoubleSupplier position) {
-        return run(() -> setMMPosition(() -> config.maxRotation * (position.getAsDouble() / 100)))
+    public Command moveToPosePercentage(DoubleSupplier percent) {
+        return run(() -> setMMPosition(() -> percentToRotations(percent)))
                 .withName(getName() + ".runPosePercentage");
     }
 
@@ -170,10 +189,10 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * Runs to the specified position using FOC control. Will require different PID and feedforward
      * configs
      *
-     * @param position position in revolutions
+     * @param rotations position in revolutions
      */
-    public Command runFOCPosition(DoubleSupplier position) {
-        return run(() -> setMMPositionFOC(position)).withName(getName() + ".runFOCPosition");
+    public Command runFOCPosition(DoubleSupplier rotations) {
+        return run(() -> setMMPositionFOC(rotations)).withName(getName() + ".runFOCPosition");
     }
 
     public Command runStop() {
@@ -221,23 +240,23 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     /**
      * Sets the mechanism position of the motor
      *
-     * @param position rotations
+     * @param rotations rotations
      */
-    protected void setMotorPosition(DoubleSupplier position) {
+    protected void setMotorPosition(DoubleSupplier rotations) {
         if (isAttached()) {
-            motor.setPosition(position.getAsDouble());
+            motor.setPosition(rotations.getAsDouble());
         }
     }
 
     /**
      * Closed-loop Velocity Motion Magic with torque control (requires Pro)
      *
-     * @param velocity rotations per second
+     * @param velocityRPS rotations per second
      */
-    protected void setMMVelocityFOC(DoubleSupplier velocity) {
+    protected void setMMVelocityFOC(DoubleSupplier velocityRPS) {
         if (isAttached()) {
             MotionMagicVelocityTorqueCurrentFOC mm =
-                    config.mmVelocityFOC.withVelocity(velocity.getAsDouble());
+                    config.mmVelocityFOC.withVelocity(velocityRPS.getAsDouble());
             motor.setControl(mm);
         }
     }
@@ -245,12 +264,12 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     /**
      * Closed-loop Velocity with torque control (requires Pro)
      *
-     * @param velocity rotations per second
+     * @param velocityRPS rotations per second
      */
-    protected void setVelocityTorqueCurrentFOC(DoubleSupplier velocity) {
+    protected void setVelocityTorqueCurrentFOC(DoubleSupplier velocityRPS) {
         if (isAttached()) {
             VelocityTorqueCurrentFOC output =
-                    config.velocityTorqueCurrentFOC.withVelocity(velocity.getAsDouble());
+                    config.velocityTorqueCurrentFOC.withVelocity(velocityRPS.getAsDouble());
             motor.setControl(output);
         }
     }
@@ -260,11 +279,11 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      *
      * @param velocity rotations per second
      */
-    protected void setVelocityTCFOCrpm(DoubleSupplier velocityRPM) {
+    protected void setVelocityTCFOCrpm(DoubleSupplier velocityRPS) {
         if (isAttached()) {
             VelocityTorqueCurrentFOC output =
                     config.velocityTorqueCurrentFOC.withVelocity(
-                            Conversions.RPMtoRPS(velocityRPM.getAsDouble()));
+                            Conversions.RPMtoRPS(velocityRPS.getAsDouble()));
             motor.setControl(output);
         }
     }
@@ -272,11 +291,11 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     /**
      * Closed-loop velocity control with voltage compensation
      *
-     * @param velocity rotations per second
+     * @param velocityRPS rotations per second
      */
-    protected void setVelocity(DoubleSupplier velocity) {
+    protected void setVelocity(DoubleSupplier velocityRPS) {
         if (isAttached()) {
-            VelocityVoltage output = config.velocityControl.withVelocity(velocity.getAsDouble());
+            VelocityVoltage output = config.velocityControl.withVelocity(velocityRPS.getAsDouble());
             motor.setControl(output);
         }
     }
@@ -284,12 +303,12 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     /**
      * Closed-loop Position Motion Magic with torque control (requires Pro)
      *
-     * @param position rotations
+     * @param rotations rotations
      */
-    protected void setMMPositionFOC(DoubleSupplier position) {
+    protected void setMMPositionFOC(DoubleSupplier rotations) {
         if (isAttached()) {
             MotionMagicTorqueCurrentFOC mm =
-                    config.mmPositionFOC.withPosition(position.getAsDouble());
+                    config.mmPositionFOC.withPosition(rotations.getAsDouble());
             motor.setControl(mm);
         }
     }
@@ -297,24 +316,24 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     /**
      * Closed-loop Position Motion Magic
      *
-     * @param position rotations
+     * @param rotations rotations
      */
-    protected void setMMPosition(DoubleSupplier position) {
-        setMMPosition(position, 0);
+    protected void setMMPosition(DoubleSupplier rotations) {
+        setMMPosition(rotations, 0);
     }
 
     /**
      * Closed-loop Position Motion Magic using a slot other than 0
      *
-     * @param position rotations
+     * @param rotations rotations
      * @param slot gains slot
      */
-    public void setMMPosition(DoubleSupplier position, int slot) {
+    public void setMMPosition(DoubleSupplier rotations, int slot) {
         if (isAttached()) {
             MotionMagicVoltage mm =
                     config.mmPositionVoltageSlot
                             .withSlot(slot)
-                            .withPosition(position.getAsDouble());
+                            .withPosition(rotations.getAsDouble());
             motor.setControl(mm);
         }
     }

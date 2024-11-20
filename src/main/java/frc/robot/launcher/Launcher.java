@@ -63,7 +63,7 @@ public class Launcher extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
+            builder.addDoubleProperty("Position", this::getMotorPositionRotations, null);
             builder.addDoubleProperty("Velocity", this::getMotorVelocityRPS, null);
         }
     }

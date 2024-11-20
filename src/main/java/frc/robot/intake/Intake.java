@@ -3,15 +3,12 @@ package frc.robot.intake;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
-import java.util.function.DoubleSupplier;
 import lombok.Getter;
 
 public class Intake extends Mechanism {
@@ -85,7 +82,7 @@ public class Intake extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
+            builder.addDoubleProperty("Position", this::getMotorPositionRotations, null);
             builder.addDoubleProperty("Velocity RPS", this::getMotorVelocityRPS, null);
         }
     }
@@ -93,29 +90,6 @@ public class Intake extends Mechanism {
     // --------------------------------------------------------------------------------
     // Custom Commands
     // --------------------------------------------------------------------------------
-
-    public Command runManualOutput(DoubleSupplier percentSupplier) {
-        return run(() -> setPercentOutput(percentSupplier)).withName("Intake.runManualOutput");
-    }
-
-    public Command intakeWithoutCurrentLimit() {
-        return new FunctionalCommand(
-                        () ->
-                                toggleTorqueCurrentLimit(
-                                        config::getTorqueCurrentLimit,
-                                        false), // init -- turn off current limits
-                        () ->
-                                setVelocityTorqueCurrentFOC(
-                                        config::getIntake), // execute -- run at intake velocity
-                        (b) -> {
-                            toggleTorqueCurrentLimit(
-                                    config::getTorqueCurrentLimit,
-                                    true); // end -- reenable current limits
-                        },
-                        () -> false, // is finished
-                        this) // requirement
-                .withName("Intake.intakeWithoutCurrentLimit");
-    }
 
     // --------------------------------------------------------------------------------
     // Simulation
