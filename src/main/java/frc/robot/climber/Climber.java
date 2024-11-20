@@ -97,11 +97,11 @@ public class Climber extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPositionRotations, null);
-            builder.addDoubleProperty("Velocity", this::getMotorVelocityRPM, null);
+            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Position Percentage",
-                    () -> getMotorPositionRotations() / config.getMaxRotation() * 100,
+                    () -> getPositionRotations() / config.getMaxRotation() * 100,
                     null);
         }
     }
@@ -124,12 +124,12 @@ public class Climber extends Mechanism {
             @Override
             public void initialize() {
                 stop();
-                holdPosition = getMotorPositionRotations();
+                holdPosition = getPositionRotations();
             }
 
             @Override
             public void execute() {
-                double currentPosition = getMotorPositionRotations();
+                double currentPosition = getPositionRotations();
                 if (Math.abs(holdPosition - currentPosition) <= 5) {
                     setMMPosition(() -> holdPosition);
                 } else {

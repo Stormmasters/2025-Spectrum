@@ -20,7 +20,12 @@ public class Circle {
     @Setter private Color8Bit color = new Color8Bit(Color.kBlack);
     @Setter private String name;
 
-    public Circle(int backgroundLines, double diameterInches, String name, MechanismRoot2d root, Mechanism2d mech) {
+    public Circle(
+            int backgroundLines,
+            double diameterInches,
+            String name,
+            MechanismRoot2d root,
+            Mechanism2d mech) {
         this.backgroundLines = backgroundLines;
         this.diameterInches = diameterInches;
         this.name = name;
@@ -37,7 +42,7 @@ public class Circle {
             String name,
             MechanismRoot2d root,
             Color8Bit color) {
-        this(backgroundLines, diameterInches, name, root,mech);
+        this(backgroundLines, diameterInches, name, root, mech);
         this.color = color;
     }
 

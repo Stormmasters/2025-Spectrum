@@ -32,17 +32,15 @@ public class RollerSim {
                         kraken, config.getSimMOI(), config.getGearRatio());
         rollerSim = new FlywheelSim(flyWheelSystem, kraken);
 
-        
-
         rollerBackground = new MechanismLigament2d[config.getBackgroundLines()];
-                
-        
+
         roller =
                 new Circle(
                         config.getBackgroundLines(),
                         config.getRollerDiameterInches(),
                         name,
-                        rollerAxle,mech);
+                        rollerAxle,
+                        mech);
     }
 
     public void simulationPeriodic(double x, double y) {

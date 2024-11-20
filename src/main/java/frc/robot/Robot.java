@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.RobotConfig.ConfigHolder;
 import frc.robot.amptrap.AmpTrap;
@@ -43,7 +42,6 @@ public class Robot extends TimedRobot {
     @Getter private static Feeder feeder;
     @Getter private static Intake intake;
     @Getter private static Launcher launcher;
-    // @Getter private static LEDs leds;
     @Getter private static LedFull leds;
     @Getter private static Operator operator;
     @Getter private static Pilot pilot;
@@ -63,9 +61,9 @@ public class Robot extends TimedRobot {
             config = robotConfig.config; // This just makes it easier to access the config
 
             /**
-             * Intialize the Subsystems of the robot. Subsystems are how we divide up the robot
+             * Initialize the Subsystems of the robot. Subsystems are how we divide up the robot
              * code. Anything with an output that needs to be independently controlled is a
-             * subsystem Something that don't have an output are alos subsystems.
+             * subsystem Something that don't have an output are also subsystems.
              */
             double canInitDelay = 0.1; // Delay between any mechanism with motor/can configs
 
@@ -90,7 +88,7 @@ public class Robot extends TimedRobot {
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
 
-            /** Intialize Telemetry */
+            /** Initialize Telemetry */
             telemetry = new RobotTelemetry();
 
             // Setup Default Commands for all subsystems
@@ -108,7 +106,7 @@ public class Robot extends TimedRobot {
     /**
      * This method cancels all commands and returns subsystems to their default commands and the
      * gamepad configs are reset so that new bindings can be assigned based on mode This method
-     * should be called when each mode is intialized
+     * should be called when each mode is initialized
      */
     public void resetCommandsAndButtons() {
         CommandScheduler.getInstance().cancelAll(); // Disable any currently running commands
@@ -117,7 +115,7 @@ public class Robot extends TimedRobot {
         // Reset Config for all gamepads and other button bindings
         pilot.resetConfig();
 
-        // Bind Triggers for all subsystmes
+        // Bind Triggers for all subsystems
         subsystems.forEach(SpectrumSubsystem::setupStates);
         RobotStates.setupStates();
     }
@@ -126,12 +124,12 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().cancelAll(); // Disable any currently running commands
         CommandScheduler.getInstance().getActiveButtonLoop().clear();
 
-        // Bind Triggers for all subsystmes
+        // Bind Triggers for all subsystems
         subsystems.forEach(SpectrumSubsystem::setupStates);
         RobotStates.setupStates();
     }
 
-    @Override // Depricated
+    @Override // Deprecated
     public void robotInit() {}
 
     /* ROBOT PERIODIC  */

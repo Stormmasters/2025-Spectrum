@@ -37,7 +37,7 @@ public class ElevatorStates {
         isUp.onTrue(Commands.print("Elevator Up"));
 
         ampPrep.whileTrue(amp());
-        score.onFalse(home()); // Return home whne we stop the scoring action
+        score.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
         climbRoutine.and(ClimberStates.atMidClimbPos).onTrue(fullExtend());

@@ -23,6 +23,7 @@ public class PivotStates {
         ampPrep.whileTrue(home());
 
         coastMode.whileTrue(coastMode());
+        coastMode.onFalse(ensureBrakeMode());
     }
 
     // missing distance based pivot commands

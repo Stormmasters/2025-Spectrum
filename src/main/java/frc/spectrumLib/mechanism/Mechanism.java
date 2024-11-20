@@ -66,7 +66,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         config.attached = attached;
     }
 
-    // Setup the telemetry values, has to be called at the end of the implemetned mechanism
+    // Setup the telemetry values, has to be called at the end of the implemented mechanism
     // constructor
     public void telemetryInit() {
         SendableRegistry.add(this, getName());
@@ -96,22 +96,18 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     public Trigger atRotations(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        Math.abs(getMotorPositionRotations() - target.getAsDouble())
+                        Math.abs(getPositionRotations() - target.getAsDouble())
                                 < tolerance.getAsDouble());
     }
 
     public Trigger belowRotations(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () ->
-                        getMotorPositionRotations()
-                                < (target.getAsDouble() + tolerance.getAsDouble()));
+                () -> getPositionRotations() < (target.getAsDouble() + tolerance.getAsDouble()));
     }
 
     public Trigger aboveRotations(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () ->
-                        getMotorPositionRotations()
-                                > (target.getAsDouble() - tolerance.getAsDouble()));
+                () -> getPositionRotations() > (target.getAsDouble() - tolerance.getAsDouble()));
     }
 
     public Trigger atPercentage(DoubleSupplier target, DoubleSupplier tolerance) {
@@ -133,19 +129,17 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     public Trigger atVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () ->
-                        Math.abs(getMotorVelocityRPM() - target.getAsDouble())
-                                < tolerance.getAsDouble());
+                () -> Math.abs(getVelocityRPM() - target.getAsDouble()) < tolerance.getAsDouble());
     }
 
     public Trigger belowVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () -> getMotorVelocityRPM() < (target.getAsDouble() + tolerance.getAsDouble()));
+                () -> getVelocityRPM() < (target.getAsDouble() + tolerance.getAsDouble()));
     }
 
     public Trigger aboveVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () -> getMotorVelocityRPM() > (target.getAsDouble() - tolerance.getAsDouble()));
+                () -> getVelocityRPM() > (target.getAsDouble() - tolerance.getAsDouble()));
     }
 
     /**
@@ -172,7 +166,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      *
      * @return motor position in rotations
      */
-    public double getMotorPositionRotations() {
+    public double getPositionRotations() {
         if (config.attached) {
             return motor.getPosition().getValueAsDouble();
         }
@@ -180,7 +174,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     public double getPositionPercentage() {
-        return rotationsToPercent(() -> getMotorPositionRotations());
+        return rotationsToPercent(() -> getPositionRotations());
     }
 
     /**
@@ -188,7 +182,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      *
      * @return motor velocity in rotations/sec which are the CTRE native units
      */
-    public double getMotorVelocityRPS() {
+    public double getVelocityRPS() {
         if (config.attached) {
             return motor.getVelocity().getValueAsDouble();
         }
@@ -196,8 +190,8 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     // Get Velocity in RPM
-    public double getMotorVelocityRPM() {
-        return Conversions.RPStoRPM(getMotorVelocityRPS());
+    public double getVelocityRPM() {
+        return Conversions.RPStoRPM(getVelocityRPS());
     }
 
     /* Commands: see method in lambda for more information */
@@ -246,8 +240,8 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     /**
-     * Runs to the specified position using FOC control. Will require different PID and feedforward
-     * configs
+     * Runs to the specified Motion Magic position using FOC control. Will require different PID and
+     * feedforward configs
      *
      * @param rotations position in revolutions
      */

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
@@ -54,6 +55,8 @@ public class Intake extends Mechanism {
     private IntakeConfig config;
     private RollerSim sim;
 
+    protected SpectrumState hasNote = new SpectrumState("IntakeHasNote");
+
     public Intake(IntakeConfig config) {
         super(config);
         this.config = config;
@@ -82,8 +85,8 @@ public class Intake extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPositionRotations, null);
-            builder.addDoubleProperty("Velocity RPS", this::getMotorVelocityRPS, null);
+            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity RPS", this::getVelocityRPS, null);
         }
     }
 
