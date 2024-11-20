@@ -28,5 +28,14 @@
   "java.test.defaultConfig": "WPIlibUnitTests",
   "java.compile.nullAnalysis.mode": "automatic",
   "java.debug.settings.onBuildFailureProceed": true,
-  "docwriter.style": "Javadoc"
+  "docwriter.style": "Javadoc",
+  "spellright.language": [
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "markdown",
+    "latex",
+    "plaintext",
+    "java"
+  ]
 }

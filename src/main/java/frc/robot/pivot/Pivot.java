@@ -169,8 +169,8 @@ public class Pivot extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
-            builder.addDoubleProperty("Velocity", this::getMotorVelocityRPM, null);
+            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
         }
@@ -237,12 +237,12 @@ public class Pivot extends Mechanism {
 
             @Override
             public void initialize() {
-                holdPosition = getMotorPosition();
+                holdPosition = getPositionRotations();
             }
 
             @Override
             public void execute() {
-                moveToPoseRevolutions(() -> holdPosition);
+                moveToRotations(() -> holdPosition);
             }
 
             @Override
@@ -254,7 +254,7 @@ public class Pivot extends Mechanism {
 
     public boolean pivotHasError() {
         if (isAttached()) {
-            return getMotorPosition() > config.getMaxRotation();
+            return getPositionRotations() > config.getMaxRotation();
         }
         return false;
     }

@@ -3,11 +3,11 @@ package frc.robot.amptrap;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
@@ -61,6 +61,8 @@ public class AmpTrap extends Mechanism {
     private RollerSim sim;
     // TODO: add lasercans
 
+    protected SpectrumState hasNote = new SpectrumState("AmpTrapHasNote");
+
     public AmpTrap(AmpTrapConfig config) {
         super(config);
         this.config = config;
@@ -89,21 +91,14 @@ public class AmpTrap extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
-            builder.addDoubleProperty("Velocity RPS", this::getMotorVelocityRPS, null);
+            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity RPS", this::getVelocityRPS, null);
         }
     }
 
     // --------------------------------------------------------------------------------
     // Custom Commands
     // --------------------------------------------------------------------------------
-
-    // may not need
-    public Command stayCoastMode() {
-        return runOnce(() -> setBrakeMode(false))
-                .ignoringDisable(true)
-                .withName("AmpTrap.stayCoastMode");
-    }
 
     // --------------------------------------------------------------------------------
     // Simulation
