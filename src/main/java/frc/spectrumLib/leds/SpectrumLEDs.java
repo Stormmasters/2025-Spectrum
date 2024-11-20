@@ -33,15 +33,11 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         @Getter @Setter private AddressableLED led;
         @Getter @Setter private AddressableLEDBuffer buffer;
         @Getter @Setter private AddressableLEDBufferView view;
-        public final Color purple = new Color(130, 103, 185);
-        public final Color white = Color.kWhite;
-        @Getter @Setter private Color primaryColor = purple;
-        @Getter @Setter private Color secondaryColor = white;
         @Getter @Setter private int startingIndex = 0;
         @Getter @Setter private int endingIndex = 0;
         @Getter @Setter private int port = 0;
         @Getter @Setter private int length;
-        // LED strip density
+        // LED strip densitry
         @Getter @Setter private Distance ledSpacing = Meters.of(1 / 120.0);
 
         public Config(String name, int length) {
@@ -81,6 +77,9 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     public final Trigger defaultTrigger = new Trigger(() -> defaultCommand.isScheduled());
 
     @Getter @Setter private int commandPriority = 0;
+
+    public final Color purple = new Color(130, 103, 185);
+    public final Color white = Color.kWhite;
 
     public SpectrumLEDs(Config config) {
         this.config = config;
@@ -147,7 +146,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     }
 
     /**
-     * LED Patter Stripe, takes in a double percent and sets the first length number of LEDs to one
+     * LED Patter Stripe, takes in a double perecent and sets the first length number of LEDs to one
      * color and the rest of the strip to another
      */
     public LEDPattern stripe(double percent, Color color1, Color color2) {

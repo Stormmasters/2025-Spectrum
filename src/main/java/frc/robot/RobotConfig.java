@@ -64,7 +64,7 @@ public class RobotConfig {
 
     public ConfigHolder config;
 
-    // Add additional robot types here, need to add them to the checkRobotType method and
+    // Add aditional robot types here, need to add them to the checkRobotType method and
     // the config switch statement
     public enum RobotType {
         AM,
@@ -92,13 +92,13 @@ public class RobotConfig {
             case AM:
                 config = new ConfigHolder();
                 break;
-            case SIM: // SIM runs FM config, move to sim other configs if needed
             case PM:
                 config = new PM2024();
                 break;
             case PHOTON:
                 config = new ConfigHolder();
                 break;
+            case SIM: // SIM runs FM config, move to sim other configs if needed
             case FM:
             default:
                 /* Set all the default configs */
