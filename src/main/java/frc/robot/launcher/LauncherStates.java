@@ -3,6 +3,7 @@ package frc.robot.launcher;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.launcher.Launcher.LauncherConfig;
 import java.util.function.DoubleSupplier;
@@ -10,6 +11,8 @@ import java.util.function.DoubleSupplier;
 public class LauncherStates {
     private static Launcher launcher = Robot.getLauncher();
     private static LauncherConfig config = Robot.getConfig().launcher;
+
+    public static final Trigger atZeroRPM = launcher.atVelocityRPM(() -> 0, () -> 100)
 
     public static void setupDefaultCommand() {
         launcher.setDefaultCommand(launcher.runStop());
@@ -19,6 +22,7 @@ public class LauncherStates {
         subwooferPrep.whileTrue(subwooferRPM());
         speakerPrep.whileTrue(defaultLauncherRPM());
         ejecting.whileTrue(ejectRPM());
+        score.and(atZeroRPM).whileTrue();
 
         coastMode.onTrue(coastMode());
         coastMode.onFalse(ensureBrakeMode());
@@ -34,6 +38,10 @@ public class LauncherStates {
 
     private static Command ejectRPM() {
         return runVelocity(config::getEjectRPM).withName("Launcher.ejectRPM");
+    }
+
+    public static Command spitRPM(){
+        return runVelocity(config::getSpitRPM).withName("Launcher.spitRPM");
     }
 
     public static Command distanceVelocity(DoubleSupplier distanceMeter) {
