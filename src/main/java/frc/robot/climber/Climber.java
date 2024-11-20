@@ -21,14 +21,14 @@ public class Climber extends Mechanism {
         @Getter private double fullExtend = 100;
         @Getter private double home = 0;
 
-        @Getter private double topClimb = 100;
         @Getter private double midClimb = 74;
         @Getter private double safeClimb = 60;
-        @Getter private double botClimb = 0;
 
-        /* Climber Percentage Output */
-        @Getter private double raisePercentage = 0.2;
-        @Getter private double lowerPercentage = -0.2;
+        @Getter private double tolerance = 2;
+
+        // /* Climber Percentage Output */
+        // @Getter private double raisePercentage = 0.2;
+        // @Getter private double lowerPercentage = -0.2;
 
         /* Climber config settings */
         @Getter private final double zeroSpeed = -0.2;

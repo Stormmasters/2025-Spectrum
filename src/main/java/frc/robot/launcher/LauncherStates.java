@@ -16,26 +16,40 @@ public class LauncherStates {
     }
 
     public static void setStates() {
-        intaking.whileTrue(runVelocity(config::getMaxVelocityRpm));
-        ejecting.whileTrue(runVelocity(() -> -1 * config.getMaxVelocityRpm()));
+        subwooferPrep.whileTrue(subwooferRPM());
+        speakerPrep.whileTrue(defaultLauncherRPM());
+        ejecting.whileTrue(ejectRPM());
 
         coastMode.onTrue(coastMode());
         coastMode.onFalse(ensureBrakeMode());
     }
 
-    public static Command runVelocity(DoubleSupplier velocityRPM) {
-        return launcher.runVelocityTCFOCrpm(velocityRPM).withName("Launcher.runVelocity");
+    private static Command defaultLauncherRPM() {
+        return runVelocity(config::getDefaultLaunchRPM).withName("Launcher.defaultLauncherRPM");
     }
 
-    public static Command coastMode() {
+    private static Command subwooferRPM() {
+        return runVelocity(config::getSubwooferRPM).withName("Launcher.subwooferRPM");
+    }
+
+    private static Command ejectRPM() {
+        return runVelocity(config::getEjectRPM).withName("Launcher.ejectRPM");
+    }
+
+    public static Command distanceVelocity(DoubleSupplier distanceMeter) {
+        return runVelocity(() -> launcher.getRPMfromDistance(distanceMeter))
+                .withName("Launcher.distanceVelocity");
+    }
+
+    private static Command runVelocity(DoubleSupplier velocityRPM) {
+        return launcher.runVelocityTcFocRpm(velocityRPM).withName("Launcher.runVelocity");
+    }
+
+    private static Command coastMode() {
         return launcher.coastMode().withName("Launcher.CoastMode");
     }
 
-    public static Command stopMotor() {
-        return launcher.runStop().withName("Launcher.stop");
-    }
-
-    public static Command ensureBrakeMode() {
+    private static Command ensureBrakeMode() {
         return launcher.ensureBrakeMode().withName("Launcher.BrakeMode");
     }
 }

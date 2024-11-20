@@ -24,11 +24,11 @@ public class IntakeStates {
     }
 
     private static Command intake() {
-        return intake.runVelocityTCFOCrpm(config::getIntake).withName("Intake.intake");
+        return intake.runVelocityTcFocRpm(config::getIntake).withName("Intake.intake");
     }
 
     private static Command eject() {
-        return intake.runVelocityTCFOCrpm(config::getEject).withName("Intake.eject");
+        return intake.runVelocityTcFocRpm(config::getEject).withName("Intake.eject");
     }
 
     private static Command coastMode() {

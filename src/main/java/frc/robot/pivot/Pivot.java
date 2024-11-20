@@ -242,7 +242,7 @@ public class Pivot extends Mechanism {
 
             @Override
             public void execute() {
-                moveToPoseRotations(() -> holdPosition);
+                moveToRotations(() -> holdPosition);
             }
 
             @Override

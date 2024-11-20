@@ -4,6 +4,8 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.amptrap.AmpTrapStates;
+import frc.robot.elevator.ElevatorStates;
 import frc.robot.feeder.Feeder.FeederConfig;
 import frc.robot.operator.Operator;
 
@@ -21,6 +23,9 @@ public class FeederStates {
         ejecting.or(operator.feederRev_fY).whileTrue(eject());
         score.whileTrue(score());
         noteToAmp.whileTrue(feedToAmp());
+
+        // Feed a note to the amp trap if we are climbing and the elevator hasn't gone up
+        climbRoutine.and(ElevatorStates.isHome, AmpTrapStates.noNote).whileTrue(feedToAmp());
 
         coastMode.whileTrue(coastMode());
         coastMode.onFalse(ensureBrakeMode());
