@@ -60,7 +60,7 @@ public class AmpTrap extends Mechanism {
     private RollerSim sim;
     // TODO: add lasercans
 
-    public SpectrumState hasNote = new SpectrumState("AmpTrapHasNote");
+    protected SpectrumState hasNote = new SpectrumState("AmpTrapHasNote");
 
     public AmpTrap(AmpTrapConfig config) {
         super(config);

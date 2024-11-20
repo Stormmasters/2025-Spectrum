@@ -28,7 +28,7 @@ public class Operator extends Gamepad {
     public final Trigger overrideElevator = leftStickY.and(fn, teleop);
 
     public final Trigger resetPose_RBLB = bothBumpers.and(teleop);
-    public final Trigger safeClimb = start.and(noFn, teleop);
+    public final Trigger safeClimb_START = start.and(noFn, teleop);
 
     public final Trigger zeroClimber = select.and(noFn, teleop);
     public final Trigger zeroElevator = select.and(fn, rightBumper, teleop);

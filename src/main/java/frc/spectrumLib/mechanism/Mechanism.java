@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.talonFX.TalonFXFactory;
@@ -92,6 +93,61 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         builder.setSmartDashboardType(getName());
     }
 
+    public Trigger atRotations(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(getMotorPositionRotations() - target.getAsDouble())
+                                < tolerance.getAsDouble());
+    }
+
+    public Trigger belowRotations(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        getMotorPositionRotations()
+                                < (target.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    public Trigger aboveRotations(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        getMotorPositionRotations()
+                                > (target.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    public Trigger atPercentage(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(getPositionPercentage() - target.getAsDouble())
+                                < tolerance.getAsDouble());
+    }
+
+    public Trigger belowPercentage(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getPositionPercentage() < (target.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    public Trigger abovePercentage(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getPositionPercentage() > (target.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    public Trigger atVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(getMotorVelocityRPM() - target.getAsDouble())
+                                < tolerance.getAsDouble());
+    }
+
+    public Trigger belowVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getMotorVelocityRPM() < (target.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    public Trigger aboveVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getMotorVelocityRPM() > (target.getAsDouble() - tolerance.getAsDouble()));
+    }
+
     /**
      * Percentage to Rotations
      *
@@ -121,6 +177,10 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
             return motor.getPosition().getValueAsDouble();
         }
         return 0;
+    }
+
+    public double getPositionPercentage() {
+        return rotationsToPercent(() -> getMotorPositionRotations());
     }
 
     /**
@@ -157,7 +217,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * @param velocityRPM
      * @return
      */
-    public Command runVelocityTCFOCrpm(DoubleSupplier velocityRPM) {
+    public Command runVelocityTcFocRpm(DoubleSupplier velocityRPM) {
         return run(() -> setVelocityTorqueCurrentFOC(() -> Conversions.RPMtoRPS(velocityRPM)))
                 .withName(getName() + ".runVelocityFOCrpm");
     }
@@ -171,7 +231,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      *
      * @param rotations position in revolutions
      */
-    public Command moveToPoseRotations(DoubleSupplier rotations) {
+    public Command moveToRotations(DoubleSupplier rotations) {
         return run(() -> setMMPosition(rotations)).withName(getName() + ".runPoseRevolutions");
     }
 
@@ -180,7 +240,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      *
      * @param percent position in percentage of max revolutions
      */
-    public Command moveToPosePercentage(DoubleSupplier percent) {
+    public Command moveToPercentage(DoubleSupplier percent) {
         return run(() -> setMMPosition(() -> percentToRotations(percent)))
                 .withName(getName() + ".runPosePercentage");
     }
@@ -191,8 +251,8 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      *
      * @param rotations position in revolutions
      */
-    public Command runFOCPosition(DoubleSupplier rotations) {
-        return run(() -> setMMPositionFOC(rotations)).withName(getName() + ".runFOCPosition");
+    public Command runFocRotations(DoubleSupplier rotations) {
+        return run(() -> setMMPositionFoc(rotations)).withName(getName() + ".runFOCPosition");
     }
 
     public Command runStop() {
@@ -305,7 +365,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      *
      * @param rotations rotations
      */
-    protected void setMMPositionFOC(DoubleSupplier rotations) {
+    protected void setMMPositionFoc(DoubleSupplier rotations) {
         if (isAttached()) {
             MotionMagicTorqueCurrentFOC mm =
                     config.mmPositionFOC.withPosition(rotations.getAsDouble());

@@ -11,6 +11,7 @@ import frc.crescendo.Field;
 import frc.robot.Robot;
 import frc.robot.RobotConfig.RobotType;
 import frc.robot.RobotTelemetry;
+import frc.robot.climber.ClimberStates;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
 import java.util.function.DoubleSupplier;
@@ -47,7 +48,7 @@ public class SwerveStates {
         ampPrep.whileTrue(pilotAimDrive(() -> Field.flipAimAngleIfBlue(270)));
 
         // TODO:Should replace with method that gives us angle to the speaker
-        speakerPrep.whileTrue(pilotAimDrive(() -> 0));
+        // speakerPrep.whileTrue(pilotAimDrive(() -> 0));
 
         pilot.fpv_rs.whileTrue(fpvDrive());
         pilot.snapSteer.whileTrue(snapSteerDrive());
@@ -56,6 +57,11 @@ public class SwerveStates {
         pilot.leftReorient.onTrue(reorientLeft());
         pilot.downReorient.onTrue(reorientBack());
         pilot.rightReorient.onTrue(reorientRight());
+
+        // Drive fwd while the climber is below mid climb and not home
+        climbRoutine
+                .and(ClimberStates.belowMidClimbPos, ClimberStates.atHomePos.not())
+                .whileTrue(climbDrive());
     }
 
     /** Pilot Commands ************************************************************************ */
@@ -112,6 +118,11 @@ public class SwerveStates {
     protected static Command xBrake() {
         return swerve.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())
                 .withName("Swerve.Xbrake");
+    }
+
+    protected static Command climbDrive() {
+        return fpvDrive(
+                () -> (0.1 * config.getSpeedAt12Volts().baseUnitMagnitude()), () -> 0, () -> 0);
     }
 
     /**

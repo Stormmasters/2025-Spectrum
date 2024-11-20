@@ -28,7 +28,7 @@ public class Elevator extends Mechanism {
         @Getter private double amp = 15;
         @Getter private double trap = 5;
 
-        @Getter private double ampTolerance = 0.8;
+        @Getter private double tolerance = 0.95;
         @Getter private double elevatorUpHeight = 5;
 
         /* Elevator config settings */
