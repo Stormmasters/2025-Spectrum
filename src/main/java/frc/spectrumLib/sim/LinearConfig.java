@@ -26,12 +26,11 @@ public class LinearConfig {
     @Getter @Setter private double staticRootY = 0;
     @Getter private double staticLength = 20;
     @Getter private double movingLength = 20;
-    @Getter @Setter private double initialAttachedX;
-    @Getter @Setter private double initialAttachedY;
     @Getter private boolean mounted = false;
     @Getter private Mount mount;
-    @Getter private double mountX;
-    @Getter private double mountY;
+    @Getter private double initMountX;
+    @Getter private double initMountY;
+    @Getter private double initMountAngle;
 
     public LinearConfig(double x, double y, double gearing, double drumRadius) {
         this.initialX = x;
@@ -82,8 +81,9 @@ public class LinearConfig {
         if (sim != null) {
             mounted = true;
             mount = sim;
-            mountX = sim.getConfig().getInitialX();
-            mountY = sim.getConfig().getInitialY();
+            initMountX = sim.getConfig().getInitialX();
+            initMountY = sim.getConfig().getInitialY();
+            initMountAngle = Math.toRadians(sim.getConfig().getAngle());
         }
 
         return this;
@@ -93,8 +93,9 @@ public class LinearConfig {
         if (sim != null) {
             mounted = true;
             mount = sim;
-            mountX = sim.getConfig().getInitialX();
-            mountY = sim.getConfig().getInitialY();
+            initMountX = sim.getConfig().getInitialX();
+            initMountY = sim.getConfig().getInitialY();
+            initMountAngle = sim.getConfig().getStartingAngle();
         }
 
         return this;

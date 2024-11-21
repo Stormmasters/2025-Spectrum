@@ -104,6 +104,9 @@ public class Elevator extends Mechanism {
         if (isAttached()) {
             builder.addDoubleProperty("Position", this::getPositionRotations, null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
+            builder.addDoubleProperty("X", this.getSim().getConfig()::getStaticRootX, null);
+            builder.addDoubleProperty("Y", this.getSim().getConfig()::getStaticRootY, null);
+            builder.addDoubleProperty("angle", this.getSim()::getAngle, null);
             builder.addDoubleProperty("#FullExtend", config::getFullExtend, config::setFullExtend);
         }
     }

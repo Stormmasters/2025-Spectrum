@@ -98,4 +98,12 @@ public class ArmSim implements Mount, Mountable {
         }
         return getAngleRads();
     }
+
+    public double getMountX() {
+        return config.getPivotX();
+    }
+
+    public double getMountY() {
+        return config.getPivotY();
+    }
 }
