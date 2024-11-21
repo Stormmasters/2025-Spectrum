@@ -49,7 +49,6 @@ public class Elevator extends Mechanism {
 
         public ElevatorConfig() {
             super("Elevator", 52, RobotConfig.CANIVORE);
-            setFollowerConfigs(new FollowerConfig("left", 53, RobotConfig.CANIVORE, false));
             configMinMaxRotations(minRotations, maxRotations);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);
