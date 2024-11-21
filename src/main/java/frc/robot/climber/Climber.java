@@ -192,6 +192,7 @@ public class Climber extends Mechanism {
                             .setAngle(config.getAngle())
                             .setMovingLength(config.getMovingLength())
                             .setStaticLength(config.getStaticLength()),
+                    // .setMount(Robot.getElevator().getSim()),
                     mech,
                     climberMotorSim,
                     config.getName());
