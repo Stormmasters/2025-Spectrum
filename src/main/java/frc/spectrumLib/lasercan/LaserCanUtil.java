@@ -5,23 +5,17 @@ import au.grapplerobotics.LaserCan;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.spectrumLib.CachedDouble;
 
 public class LaserCanUtil implements Subsystem {
     private LaserCan lasercan; // TODO: Waiting on GrappleLib 2025
     private int id;
 
-    private int cachedDistance = -1000;
+    private final CachedDouble cachedDistance;
 
     // default constructor
     public LaserCanUtil(int id) {
-        this.id = id;
-        lasercan = new LaserCan(id);
-        setShortRange();
-        setRegionOfInterest(8, 8, 4, 4); // max region
-        setTimingBudget(
-                LaserCan.TimingBudget
-                        .TIMING_BUDGET_100MS); // Can only set ms to 20, 33, 50, and 100
-        this.register();
+        this(id, true, 8, 8, 4, 4, LaserCan.TimingBudget.TIMING_BUDGET_100MS);
     }
 
     public LaserCanUtil(
@@ -40,21 +34,24 @@ public class LaserCanUtil implements Subsystem {
         }
         setRegionOfInterest(x, y, w, h); // max region
         setTimingBudget(timingBudget); // Can only set ms to 20, 33, 50, and 100
+        cachedDistance = new CachedDouble(this::updateDistance);
+        this.register();
     }
 
     @Override
-    public void periodic() {
-        cachedDistance = updateDistance();
-    }
+    public void periodic() {}
 
     /* Internal Lasercan methods */
 
+    public double getDistance() {
+        return cachedDistance.getAsDouble();
+    }
+
     public boolean validDistance() {
-        return cachedDistance >= 0;
+        return cachedDistance.getAsDouble() >= 0;
     }
 
     /* Helper methods for constructors */
-
     public LaserCanUtil setShortRange() {
         try {
             lasercan.setRangingMode(LaserCan.RangingMode.SHORT);
@@ -100,10 +97,6 @@ public class LaserCanUtil implements Subsystem {
         DriverStation.reportWarning("LaserCan: failed to complete operation", false);
     }
 
-    public int getDistance() {
-        return cachedDistance;
-    }
-
     public Trigger greaterThan(int distance) {
         return new Trigger(() -> getDistance() > distance);
     }
@@ -116,7 +109,7 @@ public class LaserCanUtil implements Subsystem {
         return new Trigger(() -> getDistance() > min && getDistance() < max);
     }
 
-    private int updateDistance() {
+    private double updateDistance() {
         LaserCan.Measurement measurement = lasercan.getMeasurement();
         if (measurement != null) {
             if (measurement.status == 0) {

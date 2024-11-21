@@ -89,8 +89,8 @@ public class Pivot extends Mechanism {
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configMinMaxRotations(0, 30); // .96
-            configReverseSoftLimit(getMinRotation(), true);
-            configForwardSoftLimit(getMaxRotation(), true);
+            configReverseSoftLimit(getMinRotations(), true);
+            configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive(); // might be different on actual robot
             setRatio(Math.abs(172.8)); // getGearRatio()));
@@ -254,7 +254,7 @@ public class Pivot extends Mechanism {
 
     public boolean pivotHasError() {
         if (isAttached()) {
-            return getPositionRotations() > config.getMaxRotation();
+            return getPositionRotations() > config.getMaxRotations();
         }
         return false;
     }
@@ -296,9 +296,9 @@ public class Pivot extends Mechanism {
                             config.pivotY,
                             config.ratio,
                             config.length,
-                            config.getMinRotation(),
+                            config.getMinRotations(),
                             80, // config.getMaxRotation() * config.getRatio(),
-                            config.getMinRotation()),
+                            config.getMinRotations()),
                     mech,
                     pivotMotorSim,
                     config.getName());

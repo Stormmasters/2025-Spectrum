@@ -5,7 +5,7 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.pivot.Pivot.PivotConfig;
-import frc.spectrumLib.util.TuneValue;
+import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
 public class PivotStates {

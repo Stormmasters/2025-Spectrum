@@ -50,6 +50,7 @@ public class Climber extends Mechanism {
 
         public ClimberConfig() {
             super("Climber", 53, RobotConfig.CANIVORE); // motor id was originally 53
+            configMinMaxRotations(-1, 104);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);
             configMotionMagic(14700, 16100, 0); // 40, 120 FOC // 120, 195 Regular
@@ -57,9 +58,8 @@ public class Climber extends Mechanism {
             configStatorCurrentLimit(statorCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-1, 104);
-            configForwardSoftLimit(getMaxRotation(), true);
-            configReverseSoftLimit(getMinRotation(), true);
+            configForwardSoftLimit(getMaxRotations(), true);
+            configReverseSoftLimit(getMinRotations(), true);
             configNeutralBrakeMode(true);
             // configMotionMagicPosition(0.12);
             configCounterClockwise_Positive(); // might be different on actual robot
@@ -98,11 +98,9 @@ public class Climber extends Mechanism {
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
             builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
+            builder.addDoubleProperty("Position Percentage", this::getPositionPercentage, null);
             builder.addDoubleProperty("VelocityRPM", this::getVelocityRPM, null);
-            builder.addDoubleProperty(
-                    "Position Percentage",
-                    () -> getPositionRotations() / config.getMaxRotation() * 100,
-                    null);
+            builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
         }
     }
 

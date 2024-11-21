@@ -83,6 +83,7 @@ public class Launcher extends Mechanism {
         if (isAttached()) {
             builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty("VelocityRPM", this::getVelocityRPM, null);
+            builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
         }
     }
 
