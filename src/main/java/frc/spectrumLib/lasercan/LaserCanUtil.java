@@ -15,7 +15,7 @@ public class LaserCanUtil implements Subsystem {
 
     // default constructor
     public LaserCanUtil(int id) {
-        this(id, true, 8, 8, 4, 4, LaserCan.TimingBudget.TIMING_BUDGET_100MS);
+        this(id, true, 8, 8, 4, 4, LaserCan.TimingBudget.TIMING_BUDGET_50MS);
     }
 
     public LaserCanUtil(
