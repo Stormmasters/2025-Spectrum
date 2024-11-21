@@ -9,7 +9,7 @@ import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
-import frc.spectrumLib.util.TuneValue;
+import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
 public class ClimberStates {
