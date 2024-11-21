@@ -173,7 +173,7 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
     }
 
     // Used to set a control request to the swerve module, ignores disable so commands are
-    // continous.
+    // continuous.
     Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get())).ignoringDisable(true);
     }

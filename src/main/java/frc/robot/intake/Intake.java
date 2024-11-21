@@ -38,7 +38,7 @@ public class Intake extends Mechanism {
         @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {
-            super("Intake", 8, RobotConfig.CANIVORE);
+            super("Intake", 5, RobotConfig.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12 / 30);
@@ -47,7 +47,7 @@ public class Intake extends Mechanism {
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive(); // might be different on actual robot
+            configClockwise_Positive(); // might be different on actual robot
             configMotionMagic(51, 205, 0);
         }
     }
@@ -85,8 +85,8 @@ public class Intake extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
-            builder.addDoubleProperty("Velocity RPS", this::getVelocityRPS, null);
+            builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity RPM", this::getVelocityRPM, null);
         }
     }
 

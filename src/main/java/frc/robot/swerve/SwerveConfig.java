@@ -38,7 +38,7 @@ public class SwerveConfig {
     @Getter private double kDRotationController = 0.2;
     @Getter private double rotationTolerance = (Math.PI / 360); // rads
 
-    @Getter private double kPHoldController = 10.0;
+    @Getter private double kPHoldController = 12.0;
     @Getter private double kIHoldController = 0.0;
     @Getter private double kDHoldController = 0.0;
 
@@ -97,14 +97,16 @@ public class SwerveConfig {
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
-    @Getter private double coupleRatio = 3.5;
+    @Getter private double coupleRatio = 3.125 * 14.0 / 13.0; //copied from 254-2024
 
-    @Getter @Setter private double driveGearRatio = 7.363636364;
-    @Getter @Setter private double steerGearRatio = 12.8;
+    @Getter @Setter
+    private double driveGearRatio = (50.0 / 16.0) * (16.0 / 28.0) * (45.0 / 15.0); // 7.363636364;
+
+    @Getter @Setter private double steerGearRatio = 21.428571428571427; // 12.8;
 
     @Getter @Setter
     // Estimated at first, then fudge-factored to make odom match record
-    private Distance wheelRadius = Inches.of(2.167);
+    private Distance wheelRadius = Inches.of(3.815 / 2);
 
     @Getter @Setter private boolean steerMotorReversed = true;
     @Getter @Setter private boolean invertLeftSide = false;
@@ -124,14 +126,17 @@ public class SwerveConfig {
 
     @Getter private SwerveModuleConstantsFactory constantCreator;
 
+    private final double wheelBaseInches = 21.5;
+    private final double trackWidthInches = 18.5;
+
     // Front Left
     @Getter private int frontLeftDriveMotorId = 1;
     @Getter private int frontLeftSteerMotorId = 2;
     @Getter private int frontLeftEncoderId = 3;
     @Getter private Angle frontLeftEncoderOffset = Rotations.of(-0.83544921875);
 
-    @Getter private Distance frontLeftXPos = Inches.of(10.5);
-    @Getter private Distance frontLeftYPos = Inches.of(10.5);
+    @Getter private Distance frontLeftXPos = Inches.of(wheelBaseInches / 2);
+    @Getter private Distance frontLeftYPos = Inches.of(trackWidthInches / 2);
 
     // Front Right
     @Getter private int frontRightDriveMotorId = 11;
@@ -139,8 +144,8 @@ public class SwerveConfig {
     @Getter private int frontRightEncoderId = 13;
     @Getter private Angle frontRightEncoderOffset = Rotations.of(-0.15234375);
 
-    @Getter private Distance frontRightXPos = Inches.of(10.5);
-    @Getter private Distance frontRightYPos = Inches.of(-10.5);
+    @Getter private Distance frontRightXPos = Inches.of(wheelBaseInches / 2);
+    @Getter private Distance frontRightYPos = Inches.of(-trackWidthInches / 2);
 
     // Back Left
     @Getter private int backLeftDriveMotorId = 21;
@@ -148,8 +153,8 @@ public class SwerveConfig {
     @Getter private int backLeftEncoderId = 23;
     @Getter private Angle backLeftEncoderOffset = Rotations.of(-0.4794921875);
 
-    @Getter private Distance backLeftXPos = Inches.of(-10.5);
-    @Getter private Distance backLeftYPos = Inches.of(10.5);
+    @Getter private Distance backLeftXPos = Inches.of(-wheelBaseInches / 2);
+    @Getter private Distance backLeftYPos = Inches.of(trackWidthInches / 2);
 
     // Back Right
     @Getter private int backRightDriveMotorId = 31;
@@ -157,8 +162,8 @@ public class SwerveConfig {
     @Getter private int backRightEncoderId = 33;
     @Getter private Angle backRightEncoderOffset = Rotations.of(-0.84130859375);
 
-    @Getter private Distance backRightXPos = Inches.of(-10.5);
-    @Getter private Distance backRightYPos = Inches.of(-10.5);
+    @Getter private Distance backRightXPos = Inches.of(-wheelBaseInches / 2);
+    @Getter private Distance backRightYPos = Inches.of(-trackWidthInches / 2);
 
     @Getter private SwerveModuleConstants frontLeft;
     @Getter private SwerveModuleConstants frontRight;

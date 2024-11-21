@@ -71,10 +71,13 @@ public class Feeder extends Mechanism {
 
     private FeederConfig config;
     private RollerSim sim;
+    // protected LaserCanUtil lasercan;
 
     public Feeder(FeederConfig config) {
         super(config);
         this.config = config;
+
+        // lasercan = new LaserCanUtil(0);
 
         simulationInit();
         telemetryInit();
@@ -100,8 +103,8 @@ public class Feeder extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
-            builder.addDoubleProperty("Velocity RPS", this::getVelocityRPS, null);
+            builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity RPM", this::getVelocityRPM, null);
         }
     }
 
