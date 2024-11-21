@@ -49,7 +49,7 @@ public class RobotStates {
     public static final Trigger climbRoutine =
             pilot.climbRoutine_start; // TODO: Add a check for hooks up
 
-    public static final Trigger ampPrep = pilot.ampPrep_B.and(ampZone);
+    public static final Trigger ampPrep = pilot.ampPrep_B; // .and(ampZone);
     public static final Trigger noteToAmp = pilot.ampPrep_B.or(operator.noteToAmp_B, climbPrep);
 
     // Robot States
