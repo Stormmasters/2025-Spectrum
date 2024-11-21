@@ -10,6 +10,7 @@ import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.util.TuneValue;
+import java.util.function.DoubleSupplier;
 
 public class ClimberStates {
     private static Climber climber = Robot.getClimber();
@@ -46,9 +47,14 @@ public class ClimberStates {
 
         operator.safeClimb_START.whileTrue(safeClimb());
         operator.zeroClimber.whileTrue(climber.zeroClimberRoutine());
+        operator.overrideClimber.whileTrue(runClimber(operator::getClimberOverride));
 
         coastMode.onTrue(coastMode());
         coastMode.onFalse(ensureBrakeMode());
+    }
+
+    private static Command runClimber(DoubleSupplier speed) {
+        return climber.runPercentage(speed).withName("Elevator.runElevator");
     }
 
     private static Command holdPosition() {

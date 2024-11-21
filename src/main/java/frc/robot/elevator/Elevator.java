@@ -26,7 +26,6 @@ public class Elevator extends Mechanism {
         @Getter @Setter private double fullExtend = maxHeight;
         @Getter private double home = minHeight;
         @Getter private double amp = 15;
-        @Getter private double trap = 5;
 
         @Getter private double tolerance = 0.95;
         @Getter private double elevatorUpHeight = 5;
