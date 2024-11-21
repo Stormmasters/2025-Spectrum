@@ -31,8 +31,8 @@ public class Launcher extends Mechanism {
         @Getter private double velocityKs = 14;
 
         /* Sim Configs */
-        @Getter private double launcherX = 0.95;
-        @Getter private double launcherY = 0.1;
+        @Getter private double launcherX = 1.2; // 0.95;
+        @Getter private double launcherY = 0.2; // 0.1;
         @Getter private double wheelDiameterIn = 2;
 
         @Getter
@@ -113,7 +113,8 @@ public class Launcher extends Mechanism {
             super(
                     new RollerConfig(config.wheelDiameterIn)
                             .setPosition(config.launcherX, config.launcherY)
-                            .setMount(Robot.getPivot().getSim()),
+                            // .setMount(Robot.getPivot().getSim()),
+                            .setMount(Robot.getFakeArm().getSim()),
                     mech,
                     rollerMotorSim,
                     config.getName());

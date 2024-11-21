@@ -11,6 +11,8 @@ import frc.robot.amptrap.AmpTrap;
 import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
 import frc.robot.elevator.Elevator;
+import frc.robot.fakeArm.FakeArm;
+import frc.robot.fakeElevator.FakeElevator;
 import frc.robot.feeder.Feeder;
 import frc.robot.intake.Intake;
 import frc.robot.launcher.Launcher;
@@ -39,6 +41,8 @@ public class Robot extends TimedRobot {
     @Getter private static AmpTrap ampTrap;
     @Getter private static Climber climber;
     @Getter private static Elevator elevator;
+    @Getter private static FakeArm fakeArm;
+    @Getter private static FakeElevator fakeElevator;
     @Getter private static Feeder feeder;
     @Getter private static Intake intake;
     @Getter private static Launcher launcher;
@@ -77,6 +81,10 @@ public class Robot extends TimedRobot {
             elevator = new Elevator(config.elevator);
             Timer.delay(canInitDelay);
             climber = new Climber(config.climber);
+            Timer.delay(canInitDelay);
+            fakeArm = new FakeArm(config.fakeArm);
+            Timer.delay(canInitDelay);
+            fakeElevator = new FakeElevator(config.fakeElevator);
             Timer.delay(canInitDelay);
             ampTrap = new AmpTrap(config.ampTrap);
             Timer.delay(canInitDelay);
