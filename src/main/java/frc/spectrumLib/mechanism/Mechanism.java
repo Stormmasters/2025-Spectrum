@@ -42,6 +42,10 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     @Getter protected TalonFX[] followerMotors;
     public Config config;
 
+    @Getter private double cachedRotations = 0;
+    @Getter private double cachedPercentage = 0;
+    @Getter private double cachedVelocity = 0;
+
     public Mechanism(Config config) {
         this.config = config;
 
@@ -74,7 +78,11 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        cachedRotations = updatePositionRotations();
+        cachedPercentage = updatePositionPercentage();
+        cachedVelocity = updateVelocityRPM();
+    }
 
     @Override
     public void simulationPeriodic() {}
@@ -95,51 +103,45 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     public Trigger atRotations(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () ->
-                        Math.abs(getPositionRotations() - target.getAsDouble())
-                                < tolerance.getAsDouble());
+                () -> Math.abs(cachedRotations - target.getAsDouble()) < tolerance.getAsDouble());
     }
 
     public Trigger belowRotations(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () -> getPositionRotations() < (target.getAsDouble() + tolerance.getAsDouble()));
+                () -> cachedRotations < (target.getAsDouble() + tolerance.getAsDouble()));
     }
 
     public Trigger aboveRotations(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () -> getPositionRotations() > (target.getAsDouble() - tolerance.getAsDouble()));
+                () -> cachedRotations > (target.getAsDouble() - tolerance.getAsDouble()));
     }
 
     public Trigger atPercentage(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () ->
-                        Math.abs(getPositionPercentage() - target.getAsDouble())
-                                < tolerance.getAsDouble());
+                () -> Math.abs(cachedPercentage - target.getAsDouble()) < tolerance.getAsDouble());
     }
 
     public Trigger belowPercentage(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () -> getPositionPercentage() < (target.getAsDouble() + tolerance.getAsDouble()));
+                () -> cachedPercentage < (target.getAsDouble() + tolerance.getAsDouble()));
     }
 
     public Trigger abovePercentage(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () -> getPositionPercentage() > (target.getAsDouble() - tolerance.getAsDouble()));
+                () -> cachedPercentage > (target.getAsDouble() - tolerance.getAsDouble()));
     }
 
     public Trigger atVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () -> Math.abs(getVelocityRPM() - target.getAsDouble()) < tolerance.getAsDouble());
+                () -> Math.abs(cachedVelocity - target.getAsDouble()) < tolerance.getAsDouble());
     }
 
     public Trigger belowVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
-        return new Trigger(
-                () -> getVelocityRPM() < (target.getAsDouble() + tolerance.getAsDouble()));
+        return new Trigger(() -> cachedVelocity < (target.getAsDouble() + tolerance.getAsDouble()));
     }
 
     public Trigger aboveVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
-        return new Trigger(
-                () -> getVelocityRPM() > (target.getAsDouble() - tolerance.getAsDouble()));
+        return new Trigger(() -> cachedVelocity > (target.getAsDouble() - tolerance.getAsDouble()));
     }
 
     /**
@@ -161,12 +163,16 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         return (rotations.getAsDouble() / config.maxRotation) * 100;
     }
 
+    public double getPositionRotations() {
+        return cachedRotations;
+    }
+
     /**
      * Gets the position of the motor
      *
      * @return motor position in rotations
      */
-    public double getPositionRotations() {
+    private double updatePositionRotations() {
         if (config.attached) {
             return motor.getPosition().getValueAsDouble();
         }
@@ -174,6 +180,10 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     public double getPositionPercentage() {
+        return cachedPercentage;
+    }
+
+    private double updatePositionPercentage() {
         return rotationsToPercent(() -> getPositionRotations());
     }
 
@@ -182,16 +192,20 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      *
      * @return motor velocity in rotations/sec which are the CTRE native units
      */
-    public double getVelocityRPS() {
+    private double updateVelocityRPS() {
         if (config.attached) {
             return motor.getVelocity().getValueAsDouble();
         }
         return 0;
     }
 
-    // Get Velocity in RPM
     public double getVelocityRPM() {
-        return Conversions.RPStoRPM(getVelocityRPS());
+        return cachedVelocity;
+    }
+
+    // Get Velocity in RPM
+    private double updateVelocityRPM() {
+        return Conversions.RPStoRPM(updateVelocityRPS());
     }
 
     /* Commands: see method in lambda for more information */

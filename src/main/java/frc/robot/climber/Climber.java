@@ -49,7 +49,7 @@ public class Climber extends Mechanism {
         @Getter private double movingLength = 1;
 
         public ClimberConfig() {
-            super("Climber", 54, RobotConfig.CANIVORE); // motor id was originally 53
+            super("Climber", 53, RobotConfig.CANIVORE); // motor id was originally 53
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);
             configMotionMagic(14700, 16100, 0); // 40, 120 FOC // 120, 195 Regular
@@ -97,8 +97,8 @@ public class Climber extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
-            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
+            builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
+            builder.addDoubleProperty("VelocityRPM", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Position Percentage",
                     () -> getPositionRotations() / config.getMaxRotation() * 100,
