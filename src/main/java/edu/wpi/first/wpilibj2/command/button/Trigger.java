@@ -300,16 +300,6 @@ public class Trigger implements BooleanSupplier {
     }
 
     /**
-     * Composes two triggers with logical OR.
-     *
-     * @param trigger the condition to compose with
-     * @return A trigger which is active when either component trigger is active.
-     */
-    public Trigger or(BooleanSupplier trigger) {
-        return new Trigger(m_loop, () -> m_condition.getAsBoolean() || trigger.getAsBoolean());
-    }
-
-    /**
      * Combines multiple BooleanSupplier triggers using a logical OR operation.
      *
      * @param triggers an array of BooleanSupplier triggers to be combined.
@@ -321,6 +311,16 @@ public class Trigger implements BooleanSupplier {
             trig = trig.or(t);
         }
         return trig;
+    }
+
+    /**
+     * Composes two triggers with logical OR.
+     *
+     * @param trigger the condition to compose with
+     * @return A trigger which is active when either component trigger is active.
+     */
+    public Trigger or(BooleanSupplier trigger) {
+        return new Trigger(m_loop, () -> m_condition.getAsBoolean() || trigger.getAsBoolean());
     }
 
     /**

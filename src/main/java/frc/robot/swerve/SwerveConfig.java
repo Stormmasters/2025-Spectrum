@@ -97,7 +97,7 @@ public class SwerveConfig {
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
-    @Getter private double coupleRatio = 3.125 * 14.0 / 13.0; //copied from 254-2024
+    @Getter private double coupleRatio = 3.125 * 14.0 / 13.0; // copied from 254-2024
 
     @Getter @Setter
     private double driveGearRatio = (50.0 / 16.0) * (16.0 / 28.0) * (45.0 / 15.0); // 7.363636364;

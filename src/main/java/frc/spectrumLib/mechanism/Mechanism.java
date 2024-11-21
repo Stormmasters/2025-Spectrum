@@ -21,7 +21,6 @@ import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.spectrumLib.SpectrumSubsystem;
@@ -62,7 +61,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
             }
         }
         Robot.subsystems.add(this);
-        CommandScheduler.getInstance().registerSubsystem(this);
+        this.register();
     }
 
     public Mechanism(Config config, boolean attached) {

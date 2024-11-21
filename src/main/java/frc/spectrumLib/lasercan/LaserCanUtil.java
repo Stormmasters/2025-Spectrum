@@ -21,6 +21,7 @@ public class LaserCanUtil implements Subsystem {
         setTimingBudget(
                 LaserCan.TimingBudget
                         .TIMING_BUDGET_100MS); // Can only set ms to 20, 33, 50, and 100
+        this.register();
     }
 
     public LaserCanUtil(
