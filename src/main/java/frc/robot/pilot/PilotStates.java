@@ -10,17 +10,15 @@ public class PilotStates {
 
     /** Set default command to turn off the rumble */
     public static void setupDefaultCommand() {
-        pilot.setDefaultCommand(
-                rumble(0, 1)
-                        .withName(
-                                "Pilot.noRmble")); // launchReadyRumble().withName("Pilot.default"));
+        pilot.setDefaultCommand(rumble(0, 1).withName("Pilot.noRumble"));
     }
 
     /** Set the states for the pilot controller */
     public static void setStates() {
-        // hasNote.onTrue(rumble(0.5, 1));
-        // slow.whileTrue(slowMode());
-        // turbo.whileTrue(turboMode());
+        // Rumble whenever we reorient
+        pilot.upReorient
+                .or(pilot.downReorient, pilot.leftReorient, pilot.rightReorient)
+                .onTrue(rumble(1, 0.5));
     }
 
     /** Command that can be used to rumble the pilot controller */
