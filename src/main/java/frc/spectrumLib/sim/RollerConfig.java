@@ -16,8 +16,9 @@ public class RollerConfig {
     @Getter private double initialY = 0;
     @Getter private boolean mounted = false;
     @Getter private Mount mount;
-    @Getter private double mountX;
-    @Getter private double mountY;
+    @Getter private double initMountX;
+    @Getter private double initMountY;
+    @Getter private double initMountAngle;
 
     public RollerConfig(double diameterInches) {
         rollerDiameterInches = diameterInches;
@@ -40,18 +41,26 @@ public class RollerConfig {
     }
 
     public RollerConfig setMount(LinearSim sim) {
-        mounted = true;
-        mount = sim;
-        mountX = sim.getConfig().getInitialX();
-        mountY = sim.getConfig().getInitialY();
+        if (sim != null) {
+            mounted = true;
+            mount = sim;
+            initMountX = sim.getConfig().getInitialX();
+            initMountY = sim.getConfig().getInitialY();
+            initMountAngle = Math.toRadians(sim.getConfig().getAngle());
+        }
+
         return this;
     }
 
     public RollerConfig setMount(ArmSim sim) {
-        mounted = true;
-        mount = sim;
-        mountX = sim.getConfig().getInitialX();
-        mountY = sim.getConfig().getInitialY();
+        if (sim != null) {
+            mounted = true;
+            mount = sim;
+            initMountX = sim.getConfig().getInitialX();
+            initMountY = sim.getConfig().getInitialY();
+            initMountAngle = sim.getConfig().getStartingAngle();
+        }
+
         return this;
     }
 }
