@@ -14,4 +14,8 @@ public interface Mount {
     double getDisplacementY();
 
     double getAngle();
+
+    double getMountX();
+
+    double getMountY();
 }

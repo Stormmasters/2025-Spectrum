@@ -16,11 +16,12 @@ public class LinearSim implements Mount, Mountable {
 
     private final MechanismRoot2d staticRoot;
     private final MechanismRoot2d root;
+    private final MechanismLigament2d staticMech2d;
     private final MechanismLigament2d m_elevatorMech2d;
     @Getter private LinearConfig config;
     private TalonFXSimState linearMotorSim;
 
-    @Getter private MountType mountType = MountType.LINEAR;
+    @Getter private final MountType mountType = MountType.LINEAR;
 
     public LinearSim(
             LinearConfig config, Mechanism2d mech, TalonFXSimState linearMotorSim, String name) {
@@ -40,13 +41,14 @@ public class LinearSim implements Mount, Mountable {
 
         staticRoot =
                 mech.getRoot(name + " 1StaticRoot", config.getInitialX(), config.getInitialY());
-        staticRoot.append(
-                new MechanismLigament2d(
-                        name + " 1Static",
-                        config.getStaticLength(),
-                        config.getAngle(),
-                        config.getLineWidth(),
-                        new Color8Bit(Color.kOrange)));
+        staticMech2d =
+                staticRoot.append(
+                        new MechanismLigament2d(
+                                name + " 1Static",
+                                config.getStaticLength(),
+                                config.getAngle(),
+                                config.getLineWidth(),
+                                new Color8Bit(Color.kOrange)));
 
         root = mech.getRoot(name + " Root", config.getInitialX(), config.getInitialY());
         m_elevatorMech2d =
@@ -83,15 +85,30 @@ public class LinearSim implements Mount, Mountable {
         double displacement = elevatorSim.getPositionMeters();
 
         if (config.isMounted()) {
+            double angle;
+
+            if (config.getMount().getMountType() == MountType.ARM) {
+                angle = config.getAngle() + Math.toDegrees(config.getMount().getAngle());
+            } else if (config.getMount().getMountType() == MountType.LINEAR) {
+                angle =
+                        config.getAngle()
+                                + Math.toDegrees(
+                                        config.getMount().getAngle() - config.getInitMountAngle());
+            } else {
+                angle = config.getAngle();
+            }
+
             config.setStaticRootX(getUpdatedX(config));
             config.setStaticRootY(getUpdatedY(config));
-            staticRoot.setPosition(config.getStaticRootX(), config.getStaticRootY());
 
+            staticRoot.setPosition(config.getStaticRootX(), config.getStaticRootY());
             root.setPosition(
-                    config.getStaticRootX()
-                            + (displacement * Math.cos(Math.toRadians(config.getAngle()))),
-                    config.getStaticRootY()
-                            + (displacement * Math.sin(Math.toRadians(config.getAngle()))));
+                    config.getStaticRootX() + (displacement * Math.cos(Math.toRadians(angle))),
+                    config.getStaticRootY() + (displacement * Math.sin(Math.toRadians(angle))));
+
+            staticMech2d.setAngle(angle);
+            m_elevatorMech2d.setAngle(angle);
+
         } else {
             root.setPosition(
                     config.getInitialX()
@@ -102,18 +119,58 @@ public class LinearSim implements Mount, Mountable {
     }
 
     public double getDisplacementX() {
-        return elevatorSim.getPositionMeters() * Math.cos(Math.toRadians(config.getAngle()))
+        double angle;
+
+        if (!config.isMounted()) {
+            angle = config.getAngle();
+        } else if (config.getMount().getMountType() == MountType.ARM) {
+            angle = config.getAngle() + Math.toDegrees(config.getMount().getAngle());
+        } else if (config.getMount().getMountType() == MountType.LINEAR) {
+            angle =
+                    config.getAngle()
+                            + Math.toDegrees(
+                                    config.getMount().getAngle() - config.getInitMountAngle());
+        } else {
+            angle = config.getAngle();
+        }
+
+        return elevatorSim.getPositionMeters() * Math.cos(Math.toRadians(angle))
                 + (config.getStaticRootX() - config.getInitialX());
     }
 
     public double getDisplacementY() {
-        return elevatorSim.getPositionMeters() * Math.sin(Math.toRadians(config.getAngle()))
+        double angle;
+
+        if (!config.isMounted()) {
+            angle = config.getAngle();
+        } else if (config.getMount().getMountType() == MountType.ARM) {
+            angle = config.getAngle() + Math.toDegrees(config.getMount().getAngle());
+        } else if (config.getMount().getMountType() == MountType.LINEAR) {
+            angle =
+                    config.getAngle()
+                            + Math.toDegrees(
+                                    config.getMount().getAngle() - config.getInitMountAngle());
+        } else {
+            angle = config.getAngle();
+        }
+
+        return elevatorSim.getPositionMeters() * Math.sin(Math.toRadians(angle))
                 + (config.getStaticRootY() - config.getInitialY());
     }
 
     public double getAngle() {
-        return 0;
-        // unsure if this makes sense, but works for how arms link to elevators at the moment
-        // return config.getAngle();
+        if (config.isMounted()) {
+            return config.getMount().getAngle() + Math.toRadians(config.getAngle());
+        } else {
+            return Math.toRadians(config.getAngle());
+        }
+    }
+
+    public double getMountX() {
+        return config.getStaticRootX();
+    }
+
+    public double getMountY() {
+        return config.getStaticRootY();
     }
 }
