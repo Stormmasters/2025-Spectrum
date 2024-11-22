@@ -172,7 +172,7 @@ public class SwerveStates {
 
     /**
      * Reset the turn controller and then run the drive command with a angle supplier. This can be
-     * used for aiming at a goal or heading locking, etc
+     * used for aiming at a goal or heading locking, etc.
      */
     protected static Command aimDrive(
             DoubleSupplier velocityX, DoubleSupplier velocityY, DoubleSupplier targetRadians) {
@@ -189,7 +189,7 @@ public class SwerveStates {
     /**
      * Reset the turn controller, set the target heading to the current heading(end that command
      * immediately), and then run the drive command with the Rotation controller. The rotation
-     * controller will only engague if you are driving x or y.
+     * controller will only engage if you are driving x or y.
      */
     protected static Command headingLock(DoubleSupplier velocityX, DoubleSupplier velocityY) {
         return resetTurnController()

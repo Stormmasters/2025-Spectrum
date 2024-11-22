@@ -21,27 +21,29 @@ import lombok.Setter;
 // Gamepad class
 public abstract class Gamepad implements SpectrumSubsystem {
 
+    public static final Trigger kFalse = new Trigger(() -> false);
+
     private CommandXboxController xboxController;
-    public Trigger A = Trigger.kFalse;
-    public Trigger B = Trigger.kFalse;
-    public Trigger X = Trigger.kFalse;
-    public Trigger Y = Trigger.kFalse;
-    public Trigger leftBumper = Trigger.kFalse;
-    public Trigger rightBumper = Trigger.kFalse;
-    public Trigger leftTrigger = Trigger.kFalse;
-    public Trigger rightTrigger = Trigger.kFalse;
-    public Trigger leftStickClick = Trigger.kFalse;
-    public Trigger rightStickClick = Trigger.kFalse;
-    public Trigger start = Trigger.kFalse;
-    public Trigger select = Trigger.kFalse;
-    public Trigger upDpad = Trigger.kFalse;
-    public Trigger downDpad = Trigger.kFalse;
-    public Trigger leftDpad = Trigger.kFalse;
-    public Trigger rightDpad = Trigger.kFalse;
-    public Trigger leftStickY = Trigger.kFalse;
-    public Trigger leftStickX = Trigger.kFalse;
-    public Trigger rightStickY = Trigger.kFalse;
-    public Trigger rightStickX = Trigger.kFalse;
+    public Trigger A = kFalse;
+    public Trigger B = kFalse;
+    public Trigger X = kFalse;
+    public Trigger Y = kFalse;
+    public Trigger leftBumper = kFalse;
+    public Trigger rightBumper = kFalse;
+    public Trigger leftTrigger = kFalse;
+    public Trigger rightTrigger = kFalse;
+    public Trigger leftStickClick = kFalse;
+    public Trigger rightStickClick = kFalse;
+    public Trigger start = kFalse;
+    public Trigger select = kFalse;
+    public Trigger upDpad = kFalse;
+    public Trigger downDpad = kFalse;
+    public Trigger leftDpad = kFalse;
+    public Trigger rightDpad = kFalse;
+    public Trigger leftStickY = kFalse;
+    public Trigger leftStickX = kFalse;
+    public Trigger rightStickY = kFalse;
+    public Trigger rightStickX = kFalse;
 
     // Setup function bumper and trigger buttons
     public Trigger noBumpers = rightBumper.negate().and(leftBumper.negate());
@@ -59,7 +61,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
     private boolean configured =
             false; // Used to determine if we detected the gamepad is plugged and we have configured
     // it
-    private boolean printed = false; // Used to only print Gamepad Not Deteceted once
+    private boolean printed = false; // Used to only print Gamepad Not Detected once
 
     @Getter protected final ExpCurve leftStickCurve;
     @Getter protected final ExpCurve rightStickCurve;
@@ -108,7 +110,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
      */
     public Gamepad(Config config) {
         this.config = config;
-        // Curve objects that we use to configure the controller axis ojbects
+        // Curve objects that we use to configure the controller axis objects
         leftStickCurve =
                 new ExpCurve(
                         config.getLeftStickExp(),
@@ -167,7 +169,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
     // Configure the pilot controller
     public void configure() {
         if (config.getAttached()) {
-            // Detect whether the xbox controller has been plugged in after start-up
+            // Detect whether the Xbox controller has been plugged in after start-up
             if (!configured) {
                 if (!isConnected()) {
                     if (!printed) {

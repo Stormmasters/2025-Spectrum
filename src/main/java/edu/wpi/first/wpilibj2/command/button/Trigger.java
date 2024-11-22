@@ -24,8 +24,8 @@ import java.util.function.BooleanSupplier;
  * <p>This class is provided by the NewCommands VendorDep
  *
  * <p>Spectrum modified in Fall 2024 to allow triggers to default start condition of false, so if
- * something is already true when bound it will activie the trigger. We needed this for a trigger to
- * activate only if Teleop was enabled.
+ * something is already true when bound it will activate the trigger. We needed this for a trigger
+ * to activate only if Teleop was enabled.
  */
 public class Trigger implements BooleanSupplier {
     private final BooleanSupplier m_condition;
@@ -300,16 +300,6 @@ public class Trigger implements BooleanSupplier {
     }
 
     /**
-     * Composes two triggers with logical OR.
-     *
-     * @param trigger the condition to compose with
-     * @return A trigger which is active when either component trigger is active.
-     */
-    public Trigger or(BooleanSupplier trigger) {
-        return new Trigger(m_loop, () -> m_condition.getAsBoolean() || trigger.getAsBoolean());
-    }
-
-    /**
      * Combines multiple BooleanSupplier triggers using a logical OR operation.
      *
      * @param triggers an array of BooleanSupplier triggers to be combined.
@@ -324,6 +314,16 @@ public class Trigger implements BooleanSupplier {
     }
 
     /**
+     * Composes two triggers with logical OR.
+     *
+     * @param trigger the condition to compose with
+     * @return A trigger which is active when either component trigger is active.
+     */
+    public Trigger or(BooleanSupplier trigger) {
+        return new Trigger(m_loop, () -> m_condition.getAsBoolean() || trigger.getAsBoolean());
+    }
+
+    /**
      * Creates a new trigger that is active when this trigger is inactive, i.e. that acts as the
      * negation of this trigger.
      *
@@ -334,7 +334,7 @@ public class Trigger implements BooleanSupplier {
     }
 
     /**
-     * renameed negate
+     * renamed negate
      *
      * @return the negated trigger
      */

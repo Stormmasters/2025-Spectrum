@@ -14,6 +14,9 @@ public class FeederStates {
     private static FeederConfig config = Robot.getConfig().feeder;
     private static Operator operator = Robot.getOperator();
 
+    // public static final Trigger hasNote = feeder.lasercan.lessThan(300);
+    // public static final Trigger noNote = hasNote.not();
+
     public static void setupDefaultCommand() {
         feeder.setDefaultCommand(feeder.runStop().ignoringDisable(true).withName("Feeder.default"));
     }

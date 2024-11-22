@@ -109,7 +109,7 @@ public class Pilot extends Gamepad {
     }
 
     // Positive is forward, up on the left stick is positive
-    // Applies Expontial Curve, Deadzone, and Slow Mode toggle
+    // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveFwdPositive() {
         double fwdPositive = leftStickCurve.calculate(-1 * getLeftY());
         if (isSlowMode) {
@@ -119,7 +119,7 @@ public class Pilot extends Gamepad {
     }
 
     // Positive is left, left on the left stick is positive
-    // Applies Expontial Curve, Deadzone, and Slow Mode toggle
+    // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveLeftPositive() {
         double leftPositive = -1 * leftStickCurve.calculate(getLeftX());
         if (isSlowMode) {

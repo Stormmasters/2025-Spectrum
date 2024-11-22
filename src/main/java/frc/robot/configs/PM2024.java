@@ -7,7 +7,8 @@ public class PM2024 extends FM2024 {
 
     public PM2024() {
         super();
-        swerve.configEncoderOffsets(0.3, 0.3, 0.3, 0.3);
+        swerve.configEncoderOffsets(0.336426, -0.031006, -0.323730, 0.492188);
         launcher.setAttached(false);
+        pivot.setAttached(false);
     }
 }
