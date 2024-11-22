@@ -32,7 +32,7 @@ public interface Mountable {
                                         initialX, initialY, initMountX, initMountY, initMountAngle),
                         mountX);
             default:
-                return 0;
+                return initialX;
         }
     }
 
@@ -64,112 +64,107 @@ public interface Mountable {
                                         initialX, initialY, initMountX, initMountY, initMountAngle),
                         mountY);
             default:
-                return 0;
+                return initialY;
         }
     }
 
-    default double getUpdatedX(
-            Mount mount,
-            double initialX,
-            double initialY,
-            double initMountX,
-            double initMountY,
-            double initMountAngle) {
-        return getUpdatedX(
-                mount.getMountType(),
-                initialX,
-                initialY,
-                initMountX,
-                initMountY,
-                initMountAngle,
-                mount.getMountX(),
-                mount.getMountY(),
-                mount.getDisplacementX(),
-                mount.getDisplacementY(),
-                mount.getAngle());
-    }
-
-    default double getUpdatedY(
-            Mount mount,
-            double initialX,
-            double initialY,
-            double initMountX,
-            double initMountY,
-            double initMountAngle) {
-        return getUpdatedY(
-                mount.getMountType(),
-                initialX,
-                initialY,
-                initMountX,
-                initMountY,
-                initMountAngle,
-                mount.getMountX(),
-                mount.getMountY(),
-                mount.getDisplacementX(),
-                mount.getDisplacementY(),
-                mount.getAngle());
-    }
-
     default double getUpdatedX(RollerConfig config) {
+        Mount mount = config.getMount();
         return getUpdatedX(
-                config.getMount(),
+                mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
                 config.getInitMountX(),
                 config.getInitMountY(),
-                config.getInitMountAngle());
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
+                mount.getDisplacementX(),
+                mount.getDisplacementY(),
+                mount.getAngle());
     }
 
     default double getUpdatedX(ArmConfig config) {
+        Mount mount = config.getMount();
         return getUpdatedX(
-                config.getMount(),
+                mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
                 config.getInitMountX(),
                 config.getInitMountY(),
-                config.getInitMountAngle());
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
+                mount.getDisplacementX(),
+                mount.getDisplacementY(),
+                mount.getAngle());
     }
 
     default double getUpdatedX(LinearConfig config) {
+        Mount mount = config.getMount();
         return getUpdatedX(
-                config.getMount(),
+                mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
                 config.getInitMountX(),
                 config.getInitMountY(),
-                config.getInitMountAngle());
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
+                mount.getDisplacementX(),
+                mount.getDisplacementY(),
+                mount.getAngle());
     }
 
     default double getUpdatedY(RollerConfig config) {
+        Mount mount = config.getMount();
         return getUpdatedY(
-                config.getMount(),
+                mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
                 config.getInitMountX(),
                 config.getInitMountY(),
-                config.getInitMountAngle());
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
+                mount.getDisplacementX(),
+                mount.getDisplacementY(),
+                mount.getAngle());
     }
 
     default double getUpdatedY(ArmConfig config) {
+        Mount mount = config.getMount();
         return getUpdatedY(
-                config.getMount(),
+                mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
                 config.getInitMountX(),
                 config.getInitMountY(),
-                config.getInitMountAngle());
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
+                mount.getDisplacementX(),
+                mount.getDisplacementY(),
+                mount.getAngle());
     }
 
     default double getUpdatedY(LinearConfig config) {
+        Mount mount = config.getMount();
         return getUpdatedY(
-                config.getMount(),
+                mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
                 config.getInitMountX(),
                 config.getInitMountY(),
-                config.getInitMountAngle());
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
+                mount.getDisplacementX(),
+                mount.getDisplacementY(),
+                mount.getAngle());
     }
 
+    /** Returns the radians a mounted object should be away from a mount based on their initial positions */
     static double getAngleOffset(
             double initialX, double initialY, double mountX, double mountY, double startingAngle) {
         double hypotenuse = getDistance(initialX, initialY, mountX, mountY);

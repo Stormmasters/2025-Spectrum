@@ -20,7 +20,7 @@ public class ArmSim implements Mount, Mountable {
     private MechanismLigament2d armMech2d;
     private TalonFXSimState armMotorSim;
 
-    @Getter private MountType mountType = MountType.ARM;
+    @Getter private final MountType mountType = MountType.ARM;
 
     public ArmSim(ArmConfig config, Mechanism2d mech, TalonFXSimState armMotorSim, String name) {
         this.config = config;
