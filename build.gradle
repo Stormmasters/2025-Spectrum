@@ -92,7 +92,7 @@ jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     from sourceSets.main.allSource
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE //Edited to allow overloading WPILib Triggers
 }
 
 // Configure jar and deploy tasks
@@ -168,7 +168,7 @@ spotbugs {
     showStackTraces = true
     showProgress = true
     effort = com.github.spotbugs.snom.Effort.DEFAULT
-    reportLevel = com.github.spotbugs.snom.Confidence.valueOf("DEFAULT")
+    reportLevel =  com.github.spotbugs.snom.Confidence.values()[3]
     reportsDir = file("$buildDir/reports/spotbugs")
     //includeFilter = file('spotbugs-include.xml')
     excludeFilter = file('excludeFilter-spotbugs.xml')

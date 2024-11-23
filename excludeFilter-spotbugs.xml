@@ -28,4 +28,7 @@
   <Match>
     <Class name="frc.spectrumLib.vision.LimelightHelpers" />
   </Match>
+  <Match>
+    <Class name="frc.robot.RobotLogger" />
+  </Match>
 </FindBugsFilter>

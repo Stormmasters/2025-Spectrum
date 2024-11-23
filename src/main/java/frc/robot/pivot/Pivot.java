@@ -11,7 +11,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,7 +23,6 @@ import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
 import lombok.*;
 
-@Logged
 public class Pivot extends Mechanism {
 
     public static class PivotConfig extends Config {
@@ -91,10 +89,10 @@ public class Pivot extends Mechanism {
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configMinMaxRotations(0, 30); // .96
-            configReverseSoftLimit(getMinRotation(), true);
-            configForwardSoftLimit(getMaxRotation(), true);
+            configReverseSoftLimit(getMinRotations(), true);
+            configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive();
+            configCounterClockwise_Positive(); // might be different on actual robot
             setRatio(Math.abs(172.8)); // getGearRatio()));
         }
 
@@ -129,7 +127,7 @@ public class Pivot extends Mechanism {
 
     private PivotConfig config;
     private CANcoder m_CANcoder;
-    private PivotSim sim;
+    @Getter private PivotSim sim;
     CANcoderSimState canCoderSim;
 
     public Pivot(PivotConfig config) {
@@ -156,6 +154,14 @@ public class Pivot extends Mechanism {
     @Override
     public void periodic() {}
 
+    public void setupStates() {
+        PivotStates.setStates();
+    }
+
+    public void setupDefaultCommand() {
+        PivotStates.setupDefaultCommand();
+    }
+
     /*-------------------
     initSendable
     Use # to denote items that are settable
@@ -163,8 +169,8 @@ public class Pivot extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
-            builder.addDoubleProperty("Velocity", this::getMotorVelocityRPM, null);
+            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
         }
@@ -231,12 +237,12 @@ public class Pivot extends Mechanism {
 
             @Override
             public void initialize() {
-                holdPosition = getMotorPosition();
+                holdPosition = getPositionRotations();
             }
 
             @Override
             public void execute() {
-                moveToPoseRevolutions(() -> holdPosition);
+                moveToRotations(() -> holdPosition);
             }
 
             @Override
@@ -248,7 +254,7 @@ public class Pivot extends Mechanism {
 
     public boolean pivotHasError() {
         if (isAttached()) {
-            return getMotorPosition() > config.getMaxRotation();
+            return getPositionRotations() > config.getMaxRotations();
         }
         return false;
     }
@@ -290,9 +296,9 @@ public class Pivot extends Mechanism {
                             config.pivotY,
                             config.ratio,
                             config.length,
-                            config.getMinRotation(),
+                            config.getMinRotations(),
                             80, // config.getMaxRotation() * config.getRatio(),
-                            config.getMinRotation()),
+                            config.getMinRotations()),
                     mech,
                     pivotMotorSim,
                     config.getName());

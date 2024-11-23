@@ -21,8 +21,10 @@ import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Robot;
+import frc.spectrumLib.CachedDouble;
+import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.talonFX.TalonFXFactory;
 import frc.spectrumLib.util.CanDeviceId;
 import frc.spectrumLib.util.Conversions;
@@ -35,10 +37,15 @@ import lombok.*;
  * Closed-loop & Motion Magic Docs:
  * https://pro.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/closed-loop-guide.html
  */
-public abstract class Mechanism implements Subsystem, NTSendable {
+public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     @Getter protected TalonFX motor;
     @Getter protected TalonFX[] followerMotors;
     public Config config;
+
+    private final CachedDouble cachedRotations;
+    private final CachedDouble cachedPercentage;
+    private final CachedDouble cachedVelocity;
+    private final CachedDouble cachedCurrent;
 
     public Mechanism(Config config) {
         this.config = config;
@@ -55,7 +62,14 @@ public abstract class Mechanism implements Subsystem, NTSendable {
                                 config.followerConfigs[i].opposeLeader);
             }
         }
-        CommandScheduler.getInstance().registerSubsystem(this);
+
+        cachedCurrent = new CachedDouble(this::updateCurrent);
+        cachedRotations = new CachedDouble(this::updatePositionRotations);
+        cachedPercentage = new CachedDouble(this::updatePositionPercentage);
+        cachedVelocity = new CachedDouble(this::updateVelocityRPM);
+
+        Robot.subsystems.add(this);
+        this.register();
     }
 
     public Mechanism(Config config, boolean attached) {
@@ -63,7 +77,7 @@ public abstract class Mechanism implements Subsystem, NTSendable {
         config.attached = attached;
     }
 
-    // Setup the telemetry values, has to be called at the end of the implemetned mechanism
+    // Setup the telemetry values, has to be called at the end of the implemented mechanism
     // constructor
     public void telemetryInit() {
         SendableRegistry.add(this, getName());
@@ -90,43 +104,156 @@ public abstract class Mechanism implements Subsystem, NTSendable {
         builder.setSmartDashboardType(getName());
     }
 
+    public Trigger atRotations(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(getPositionRotations() - target.getAsDouble())
+                                < tolerance.getAsDouble());
+    }
+
+    public Trigger belowRotations(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getPositionRotations() < (target.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    public Trigger aboveRotations(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getPositionRotations() > (target.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    public Trigger atPercentage(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(getPositionPercentage() - target.getAsDouble())
+                                < tolerance.getAsDouble());
+    }
+
+    public Trigger belowPercentage(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getPositionPercentage() < (target.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    public Trigger abovePercentage(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getPositionPercentage() > (target.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    public Trigger atVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> Math.abs(getVelocityRPM() - target.getAsDouble()) < tolerance.getAsDouble());
+    }
+
+    public Trigger belowVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getVelocityRPM() < (target.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    public Trigger aboveVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getVelocityRPM() > (target.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    public Trigger atCurrent(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> Math.abs(getCurrent() - target.getAsDouble()) < tolerance.getAsDouble());
+    }
+
+    public Trigger belowCurrent(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(() -> getCurrent() < (target.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    public Trigger aboveCurrent(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(() -> getCurrent() > (target.getAsDouble() - tolerance.getAsDouble()));
+    }
+
     /**
-     * Gets the position of the motor
+     * Update the value of the stator current for the motor
+     *
+     * @return
+     */
+    public double updateCurrent() {
+        if (config.attached) {
+            return motor.getStatorCurrent().getValueAsDouble();
+        }
+        return 0;
+    }
+
+    public double getCurrent() {
+        return cachedCurrent.getAsDouble();
+    }
+
+    /**
+     * Percentage to Rotations
+     *
+     * @return
+     */
+    public double percentToRotations(DoubleSupplier percent) {
+        return (percent.getAsDouble() / 100) * config.maxRotations;
+    }
+
+    /**
+     * Rotations to Percentage
+     *
+     * @param rotations
+     * @return
+     */
+    public double rotationsToPercent(DoubleSupplier rotations) {
+        return (rotations.getAsDouble() / config.maxRotations) * 100;
+    }
+
+    public double getPositionRotations() {
+        return cachedRotations.getAsDouble();
+    }
+
+    /**
+     * Updates the position of the motor
      *
      * @return motor position in rotations
      */
-    public double getMotorPosition() {
+    private double updatePositionRotations() {
         if (config.attached) {
             return motor.getPosition().getValueAsDouble();
         }
         return 0;
     }
 
+    public double getPositionPercentage() {
+        return cachedPercentage.getAsDouble();
+    }
+
+    private double updatePositionPercentage() {
+        return rotationsToPercent(() -> getPositionRotations());
+    }
+
     /**
-     * Gets the velocity of the motor
+     * Updates the velocity of the motor
      *
      * @return motor velocity in rotations/sec which are the CTRE native units
      */
-    public double getMotorVelocityRPS() {
+    private double updateVelocityRPS() {
         if (config.attached) {
             return motor.getVelocity().getValueAsDouble();
         }
         return 0;
     }
 
+    public double getVelocityRPM() {
+        return cachedVelocity.getAsDouble();
+    }
+
     // Get Velocity in RPM
-    public double getMotorVelocityRPM() {
-        return Conversions.RPStoRPM(getMotorVelocityRPS());
+    private double updateVelocityRPM() {
+        return Conversions.RPStoRPM(updateVelocityRPS());
     }
 
     /* Commands: see method in lambda for more information */
     /**
      * Runs the Mechanism at a given velocity
      *
-     * @param velocity in revolutions per minute
+     * @param velocityRPM in revolutions per minute
      */
-    public Command runVelocity(DoubleSupplier velocity) {
-        return run(() -> setVelocity(() -> Conversions.RPMtoRPS(velocity)))
+    public Command runVelocity(DoubleSupplier velocityRPM) {
+        return run(() -> setVelocity(() -> Conversions.RPMtoRPS(velocityRPM)))
                 .withName(getName() + ".runVelocity");
     }
 
@@ -136,42 +263,42 @@ public abstract class Mechanism implements Subsystem, NTSendable {
      * @param velocityRPM
      * @return
      */
-    public Command runVelocityTCFOCrpm(DoubleSupplier velocityRPM) {
+    public Command runVelocityTcFocRpm(DoubleSupplier velocityRPM) {
         return run(() -> setVelocityTorqueCurrentFOC(() -> Conversions.RPMtoRPS(velocityRPM)))
                 .withName(getName() + ".runVelocityFOCrpm");
     }
 
-    public Command runPercentage(DoubleSupplier percentSupplier) {
-        return run(() -> setPercentOutput(percentSupplier)).withName(getName() + ".runPercentage");
+    public Command runPercentage(DoubleSupplier percent) {
+        return run(() -> setPercentOutput(percent)).withName(getName() + ".runPercentage");
     }
 
     /**
      * Run to the specified position.
      *
-     * @param position position in revolutions
+     * @param rotations position in revolutions
      */
-    public Command moveToPoseRevolutions(DoubleSupplier position) {
-        return run(() -> setMMPosition(position)).withName(getName() + ".runPoseRevolutions");
+    public Command moveToRotations(DoubleSupplier rotations) {
+        return run(() -> setMMPosition(rotations)).withName(getName() + ".runPoseRevolutions");
     }
 
     /**
      * Move to the specified position.
      *
-     * @param position position in percentage of max revolutions
+     * @param percent position in percentage of max revolutions
      */
-    public Command moveToPosePercentage(DoubleSupplier position) {
-        return run(() -> setMMPosition(() -> config.maxRotation * (position.getAsDouble() / 100)))
+    public Command moveToPercentage(DoubleSupplier percent) {
+        return run(() -> setMMPosition(() -> percentToRotations(percent)))
                 .withName(getName() + ".runPosePercentage");
     }
 
     /**
-     * Runs to the specified position using FOC control. Will require different PID and feedforward
-     * configs
+     * Runs to the specified Motion Magic position using FOC control. Will require different PID and
+     * feedforward configs
      *
-     * @param position position in revolutions
+     * @param rotations position in revolutions
      */
-    public Command runFOCPosition(DoubleSupplier position) {
-        return run(() -> setMMPositionFOC(position)).withName(getName() + ".runFOCPosition");
+    public Command runFocRotations(DoubleSupplier rotations) {
+        return run(() -> setMMPositionFoc(rotations)).withName(getName() + ".runFOCPosition");
     }
 
     public Command runStop() {
@@ -219,23 +346,23 @@ public abstract class Mechanism implements Subsystem, NTSendable {
     /**
      * Sets the mechanism position of the motor
      *
-     * @param position rotations
+     * @param rotations rotations
      */
-    protected void setMotorPosition(DoubleSupplier position) {
+    protected void setMotorPosition(DoubleSupplier rotations) {
         if (isAttached()) {
-            motor.setPosition(position.getAsDouble());
+            motor.setPosition(rotations.getAsDouble());
         }
     }
 
     /**
      * Closed-loop Velocity Motion Magic with torque control (requires Pro)
      *
-     * @param velocity rotations per second
+     * @param velocityRPS rotations per second
      */
-    protected void setMMVelocityFOC(DoubleSupplier velocity) {
+    protected void setMMVelocityFOC(DoubleSupplier velocityRPS) {
         if (isAttached()) {
             MotionMagicVelocityTorqueCurrentFOC mm =
-                    config.mmVelocityFOC.withVelocity(velocity.getAsDouble());
+                    config.mmVelocityFOC.withVelocity(velocityRPS.getAsDouble());
             motor.setControl(mm);
         }
     }
@@ -243,12 +370,12 @@ public abstract class Mechanism implements Subsystem, NTSendable {
     /**
      * Closed-loop Velocity with torque control (requires Pro)
      *
-     * @param velocity rotations per second
+     * @param velocityRPS rotations per second
      */
-    protected void setVelocityTorqueCurrentFOC(DoubleSupplier velocity) {
+    protected void setVelocityTorqueCurrentFOC(DoubleSupplier velocityRPS) {
         if (isAttached()) {
             VelocityTorqueCurrentFOC output =
-                    config.velocityTorqueCurrentFOC.withVelocity(velocity.getAsDouble());
+                    config.velocityTorqueCurrentFOC.withVelocity(velocityRPS.getAsDouble());
             motor.setControl(output);
         }
     }
@@ -258,11 +385,11 @@ public abstract class Mechanism implements Subsystem, NTSendable {
      *
      * @param velocity rotations per second
      */
-    protected void setVelocityTCFOCrpm(DoubleSupplier velocityRPM) {
+    protected void setVelocityTCFOCrpm(DoubleSupplier velocityRPS) {
         if (isAttached()) {
             VelocityTorqueCurrentFOC output =
                     config.velocityTorqueCurrentFOC.withVelocity(
-                            Conversions.RPMtoRPS(velocityRPM.getAsDouble()));
+                            Conversions.RPMtoRPS(velocityRPS.getAsDouble()));
             motor.setControl(output);
         }
     }
@@ -270,11 +397,11 @@ public abstract class Mechanism implements Subsystem, NTSendable {
     /**
      * Closed-loop velocity control with voltage compensation
      *
-     * @param velocity rotations per second
+     * @param velocityRPS rotations per second
      */
-    protected void setVelocity(DoubleSupplier velocity) {
+    protected void setVelocity(DoubleSupplier velocityRPS) {
         if (isAttached()) {
-            VelocityVoltage output = config.velocityControl.withVelocity(velocity.getAsDouble());
+            VelocityVoltage output = config.velocityControl.withVelocity(velocityRPS.getAsDouble());
             motor.setControl(output);
         }
     }
@@ -282,12 +409,12 @@ public abstract class Mechanism implements Subsystem, NTSendable {
     /**
      * Closed-loop Position Motion Magic with torque control (requires Pro)
      *
-     * @param position rotations
+     * @param rotations rotations
      */
-    protected void setMMPositionFOC(DoubleSupplier position) {
+    protected void setMMPositionFoc(DoubleSupplier rotations) {
         if (isAttached()) {
             MotionMagicTorqueCurrentFOC mm =
-                    config.mmPositionFOC.withPosition(position.getAsDouble());
+                    config.mmPositionFOC.withPosition(rotations.getAsDouble());
             motor.setControl(mm);
         }
     }
@@ -295,24 +422,24 @@ public abstract class Mechanism implements Subsystem, NTSendable {
     /**
      * Closed-loop Position Motion Magic
      *
-     * @param position rotations
+     * @param rotations rotations
      */
-    protected void setMMPosition(DoubleSupplier position) {
-        setMMPosition(position, 0);
+    protected void setMMPosition(DoubleSupplier rotations) {
+        setMMPosition(rotations, 0);
     }
 
     /**
      * Closed-loop Position Motion Magic using a slot other than 0
      *
-     * @param position rotations
+     * @param rotations rotations
      * @param slot gains slot
      */
-    public void setMMPosition(DoubleSupplier position, int slot) {
+    public void setMMPosition(DoubleSupplier rotations, int slot) {
         if (isAttached()) {
             MotionMagicVoltage mm =
                     config.mmPositionVoltageSlot
                             .withSlot(slot)
-                            .withPosition(position.getAsDouble());
+                            .withPosition(rotations.getAsDouble());
             motor.setControl(mm);
         }
     }
@@ -380,8 +507,8 @@ public abstract class Mechanism implements Subsystem, NTSendable {
         @Getter protected TalonFXConfiguration talonConfig;
         @Getter private int numMotors = 1;
         @Getter private double voltageCompSaturation = 12.0; // 12V by default
-        @Getter private double minRotation;
-        @Getter private double maxRotation;
+        @Getter private double minRotations = 0;
+        @Getter private double maxRotations = 1;
 
         @Getter private FollowerConfig[] followerConfigs = new FollowerConfig[0];
 
@@ -631,8 +758,8 @@ public abstract class Mechanism implements Subsystem, NTSendable {
          * @param maxRotation
          */
         protected void configMinMaxRotations(double minRotation, double maxRotation) {
-            this.minRotation = minRotation;
-            this.maxRotation = maxRotation;
+            this.minRotations = minRotation;
+            this.maxRotations = maxRotation;
         }
     }
 }

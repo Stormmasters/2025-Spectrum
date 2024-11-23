@@ -10,15 +10,17 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import frc.robot.RobotTelemetry;
+import lombok.Getter;
 
-public class ArmSim {
+public class ArmSim implements Mount, Mountable {
     private SingleJointedArmSim armSim;
-    private ArmConfig config;
+    @Getter private ArmConfig config;
 
     private MechanismRoot2d armPivot;
     private MechanismLigament2d armMech2d;
     private TalonFXSimState armMotorSim;
+
+    @Getter private final MountType mountType = MountType.ARM;
 
     public ArmSim(ArmConfig config, Mechanism2d mech, TalonFXSimState armMotorSim, String name) {
         this.config = config;
@@ -57,7 +59,6 @@ public class ArmSim {
 
         // armMotorSim.setRotorVelocity(
         //         armSim.getVelocityRadPerSec() * config.getRatio() / (2.0 * Math.PI));
-        RobotTelemetry.print("armSim angle: " + armSim.getAngleRads());
         armMotorSim.setRawRotorPosition(
                 (Units.radiansToRotations(armSim.getAngleRads() - config.getStartingAngle()))
                         * config.getRatio());
@@ -66,10 +67,43 @@ public class ArmSim {
                 Units.radiansToRotations(armSim.getVelocityRadPerSec()) * config.getRatio());
 
         // ------ Update viz based on sim
-        armMech2d.setAngle(Math.toDegrees(armSim.getAngleRads()));
+        if (config.isMounted()) {
+            config.setPivotX(getUpdatedX(config));
+            config.setPivotY(getUpdatedY(config));
+            armMech2d.setAngle(
+                    Math.toDegrees(armSim.getAngleRads())
+                            + Math.toDegrees(config.getMount().getAngle()));
+        } else {
+            armMech2d.setAngle(Math.toDegrees(armSim.getAngleRads()));
+        }
+
+        armPivot.setPosition(config.getPivotX(), config.getPivotY());
     }
 
     public double getAngleRads() {
         return armSim.getAngleRads();
+    }
+
+    public double getDisplacementX() {
+        return config.getPivotX() - config.getInitialX();
+    }
+
+    public double getDisplacementY() {
+        return config.getPivotY() - config.getInitialY();
+    }
+
+    public double getAngle() {
+        if (config.isMounted()) {
+            return getAngleRads() + config.getMount().getAngle();
+        }
+        return getAngleRads();
+    }
+
+    public double getMountX() {
+        return config.getPivotX();
+    }
+
+    public double getMountY() {
+        return config.getPivotY();
     }
 }

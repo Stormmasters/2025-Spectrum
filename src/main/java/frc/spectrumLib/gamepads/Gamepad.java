@@ -3,28 +3,74 @@ package frc.spectrumLib.gamepads;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.ExpCurve;
+import frc.spectrumLib.util.Util;
 import java.util.function.DoubleSupplier;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class Gamepad extends SpectrumController implements Subsystem {
+// Gamepad class
+public abstract class Gamepad implements SpectrumSubsystem {
+
+    public static final Trigger kFalse = new Trigger(() -> false);
+
+    private CommandXboxController xboxController;
+    public Trigger A = kFalse;
+    public Trigger B = kFalse;
+    public Trigger X = kFalse;
+    public Trigger Y = kFalse;
+    public Trigger leftBumper = kFalse;
+    public Trigger rightBumper = kFalse;
+    public Trigger leftTrigger = kFalse;
+    public Trigger rightTrigger = kFalse;
+    public Trigger leftStickClick = kFalse;
+    public Trigger rightStickClick = kFalse;
+    public Trigger start = kFalse;
+    public Trigger select = kFalse;
+    public Trigger upDpad = kFalse;
+    public Trigger downDpad = kFalse;
+    public Trigger leftDpad = kFalse;
+    public Trigger rightDpad = kFalse;
+    public Trigger leftStickY = kFalse;
+    public Trigger leftStickX = kFalse;
+    public Trigger rightStickY = kFalse;
+    public Trigger rightStickX = kFalse;
+
+    // Setup function bumper and trigger buttons
+    public Trigger noBumpers = rightBumper.negate().and(leftBumper.negate());
+    public Trigger leftBumperOnly = leftBumper.and(rightBumper.negate());
+    public Trigger rightBumperOnly = rightBumper.and(leftBumper.negate());
+    public Trigger bothBumpers = rightBumper.and(leftBumper);
+    public Trigger noTriggers = leftTrigger.negate().and(rightTrigger.negate());
+    public Trigger leftTriggerOnly = leftTrigger.and(rightTrigger.negate());
+    public Trigger rightTriggerOnly = rightTrigger.and(leftTrigger.negate());
+    public Trigger bothTriggers = leftTrigger.and(rightTrigger);
+    public Trigger noModifiers = noBumpers.and(noTriggers);
 
     private Rotation2d storedLeftStickDirection = new Rotation2d();
     private Rotation2d storedRightStickDirection = new Rotation2d();
     private boolean configured =
             false; // Used to determine if we detected the gamepad is plugged and we have configured
     // it
-    private boolean printed = false; // Used to only print Gamepad Not Deteceted once
+    private boolean printed = false; // Used to only print Gamepad Not Detected once
 
     @Getter protected final ExpCurve leftStickCurve;
     @Getter protected final ExpCurve rightStickCurve;
     @Getter protected final ExpCurve triggersCurve;
+
+    protected Trigger teleop = Util.teleop;
+    protected Trigger autoMode = Util.autoMode;
+    protected Trigger testMode = Util.testMode;
+    protected Trigger disabled = Util.disabled;
 
     public static class Config {
         @Getter private String name;
@@ -33,23 +79,15 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
         // A configured value to say if we should use this controller on this robot
         @Getter @Setter private Boolean attached;
 
-        /**
-         * in order to run a PS5 controller, you must use DS4Windows to emulate a XBOX controller as
-         * well and move the controller to emulatedPS5Port
-         */
-        @Getter @Setter boolean isXbox = true;
-
-        @Getter @Setter int emulatedPS5Port;
-
-        @Getter @Setter double leftStickDeadzone = 0.0;
+        @Getter @Setter double leftStickDeadzone = 0.001;
         @Getter @Setter double leftStickExp = 1.0;
         @Getter @Setter double leftStickScalor = 1.0;
 
-        @Getter @Setter double rightStickDeadzone = 0.0;
+        @Getter @Setter double rightStickDeadzone = 0.001;
         @Getter @Setter double rightStickExp = 1.0;
         @Getter @Setter double rightStickScalor = 1.0;
 
-        @Getter @Setter double triggersDeadzone = 0.0;
+        @Getter @Setter double triggersDeadzone = 0.001;
         @Getter @Setter double triggersExp = 1.0;
         @Getter @Setter double triggersScalor = 1.0;
 
@@ -60,18 +98,19 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
     }
 
     private Config config;
+
     /**
-     * Creates a new Gamepad.
+     * Constructs a Gamepad object with the specified configuration.
      *
-     * @param port The port the gamepad is plugged into
-     * @param name The name of the gamepad
-     * @param isXbox Xbox or PS5 controller
-     * @param emulatedPS5Port emulated port for PS5 controller so we can rumble PS5 controllers.
+     * @param config the configuration object containing settings for the gamepad
+     *     <p>The constructor initializes the following: - Superclass with port and attachment
+     *     status from the configuration. - Curve objects for left stick, right stick, and triggers
+     *     using exponential curves. - If the gamepad is attached, initializes the Xbox controller
+     *     and its buttons, triggers, sticks, and D-pad.
      */
     public Gamepad(Config config) {
-        super(config.getPort(), config.isXbox(), config.getEmulatedPS5Port(), config.getAttached());
         this.config = config;
-        // Curve objects that we use to configure the controller axis ojbects
+        // Curve objects that we use to configure the controller axis objects
         leftStickCurve =
                 new ExpCurve(
                         config.getLeftStickExp(),
@@ -90,6 +129,36 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
                         0,
                         config.getTriggersScalor(),
                         config.getTriggersDeadzone());
+
+        if (config.attached) {
+            xboxController = new CommandXboxController(config.port);
+            A = xboxController.a();
+            B = xboxController.b();
+            X = xboxController.x();
+            Y = xboxController.y();
+            leftBumper = xboxController.leftBumper();
+            rightBumper = xboxController.rightBumper();
+            leftTrigger =
+                    xboxController.leftTrigger(
+                            config.triggersDeadzone); // Assuming a default threshold of 0.5
+            rightTrigger =
+                    xboxController.rightTrigger(
+                            config.triggersDeadzone); // Assuming a default threshold of 0.5
+            leftStickClick = xboxController.leftStick();
+            rightStickClick = xboxController.rightStick();
+            start = xboxController.start();
+            select = xboxController.back();
+            upDpad = xboxController.povUp();
+            downDpad = xboxController.povDown();
+            leftDpad = xboxController.povLeft();
+            rightDpad = xboxController.povRight();
+            leftStickY = leftYTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
+            leftStickX = leftXTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
+            rightStickY = rightYTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
+            rightStickX = rightXTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
+        }
+
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     @Override
@@ -100,7 +169,7 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
     // Configure the pilot controller
     public void configure() {
         if (config.getAttached()) {
-            // Detect whether the xbox controller has been plugged in after start-up
+            // Detect whether the Xbox controller has been plugged in after start-up
             if (!configured) {
                 if (!isConnected()) {
                     if (!printed) {
@@ -110,16 +179,7 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
                     return;
                 }
 
-                // Configure button bindings once the driver controller is connected
-                if (DriverStation.isTest()) {
-                    setupTestTriggers();
-                } else if (DriverStation.isDisabled()) {
-                    setupDisabledTriggers();
-                } else {
-                    setupTeleopTriggers();
-                }
                 configured = true;
-
                 Telemetry.print("## " + getName() + ": gamepad is connected ##");
             }
         }
@@ -228,20 +288,6 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
         }
     }
 
-    // TODO: simplified but untested
-    // public double getBlueAllianceStickCardinals() {
-    //     double stickAngle = getRightStickDirection().getRadians();
-
-    //     // Normalize angle to be between 0 and 2π
-    //     stickAngle = (stickAngle + 2 * Math.PI) % (2 * Math.PI);
-
-    //     // Round to nearest π/4 (45 degrees) and adjust for direction
-    //     double aimAngle = Math.round(stickAngle / (Math.PI / 4)) * (Math.PI / 4);
-
-    //     // Wrap angle to -π to π
-    //     return MathUtil.angleModulus(aimAngle);
-    // }
-
     /**
      * Flips the stick direction for the red alliance.
      *
@@ -271,87 +317,19 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
         }
     }
 
-    // TODO: simplified but untested
-    // public double getRedAllianceStickCardinals() {
-    //     double aimAngle = getBlueAllianceStickCardinals();
-    //     return MathUtil.angleModulus(aimAngle + Math.PI); // Flip the angle
-    // }
-
-    // public double getStickSteer(int segments){
-    //     double stickAngle = getRightStickDirection().getRadians();
-    //     double[] outputs = new double[segments];
-    //     for (int i = 0; i < segments; i++){
-    //         outputs[i] = i * (2*Math.PI/segments);
-    //     }
-
-    // }
-    // public double idk (double[] outputs, double stickAngle, int segments){ ///need three
-    // parameters?, output array and current stickAngle in Radians, segments wanted
-    //     double[] newoutputs = new double[segments]; //create copy of array with the rotated
-    // values
-    //     for (int i=0; i < segments; i++){ // loops for the length of outputs
-    //         newoutputs[i] = outputs[i] + Math.PI/segments; /// shifts circle
-    //     }
-    //     for (int i=0; i< segments; i++){
-    //         if (stickAngle > outputs[i] && stickAngle <= outputs[(i+1)%segments]){ ///if the
-    // given stickAngle is between two of the other angles
-    //             ///The %segments should account for the circle looping around?
-    //             return outputs[(i+1)%segments];// shoudl be the desired angle output
-    //         }
-    //     }
-
-    // }
-
-    /** Setup modifier bumper and trigger buttons */
-    public Trigger noModifers() {
-        return noBumpers().and(noTriggers());
-    }
-
-    public Trigger noBumpers() {
-        return rightBumper().negate().and(leftBumper().negate());
-    }
-
-    public Trigger leftBumperOnly() {
-        return leftBumper().and(rightBumper().negate());
-    }
-
-    public Trigger rightBumperOnly() {
-        return rightBumper().and(leftBumper().negate());
-    }
-
-    public Trigger bothBumpers() {
-        return rightBumper().and(leftBumper());
-    }
-
-    public Trigger noTriggers() {
-        return leftTrigger(0).negate().and(rightTrigger(0).negate());
-    }
-
-    public Trigger leftTriggerOnly() {
-        return leftTrigger(0).and(rightTrigger(0).negate());
-    }
-
-    public Trigger rightTriggerOnly() {
-        return rightTrigger(0).and(leftTrigger(0).negate());
-    }
-
-    public Trigger bothTriggers() {
-        return leftTrigger(0).and(rightTrigger(0));
-    }
-
-    public Trigger leftYTrigger(ThresholdType t, double threshold) {
+    public Trigger leftYTrigger(Threshold t, double threshold) {
         return axisTrigger(t, threshold, () -> getLeftY());
     }
 
-    public Trigger leftXTrigger(ThresholdType t, double threshold) {
+    public Trigger leftXTrigger(Threshold t, double threshold) {
         return axisTrigger(t, threshold, () -> getLeftX());
     }
 
-    public Trigger rightYTrigger(ThresholdType t, double threshold) {
+    public Trigger rightYTrigger(Threshold t, double threshold) {
         return axisTrigger(t, threshold, () -> getRightY());
     }
 
-    public Trigger rightXTrigger(ThresholdType t, double threshold) {
+    public Trigger rightXTrigger(Threshold t, double threshold) {
         return axisTrigger(t, threshold, () -> getRightX());
     }
 
@@ -369,16 +347,16 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
                 });
     }
 
-    private Trigger axisTrigger(ThresholdType t, double threshold, DoubleSupplier v) {
+    private Trigger axisTrigger(Threshold t, double threshold, DoubleSupplier v) {
         return new Trigger(
                 () -> {
                     double value = v.getAsDouble();
                     switch (t) {
-                        case GREATER_THAN:
+                        case GREATER:
                             return value > threshold;
-                        case LESS_THAN:
+                        case LESS:
                             return value < threshold;
-                        case ABS_GREATER_THAN: // Also called Deadband
+                        case ABS_GREATER: // Also called Deadband
                             return Math.abs(value) > threshold;
                         default:
                             return false;
@@ -386,10 +364,10 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
                 });
     }
 
-    public static enum ThresholdType {
-        GREATER_THAN,
-        LESS_THAN,
-        ABS_GREATER_THAN;
+    public static enum Threshold {
+        GREATER,
+        LESS,
+        ABS_GREATER;
     }
 
     private void rumble(double leftIntensity, double rightIntensity) {
@@ -410,20 +388,6 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
     }
 
     /**
-     * Run a command while a button/trigger is held down. Also runs a command for a certain timeout
-     * when the button/trigger is released.
-     *
-     * @param trigger
-     * @param runCommand
-     * @param endCommand
-     */
-    public void runWithEndSequence(
-            Trigger trigger, Command runCommand, Command endCommand, double endTimeout) {
-        trigger.whileTrue(runCommand);
-        trigger.onFalse(endCommand.withTimeout(endTimeout).withName(endCommand.getName()));
-    }
-
-    /**
      * Returns a new Command object that combines the given command with a rumble command. The
      * rumble command has a rumble strength of 1 and a duration of 0.5 seconds. The name of the
      * returned command is set to the name of the given command.
@@ -435,9 +399,82 @@ public abstract class Gamepad extends SpectrumController implements Subsystem {
         return command.alongWith(rumbleCommand(1, 0.5)).withName(command.getName());
     }
 
-    public abstract void setupTeleopTriggers();
+    public boolean isConnected() {
+        if (config.attached) {
+            return this.getHID().isConnected();
+        } else {
+            return false;
+        }
+    }
 
-    public abstract void setupDisabledTriggers();
+    public double getRightTriggerAxis() {
+        if (!isConnected()) {
+            return 0.0;
+        }
+        return xboxController.getRightTriggerAxis();
+    }
 
-    public abstract void setupTestTriggers();
+    public double getLeftTriggerAxis() {
+        if (!isConnected()) {
+            return 0.0;
+        }
+        return xboxController.getLeftTriggerAxis();
+    }
+
+    public double getTwist() {
+        double right = getRightTriggerAxis();
+        double left = getLeftTriggerAxis();
+        double value = right - left;
+        return value;
+    }
+
+    public double getLeftX() {
+        if (!isConnected()) {
+            return 0.0;
+        }
+        return xboxController.getLeftX();
+    }
+
+    public double getLeftY() {
+        if (!isConnected()) {
+            return 0.0;
+        }
+        return xboxController.getLeftY();
+    }
+
+    public double getRightX() {
+        if (!isConnected()) {
+            return 0.0;
+        }
+        return xboxController.getRightX();
+    }
+
+    public double getRightY() {
+        if (!isConnected()) {
+            return 0.0;
+        }
+        return xboxController.getRightY();
+    }
+
+    protected GenericHID getHID() {
+        if (!config.attached) {
+            return null;
+        }
+        return xboxController.getHID();
+    }
+
+    protected GenericHID getRumbleHID() {
+        if (!isConnected()) {
+            return null;
+        }
+        return xboxController.getHID();
+    }
+
+    public void rumbleController(double leftIntensity, double rightIntensity) {
+        if (!isConnected()) {
+            return;
+        }
+        getRumbleHID().setRumble(RumbleType.kLeftRumble, leftIntensity);
+        getRumbleHID().setRumble(RumbleType.kRightRumble, rightIntensity);
+    }
 }

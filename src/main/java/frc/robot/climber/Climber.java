@@ -1,7 +1,6 @@
 package frc.robot.climber;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -16,21 +15,20 @@ import frc.spectrumLib.sim.LinearConfig;
 import frc.spectrumLib.sim.LinearSim;
 import lombok.*;
 
-@Logged
 public class Climber extends Mechanism {
     public static class ClimberConfig extends Config {
         /* Climber positions in percent (0 - 100) of full rotation */
         @Getter private double fullExtend = 100;
         @Getter private double home = 0;
 
-        @Getter private double topClimb = 100;
         @Getter private double midClimb = 74;
         @Getter private double safeClimb = 60;
-        @Getter private double botClimb = 0;
 
-        /* Climber Percentage Output */
-        @Getter private double raisePercentage = 0.2;
-        @Getter private double lowerPercentage = -0.2;
+        @Getter private double tolerance = 2;
+
+        // /* Climber Percentage Output */
+        // @Getter private double raisePercentage = 0.2;
+        // @Getter private double lowerPercentage = -0.2;
 
         /* Climber config settings */
         @Getter private final double zeroSpeed = -0.2;
@@ -51,7 +49,8 @@ public class Climber extends Mechanism {
         @Getter private double movingLength = 1;
 
         public ClimberConfig() {
-            super("Climber", 54, RobotConfig.CANIVORE); // motor id was originally 53
+            super("Climber", 53, RobotConfig.CANIVORE); // motor id was originally 53
+            configMinMaxRotations(-1, 104);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);
             configMotionMagic(14700, 16100, 0); // 40, 120 FOC // 120, 195 Regular
@@ -59,17 +58,16 @@ public class Climber extends Mechanism {
             configStatorCurrentLimit(statorCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-1, 104);
-            configForwardSoftLimit(getMaxRotation(), true);
-            configReverseSoftLimit(getMinRotation(), true);
+            configForwardSoftLimit(getMaxRotations(), true);
+            configReverseSoftLimit(getMinRotations(), true);
             configNeutralBrakeMode(true);
             // configMotionMagicPosition(0.12);
-            configCounterClockwise_Positive();
+            configCounterClockwise_Positive(); // might be different on actual robot
         }
     }
 
     private ClimberConfig config;
-    private ClimberSim sim;
+    @Getter private ClimberSim sim;
 
     public Climber(ClimberConfig config) {
         super(config); // unsure if we need this, may delete and test
@@ -83,6 +81,14 @@ public class Climber extends Mechanism {
     @Override
     public void periodic() {}
 
+    public void setupStates() {
+        ClimberStates.setStates();
+    }
+
+    public void setupDefaultCommand() {
+        ClimberStates.setupDefaultCommand();
+    }
+
     /*-------------------
     initSendable
     Use # to denote items that are settable
@@ -91,12 +97,10 @@ public class Climber extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getMotorPosition, null);
-            builder.addDoubleProperty("Velocity", this::getMotorVelocityRPM, null);
-            builder.addDoubleProperty(
-                    "Position Percentage",
-                    () -> getMotorPosition() / config.getMaxRotation() * 100,
-                    null);
+            builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
+            builder.addDoubleProperty("Position Percentage", this::getPositionPercentage, null);
+            builder.addDoubleProperty("VelocityRPM", this::getVelocityRPM, null);
+            builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
         }
     }
 
@@ -118,12 +122,12 @@ public class Climber extends Mechanism {
             @Override
             public void initialize() {
                 stop();
-                holdPosition = getMotorPosition();
+                holdPosition = getPositionRotations();
             }
 
             @Override
             public void execute() {
-                double currentPosition = getMotorPosition();
+                double currentPosition = getPositionRotations();
                 if (Math.abs(holdPosition - currentPosition) <= 5) {
                     setMMPosition(() -> holdPosition);
                 } else {

@@ -6,12 +6,10 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,10 +25,13 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.crescendo.Field;
 import frc.robot.Robot;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.SpectrumSubsystem;
+import frc.spectrumLib.util.Util;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import lombok.Getter;
@@ -39,8 +40,7 @@ import lombok.Getter;
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
  * in command-based projects easily.
  */
-@Logged
-public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
+public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSendable {
     private SwerveConfig config;
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
@@ -53,11 +53,17 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean hasAppliedPilotPerspective = false;
 
-    private final SwerveRequest.ApplyChassisSpeeds AutoRequest =
-            new SwerveRequest.ApplyChassisSpeeds();
+    private final SwerveRequest.ApplyRobotSpeeds AutoRequest = new SwerveRequest.ApplyRobotSpeeds();
 
+    /**
+     * Constructs a new Swerve drive subsystem.
+     *
+     * @param config The configuration object containing drivetrain constants and module
+     *     configurations.
+     */
     public Swerve(SwerveConfig config) {
         super(config.getDrivetrainConstants(), config.getModules());
+        // this.robotConfig = robotConfig;
         this.config = config;
         configurePathPlanner();
 
@@ -68,14 +74,34 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
         }
 
         SendableRegistry.add(this, "SwerveDrive");
+        Robot.subsystems.add(this);
+        CommandScheduler.getInstance().registerSubsystem(this);
         RobotTelemetry.print(getName() + " Subsystem Initialized: ");
     }
 
+    /**
+     * This method is called periodically and is used to update the pilot's perspective. It ensures
+     * that the swerve drive system is aligned correctly based on the pilot's view.
+     */
     @Override
     public void periodic() {
         setPilotPerspective();
     }
 
+    public void setupStates() {
+        SwerveStates.setStates();
+    };
+
+    public void setupDefaultCommand() {
+        SwerveStates.setupDefaultCommand();
+    };
+
+    /**
+     * The `initSendable` function sets up properties for a SmartDashboard type "SwerveDrive" with
+     * position and velocity double values.
+     *
+     * @param builder The `builder` parameter is an instance of the `NTSendableBuilder` class
+     */
     @Override
     public void initSendable(NTSendableBuilder builder) {
         builder.setSmartDashboardType("SwerveDrive");
@@ -83,66 +109,77 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
         builder.addDoubleProperty("Velocity", () -> 4, null);
     }
 
-    // This allows us to keep the robot pose on the sim field
-    // May need to make this only change the pose if we are in Sim
+    /**
+     * The function `getRobotPose` returns the robot's pose after checking and updating it.
+     *
+     * @return The `getRobotPose` method is returning the robot's current pose after calling the
+     *     `seedCheckedPose` method with the current pose as an argument.
+     */
     public Pose2d getRobotPose() {
         Pose2d pose = getState().Pose;
-        seedCheckedPose(pose);
-        return getState().Pose;
+        return keepPoseOnField(pose);
     }
 
-    // Keep the robot on the field during simulation
-    private void seedCheckedPose(Pose2d pose) {
-
+    // Keep the robot on the field
+    private Pose2d keepPoseOnField(Pose2d pose) {
         double halfRobot = config.getRobotLength() / 2;
-        double maxX = Field.getFieldLength() - halfRobot;
         double x = pose.getX();
-        boolean update = false;
-        if (x < halfRobot) {
-            x = halfRobot;
-            update = true;
-        } else if (x > maxX) {
-            x = maxX;
-            update = true;
-        }
-
-        double maxY = Field.getFieldWidth() - halfRobot;
         double y = pose.getY();
-        if (y < halfRobot) {
-            y = halfRobot;
-            update = true;
-        } else if (y > maxY) {
-            y = maxY;
-            update = true;
+
+        double newX = Util.limit(x, halfRobot, Field.getFieldLength() - halfRobot);
+        double newY = Util.limit(y, halfRobot, Field.getFieldWidth() - halfRobot);
+
+        if (x != newX || y != newY) {
+            pose = new Pose2d(new Translation2d(newX, newY), pose.getRotation());
+            resetPose(pose);
         }
-        if (update) {
-            seedFieldRelative(new Pose2d(new Translation2d(x, y), pose.getRotation()));
-        }
+        return pose;
+    }
+
+    public Trigger inXzone(double minXmeter, double maxXmeter) {
+        return new Trigger(
+                () -> Util.inRange(() -> getRobotPose().getX(), () -> minXmeter, () -> maxXmeter));
+    }
+
+    public Trigger inYzone(double minYmeter, double maxYmeter) {
+        return new Trigger(
+                () -> Util.inRange(() -> getRobotPose().getY(), () -> minYmeter, () -> maxYmeter));
+    }
+
+    /**
+     * This method is used to check if the robot is in the X zone of the field flips the values if
+     * Red Alliance
+     *
+     * @param minXmeter
+     * @param maxXmeter
+     * @return
+     */
+    public Trigger inXzoneAlliance(double minXmeter, double maxXmeter) {
+        return new Trigger(
+                () -> Util.inRange(Field.flipXifRed(getRobotPose().getX()), minXmeter, maxXmeter));
+    }
+
+    /**
+     * This method is used to check if the robot is in the Y zone of the field flips the values if
+     * Red Alliance
+     *
+     * @param minYmeter
+     * @param maxYmeter
+     * @return
+     */
+    public Trigger inYzoneAlliance(double minYmeter, double maxYmeter) {
+        return new Trigger(
+                () -> Util.inRange(Field.flipYifRed(getRobotPose().getY()), minYmeter, maxYmeter));
     }
 
     // Used to set a control request to the swerve module, ignores disable so commands are
-    // continous.
+    // continuous.
     Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get())).ignoringDisable(true);
     }
 
     private ChassisSpeeds getCurrentRobotChassisSpeeds() {
-        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
-    }
-
-    /**
-     * Applies the specified control request to this swerve drivetrain.
-     *
-     * @param request Request to apply
-     */
-    public void writeSetpoints(SwerveModuleState[] setpoints) {
-        try {
-            m_stateLock.lock();
-
-            this.setpoints = setpoints;
-        } finally {
-            m_stateLock.unlock();
-        }
+        return getKinematics().toChassisSpeeds(getState().ModuleStates);
     }
 
     private void setPilotPerspective() {
@@ -165,7 +202,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
     }
 
     protected void reorient(double angleDegrees) {
-        seedFieldRelative(
+        resetPose(
                 new Pose2d(
                         getRobotPose().getX(),
                         getRobotPose().getY(),
@@ -176,11 +213,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
         return runOnce(
                 () -> {
                     double output;
-                    if (Field.isRed()) {
-                        output = (angleDegrees + 180) % 360;
-                    } else {
-                        output = angleDegrees;
-                    }
+                    output = Field.flipTrueAngleIfRed(angleDegrees);
                     reorient(output);
                 });
     }
@@ -196,6 +229,23 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
         } else {
             return 270;
         }
+    }
+
+    protected double getClosest45() {
+        double angleRadians = getRotation().getRadians();
+        double angleDegrees = Math.toDegrees(angleRadians);
+
+        // Normalize the angle to be within 0 to 360 degrees
+        angleDegrees = angleDegrees % 360;
+        if (angleDegrees < 0) {
+            angleDegrees += 360;
+        }
+
+        // Round to the nearest multiple of 45 degrees
+        double closest45Degrees = Math.round(angleDegrees / 45.0) * 45.0;
+
+        // Convert back to radians and return as a Rotation2d
+        return Rotation2d.fromDegrees(closest45Degrees).getRadians();
     }
 
     protected Command cardinalReorient() {
@@ -234,25 +284,25 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
     // --------------------------------------------------------------------------------
     private void configurePathPlanner() {
         // Seed robot to mid field at start (Paths will change this starting position)
-        seedFieldRelative(
+        resetPose(
                 new Pose2d(
                         Units.feetToMeters(27),
                         Units.feetToMeters(27 / 2),
                         config.getBlueAlliancePerspectiveRotation()));
         double driveBaseRadius = .4;
-        for (var moduleLocation : m_moduleLocations) {
+        for (var moduleLocation : getModuleLocations()) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
 
         ModuleConfig moduleConfig =
                 new ModuleConfig(
-                        Units.inchesToMeters(config.getWheelRadiusInches()),
-                        config.getSpeedAt12VoltsMps(),
+                        config.getWheelRadius(),
+                        config.getSpeedAt12Volts(),
                         1,
                         DCMotor.getKrakenX60(1),
-                        config.getSlipCurrentA(),
+                        config.getSlipCurrent(),
                         1);
-        RobotConfig robotConfig =
+        RobotConfig robotConfig = // Have directly call this to avoid name space problem
                 new RobotConfig(
                         Units.lbsToKilograms(150),
                         1,
@@ -262,7 +312,7 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
                                 26)); // TODO Fix this line and line above with real numbers
         AutoBuilder.configure(
                 () -> this.getState().Pose, // Supplier of current robot pose
-                this::seedFieldRelative, // Consumer for seeding pose against auto
+                this::resetPose, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
                 (speeds) ->
                         this.setControl(
@@ -277,10 +327,6 @@ public class Swerve extends SwerveDrivetrain implements Subsystem, NTSendable {
                 // Blue, this is normally
                 // the case
                 this); // Subsystem for requirements
-    }
-
-    public Command getAutoPath(String pathName) {
-        return new PathPlannerAuto(pathName);
     }
 
     // --------------------------------------------------------------------------------
