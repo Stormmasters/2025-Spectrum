@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -74,6 +75,8 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         }
 
         SendableRegistry.add(this, "SwerveDrive");
+        SmartDashboard.putData(this);
+
         Robot.subsystems.add(this);
         CommandScheduler.getInstance().registerSubsystem(this);
         RobotTelemetry.print(getName() + " Subsystem Initialized: ");
@@ -107,6 +110,49 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         builder.setSmartDashboardType("SwerveDrive");
         builder.addDoubleProperty("Position", () -> 2, null);
         builder.addDoubleProperty("Velocity", () -> 4, null);
+
+        builder.addDoubleProperty(
+                "Front Left Angle", () -> getModule(0).getCurrentState().angle.getRadians(), null);
+        builder.addDoubleProperty(
+                "Front Left Velocity",
+                () -> getModule(0).getCurrentState().speedMetersPerSecond,
+                null);
+
+        builder.addDoubleProperty(
+                "Front Right Angle", () -> getModule(1).getCurrentState().angle.getRadians(), null);
+        builder.addDoubleProperty(
+                "Front Right Velocity",
+                () -> getModule(1).getCurrentState().speedMetersPerSecond,
+                null);
+
+        builder.addDoubleProperty(
+                // "Front Right Angle", getModule(1).getCurrentState().angle::getRadians, null);
+                "Front Right Angle",
+                () -> getModule(1).getCachedPosition().angle.getRadians(),
+                null);
+        builder.addDoubleProperty(
+                "Front Right Velocity",
+                () -> getModule(1).getCurrentState().speedMetersPerSecond,
+                null);
+
+        builder.addDoubleProperty(
+                "Back Left Angle", () -> getModule(2).getCurrentState().angle.getRadians(), null);
+        builder.addDoubleProperty(
+                "Back Left Velocity",
+                () -> getModule(2).getCurrentState().speedMetersPerSecond,
+                null);
+
+        builder.addDoubleProperty(
+                "Back Right Angle", () -> getModule(3).getCurrentState().angle.getRadians(), null);
+        builder.addDoubleProperty(
+                "Back Right Velocity",
+                () -> getModule(3).getCurrentState().speedMetersPerSecond,
+                null);
+
+        builder.addDoubleProperty(
+                "Robot Angle",
+                () -> getRotationRadians(),
+                null); // getRotation()::getRadians, null);
     }
 
     /**

@@ -88,26 +88,10 @@
   },
   "NetworkTables": {
     "transitory": {
-      "Epilogue": {
-        "Stats": {
+      "SmartDashboard": {
+        "SwerveDrive": {
           "open": true
         },
-        "open": true
-      },
-      "Robot": {
-        "getElevator2": {
-          "open": true
-        },
-        "open": true
-      },
-      "SmartDashboard": {
-        "open": true
-      }
-    }
-  },
-  "NetworkTables": {
-    "transitory": {
-      "SmartDashboard": {
         "open": true
       }
     }
