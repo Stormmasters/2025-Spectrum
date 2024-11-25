@@ -73,7 +73,7 @@ public class Robot extends SpectrumRobot {
     public Robot() {
         super();
         DataLogManager.start();
-        DriverStation.silenceJoystickConnectionWarning(true);
+
         try {
             RobotTelemetry.print("--- Robot Init Starting ---");
             robotSim = new RobotSim();
