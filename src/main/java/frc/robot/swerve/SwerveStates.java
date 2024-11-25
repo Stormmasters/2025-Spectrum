@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.crescendo.Field;
 import frc.robot.Robot;
-import frc.robot.RobotConfig.RobotType;
 import frc.robot.RobotTelemetry;
 import frc.robot.climber.ClimberStates;
 import frc.robot.pilot.Pilot;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
 import java.util.function.DoubleSupplier;
 
@@ -26,12 +26,14 @@ public class SwerveStates {
     static SpectrumState steeringLock = new SpectrumState("SteeringLock");
 
     protected static void setupDefaultCommand() {
-        if (Robot.getRobotConfig().getRobotType() == RobotType.PM) {
+        if (Rio.id == Rio.PHOTON_2024) {
             // Use this to set a different command based on robotType
             // Robot.swerve.setDefaultCommand(PhotonPilotCommands.pilotDrive());
             // return;
+            swerve.setDefaultCommand(pilotSteerCommand);
+        } else {
+            swerve.setDefaultCommand(pilotSteerCommand);
         }
-        swerve.setDefaultCommand(pilotSteerCommand);
     }
 
     protected static void setStates() {

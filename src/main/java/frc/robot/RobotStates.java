@@ -4,14 +4,13 @@ import static frc.robot.auton.Auton.*;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.crescendo.Field;
-import frc.robot.RobotConfig.RobotType;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.swerve.Swerve;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
 
 public class RobotStates {
-    private static final RobotConfig config = Robot.getRobotConfig();
     private static final Pilot pilot = Robot.getPilot();
     private static final Operator operator = Robot.getOperator();
     private static final Swerve swerve = Robot.getSwerve();
@@ -22,11 +21,11 @@ public class RobotStates {
      * when entering the state Use onFalse/whileFalse to run a command when leaving the state
      * RobotType Triggers
      */
-    public static final Trigger pm = new Trigger(() -> config.getRobotType() == RobotType.PM);
+    public static final Trigger pm = new Trigger(() -> Rio.id == Rio.PM_2024);
 
-    public static final Trigger am = new Trigger(() -> config.getRobotType() == RobotType.AM);
-    public static final Trigger fm = new Trigger(() -> config.getRobotType() == RobotType.FM);
-    public static final Trigger sim = new Trigger(() -> config.getRobotType() == RobotType.SIM);
+    public static final Trigger am = new Trigger(() -> Rio.id == Rio.AM_2024);
+    public static final Trigger fm = new Trigger(() -> Rio.id == Rio.FM_2024);
+    public static final Trigger sim = new Trigger(() -> Robot.isSimulation());
 
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger intaking =

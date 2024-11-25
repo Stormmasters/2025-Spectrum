@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.climber.Climber.ClimberConfig;
-import frc.robot.configs.FM2024;
-import frc.robot.configs.PM2024;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.feeder.Feeder.FeederConfig;
 import frc.robot.intake.Intake.IntakeConfig;
@@ -58,7 +56,7 @@ public class RobotConfig {
     public static final String CANIVORE = "*"; // CANbus name is 3847
     public static final String RIO_CANBUS = "rio";
 
-    public final int ledPWMport = 0;
+    // public final int ledPWMport = 0;
 
     private RobotType robotType = null;
 
@@ -93,7 +91,7 @@ public class RobotConfig {
                 config = new ConfigHolder();
                 break;
             case PM:
-                config = new PM2024();
+                // config = new PM2024();
                 break;
             case PHOTON:
                 config = new ConfigHolder();
@@ -102,7 +100,7 @@ public class RobotConfig {
             case FM:
             default:
                 /* Set all the default configs */
-                config = new FM2024();
+                // config = new FM2024();
                 break;
         }
 
