@@ -103,8 +103,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         setPattern(defaultPattern);
         led.start();
 
-        SpectrumRobot.subsystems.add(
-                this); // TODO: Make a SpectrumRobot.java to this isn't importing robot
+        SpectrumRobot.add(this); // TODO: Make a SpectrumRobot.java to this isn't importing robot
         CommandScheduler.getInstance().registerSubsystem(this);
     }
 

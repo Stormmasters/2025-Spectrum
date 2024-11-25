@@ -4,9 +4,9 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
@@ -54,7 +54,7 @@ public class Feeder extends Mechanism {
         @Getter private double wheelDiameter = 5.0;
 
         public FeederConfig() {
-            super("Feeder", 40, RobotConfig.CANIVORE);
+            super("Feeder", 40, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0); // velocity
             configFeedForwardGains(velocityKs, velocityKv, 0, 0); // velocity
             configPIDGains(1, positionKp, 0, 0);

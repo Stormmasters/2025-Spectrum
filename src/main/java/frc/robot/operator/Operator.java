@@ -65,7 +65,7 @@ public class Operator extends Gamepad {
     public Operator(OperatorConfig config) {
         super(config);
         this.config = config;
-        Robot.subsystems.add(this);
+        Robot.add(this);
         RobotTelemetry.print("Operator Subsystem Initialized: ");
     }
 

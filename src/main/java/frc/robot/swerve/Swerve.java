@@ -74,7 +74,7 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         }
 
         SendableRegistry.add(this, "SwerveDrive");
-        Robot.subsystems.add(this);
+        Robot.add(this);
         CommandScheduler.getInstance().registerSubsystem(this);
         RobotTelemetry.print(getName() + " Subsystem Initialized: ");
     }

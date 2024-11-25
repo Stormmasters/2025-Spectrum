@@ -33,7 +33,6 @@ import frc.robot.swerve.SwerveConfig;
 import frc.robot.vision.VisionSystem;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumRobot;
-import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.util.CrashTracker;
 import lombok.Getter;
 
@@ -43,6 +42,7 @@ public class Robot extends SpectrumRobot {
     @Getter private static Config config;
 
     public static class Config {
+
         public SwerveConfig swerve = new SwerveConfig();
         public IntakeConfig intake = new IntakeConfig();
         public FeederConfig feeder = new FeederConfig();
@@ -156,7 +156,7 @@ public class Robot extends SpectrumRobot {
         CommandScheduler.getInstance().getActiveButtonLoop().clear();
 
         // Bind Triggers for all subsystems
-        subsystems.forEach(SpectrumSubsystem::setupStates);
+        setupStates();
         RobotStates.setupStates();
     }
 

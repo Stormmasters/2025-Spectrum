@@ -39,6 +39,9 @@ public enum Rio {
     private static final Alert rioIdUnknown = new Alert("UNKNOWN RIO: ", AlertType.kError);
     public static final Rio id = checkID();
 
+    public static final String CANIVORE = "*"; // Use the first CANivore bus found
+    public static final String RIO_CANBUS = "rio";
+
     private final String serialNumber;
     private final boolean isRIO_2;
 

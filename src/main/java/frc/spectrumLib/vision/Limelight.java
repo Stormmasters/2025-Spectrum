@@ -111,7 +111,7 @@ public class Limelight {
         return LimelightHelpers.getTY(config.getName());
     }
 
-    /** @return Whether the LL has any valid targets (apriltags or other vision targets) */
+    /** @return Whether the LL has any valid targets (April tags or other vision targets) */
     public boolean targetInView() {
         if (!isAttached()) {
             return false;

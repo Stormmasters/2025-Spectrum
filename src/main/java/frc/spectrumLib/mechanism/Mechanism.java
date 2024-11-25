@@ -68,7 +68,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         cachedPercentage = new CachedDouble(this::updatePositionPercentage);
         cachedVelocity = new CachedDouble(this::updateVelocityRPM);
 
-        SpectrumRobot.subsystems.add(this);
+        SpectrumRobot.add(this);
         this.register();
     }
 
