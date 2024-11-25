@@ -39,6 +39,7 @@ import lombok.Getter;
 
 public class Robot extends SpectrumRobot {
     @Getter private static RobotTelemetry telemetry;
+    @Getter private static RobotSim robotSim;
     @Getter private static Config config;
 
     public static class Config {
@@ -55,7 +56,6 @@ public class Robot extends SpectrumRobot {
         public OperatorConfig operator = new OperatorConfig();
     }
 
-    @Getter private static RobotSim robotSim;
     @Getter private static Swerve swerve;
     @Getter private static AmpTrap ampTrap;
     @Getter private static Climber climber;
@@ -71,6 +71,7 @@ public class Robot extends SpectrumRobot {
     @Getter private static Auton auton;
 
     public Robot() {
+        super();
         DataLogManager.start();
         DriverStation.silenceJoystickConnectionWarning(true);
         try {
