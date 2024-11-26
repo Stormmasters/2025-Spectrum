@@ -72,7 +72,7 @@ public enum Rio {
             rioIdAlert.set(true);
 
             System.out.println("RIO NAME: " + id.name());
-            if (id.isRIO_2 == false) {
+            if (id.isRio2) {
                 rio1alert.set(true);
             }
             return id;
