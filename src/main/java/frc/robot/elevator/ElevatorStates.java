@@ -68,11 +68,15 @@ public class ElevatorStates {
     }
 
     private static Command amp() {
-        return elevator.moveToRotations(config::getAmp).withName("Elevator.amp");
+        return elevator.moveToRotations(config::getAmp)
+                .alongWith(elevator.checkMaxCurrent(() -> 100))
+                .withName("Elevator.amp");
     }
 
     private static Command home() {
-        return elevator.moveToRotations(config::getHome).withName("Elevator.home");
+        return elevator.moveToRotations(config::getHome)
+                .alongWith(elevator.checkMaxCurrent(() -> 100))
+                .withName("Elevator.home");
     }
 
     private static Command zero() {

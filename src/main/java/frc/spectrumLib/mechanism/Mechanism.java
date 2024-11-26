@@ -18,6 +18,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.spectrumLib.CachedDouble;
 import frc.spectrumLib.SpectrumRobot;
 import frc.spectrumLib.SpectrumSubsystem;
+import frc.spectrumLib.mechanism.Mechanism.FollowerConfig;
 import frc.spectrumLib.talonFX.TalonFXFactory;
 import frc.spectrumLib.util.CanDeviceId;
 import frc.spectrumLib.util.Conversions;
@@ -41,6 +44,8 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     @Getter protected TalonFX motor;
     @Getter protected TalonFX[] followerMotors;
     public Config config;
+
+    Alert currentAlert = new Alert("", AlertType.kWarning);
 
     private final CachedDouble cachedRotations;
     private final CachedDouble cachedPercentage;
@@ -482,6 +487,107 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
                 config.applyTalonConfig(motor);
             }
         }
+    }
+
+    public Command checkAvgCurrent(DoubleSupplier expectedCurrent, DoubleSupplier tolerance) {
+        return new Command() {
+            double totalCurrent = 0;
+            int count = 0;
+            String alertText = config.name + " AvgCurrent Error";
+
+            @Override
+            public void initialize() {
+                totalCurrent = 0;
+                count = 0;
+            }
+
+            @Override
+            public void execute() {
+                totalCurrent += getCurrent();
+                count++;
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                double avgCurrent = totalCurrent / count;
+                if (Math.abs(avgCurrent - expectedCurrent.getAsDouble())
+                        > tolerance.getAsDouble()) {
+                    currentAlert.setText(
+                            alertText
+                                    + " Expected: "
+                                    + expectedCurrent.getAsDouble()
+                                    + " Actual: "
+                                    + avgCurrent);
+                    currentAlert.set(true);
+                }
+            }
+        };
+    }
+
+    public Command checkMaxCurrent(DoubleSupplier expectedCurrent) {
+        return new Command() {
+            double maxCurrent = 0;
+            String alertText = config.name + " MaxCurrent Error";
+
+            @Override
+            public void initialize() {
+                maxCurrent = 0;
+            }
+
+            @Override
+            public void execute() {
+                double current = getCurrent();
+                if (current > maxCurrent) {
+                    maxCurrent = current;
+                }
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                if (maxCurrent > expectedCurrent.getAsDouble()) {
+                    currentAlert.setText(
+                            alertText
+                                    + " Expected: "
+                                    + expectedCurrent.getAsDouble()
+                                    + " Actual: "
+                                    + maxCurrent);
+                    currentAlert.set(true);
+                }
+            }
+        };
+    }
+
+    public Command checkMinThresholdCurrent(DoubleSupplier expectedCurrent) {
+        return new Command() {
+            double maxCurrent = 0;
+            String alertText = config.name + " Current Error";
+
+            @Override
+            public void initialize() {
+                maxCurrent = 0;
+            }
+
+            @Override
+            public void execute() {
+                double current = getCurrent();
+                if (current > maxCurrent) {
+                    maxCurrent = current;
+                }
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                if (maxCurrent < expectedCurrent.getAsDouble()) {
+                    currentAlert.setText(
+                            alertText
+                                    + " Expected at least: "
+                                    + expectedCurrent.getAsDouble()
+                                    + " Actual: "
+                                    + maxCurrent);
+                    currentAlert.set(true);
+                }
+            }
+        };
     }
 
     public static class FollowerConfig {

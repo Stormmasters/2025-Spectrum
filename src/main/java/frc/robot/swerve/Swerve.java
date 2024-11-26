@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.crescendo.Field;
 import frc.robot.Robot;
@@ -77,7 +76,7 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         SendableRegistry.add(this, "SwerveDrive");
         SmartDashboard.putData(this);
         Robot.add(this);
-        CommandScheduler.getInstance().registerSubsystem(this);
+        this.register();
         RobotTelemetry.print(getName() + " Subsystem Initialized: ");
     }
 
