@@ -145,6 +145,7 @@ public class Robot extends SpectrumRobot {
 
         // Reset Config for all gamepads and other button bindings
         pilot.resetConfig();
+        operator.resetConfig();
 
         // Bind Triggers for all subsystems
         setupStates();
