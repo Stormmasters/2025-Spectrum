@@ -41,7 +41,7 @@ public class Intake extends Mechanism {
             super("Intake", 5, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configGearRatio(12 / 30);
+            configGearRatio(12.0 / 30.0);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(30, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);

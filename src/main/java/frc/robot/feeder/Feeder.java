@@ -59,7 +59,7 @@ public class Feeder extends Mechanism {
             configFeedForwardGains(velocityKs, velocityKv, 0, 0); // velocity
             configPIDGains(1, positionKp, 0, 0);
             configFeedForwardGains(1, 0, positionKv, 0, 0);
-            configGearRatio(12 / 30);
+            configGearRatio(12.0 / 30.0);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);

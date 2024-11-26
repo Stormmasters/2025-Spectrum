@@ -43,7 +43,7 @@ public class Elevator extends Mechanism {
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.5;
         @Getter private double initialY = 0.0;
-        @Getter private double angle = 180 - 72;
+        @Getter private double angle = 180.0 - 72.0;
         @Getter private double staticLength = 20;
         @Getter private double movingLength = 20;
 
@@ -156,7 +156,7 @@ public class Elevator extends Mechanism {
         return new FunctionalCommand(
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
-                        (b) -> {
+                        b -> {
                             tareMotor();
                             toggleReverseSoftLimit(true); // end
                         },

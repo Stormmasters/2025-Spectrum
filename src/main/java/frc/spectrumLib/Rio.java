@@ -43,11 +43,11 @@ public enum Rio {
     public static final String RIO_CANBUS = "rio";
 
     private final String serialNumber;
-    private final boolean isRIO_2;
+    private final boolean isRio2;
 
-    private Rio(String serialNumber, boolean isRIO_2) {
+    private Rio(String serialNumber, boolean isRio2) {
         this.serialNumber = serialNumber;
-        this.isRIO_2 = isRIO_2;
+        this.isRio2 = isRio2;
     }
 
     private static Rio checkID() {
@@ -77,7 +77,7 @@ public enum Rio {
         return UNKNOWN;
     }
 
-    public boolean isRIO_2() {
-        return isRIO_2;
+    public boolean isRio2() {
+        return isRio2;
     }
 }

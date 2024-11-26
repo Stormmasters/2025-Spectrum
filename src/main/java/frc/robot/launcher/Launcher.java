@@ -42,7 +42,7 @@ public class Launcher extends Mechanism {
             super("LeftLauncher", 42, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0.0, 0.0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configGearRatio(1 / 2);
+            configGearRatio(1.0 / 2.0);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
@@ -103,6 +103,7 @@ public class Launcher extends Mechanism {
 
     // Must be called to enable the simulation
     // if roller position changes configure x and y to set position.
+    @Override
     public void simulationPeriodic() {
         if (isAttached()) {
             sim.simulationPeriodic();

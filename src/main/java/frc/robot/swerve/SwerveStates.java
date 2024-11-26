@@ -30,7 +30,7 @@ public class SwerveStates {
             // Use this to set a different command based on robotType
             // Robot.swerve.setDefaultCommand(PhotonPilotCommands.pilotDrive());
             // return;
-            swerve.setDefaultCommand(pilotSteerCommand);
+            // swerve.setDefaultCommand(pilotSteerCommand);
         } else {
             swerve.setDefaultCommand(pilotSteerCommand);
         }
@@ -118,8 +118,7 @@ public class SwerveStates {
 
     /** Turn the swerve wheels to an X to prevent the robot from moving */
     protected static Command xBrake() {
-        return swerve.applyRequest(() -> new SwerveRequest.SwerveDriveBrake())
-                .withName("Swerve.Xbrake");
+        return swerve.applyRequest(SwerveRequest.SwerveDriveBrake::new).withName("Swerve.Xbrake");
     }
 
     protected static Command climbDrive() {
@@ -226,7 +225,7 @@ public class SwerveStates {
                 RobotTelemetry.print("Output zero");
                 return 0;
             } else {
-                return swerve.calculateRotationController(() -> heading.getAsDouble());
+                return swerve.calculateRotationController(heading::getAsDouble);
             }
         };
     }

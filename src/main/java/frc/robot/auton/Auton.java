@@ -42,8 +42,8 @@ public class Auton {
         // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto"));
         // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto"));
 
-        pathChooser.addOption("Basic Front 4", SpectrumAuton("Basic Front 4"));
-        pathChooser.addOption("Madtown", SpectrumAuton("Madtown"));
+        pathChooser.addOption("Basic Front 4", spectrumAuton("Basic Front 4"));
+        pathChooser.addOption("Madtown", spectrumAuton("Madtown"));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
@@ -77,7 +77,7 @@ public class Auton {
      * @param autoName the name of the autonomous routine to execute
      * @return a Command that represents the SpectrumAuton sequence
      */
-    public Command SpectrumAuton(String autoName) {
+    public Command spectrumAuton(String autoName) {
         return Commands.waitSeconds(0.01).andThen(new PathPlannerAuto(autoName));
     }
 
@@ -127,11 +127,11 @@ public class Auton {
         }
     }
 
-    public static Command followSinglePath(String PathName) {
+    public static Command followSinglePath(String pathName) {
         // Load the path you want to follow using its name in the GUI
         PathPlannerPath path;
         try {
-            path = PathPlannerPath.fromPathFile(PathName);
+            path = PathPlannerPath.fromPathFile(pathName);
 
             // Create a path following command using AutoBuilder. This will also trigger event
             // markers.

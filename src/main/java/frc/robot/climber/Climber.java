@@ -44,7 +44,7 @@ public class Climber extends Mechanism {
         @Getter private double kClimberDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initalX = 0.95;
         @Getter private double initalY = 0;
-        @Getter private double angle = 180 - 38;
+        @Getter private double angle = 180.0 - 38;
         @Getter private double staticLength = 30;
         @Getter private double movingLength = 1;
 

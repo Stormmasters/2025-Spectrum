@@ -2,6 +2,7 @@ package frc.robot;
 
 import static frc.robot.auton.Auton.*;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.crescendo.Field;
 import frc.robot.operator.Operator;
@@ -25,7 +26,7 @@ public class RobotStates {
 
     public static final Trigger am = new Trigger(() -> Rio.id == Rio.AM_2024);
     public static final Trigger fm = new Trigger(() -> Rio.id == Rio.FM_2024);
-    public static final Trigger sim = new Trigger(() -> Robot.isSimulation());
+    public static final Trigger sim = new Trigger(RobotBase::isSimulation);
 
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger intaking =
@@ -60,5 +61,9 @@ public class RobotStates {
     public static void setupStates() {
         pilot.coastOn_dB.and(sim.not()).onTrue(coastMode.setTrue());
         pilot.coastOff_dA.and(sim.not()).onTrue(coastMode.setFalse());
+    }
+
+    private RobotStates() {
+        throw new IllegalStateException("Utility class");
     }
 }
