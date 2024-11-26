@@ -47,7 +47,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     private final CachedDouble cachedVelocity;
     private final CachedDouble cachedCurrent;
 
-    public Mechanism(Config config) {
+    protected Mechanism(Config config) {
         this.config = config;
 
         if (isAttached()) {
@@ -72,7 +72,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         this.register();
     }
 
-    public Mechanism(Config config, boolean attached) {
+    protected Mechanism(Config config, boolean attached) {
         this(config);
         config.attached = attached;
     }
