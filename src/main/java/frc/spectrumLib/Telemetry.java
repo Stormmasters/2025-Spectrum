@@ -25,7 +25,7 @@ public class Telemetry extends SubsystemBase {
         disablePrints = false;
     }
 
-    /** Print a statment if they are enabled */
+    /** Print a statement if they are enabled */
     public static void print(String output) {
         if (!disablePrints) {
             System.out.println(

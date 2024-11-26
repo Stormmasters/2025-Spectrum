@@ -3,9 +3,9 @@ package frc.robot.intake;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
@@ -38,10 +38,10 @@ public class Intake extends Mechanism {
         @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {
-            super("Intake", 5, RobotConfig.CANIVORE);
+            super("Intake", 5, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configGearRatio(12 / 30);
+            configGearRatio(12.0 / 30.0);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(30, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);

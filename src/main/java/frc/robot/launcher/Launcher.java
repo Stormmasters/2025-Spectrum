@@ -5,9 +5,9 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import frc.robot.Robot;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
@@ -39,10 +39,10 @@ public class Launcher extends Mechanism {
         private final InterpolatingDoubleTreeMap distanceMap = new InterpolatingDoubleTreeMap();
 
         public LauncherConfig() {
-            super("LeftLauncher", 42, RobotConfig.CANIVORE);
+            super("LeftLauncher", 42, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0.0, 0.0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configGearRatio(1 / 2);
+            configGearRatio(1.0 / 2.0);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
@@ -50,7 +50,7 @@ public class Launcher extends Mechanism {
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive();
             configMotionMagic(51, 205, 0);
-            setFollowerConfigs(new FollowerConfig("RightLauncher", 43, RobotConfig.CANIVORE, true));
+            setFollowerConfigs(new FollowerConfig("RightLauncher", 43, Rio.CANIVORE, true));
 
             distanceMap.put(0.0, 4500.0);
             distanceMap.put(4.1, 4500.0);
@@ -103,6 +103,7 @@ public class Launcher extends Mechanism {
 
     // Must be called to enable the simulation
     // if roller position changes configure x and y to set position.
+    @Override
     public void simulationPeriodic() {
         if (isAttached()) {
             sim.simulationPeriodic();

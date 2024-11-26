@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.LinearConfig;
 import frc.spectrumLib.sim.LinearSim;
@@ -43,12 +43,12 @@ public class Elevator extends Mechanism {
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.5;
         @Getter private double initialY = 0.0;
-        @Getter private double angle = 180 - 72;
+        @Getter private double angle = 180.0 - 72.0;
         @Getter private double staticLength = 20;
         @Getter private double movingLength = 20;
 
         public ElevatorConfig() {
-            super("Elevator", 52, RobotConfig.CANIVORE);
+            super("Elevator", 52, Rio.CANIVORE);
             configMinMaxRotations(minRotations, maxRotations);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);
@@ -156,7 +156,7 @@ public class Elevator extends Mechanism {
         return new FunctionalCommand(
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
-                        (b) -> {
+                        b -> {
                             tareMotor();
                             toggleReverseSoftLimit(true); // end
                         },

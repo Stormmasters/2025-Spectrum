@@ -1,6 +1,7 @@
 package frc.spectrumLib.gamepads;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -20,6 +21,7 @@ import lombok.Setter;
 
 // Gamepad class
 public abstract class Gamepad implements SpectrumSubsystem {
+    private Alert disconnectedAlert;
 
     public static final Trigger kFalse = new Trigger(() -> false);
 
@@ -110,6 +112,8 @@ public abstract class Gamepad implements SpectrumSubsystem {
      */
     public Gamepad(Config config) {
         this.config = config;
+        disconnectedAlert =
+                new Alert(config.name + " Gamepad Disconnected", Alert.AlertType.kError);
         // Curve objects that we use to configure the controller axis objects
         leftStickCurve =
                 new ExpCurve(
@@ -169,6 +173,8 @@ public abstract class Gamepad implements SpectrumSubsystem {
     // Configure the pilot controller
     public void configure() {
         if (config.getAttached()) {
+            disconnectedAlert.set(!isConnected()); // Display if the controller is disconnected
+
             // Detect whether the Xbox controller has been plugged in after start-up
             if (!configured) {
                 if (!isConnected()) {

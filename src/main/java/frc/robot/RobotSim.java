@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 // General Sim principles
-// Always move the root/orgin to change it's display position
+// Always move the root/origin to change it's display position
 // Looking at the robot from the left view (right side of the robot)
 public class RobotSim {
     public static final double height = 60;

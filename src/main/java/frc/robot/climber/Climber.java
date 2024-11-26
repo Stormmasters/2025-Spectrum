@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.LinearConfig;
 import frc.spectrumLib.sim.LinearSim;
@@ -44,12 +44,12 @@ public class Climber extends Mechanism {
         @Getter private double kClimberDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initalX = 0.95;
         @Getter private double initalY = 0;
-        @Getter private double angle = 180 - 38;
+        @Getter private double angle = 180.0 - 38;
         @Getter private double staticLength = 30;
         @Getter private double movingLength = 1;
 
         public ClimberConfig() {
-            super("Climber", 53, RobotConfig.CANIVORE); // motor id was originally 53
+            super("Climber", 53, Rio.CANIVORE); // motor id was originally 53
             configMinMaxRotations(-1, 104);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);
