@@ -2,39 +2,60 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.RobotConfig.ConfigHolder;
 import frc.robot.amptrap.AmpTrap;
+import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
+import frc.robot.climber.Climber.ClimberConfig;
+import frc.robot.configs.FM2024;
+import frc.robot.configs.PM2024;
 import frc.robot.elevator.Elevator;
+import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.feeder.Feeder;
+import frc.robot.feeder.Feeder.FeederConfig;
 import frc.robot.intake.Intake;
+import frc.robot.intake.Intake.IntakeConfig;
 import frc.robot.launcher.Launcher;
+import frc.robot.launcher.Launcher.LauncherConfig;
 import frc.robot.leds.LedFull;
+import frc.robot.leds.LedFull.LedFullConfig;
 import frc.robot.operator.Operator;
+import frc.robot.operator.Operator.OperatorConfig;
 import frc.robot.pilot.Pilot;
+import frc.robot.pilot.Pilot.PilotConfig;
 import frc.robot.pivot.Pivot;
+import frc.robot.pivot.Pivot.PivotConfig;
 import frc.robot.swerve.Swerve;
+import frc.robot.swerve.SwerveConfig;
 import frc.robot.vision.VisionSystem;
-import frc.spectrumLib.SpectrumSubsystem;
+import frc.spectrumLib.Rio;
+import frc.spectrumLib.SpectrumRobot;
 import frc.spectrumLib.util.CrashTracker;
-import java.util.ArrayList;
 import lombok.Getter;
 
-public class Robot extends TimedRobot {
-    @Getter private static RobotConfig robotConfig;
-    @Getter private static ConfigHolder config;
-
-    /** Create a single static instance of all of your subsystems */
-    public static ArrayList<SpectrumSubsystem> subsystems = new ArrayList<SpectrumSubsystem>();
-
+public class Robot extends SpectrumRobot {
     @Getter private static RobotTelemetry telemetry;
-
     @Getter private static RobotSim robotSim;
+    @Getter private static Config config;
+
+    public static class Config {
+
+        public SwerveConfig swerve = new SwerveConfig();
+        public IntakeConfig intake = new IntakeConfig();
+        public FeederConfig feeder = new FeederConfig();
+        public ElevatorConfig elevator = new ElevatorConfig();
+        public AmpTrapConfig ampTrap = new AmpTrapConfig();
+        public PivotConfig pivot = new PivotConfig();
+        public LauncherConfig launcher = new LauncherConfig();
+        public ClimberConfig climber = new ClimberConfig();
+        public LedFullConfig leds = new LedFullConfig();
+        public PilotConfig pilot = new PilotConfig();
+        public OperatorConfig operator = new OperatorConfig();
+    }
+
     @Getter private static Swerve swerve;
     @Getter private static AmpTrap ampTrap;
     @Getter private static Climber climber;
@@ -50,15 +71,25 @@ public class Robot extends TimedRobot {
     @Getter private static Auton auton;
 
     public Robot() {
+        super();
         DataLogManager.start();
-        DriverStation.silenceJoystickConnectionWarning(true);
+
         try {
             RobotTelemetry.print("--- Robot Init Starting ---");
             robotSim = new RobotSim();
 
             /** Set up the config */
-            robotConfig = new RobotConfig(); // Setup the robot config and choose which robot
-            config = robotConfig.config; // This just makes it easier to access the config
+            switch (Rio.id) {
+                case FM_2024:
+                    config = new FM2024();
+                    break;
+                case PM_2024:
+                    config = new PM2024();
+                    break;
+                default: // SIM and UNKNOWN
+                    config = new FM2024();
+                    break;
+            }
 
             /**
              * Initialize the Subsystems of the robot. Subsystems are how we divide up the robot
@@ -92,7 +123,7 @@ public class Robot extends TimedRobot {
             telemetry = new RobotTelemetry();
 
             // Setup Default Commands for all subsystems
-            subsystems.forEach(SpectrumSubsystem::setupDefaultCommand);
+            setupDefaultCommands();
 
             RobotTelemetry.print("--- Robot Init Complete ---");
 
@@ -116,7 +147,7 @@ public class Robot extends TimedRobot {
         pilot.resetConfig();
 
         // Bind Triggers for all subsystems
-        subsystems.forEach(SpectrumSubsystem::setupStates);
+        setupStates();
         RobotStates.setupStates();
     }
 
@@ -125,7 +156,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().getActiveButtonLoop().clear();
 
         // Bind Triggers for all subsystems
-        subsystems.forEach(SpectrumSubsystem::setupStates);
+        setupStates();
         RobotStates.setupStates();
     }
 

@@ -1,6 +1,6 @@
 package frc.spectrumLib.util;
 
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj.RobotBase;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.UUID;
 
-/** Tracks start-up and caught crash events, logging them to a file which dosn't roll over */
+/** Tracks start-up and caught crash events, logging them to a file which doesn't roll over */
 public class CrashTracker {
 
     private static final UUID RUN_INSTANCE_UUID = UUID.randomUUID();
@@ -52,7 +52,7 @@ public class CrashTracker {
             writer.println();
         } catch (IOException e) {
             if (e instanceof FileNotFoundException) {
-                if (Robot.isSimulation()) {
+                if (RobotBase.isSimulation()) {
                     System.out.println(
                             "CrashTracker failed to save crash file to robot: running in simulation mode");
                 } else {

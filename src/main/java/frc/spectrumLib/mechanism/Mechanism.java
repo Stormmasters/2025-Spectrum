@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Robot;
 import frc.spectrumLib.CachedDouble;
+import frc.spectrumLib.SpectrumRobot;
 import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.talonFX.TalonFXFactory;
 import frc.spectrumLib.util.CanDeviceId;
@@ -47,7 +47,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     private final CachedDouble cachedVelocity;
     private final CachedDouble cachedCurrent;
 
-    public Mechanism(Config config) {
+    protected Mechanism(Config config) {
         this.config = config;
 
         if (isAttached()) {
@@ -68,11 +68,11 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         cachedPercentage = new CachedDouble(this::updatePositionPercentage);
         cachedVelocity = new CachedDouble(this::updateVelocityRPM);
 
-        Robot.subsystems.add(this);
+        SpectrumRobot.add(this);
         this.register();
     }
 
-    public Mechanism(Config config, boolean attached) {
+    protected Mechanism(Config config, boolean attached) {
         this(config);
         config.attached = attached;
     }
@@ -222,7 +222,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     private double updatePositionPercentage() {
-        return rotationsToPercent(() -> getPositionRotations());
+        return rotationsToPercent(this::getPositionRotations);
     }
 
     /**
@@ -302,7 +302,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     public Command runStop() {
-        return run(() -> stop()).withName(getName() + ".runStop");
+        return run(this::stop).withName(getName() + ".runStop");
     }
 
     /**
@@ -317,10 +317,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     /** Sets the motor to brake mode if it is in coast mode */
     public Command ensureBrakeMode() {
-        return runOnce(
-                        () -> {
-                            setBrakeMode(true);
-                        })
+        return runOnce(() -> setBrakeMode(true))
                 .onlyIf(
                         () ->
                                 config.attached

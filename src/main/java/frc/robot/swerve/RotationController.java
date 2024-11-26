@@ -50,9 +50,11 @@ public class RotationController {
 
         if (atSetpoint()) {
             if (isHoldController) {
-                return calculatedValue = calculateHold(goalRadians, currentRadians);
+                calculatedValue = calculateHold(goalRadians, currentRadians);
+                return calculatedValue;
             }
-            return calculatedValue = 0;
+            calculatedValue = 0;
+            return calculatedValue;
         } else {
             return calculatedValue;
         }
@@ -63,7 +65,7 @@ public class RotationController {
     }
 
     public double calculateHold(double goalRadians, double currentRadians) {
-        double calculatedValue = holdController.calculate(currentRadians, goalRadians);
+        calculatedValue = holdController.calculate(currentRadians, goalRadians);
         return calculatedValue;
     }
 

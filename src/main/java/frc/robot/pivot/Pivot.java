@@ -15,9 +15,9 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
 import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
@@ -80,7 +80,7 @@ public class Pivot extends Mechanism {
         @Getter private double length = 0.4;
 
         public PivotConfig() {
-            super("Pivot", 41, RobotConfig.CANIVORE);
+            super("Pivot", 41, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(147000, 161000, 0);
@@ -136,7 +136,7 @@ public class Pivot extends Mechanism {
 
         if (config.isCANcoderAttached()) {
             config.modifyMotorConfig(motor); // Modify configuration to use remote CANcoder fused
-            m_CANcoder = new CANcoder(config.getCANcoderID(), RobotConfig.CANIVORE);
+            m_CANcoder = new CANcoder(config.getCANcoderID(), Rio.CANIVORE);
             CANcoderConfiguration cancoderConfigs = new CANcoderConfiguration();
             cancoderConfigs.MagnetSensor.MagnetOffset = config.getCANcoderOffset();
             cancoderConfigs.MagnetSensor.SensorDirection =

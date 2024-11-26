@@ -25,16 +25,17 @@ public class SysID {
     public SysID(Swerve swerve) {
         // this.swerve = swerve;
 
-        /* Use one of these sysidroutines for your particular test */
+        /* Use one of these sysid routines for your particular test */
+        String stateTxt = "state";
         SysIdRoutineTranslation =
                 new SysIdRoutine(
                         new SysIdRoutine.Config(
                                 null,
                                 Volts.of(4),
                                 null,
-                                (state) -> SignalLogger.writeString("state", state.toString())),
+                                state -> SignalLogger.writeString(stateTxt, state.toString())),
                         new SysIdRoutine.Mechanism(
-                                (volts) ->
+                                volts ->
                                         swerve.setControl(
                                                 TranslationCharacterization.withVolts(volts)),
                                 null,
@@ -46,9 +47,9 @@ public class SysID {
                                 null,
                                 Volts.of(4),
                                 null,
-                                (state) -> SignalLogger.writeString("state", state.toString())),
+                                state -> SignalLogger.writeString(stateTxt, state.toString())),
                         new SysIdRoutine.Mechanism(
-                                (roationalRate) ->
+                                roationalRate ->
                                         swerve.setControl(
                                                 RotationCharacterization.withRotationalRate(
                                                         roationalRate.baseUnitMagnitude())),
@@ -63,10 +64,9 @@ public class SysID {
                                 null,
                                 Volts.of(7),
                                 null,
-                                (state) -> SignalLogger.writeString("state", state.toString())),
+                                state -> SignalLogger.writeString(stateTxt, state.toString())),
                         new SysIdRoutine.Mechanism(
-                                (volts) ->
-                                        swerve.setControl(SteerCharacterization.withVolts(volts)),
+                                volts -> swerve.setControl(SteerCharacterization.withVolts(volts)),
                                 null,
                                 swerve));
 

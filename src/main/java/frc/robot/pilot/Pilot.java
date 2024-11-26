@@ -82,7 +82,7 @@ public class Pilot extends Gamepad {
     public Pilot(PilotConfig config) {
         super(config);
         this.config = config;
-        Robot.subsystems.add(this);
+        Robot.add(this);
 
         driving = leftStickX.or(leftStickY);
         steer = rightStickX.or(rightStickY);

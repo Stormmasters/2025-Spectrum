@@ -38,26 +38,20 @@ public class LedCommands {
                 "right.disabledPattern", right, right.ombre(right.purple, right.white), trigger);
         ledDefaultCommand(
                 "left.disabledPattern", left, left.ombre(left.purple, left.white), trigger);
-    };
+    }
 
     static void teleopPattern(Trigger trigger) {
         ledDefaultCommand("right.teleopPattern", right, right.bounce(right.purple, 3), trigger);
         ledDefaultCommand("left.teleopPattern", left, left.bounce(left.purple, 3), trigger);
-    };
+    }
 
     static void autoPattern(Trigger trigger) {
         ledDefaultCommand(
-                "right.autoPattern",
-                right,
-                right.countdown(() -> Timer.getFPGATimestamp(), 15),
-                trigger);
+                "right.autoPattern", right, right.countdown(Timer::getFPGATimestamp, 15), trigger);
 
         ledDefaultCommand(
-                "left.autoPattern",
-                left,
-                left.countdown(() -> Timer.getFPGATimestamp(), 15),
-                trigger);
-    };
+                "left.autoPattern", left, left.countdown(Timer::getFPGATimestamp, 15), trigger);
+    }
 
     static void testModePattern(Trigger trigger) {
         ledDefaultCommand("right.testModePattern", right, right.chase(Color.kRed, 0.2, 1), trigger);
