@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -42,8 +43,8 @@ import lombok.Getter;
  */
 public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSendable {
     private SwerveConfig config;
-    private Notifier m_simNotifier = null;
-    private double m_lastSimTime;
+    private Notifier simNotifier = null;
+    private double lastSimTime;
     private RotationController rotationController;
 
     @Getter
@@ -74,6 +75,7 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         }
 
         SendableRegistry.add(this, "SwerveDrive");
+        SmartDashboard.putData(this);
         Robot.add(this);
         CommandScheduler.getInstance().registerSubsystem(this);
         RobotTelemetry.print(getName() + " Subsystem Initialized: ");
@@ -90,11 +92,11 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
 
     public void setupStates() {
         SwerveStates.setStates();
-    };
+    }
 
     public void setupDefaultCommand() {
         SwerveStates.setupDefaultCommand();
-    };
+    }
 
     /**
      * The `initSendable` function sets up properties for a SmartDashboard type "SwerveDrive" with
@@ -107,6 +109,25 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         builder.setSmartDashboardType("SwerveDrive");
         builder.addDoubleProperty("Position", () -> 2, null);
         builder.addDoubleProperty("Velocity", () -> 4, null);
+
+        addModuleProperties(builder, "Front Left", 0);
+        addModuleProperties(builder, "Front Right", 1);
+        addModuleProperties(builder, "Back Left", 2);
+        addModuleProperties(builder, "Back Right", 3);
+
+        builder.addDoubleProperty("Robot Angle", this::getRotationRadians, null);
+    }
+
+    private void addModuleProperties(
+            NTSendableBuilder builder, String moduleName, int moduleNumber) {
+        builder.addDoubleProperty(
+                moduleName + " Angle",
+                () -> getModule(moduleNumber).getCurrentState().angle.getRadians(),
+                null);
+        builder.addDoubleProperty(
+                moduleName + " Velocity",
+                () -> getModule(moduleNumber).getCurrentState().speedMetersPerSecond,
+                null);
     }
 
     /**
@@ -191,7 +212,7 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         if (!hasAppliedPilotPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance()
                     .ifPresent(
-                            (allianceColor) -> {
+                            allianceColor -> {
                                 this.setOperatorPerspectiveForward(
                                         allianceColor == Alliance.Red
                                                 ? config.getRedAlliancePerspectiveRotation()
@@ -286,8 +307,8 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         // Seed robot to mid field at start (Paths will change this starting position)
         resetPose(
                 new Pose2d(
-                        Units.feetToMeters(27),
-                        Units.feetToMeters(27 / 2),
+                        Units.feetToMeters(27.0),
+                        Units.feetToMeters(27.0 / 2.0),
                         config.getBlueAlliancePerspectiveRotation()));
         double driveBaseRadius = .4;
         for (var moduleLocation : getModuleLocations()) {
@@ -314,7 +335,7 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
                 () -> this.getState().Pose, // Supplier of current robot pose
                 this::resetPose, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
-                (speeds) ->
+                speeds ->
                         this.setControl(
                                 AutoRequest.withSpeeds(
                                         speeds)), // Consumer of ChassisSpeeds to drive the robot
@@ -333,19 +354,19 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
     // Simulation
     // --------------------------------------------------------------------------------
     private void startSimThread() {
-        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        lastSimTime = Utils.getCurrentTimeSeconds();
 
         /* Run simulation at a faster rate so PID gains behave more reasonably */
-        m_simNotifier =
+        simNotifier =
                 new Notifier(
                         () -> {
                             final double currentTime = Utils.getCurrentTimeSeconds();
-                            double deltaTime = currentTime - m_lastSimTime;
-                            m_lastSimTime = currentTime;
+                            double deltaTime = currentTime - lastSimTime;
+                            lastSimTime = currentTime;
 
                             /* use the measured time delta, get battery voltage from WPILib */
                             updateSimState(deltaTime, RobotController.getBatteryVoltage());
                         });
-        m_simNotifier.startPeriodic(config.getSimLoopPeriod());
+        simNotifier.startPeriodic(config.getSimLoopPeriod());
     }
 }
