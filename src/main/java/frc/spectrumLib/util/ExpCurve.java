@@ -5,7 +5,7 @@ package frc.spectrumLib.util;
 
 /**
  * This class maps the value of a input to an exponential curve. It is a subclass of <code>
- * Curve</code>. Modified to allow outptus larger than 1.0
+ * Curve</code>. Modified to allow outputs larger than 1.0
  */
 public class ExpCurve extends Curve {
     /** The value of the base of the exponent used in calculating the curve. */

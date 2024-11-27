@@ -8,7 +8,7 @@ public class SpectrumRobot extends TimedRobot {
 
     /** Create a single static instance of all of your subsystems */
     private static final ArrayList<SpectrumSubsystem> subsystems =
-            new ArrayList<SpectrumSubsystem>();
+            new ArrayList<>();
 
     public static void add(SpectrumSubsystem subsystem) {
         subsystems.add(subsystem);

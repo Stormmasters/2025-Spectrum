@@ -9,7 +9,7 @@ import frc.robot.elevator.ElevatorStates;
 import frc.spectrumLib.leds.SpectrumLEDs;
 import frc.spectrumLib.util.Util;
 
-public class LedCommands {
+public class LedStates {
     private static LedFull leds = Robot.getLeds();
     private static LedRight right = leds.getRight();
     private static LedLeft left = leds.getLeft();
@@ -22,7 +22,6 @@ public class LedCommands {
 
         // Elevator Led Commands
         elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
-        xButtonLED(Robot.getPilot().X, 3);
     }
 
     /** Default LED commands for each mode */
@@ -68,10 +67,5 @@ public class LedCommands {
     static void elevatorUpLED(Trigger trigger, int priority) {
         ledCommand("right.ElevatorUp", right, right.blink(Color.kBlue, 0.25), priority, trigger);
         ledCommand("left.ElevatorUp", left, left.blink(Color.kBlue, 0.25), priority, trigger);
-    }
-
-    static void xButtonLED(Trigger trigger, int priority) {
-        ledCommand("right.XButton", right, right.rainbow(), priority, trigger);
-        ledCommand("left.XButton", left, left.rainbow(), priority, trigger);
     }
 }
