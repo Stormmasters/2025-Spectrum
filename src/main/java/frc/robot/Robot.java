@@ -73,6 +73,7 @@ public class Robot extends SpectrumRobot {
     public Robot() {
         super();
         DataLogManager.start();
+        DriverStation.startDataLog(DataLogManager.getLog());
 
         try {
             RobotTelemetry.print("--- Robot Init Starting ---");
