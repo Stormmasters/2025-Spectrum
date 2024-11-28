@@ -3,8 +3,6 @@ package frc.spectrumLib;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,8 +57,6 @@ public class Telemetry extends DogLog implements Subsystem {
         Telemetry.setPdh(new PowerDistribution());
         /* Display the currently running commands on SmartDashboard*/
         SmartDashboard.putData(CommandScheduler.getInstance());
-        Alert testAlert = new Alert("This is a Error Test", AlertType.kError);
-        testAlert.set(true);
     }
 
     private static void setPriority(PrintPriority priority) {
