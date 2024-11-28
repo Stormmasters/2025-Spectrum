@@ -40,6 +40,7 @@ import lombok.Getter;
 public class Robot extends SpectrumRobot {
     @Getter private static RobotSim robotSim;
     @Getter private static Config config;
+    private static Telemetry telemetry = new Telemetry();
 
     public enum RobotFault {
         CAMERA_OFFLINE,

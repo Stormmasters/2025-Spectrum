@@ -2,6 +2,9 @@ package frc.spectrumLib;
 
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,8 +12,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Telemetry extends DogLog implements Subsystem {
+
+    private static final Map<String, String[]> previousAlerts = new HashMap<>();
 
     public enum Fault {
         CAMERA_OFFLINE,
@@ -34,6 +42,11 @@ public class Telemetry extends DogLog implements Subsystem {
         register();
     }
 
+    @Override
+    public void periodic() {
+        logAlerts();
+    }
+
     public static void start(boolean ntPublish, boolean captureNt, PrintPriority priority) {
         setPriority(priority);
         Telemetry.setOptions(
@@ -46,6 +59,8 @@ public class Telemetry extends DogLog implements Subsystem {
         Telemetry.setPdh(new PowerDistribution());
         /* Display the currently running commands on SmartDashboard*/
         SmartDashboard.putData(CommandScheduler.getInstance());
+        Alert testAlert = new Alert("This is a Error Test", AlertType.kError);
+        testAlert.set(true);
     }
 
     private static void setPriority(PrintPriority priority) {
@@ -70,5 +85,31 @@ public class Telemetry extends DogLog implements Subsystem {
 
     public static void print(String output) {
         print(output, PrintPriority.NORMAL);
+    }
+
+    // New method to log alerts from NetworkTables
+    public static void logAlerts() {
+        NetworkTableInstance ntInstance = NetworkTableInstance.getDefault();
+        logAlertType(ntInstance, "errors", "ERROR");
+        logAlertType(ntInstance, "warnings", "WARNING");
+        logAlertType(ntInstance, "infos", "INFO");
+    }
+
+    private static void logAlertType(NetworkTableInstance ntInstance, String key, String prefix) {
+        String[] alertStrings =
+                ntInstance
+                        .getTable("SmartDashboard/Alerts")
+                        .getEntry(key)
+                        .getStringArray(new String[0]);
+
+        String[] previousAlertStrings = previousAlerts.getOrDefault(key, new String[0]);
+
+        for (String alert : alertStrings) {
+            if (!Arrays.asList(previousAlertStrings).contains(alert)) {
+                log("Alerts", prefix + ": " + alert);
+            }
+        }
+
+        previousAlerts.put(key, alertStrings);
     }
 }
