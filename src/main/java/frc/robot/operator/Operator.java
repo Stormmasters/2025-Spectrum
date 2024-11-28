@@ -2,7 +2,7 @@ package frc.robot.operator;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
 
 public class Operator extends Gamepad {
@@ -64,7 +64,7 @@ public class Operator extends Gamepad {
         super(config);
         this.config = config;
         Robot.add(this);
-        RobotTelemetry.print("Operator Subsystem Initialized: ");
+        Telemetry.print("Operator Subsystem Initialized: ");
     }
 
     public void setupStates() {

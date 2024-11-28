@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Telemetry;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
@@ -50,7 +50,7 @@ public class Auton {
 
     public Auton() {
         setupSelectors(); // runs the command to start the chooser for auto on shuffleboard
-        RobotTelemetry.print("Auton Subsystem Initialized: ");
+        Telemetry.print("Auton Subsystem Initialized: ");
     }
 
     public void init() {
@@ -60,7 +60,7 @@ public class Auton {
             autonCommand.schedule();
             startAutonTimer();
         } else {
-            RobotTelemetry.print("No Auton Command Found");
+            Telemetry.print("No Auton Command Found");
         }
     }
 
@@ -112,12 +112,12 @@ public class Auton {
         if (autoCommand != null) {
             if (!autoCommand.isScheduled() && !autoMessagePrinted) {
                 if (DriverStation.isAutonomousEnabled()) {
-                    RobotTelemetry.print(
+                    Telemetry.print(
                             String.format(
                                     "*** Auton finished in %.2f secs ***",
                                     Timer.getFPGATimestamp() - autonStart));
                 } else {
-                    RobotTelemetry.print(
+                    Telemetry.print(
                             String.format(
                                     "*** Auton CANCELLED in %.2f secs ***",
                                     Timer.getFPGATimestamp() - autonStart));

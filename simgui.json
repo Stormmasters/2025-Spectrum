@@ -76,10 +76,10 @@
   },
   "NetworkTables": {
     "transitory": {
+      "Robot": {
+        "open": true
+      },
       "SmartDashboard": {
-        "SwerveDrive": {
-          "open": true
-        },
         "open": true
       }
     }

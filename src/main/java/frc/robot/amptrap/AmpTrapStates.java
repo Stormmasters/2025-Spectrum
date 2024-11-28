@@ -8,6 +8,7 @@ import frc.robot.Robot;
 import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.climber.ClimberStates;
 import frc.robot.elevator.ElevatorStates;
+import frc.spectrumLib.Telemetry;
 
 public class AmpTrapStates {
     private static AmpTrap ampTrap = Robot.getAmpTrap();
@@ -36,26 +37,26 @@ public class AmpTrapStates {
     }
 
     private static Command intake() {
-        return ampTrap.runVelocity(config::getIntake).withName("AmpTrap.intake");
+        return Telemetry.log(ampTrap.runVelocity(config::getIntake).withName("AmpTrap.intake"));
     }
 
     private static Command amp() {
-        return ampTrap.runVelocity(config::getAmp).withName("AmpTrap.amp");
+        return Telemetry.log(ampTrap.runVelocity(config::getAmp).withName("AmpTrap.amp"));
     }
 
     private static Command score() {
-        return ampTrap.runVelocity(config::getScore).withName("AmpTrap.score");
+        return Telemetry.log(ampTrap.runVelocity(config::getScore).withName("AmpTrap.score"));
     }
 
     private static Command eject() {
-        return ampTrap.runVelocity(config::getEject).withName("AmpTrap.eject");
+        return Telemetry.log(ampTrap.runVelocity(config::getEject).withName("AmpTrap.eject"));
     }
 
     private static Command coastMode() {
-        return ampTrap.coastMode();
+        return Telemetry.log(ampTrap.coastMode());
     }
 
     private static Command ensureBrakeMode() {
-        return ampTrap.ensureBrakeMode();
+        return Telemetry.log(ampTrap.ensureBrakeMode());
     }
 }

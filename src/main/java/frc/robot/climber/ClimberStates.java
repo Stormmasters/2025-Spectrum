@@ -9,6 +9,7 @@ import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
@@ -54,39 +55,43 @@ public class ClimberStates {
     }
 
     private static Command runClimber(DoubleSupplier speed) {
-        return climber.runPercentage(speed).withName("Elevator.runElevator");
+        return Telemetry.log(climber.runPercentage(speed).withName("Elevator.runElevator"));
     }
 
     private static Command holdPosition() {
-        return climber.holdPosition().withName("Climber.holdPosition");
+        return Telemetry.log(climber.holdPosition().withName("Climber.holdPosition"));
     }
 
     private static Command fullExtend() {
-        return climber.moveToPercentage(config::getFullExtend).withName("Climber.fullExtend");
+        return Telemetry.log(
+                climber.moveToPercentage(config::getFullExtend).withName("Climber.fullExtend"));
     }
 
     private static Command home() {
-        return climber.moveToPercentage(config::getHome).withName("Climber.home");
+        return Telemetry.log(climber.moveToPercentage(config::getHome).withName("Climber.home"));
     }
 
     private static Command midClimb() {
-        return climber.moveToPercentage(config::getMidClimb).withName("Climber.midClimb");
+        return Telemetry.log(
+                climber.moveToPercentage(config::getMidClimb).withName("Climber.midClimb"));
     }
 
     private static Command safeClimb() {
-        return climber.moveToPercentage(config::getSafeClimb).withName("Climber.safeClimb");
+        return Telemetry.log(
+                climber.moveToPercentage(config::getSafeClimb).withName("Climber.safeClimb"));
     }
 
     private static Command coastMode() {
-        return climber.coastMode().withName("Climber.CoastMode");
+        return Telemetry.log(climber.coastMode().withName("Climber.CoastMode"));
     }
 
     private static Command ensureBrakeMode() {
-        return climber.ensureBrakeMode().withName("Climber.BrakeMode");
+        return Telemetry.log(climber.ensureBrakeMode().withName("Climber.BrakeMode"));
     }
 
     private static Command tuneClimber() {
-        return climber.moveToPercentage(new TuneValue("Tune Climber", 0).getSupplier())
-                .withName("Climber.Tune");
+        return Telemetry.log(
+                climber.moveToPercentage(new TuneValue("Tune Climber", 0).getSupplier())
+                        .withName("Climber.Tune"));
     }
 }

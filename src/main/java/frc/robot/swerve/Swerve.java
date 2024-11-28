@@ -19,6 +19,10 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -29,8 +33,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.crescendo.Field;
 import frc.robot.Robot;
-import frc.robot.RobotTelemetry;
 import frc.spectrumLib.SpectrumSubsystem;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.Util;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -55,6 +59,12 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
 
     private final SwerveRequest.ApplyRobotSpeeds AutoRequest = new SwerveRequest.ApplyRobotSpeeds();
 
+    // Logging publisher
+    StructArrayPublisher<SwerveModuleState> publisher =
+            NetworkTableInstance.getDefault()
+                    .getStructArrayTopic("SwerveStates", SwerveModuleState.struct)
+                    .publish();
+
     /**
      * Constructs a new Swerve drive subsystem.
      *
@@ -73,11 +83,16 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
             startSimThread();
         }
 
-        SendableRegistry.add(this, "SwerveDrive");
+        SendableRegistry.add(this, "Swerve");
         SmartDashboard.putData(this);
         Robot.add(this);
         this.register();
-        RobotTelemetry.print(getName() + " Subsystem Initialized: ");
+        registerTelemetry(this::log);
+        Telemetry.print(getName() + " Subsystem Initialized: ");
+    }
+
+    protected void log(SwerveDriveState state) {
+        publisher.set(state.ModuleStates);
     }
 
     /**
@@ -105,20 +120,24 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
      */
     @Override
     public void initSendable(NTSendableBuilder builder) {
-        builder.setSmartDashboardType("SwerveDrive");
-        builder.addDoubleProperty("Position", () -> 2, null);
-        builder.addDoubleProperty("Velocity", () -> 4, null);
+        SmartDashboard.putData(
+                "Swerve Drive",
+                new Sendable() {
+                    @Override
+                    public void initSendable(SendableBuilder builder) {
+                        builder.setSmartDashboardType("SwerveDrive");
 
-        addModuleProperties(builder, "Front Left", 0);
-        addModuleProperties(builder, "Front Right", 1);
-        addModuleProperties(builder, "Back Left", 2);
-        addModuleProperties(builder, "Back Right", 3);
+                        addModuleProperties(builder, "Front Left", 0);
+                        addModuleProperties(builder, "Front Right", 1);
+                        addModuleProperties(builder, "Back Left", 2);
+                        addModuleProperties(builder, "Back Right", 3);
 
-        builder.addDoubleProperty("Robot Angle", this::getRotationRadians, null);
+                        builder.addDoubleProperty("Robot Angle", () -> getRotationRadians(), null);
+                    }
+                });
     }
 
-    private void addModuleProperties(
-            NTSendableBuilder builder, String moduleName, int moduleNumber) {
+    private void addModuleProperties(SendableBuilder builder, String moduleName, int moduleNumber) {
         builder.addDoubleProperty(
                 moduleName + " Angle",
                 () -> getModule(moduleNumber).getCurrentState().angle.getRadians(),
