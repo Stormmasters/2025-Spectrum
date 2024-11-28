@@ -26,22 +26,22 @@ public abstract class Gamepad implements SpectrumSubsystem {
     public static final Trigger kFalse = new Trigger(() -> false);
 
     private CommandXboxController xboxController;
-    protected Trigger A = xboxController.a();
-    protected Trigger B = xboxController.b();
-    protected Trigger X = xboxController.x();
-    protected Trigger Y = xboxController.y();
-    protected Trigger leftBumper = xboxController.leftBumper();
-    protected Trigger rightBumper = xboxController.rightBumper();
-    protected Trigger leftTrigger = xboxController.leftTrigger();
-    protected Trigger rightTrigger = xboxController.rightTrigger();
-    protected Trigger leftStickClick = xboxController.leftStick();
-    protected Trigger rightStickClick = xboxController.rightStick();
-    protected Trigger start = xboxController.start();
-    protected Trigger select = xboxController.back();
-    protected Trigger upDpad = xboxController.povUp();
-    protected Trigger downDpad = xboxController.povDown();
-    protected Trigger leftDpad = xboxController.povLeft();
-    protected Trigger rightDpad = xboxController.povRight();
+    protected Trigger A = kFalse;
+    protected Trigger B = kFalse;
+    protected Trigger X = kFalse;
+    protected Trigger Y = kFalse;
+    protected Trigger leftBumper = kFalse;
+    protected Trigger rightBumper = kFalse;
+    protected Trigger leftTrigger = kFalse;
+    protected Trigger rightTrigger = kFalse;
+    protected Trigger leftStickClick = kFalse;
+    protected Trigger rightStickClick = kFalse;
+    protected Trigger start = kFalse;
+    protected Trigger select = kFalse;
+    protected Trigger upDpad = kFalse;
+    protected Trigger downDpad = kFalse;
+    protected Trigger leftDpad = kFalse;
+    protected Trigger rightDpad = kFalse;
     protected Trigger leftStickY = kFalse;
     protected Trigger leftStickX = kFalse;
     protected Trigger rightStickY = kFalse;
@@ -114,6 +114,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
         this.config = config;
         disconnectedAlert =
                 new Alert(config.name + " Gamepad Disconnected", Alert.AlertType.kError);
+
         // Curve objects that we use to configure the controller axis objects
         leftStickCurve =
                 new ExpCurve(
@@ -136,6 +137,30 @@ public abstract class Gamepad implements SpectrumSubsystem {
 
         if (config.attached) {
             xboxController = new CommandXboxController(config.port);
+            A = xboxController.a();
+            B = xboxController.b();
+            X = xboxController.x();
+            Y = xboxController.y();
+            leftBumper = xboxController.leftBumper();
+            rightBumper = xboxController.rightBumper();
+            leftTrigger =
+                    xboxController.leftTrigger(
+                            config.triggersDeadzone); // Assuming a default threshold of 0.5
+            rightTrigger =
+                    xboxController.rightTrigger(
+                            config.triggersDeadzone); // Assuming a default threshold of 0.5
+            leftStickClick = xboxController.leftStick();
+            rightStickClick = xboxController.rightStick();
+            start = xboxController.start();
+            select = xboxController.back();
+            upDpad = xboxController.povUp();
+            downDpad = xboxController.povDown();
+            leftDpad = xboxController.povLeft();
+            rightDpad = xboxController.povRight();
+            leftStickY = leftYTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
+            leftStickX = leftXTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
+            rightStickY = rightYTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
+            rightStickX = rightXTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
             leftStickY = leftYTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
             leftStickX = leftXTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
             rightStickY = rightYTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);

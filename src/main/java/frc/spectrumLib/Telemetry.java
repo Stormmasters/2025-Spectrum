@@ -2,7 +2,9 @@ package frc.spectrumLib;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Telemetry extends SubsystemBase {
@@ -23,6 +25,13 @@ public class Telemetry extends SubsystemBase {
     /** Enable Print Statements */
     public static void enablePrints() {
         disablePrints = false;
+    }
+
+    public static Command logCommand(Command cmd) {
+        return cmd.deadlineFor(
+                Commands.startEnd(
+                        () -> print("CmdStart: " + cmd.getName()),
+                        () -> print("CmdEnd: " + cmd.getName())));
     }
 
     /** Print a statement if they are enabled */

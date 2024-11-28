@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.RobotTelemetry;
 import frc.robot.climber.ClimberStates;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.operator.Operator;
@@ -38,7 +39,7 @@ public class ElevatorStates {
         isAtAmp.onTrue(Commands.print("At Amp Height"));
         isUp.onTrue(Commands.print("Elevator Up"));
 
-        ampPrep.whileTrue(amp());
+        ampPrep.whileTrue(RobotTelemetry.logCommand(amp()));
         score.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
