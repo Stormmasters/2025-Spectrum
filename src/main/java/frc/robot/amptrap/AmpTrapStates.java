@@ -19,44 +19,49 @@ public class AmpTrapStates {
 
     public static void setupDefaultCommand() {
         ampTrap.setDefaultCommand(
-                ampTrap.runStop().ignoringDisable(true).withName("AmpTrap.default"));
+                log(ampTrap.runStop().ignoringDisable(true).withName("AmpTrap.default")));
     }
 
     public static void setStates() {
-        intaking.whileTrue(intake());
-        ejecting.whileTrue(eject());
-        noteToAmp.and(noNote).whileTrue(amp());
-        score.whileTrue(score());
+        intaking.whileTrue(log(intake()));
+        ejecting.whileTrue(log(eject()));
+        noteToAmp.and(noNote).whileTrue(log(amp()));
+        score.whileTrue(log(score()));
 
-        coastMode.whileTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.whileTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
 
         // Trap once the climber is at the bottom
-        climbRoutine.and(ElevatorStates.isHome, noNote).whileTrue(amp());
-        climbRoutine.and(ClimberStates.atHomePos).whileTrue(amp());
+        climbRoutine.and(ElevatorStates.isHome, noNote).whileTrue(log(amp()));
+        climbRoutine.and(ClimberStates.atHomePos).whileTrue(log(amp()));
     }
 
     private static Command intake() {
-        return Telemetry.log(ampTrap.runVelocity(config::getIntake).withName("AmpTrap.intake"));
+        return ampTrap.runVelocity(config::getIntake).withName("AmpTrap.intake");
     }
 
     private static Command amp() {
-        return Telemetry.log(ampTrap.runVelocity(config::getAmp).withName("AmpTrap.amp"));
+        return ampTrap.runVelocity(config::getAmp).withName("AmpTrap.amp");
     }
 
     private static Command score() {
-        return Telemetry.log(ampTrap.runVelocity(config::getScore).withName("AmpTrap.score"));
+        return ampTrap.runVelocity(config::getScore).withName("AmpTrap.score");
     }
 
     private static Command eject() {
-        return Telemetry.log(ampTrap.runVelocity(config::getEject).withName("AmpTrap.eject"));
+        return ampTrap.runVelocity(config::getEject).withName("AmpTrap.eject");
     }
 
     private static Command coastMode() {
-        return Telemetry.log(ampTrap.coastMode());
+        return ampTrap.coastMode();
     }
 
     private static Command ensureBrakeMode() {
-        return Telemetry.log(ampTrap.ensureBrakeMode());
+        return ampTrap.ensureBrakeMode();
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

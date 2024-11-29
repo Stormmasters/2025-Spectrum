@@ -13,6 +13,7 @@ import frc.robot.climber.ClimberStates;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
+import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
 
 public class SwerveStates {
@@ -21,7 +22,7 @@ public class SwerveStates {
     static Pilot pilot = Robot.getPilot();
 
     static Command pilotSteerCommand =
-            pilotDrive().ignoringDisable(true).withName("SwerveCommands.pilotSteer");
+            log(pilotDrive().ignoringDisable(true).withName("SwerveCommands.pilotSteer"));
     static SpectrumState steeringLock = new SpectrumState("SteeringLock");
 
     protected static void setupDefaultCommand() {
@@ -44,25 +45,30 @@ public class SwerveStates {
         // When not driving it stops locking
         pilot.steer.and(pilot.driving).onTrue(steeringLock.setTrue());
         pilot.driving.onFalse(steeringLock.setFalse());
-        steeringLock.and(pilot.steer.not()).onTrue(lockToClosest45degDrive());
+        steeringLock
+                .and(pilot.steer.not())
+                .onTrue(log(lockToClosest45degDrive().withName("Swerve.45headingLock")));
 
-        ampPrep.whileTrue(pilotAimDrive(() -> Field.flipAimAngleIfBlue(270)));
+        ampPrep.whileTrue(
+                log(
+                        pilotAimDrive(() -> Field.flipAimAngleIfBlue(270))
+                                .withName("Swerve.AimToAmp")));
 
         // TODO:Should replace with method that gives us angle to the speaker
         // speakerPrep.whileTrue(pilotAimDrive(() -> 0));
 
-        pilot.fpv_rs.whileTrue(fpvDrive());
-        pilot.snapSteer.whileTrue(snapSteerDrive());
+        pilot.fpv_rs.whileTrue(log(fpvDrive()));
+        pilot.snapSteer.whileTrue(log(snapSteerDrive()));
 
-        pilot.upReorient.onTrue(reorientForward());
-        pilot.leftReorient.onTrue(reorientLeft());
-        pilot.downReorient.onTrue(reorientBack());
-        pilot.rightReorient.onTrue(reorientRight());
+        pilot.upReorient.onTrue(log(reorientForward()));
+        pilot.leftReorient.onTrue(log(reorientLeft()));
+        pilot.downReorient.onTrue(log(reorientBack()));
+        pilot.rightReorient.onTrue(log(reorientRight()));
 
         // Drive fwd while the climber is below mid climb and not home
         climbRoutine
                 .and(ClimberStates.belowMidClimbPos, ClimberStates.atHomePos.not())
-                .whileTrue(climbDrive());
+                .whileTrue(log(climbDrive()));
     }
 
     /** Pilot Commands ************************************************************************ */
@@ -122,7 +128,10 @@ public class SwerveStates {
 
     protected static Command climbDrive() {
         return fpvDrive(
-                () -> (0.1 * config.getSpeedAt12Volts().baseUnitMagnitude()), () -> 0, () -> 0);
+                        () -> (0.1 * config.getSpeedAt12Volts().baseUnitMagnitude()),
+                        () -> 0,
+                        () -> 0)
+                .withName("Swerve.climbDrive");
     }
 
     /**
@@ -150,11 +159,12 @@ public class SwerveStates {
     private static Command drive(
             DoubleSupplier fwdPositive, DoubleSupplier leftPositive, DoubleSupplier ccwPositive) {
         return swerve.applyRequest(
-                () ->
-                        fieldCentricDrive
-                                .withVelocityX(fwdPositive.getAsDouble())
-                                .withVelocityY(leftPositive.getAsDouble())
-                                .withRotationalRate(ccwPositive.getAsDouble()));
+                        () ->
+                                fieldCentricDrive
+                                        .withVelocityX(fwdPositive.getAsDouble())
+                                        .withVelocityY(leftPositive.getAsDouble())
+                                        .withRotationalRate(ccwPositive.getAsDouble()))
+                .withName("Swerve.drive");
     }
 
     private static final SwerveRequest.RobotCentric robotCentric =
@@ -163,11 +173,12 @@ public class SwerveStates {
     private static Command fpvDrive(
             DoubleSupplier fwdPositive, DoubleSupplier leftPositive, DoubleSupplier ccwPositive) {
         return swerve.applyRequest(
-                () ->
-                        robotCentric
-                                .withVelocityX(fwdPositive.getAsDouble())
-                                .withVelocityY(leftPositive.getAsDouble())
-                                .withRotationalRate(ccwPositive.getAsDouble()));
+                        () ->
+                                robotCentric
+                                        .withVelocityX(fwdPositive.getAsDouble())
+                                        .withVelocityY(leftPositive.getAsDouble())
+                                        .withRotationalRate(ccwPositive.getAsDouble()))
+                .withName("Swerve.fpvDrive");
     }
 
     /**
@@ -185,7 +196,6 @@ public class SwerveStates {
                 .withName("Swerve.aimDrive");
     }
 
-    // TODO: Potential new heading lock, that only fixes minor heading errors, and leaves large ones
     /**
      * Reset the turn controller, set the target heading to the current heading(end that command
      * immediately), and then run the drive command with the Rotation controller. The rotation
@@ -251,5 +261,9 @@ public class SwerveStates {
 
     protected static Command cardinalReorient() {
         return swerve.cardinalReorient().withName("Swerve.cardinalReorient");
+    }
+
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

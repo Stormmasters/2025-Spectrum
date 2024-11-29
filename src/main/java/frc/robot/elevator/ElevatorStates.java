@@ -38,61 +38,63 @@ public class ElevatorStates {
         score.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
-        climbRoutine.and(ClimberStates.atMidClimbPos).onTrue(fullExtend());
+        climbRoutine.and(ClimberStates.atMidClimbPos).onTrue(log(fullExtend()));
 
-        operator.overrideElevator.whileTrue(runElevator(operator::getElevatorOverride));
-        operator.zeroElevator.whileTrue(zero());
+        operator.overrideElevator.whileTrue(
+                log(runElevator(operator::getElevatorOverride).withName("Elevator.operator")));
+        operator.zeroElevator.whileTrue(log(zero()));
 
         // Test Mode Buttons
-        pilot.tuneElevator_tB.whileTrue(tuneElevator());
+        pilot.tuneElevator_tB.whileTrue(log(tuneElevator()));
 
-        coastMode.onTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.onTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
     }
 
     private static Command runElevator(DoubleSupplier speed) {
-        return Telemetry.log(elevator.runPercentage(speed).withName("Elevator.runElevator"));
+        return elevator.runPercentage(speed).withName("Elevator.runElevator");
     }
 
     private static Command holdPosition() {
-        return Telemetry.log(elevator.holdPosition().withName("Elevator.holdPosition"));
+        return elevator.holdPosition().withName("Elevator.holdPosition");
     }
 
     private static Command fullExtend() {
-        return Telemetry.log(
-                elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend"));
+        return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
     }
 
     private static Command amp() {
-        return Telemetry.log(
-                elevator.moveToRotations(config::getAmp)
-                        .alongWith(elevator.checkMaxCurrent(() -> 100))
-                        .withName("Elevator.amp"));
+        return elevator.moveToRotations(config::getAmp)
+                .alongWith(elevator.checkMaxCurrent(() -> 100))
+                .withName("Elevator.amp");
     }
 
     private static Command home() {
-        return Telemetry.log(
-                elevator.moveToRotations(config::getHome)
-                        .alongWith(elevator.checkMaxCurrent(() -> 100))
-                        .withName("Elevator.home"));
+        return elevator.moveToRotations(config::getHome)
+                .alongWith(elevator.checkMaxCurrent(() -> 100))
+                .withName("Elevator.home");
     }
 
     private static Command zero() {
-        return Telemetry.log(elevator.zeroElevatorRoutine().withName("Zero Elevator"));
+        return elevator.zeroElevatorRoutine().withName("Zero Elevator");
     }
 
     private static Command coastMode() {
-        return Telemetry.log(elevator.coastMode().withName("Elevator.CoastMode"));
+        return elevator.coastMode().withName("Elevator.CoastMode");
     }
 
     private static Command ensureBrakeMode() {
-        return Telemetry.log(elevator.ensureBrakeMode().withName("Elevator.BrakeMode"));
+        return elevator.ensureBrakeMode().withName("Elevator.BrakeMode");
     }
 
     // Example of a TuneValue that is used to tune a single value in the code
     private static Command tuneElevator() {
-        return Telemetry.log(
-                elevator.moveToRotations(new TuneValue("Tune Elevator", 0).getSupplier())
-                        .withName("Elevator.Tune"));
+        return elevator.moveToRotations(new TuneValue("Tune Elevator", 0).getSupplier())
+                .withName("Elevator.Tune");
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

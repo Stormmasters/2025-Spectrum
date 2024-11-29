@@ -8,6 +8,7 @@ import frc.robot.amptrap.AmpTrapStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.feeder.Feeder.FeederConfig;
 import frc.robot.operator.Operator;
+import frc.spectrumLib.Telemetry;
 
 public class FeederStates {
     private static Feeder feeder = Robot.getFeeder();
@@ -18,20 +19,21 @@ public class FeederStates {
     // public static final Trigger noNote = hasNote.not();
 
     public static void setupDefaultCommand() {
-        feeder.setDefaultCommand(feeder.runStop().ignoringDisable(true).withName("Feeder.default"));
+        feeder.setDefaultCommand(
+                log(feeder.runStop().ignoringDisable(true).withName("Feeder.default")));
     }
 
     public static void setStates() {
-        intaking.or(operator.feederFwd_Y).whileTrue(intake());
-        ejecting.or(operator.feederRev_fY).whileTrue(eject());
-        score.whileTrue(score());
-        noteToAmp.whileTrue(feedToAmp());
+        intaking.or(operator.feederFwd_Y).whileTrue(log(intake()));
+        ejecting.or(operator.feederRev_fY).whileTrue(log(eject()));
+        score.whileTrue(log(score()));
+        noteToAmp.whileTrue(log(feedToAmp()));
 
         // Feed a note to the amp trap if we are climbing and the elevator hasn't gone up
-        climbRoutine.and(ElevatorStates.isHome, AmpTrapStates.noNote).whileTrue(feedToAmp());
+        climbRoutine.and(ElevatorStates.isHome, AmpTrapStates.noNote).whileTrue(log(feedToAmp()));
 
-        coastMode.whileTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.whileTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
     }
 
     private static Command eject() {
@@ -56,5 +58,10 @@ public class FeederStates {
 
     private static Command ensureBrakeMode() {
         return feeder.ensureBrakeMode();
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

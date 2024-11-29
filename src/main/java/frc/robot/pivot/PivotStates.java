@@ -5,6 +5,7 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.pivot.Pivot.PivotConfig;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
@@ -14,16 +15,16 @@ public class PivotStates {
 
     public static void setupDefaultCommand() {
         pivot.setDefaultCommand(
-                pivot.runHoldPivot().ignoringDisable(true).withName("Pivot.default"));
+                log(pivot.runHoldPivot().ignoringDisable(true).withName("Pivot.default")));
     }
 
     public static void setStates() {
         // missing bindTriggers
-        intaking.whileTrue(subwoofer());
-        ampPrep.whileTrue(home());
+        intaking.whileTrue(log(subwoofer()));
+        ampPrep.whileTrue(log(home()));
 
-        coastMode.whileTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.whileTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
     }
 
     // missing distance based pivot commands
@@ -115,5 +116,10 @@ public class PivotStates {
     public static Command tunePivot() {
         return pivot.moveToPercentage(new TuneValue("Tune Pivot", 0).getSupplier())
                 .withName("Pivot.Tune");
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

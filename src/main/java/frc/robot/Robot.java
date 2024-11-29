@@ -42,10 +42,9 @@ public class Robot extends SpectrumRobot {
     @Getter private static Config config;
     private static Telemetry telemetry = new Telemetry();
 
+    // TODO: Create robot faults
     public enum RobotFault {
-        CAMERA_OFFLINE,
-        AUTO_SHOT_TIMEOUT_TRIGGERED,
-        BROWNOUT,
+        OVERCURRENT,
     }
 
     public static class Config {

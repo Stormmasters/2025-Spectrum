@@ -29,7 +29,8 @@ public class ClimberStates {
             climber.atPercentage(config::getHome, config::getTolerance);
 
     public static void setupDefaultCommand() {
-        climber.setDefaultCommand(holdPosition().ignoringDisable(true).withName("Climber.default"));
+        climber.setDefaultCommand(
+                log(holdPosition().ignoringDisable(true).withName("Climber.default")));
     }
 
     public static void setStates() {
@@ -38,60 +39,61 @@ public class ClimberStates {
         // What does the climber do in auto climb sequence?
         // Hooks go to mid climb, until Elevator is full up
         // Once Elevator is full up, hooks go to home
-        climbRoutine.and(ElevatorStates.isUp.not()).whileTrue(midClimb());
-        climbRoutine.and(ElevatorStates.isUp).whileTrue(home());
-        pilot.retract_X.whileTrue(home());
+        climbRoutine.and(ElevatorStates.isUp.not()).whileTrue(log(midClimb()));
+        climbRoutine.and(ElevatorStates.isUp).whileTrue(log(home()));
+        pilot.retract_X.whileTrue(log(home()));
 
-        operator.topClimb_fUdp.whileTrue(fullExtend());
-        operator.midClimb_fDdp.whileTrue(midClimb());
-        operator.botClimb_fRdp.whileTrue(home());
+        operator.topClimb_fUdp.whileTrue(log(fullExtend()));
+        operator.midClimb_fDdp.whileTrue(log(midClimb()));
+        operator.botClimb_fRdp.whileTrue(log(home()));
 
-        operator.safeClimb_START.whileTrue(safeClimb());
-        operator.zeroClimber.whileTrue(climber.zeroClimberRoutine());
-        operator.overrideClimber.whileTrue(runClimber(operator::getClimberOverride));
+        operator.safeClimb_START.whileTrue(log(safeClimb()));
+        operator.zeroClimber.whileTrue(log(climber.zeroClimberRoutine()));
+        operator.overrideClimber.whileTrue(log(runClimber(operator::getClimberOverride)));
 
-        coastMode.onTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.onTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
     }
 
     private static Command runClimber(DoubleSupplier speed) {
-        return Telemetry.log(climber.runPercentage(speed).withName("Elevator.runElevator"));
+        return climber.runPercentage(speed).withName("Elevator.runElevator");
     }
 
     private static Command holdPosition() {
-        return Telemetry.log(climber.holdPosition().withName("Climber.holdPosition"));
+        return climber.holdPosition().withName("Climber.holdPosition");
     }
 
     private static Command fullExtend() {
-        return Telemetry.log(
-                climber.moveToPercentage(config::getFullExtend).withName("Climber.fullExtend"));
+        return climber.moveToPercentage(config::getFullExtend).withName("Climber.fullExtend");
     }
 
     private static Command home() {
-        return Telemetry.log(climber.moveToPercentage(config::getHome).withName("Climber.home"));
+        return climber.moveToPercentage(config::getHome).withName("Climber.home");
     }
 
     private static Command midClimb() {
-        return Telemetry.log(
-                climber.moveToPercentage(config::getMidClimb).withName("Climber.midClimb"));
+        return climber.moveToPercentage(config::getMidClimb).withName("Climber.midClimb");
     }
 
     private static Command safeClimb() {
-        return Telemetry.log(
-                climber.moveToPercentage(config::getSafeClimb).withName("Climber.safeClimb"));
+        return climber.moveToPercentage(config::getSafeClimb).withName("Climber.safeClimb");
     }
 
     private static Command coastMode() {
-        return Telemetry.log(climber.coastMode().withName("Climber.CoastMode"));
+        return climber.coastMode().withName("Climber.CoastMode");
     }
 
     private static Command ensureBrakeMode() {
-        return Telemetry.log(climber.ensureBrakeMode().withName("Climber.BrakeMode"));
+        return climber.ensureBrakeMode().withName("Climber.BrakeMode");
     }
 
     private static Command tuneClimber() {
-        return Telemetry.log(
-                climber.moveToPercentage(new TuneValue("Tune Climber", 0).getSupplier())
-                        .withName("Climber.Tune"));
+        return climber.moveToPercentage(new TuneValue("Tune Climber", 0).getSupplier())
+                .withName("Climber.Tune");
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }
