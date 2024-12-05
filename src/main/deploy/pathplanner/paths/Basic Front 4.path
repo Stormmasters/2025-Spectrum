@@ -20,11 +20,11 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 1.75,
+        "x": 2.25,
         "y": 5.55
       },
       "nextControl": {
-        "x": 3.75,
+        "x": 3.25,
         "y": 5.55
       },
       "isLocked": false,
