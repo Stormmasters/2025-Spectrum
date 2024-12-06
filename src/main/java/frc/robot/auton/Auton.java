@@ -38,13 +38,17 @@ public class Auton {
      */
     public void setupSelectors() {
 
-        pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
+        pathChooser.setDefaultOption(
+                "Do Nothing", Commands.print("Do Nothing Auto ran").withName(null));
         // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto"));
         // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto"));
 
-        pathChooser.addOption("Basic Front 4", SpectrumAuton("Basic Front 4"));
-        pathChooser.addOption("Madtown", SpectrumAuton("Madtown"));
-        pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward"));
+        pathChooser.addOption(
+                "Basic Front 4", SpectrumAuton("Basic Front 4").withName("Basic Front 4"));
+        pathChooser.addOption("Madtown", SpectrumAuton("Madtown").withName("Madtown"));
+        pathChooser.addOption(
+                "Drive Forward", SpectrumAuton("Drive Forward").withName("Drive Forward"));
+        pathChooser.addOption("Front 6", SpectrumAuton("Front 6").withName("Front 6"));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }

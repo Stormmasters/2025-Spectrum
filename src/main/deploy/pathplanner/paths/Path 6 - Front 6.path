@@ -1,0 +1,154 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.28,
+        "y": 6.4
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.30894679128928,
+        "y": 6.25300760124439
+      },
+      "isLocked": false,
+      "linkedName": "End - Front 5"
+    },
+    {
+      "anchor": {
+        "x": 8.1,
+        "y": 5.9
+      },
+      "prevControl": {
+        "x": 7.118261484820392,
+        "y": 6.055492105271764
+      },
+      "nextControl": {
+        "x": 8.791381838416596,
+        "y": 5.790495874471839
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.28,
+        "y": 6.4
+      },
+      "prevControl": {
+        "x": 5.084589972135977,
+        "y": 6.299426253483003
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "End - Front 5"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": 152.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "LaunchReady",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "launchReady9"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "stopTracking"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "StopFeed",
+      "waypointRelativePos": 0.55,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "stopFeeder"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.6,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "smartIntake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Launch",
+      "waypointRelativePos": 1.95,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "launch"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -167.5
+  },
+  "reversed": false,
+  "folder": "Front",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
