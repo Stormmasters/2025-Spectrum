@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.RobotSim;
-import frc.robot.RobotTelemetry;
 import frc.spectrumLib.Rio;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
@@ -148,7 +148,7 @@ public class Pivot extends Mechanism {
 
         simulationInit();
         telemetryInit();
-        RobotTelemetry.print(getName() + " Subsystem Initialized");
+        Telemetry.print(getName() + " Subsystem Initialized");
     }
 
     @Override
@@ -188,23 +188,22 @@ public class Pivot extends Mechanism {
 
     public void increaseOffset(double amount) {
         config.setOFFSET(config.getOFFSET() + amount);
-        RobotTelemetry.print("Pivot offset increased to: " + config.getOFFSET());
+        Telemetry.print("Pivot offset increased to: " + config.getOFFSET());
     }
 
     public void decreaseOffset(double amount) {
         config.setOFFSET(config.getOFFSET() - amount);
-        RobotTelemetry.print("Pivot offset decreased to: " + config.getOFFSET());
+        Telemetry.print("Pivot offset decreased to: " + config.getOFFSET());
     }
 
     public void resetOffset() {
         config.setOFFSET(config.getSTARTING_OFFSET());
-        RobotTelemetry.print("Pivot offset reset to: " + config.getOFFSET());
+        Telemetry.print("Pivot offset reset to: " + config.getOFFSET());
     }
 
     public void switchFeedSpot() {
         config.setShortFeed(!(config.isShortFeed()));
-        RobotTelemetry.print(
-                "Feed spot switched to " + ((config.isShortFeed()) ? " short" : " long"));
+        Telemetry.print("Feed spot switched to " + ((config.isShortFeed()) ? " short" : " long"));
     }
 
     // --------------------------------------------------------------------------------
@@ -261,7 +260,7 @@ public class Pivot extends Mechanism {
 
     public void checkCANcoderResponse(StatusCode response) {
         if (!response.isOK()) {
-            System.out.println(
+            Telemetry.print(
                     "Pivot CANcoder ID "
                             + config.getCANcoderID()
                             + " failed config with error "

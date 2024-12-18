@@ -8,6 +8,7 @@ import frc.robot.Robot;
 import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.climber.ClimberStates;
 import frc.robot.elevator.ElevatorStates;
+import frc.spectrumLib.Telemetry;
 
 public class AmpTrapStates {
     private static AmpTrap ampTrap = Robot.getAmpTrap();
@@ -18,21 +19,21 @@ public class AmpTrapStates {
 
     public static void setupDefaultCommand() {
         ampTrap.setDefaultCommand(
-                ampTrap.runStop().ignoringDisable(true).withName("AmpTrap.default"));
+                log(ampTrap.runStop().ignoringDisable(true).withName("AmpTrap.default")));
     }
 
     public static void setStates() {
-        intaking.whileTrue(intake());
-        ejecting.whileTrue(eject());
-        noteToAmp.and(noNote).whileTrue(amp());
-        score.whileTrue(score());
+        intaking.whileTrue(log(intake()));
+        ejecting.whileTrue(log(eject()));
+        noteToAmp.and(noNote).whileTrue(log(amp()));
+        score.whileTrue(log(score()));
 
-        coastMode.whileTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.whileTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
 
         // Trap once the climber is at the bottom
-        climbRoutine.and(ElevatorStates.isHome, noNote).whileTrue(amp());
-        climbRoutine.and(ClimberStates.atHomePos).whileTrue(amp());
+        climbRoutine.and(ElevatorStates.isHome, noNote).whileTrue(log(amp()));
+        climbRoutine.and(ClimberStates.atHomePos).whileTrue(log(amp()));
     }
 
     private static Command intake() {
@@ -57,5 +58,10 @@ public class AmpTrapStates {
 
     private static Command ensureBrakeMode() {
         return ampTrap.ensureBrakeMode();
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

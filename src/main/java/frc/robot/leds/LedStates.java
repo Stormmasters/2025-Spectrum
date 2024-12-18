@@ -3,9 +3,11 @@ package frc.robot.leds;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elevator.ElevatorStates;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.leds.SpectrumLEDs;
 import frc.spectrumLib.util.Util;
 
@@ -61,11 +63,16 @@ public class LedStates {
     private static Trigger ledCommand(
             String name, SpectrumLEDs sLed, LEDPattern pattern, int priority, Trigger trigger) {
         return trigger.and(sLed.checkPriority(priority))
-                .whileTrue(sLed.setPattern(pattern, priority).withName(name));
+                .whileTrue(log(sLed.setPattern(pattern, priority).withName(name)));
     }
 
     static void elevatorUpLED(Trigger trigger, int priority) {
         ledCommand("right.ElevatorUp", right, right.blink(Color.kBlue, 0.25), priority, trigger);
         ledCommand("left.ElevatorUp", left, left.blink(Color.kBlue, 0.25), priority, trigger);
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

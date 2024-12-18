@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,16 +32,22 @@ import frc.robot.swerve.SwerveConfig;
 import frc.robot.vision.VisionSystem;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumRobot;
+import frc.spectrumLib.Telemetry;
+import frc.spectrumLib.Telemetry.PrintPriority;
 import frc.spectrumLib.util.CrashTracker;
 import lombok.Getter;
 
 public class Robot extends SpectrumRobot {
-    @Getter private static RobotTelemetry telemetry;
     @Getter private static RobotSim robotSim;
     @Getter private static Config config;
+    private static Telemetry telemetry = new Telemetry();
+
+    // TODO: Create robot faults
+    public enum RobotFault {
+        OVERCURRENT,
+    }
 
     public static class Config {
-
         public SwerveConfig swerve = new SwerveConfig();
         public IntakeConfig intake = new IntakeConfig();
         public FeederConfig feeder = new FeederConfig();
@@ -72,10 +77,10 @@ public class Robot extends SpectrumRobot {
 
     public Robot() {
         super();
-        DataLogManager.start();
+        Telemetry.start(true, true, PrintPriority.NORMAL);
 
         try {
-            RobotTelemetry.print("--- Robot Init Starting ---");
+            Telemetry.print("--- Robot Init Starting ---");
             robotSim = new RobotSim();
 
             /** Set up the config */
@@ -119,13 +124,10 @@ public class Robot extends SpectrumRobot {
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
 
-            /** Initialize Telemetry */
-            telemetry = new RobotTelemetry();
-
             // Setup Default Commands for all subsystems
             setupDefaultCommands();
 
-            RobotTelemetry.print("--- Robot Init Complete ---");
+            Telemetry.print("--- Robot Init Complete ---");
 
         } catch (Throwable t) {
             // intercept error and log it
@@ -192,10 +194,10 @@ public class Robot extends SpectrumRobot {
 
     @Override
     public void disabledInit() {
-        RobotTelemetry.print("### Disabled Init Starting ### ");
+        Telemetry.print("### Disabled Init Starting ### ");
         resetCommandsAndButtons();
 
-        RobotTelemetry.print("### Disabled Init Complete ### ");
+        Telemetry.print("### Disabled Init Complete ### ");
     }
 
     @Override
@@ -204,7 +206,7 @@ public class Robot extends SpectrumRobot {
     @Override
     public void disabledExit() {
         RobotStates.coastMode.setFalse(); // Ensure motors are in brake mode
-        RobotTelemetry.print("### Disabled Exit### ");
+        Telemetry.print("### Disabled Exit### ");
     }
 
     /* AUTONOMOUS MODE (AUTO) */
@@ -217,12 +219,12 @@ public class Robot extends SpectrumRobot {
     @Override
     public void autonomousInit() {
         try {
-            RobotTelemetry.print("@@@ Auton Init Starting @@@ ");
+            Telemetry.print("@@@ Auton Init Starting @@@ ");
             clearCommandsAndButtons();
 
             auton.init();
 
-            RobotTelemetry.print("@@@ Auton Init Complete @@@ ");
+            Telemetry.print("@@@ Auton Init Complete @@@ ");
         } catch (Throwable t) {
             // intercept error and log it
             CrashTracker.logThrowableCrash(t);
@@ -236,16 +238,16 @@ public class Robot extends SpectrumRobot {
     @Override
     public void autonomousExit() {
         auton.exit();
-        RobotTelemetry.print("@@@ Auton Exit @@@ ");
+        Telemetry.print("@@@ Auton Exit @@@ ");
     }
 
     @Override
     public void teleopInit() {
         try {
-            RobotTelemetry.print("!!! Teleop Init Starting !!! ");
+            Telemetry.print("!!! Teleop Init Starting !!! ");
             resetCommandsAndButtons();
 
-            RobotTelemetry.print("!!! Teleop Init Complete !!! ");
+            Telemetry.print("!!! Teleop Init Complete !!! ");
         } catch (Throwable t) {
             // intercept error and log it
             CrashTracker.logThrowableCrash(t);
@@ -258,7 +260,7 @@ public class Robot extends SpectrumRobot {
 
     @Override
     public void teleopExit() {
-        RobotTelemetry.print("!!! Teleop Exit !!! ");
+        Telemetry.print("!!! Teleop Exit !!! ");
     }
 
     /* TEST MODE */
@@ -274,10 +276,10 @@ public class Robot extends SpectrumRobot {
     public void testInit() {
         try {
 
-            RobotTelemetry.print("~~~ Test Init Starting ~~~ ");
+            Telemetry.print("~~~ Test Init Starting ~~~ ");
             resetCommandsAndButtons();
 
-            RobotTelemetry.print("~~~ Test Init Complete ~~~ ");
+            Telemetry.print("~~~ Test Init Complete ~~~ ");
         } catch (Throwable t) {
             // intercept error and log it
             CrashTracker.logThrowableCrash(t);
@@ -290,7 +292,7 @@ public class Robot extends SpectrumRobot {
 
     @Override
     public void testExit() {
-        RobotTelemetry.print("~~~ Test Exit ~~~ ");
+        Telemetry.print("~~~ Test Exit ~~~ ");
     }
 
     /* SIMULATION MODE */
@@ -302,9 +304,9 @@ public class Robot extends SpectrumRobot {
     /** This method is called once when a simulation starts */
     @Override
     public void simulationInit() {
-        RobotTelemetry.print("$$$ Simulation Init Starting $$$ ");
+        Telemetry.print("$$$ Simulation Init Starting $$$ ");
 
-        RobotTelemetry.print("$$$ Simulation Init Complete $$$ ");
+        Telemetry.print("$$$ Simulation Init Complete $$$ ");
     }
 
     /** This method is called periodically during simulation. */

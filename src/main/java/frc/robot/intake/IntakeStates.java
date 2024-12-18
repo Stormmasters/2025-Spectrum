@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.intake.Intake.IntakeConfig;
+import frc.spectrumLib.Telemetry;
 
 public class IntakeStates {
     private static Intake intake = Robot.getIntake();
@@ -15,16 +16,17 @@ public class IntakeStates {
     public static final Trigger noNote = hasNote.not();
 
     public static void setupDefaultCommand() {
-        intake.setDefaultCommand(intake.runStop().ignoringDisable(true).withName("Intake.default"));
+        intake.setDefaultCommand(
+                log(intake.runStop().ignoringDisable(true).withName("Intake.default")));
     }
 
     public static void setStates() {
-        intaking.whileTrue(intake());
-        ejecting.whileTrue(eject());
-        score.whileTrue(intake());
+        intaking.whileTrue(log(intake()));
+        ejecting.whileTrue(log(eject()));
+        score.whileTrue(log(intake()));
 
-        coastMode.whileTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.whileTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
     }
 
     private static Command intake() {
@@ -41,5 +43,10 @@ public class IntakeStates {
 
     private static Command ensureBrakeMode() {
         return intake.ensureBrakeMode();
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

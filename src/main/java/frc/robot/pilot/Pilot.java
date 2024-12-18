@@ -2,7 +2,7 @@ package frc.robot.pilot;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
 import lombok.Getter;
 import lombok.Setter;
@@ -87,7 +87,7 @@ public class Pilot extends Gamepad {
         driving = leftStickX.or(leftStickY);
         steer = rightStickX.or(rightStickY);
 
-        RobotTelemetry.print("Pilot Subsystem Initialized: ");
+        Telemetry.print("Pilot Subsystem Initialized: ");
     }
 
     public void setupStates() {

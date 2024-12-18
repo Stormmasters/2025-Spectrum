@@ -3,14 +3,13 @@ package frc.robot.elevator;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.RobotTelemetry;
 import frc.robot.climber.ClimberStates;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
@@ -35,28 +34,24 @@ public class ElevatorStates {
     }
 
     public static void setStates() {
-        // Test statements to show how these triggers work
-        isAtAmp.onTrue(Commands.print("At Amp Height"));
-        isUp.onTrue(Commands.print("Elevator Up"));
-
-        ampPrep.whileTrue(RobotTelemetry.logCommand(amp()));
+        ampPrep.whileTrue(Telemetry.log(amp()));
         score.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
-        climbRoutine.and(ClimberStates.atMidClimbPos).onTrue(fullExtend());
+        climbRoutine.and(ClimberStates.atMidClimbPos).onTrue(log(fullExtend()));
 
-        operator.overrideElevator.whileTrue(runElevator(operator::getElevatorOverride));
-        operator.zeroElevator.whileTrue(zero());
+        operator.overrideElevator.whileTrue(
+                log(runElevator(operator::getElevatorOverride).withName("Elevator.operator")));
+        operator.zeroElevator.whileTrue(log(zero()));
 
         // Test Mode Buttons
-        pilot.tuneElevator_tB.whileTrue(tuneElevator());
+        pilot.tuneElevator_tB.whileTrue(log(tuneElevator()));
 
-        coastMode.onTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.onTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
     }
 
     private static Command runElevator(DoubleSupplier speed) {
-
         return elevator.runPercentage(speed).withName("Elevator.runElevator");
     }
 
@@ -96,5 +91,10 @@ public class ElevatorStates {
     private static Command tuneElevator() {
         return elevator.moveToRotations(new TuneValue("Tune Elevator", 0).getSupplier())
                 .withName("Elevator.Tune");
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

@@ -5,9 +5,9 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
-import frc.robot.RobotTelemetry;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
@@ -69,7 +69,7 @@ public class AmpTrap extends Mechanism {
 
         simulationInit();
         telemetryInit();
-        RobotTelemetry.print(getName() + " Subsystem Initialized");
+        Telemetry.print(getName() + " Subsystem Initialized");
     }
 
     @Override
