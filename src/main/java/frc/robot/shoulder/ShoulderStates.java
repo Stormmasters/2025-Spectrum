@@ -20,7 +20,7 @@ public class ShoulderStates {
 
     public static void setStates() {
         // missing bindTriggers
-        intaking.whileTrue(log(subwoofer()));
+        //intaking.whileTrue(log(subwoofer()));
         ampPrep.whileTrue(log(home()));
 
         coastMode.whileTrue(log(coastMode()));
@@ -47,25 +47,7 @@ public class ShoulderStates {
 
     /* Scoring positions */
 
-    public static Command subwoofer() {
-        return shoulder.moveToPercentage(config::getSubwoofer).withName("Shoulder.subwoofer");
-    }
 
-    public static Command podium() {
-        return shoulder.moveToPercentage(config::getPodium).withName("Shoulder.podium");
-    }
-
-    public static Command ampWing() {
-        return shoulder.moveToPercentage(config::getAmpWing).withName("Shoulder.ampWing");
-    }
-
-    public static Command fromAmp() {
-        return shoulder.moveToPercentage(config::getFromAmp).withName("Shoulder.fromAmp");
-    }
-
-    public static Command intoAmp() {
-        return shoulder.moveToPercentage(config::getIntoAmp).withName("Shoulder.intoAmp");
-    }
 
     // missing auton Shoulder commands, add when auton is added
 
@@ -83,12 +65,6 @@ public class ShoulderStates {
 
     public static Command ensureBrakeMode() {
         return shoulder.ensureBrakeMode().withName("Shoulder.BrakeMode");
-    }
-
-    public static Command switchFeedSpot() {
-        return shoulder.runOnce(shoulder::switchFeedSpot)
-                .withName("Shoulder.switchFeedSpot")
-                .ignoringDisable(true);
     }
 
     // Tune value command
