@@ -22,7 +22,6 @@ public class Shoulder extends Mechanism {
 
     public static class ShoulderConfig extends Config {
 
-            
         // Positions set as percentage of shoulder
         @Getter private final int initializedPosition = 20;
 
@@ -55,7 +54,7 @@ public class Shoulder extends Mechanism {
         /* Sim properties */
         @Getter private double shoulderX = 0.55;
         @Getter private double shoulderY = 0.1;
-        @Getter @Setter private double simRatio = 172.8; //TODO: Set this to actual shoulder ratio
+        @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual shoulder ratio
         @Getter private double length = 0.4;
 
         public ShoulderConfig() {
@@ -71,7 +70,7 @@ public class Shoulder extends Mechanism {
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive(); // TODO: check if this is right direction
+            configCounterClockwise_Positive();
         }
 
         public ShoulderConfig modifyMotorConfig(TalonFX motor) {

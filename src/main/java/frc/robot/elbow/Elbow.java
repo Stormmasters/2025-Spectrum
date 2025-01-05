@@ -42,7 +42,7 @@ public class Elbow extends Mechanism {
         /* Sim properties */
         @Getter private double eblowX = 0.55;
         @Getter private double elbowY = 0.1;
-        @Getter @Setter private double simRatio = 172.8; //TODO: Set this to actual elbow ratio
+        @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual elbow ratio
         @Getter private double length = 0.4;
 
         public ElbowConfig() {
@@ -54,11 +54,11 @@ public class Elbow extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-33.357421875, 30.88671875); // .96
+            configMinMaxRotations(-33.357421875, 30.88671875);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
-            configClockwise_Positive(); // TODO: check if this is right direction
+            configClockwise_Positive();
         }
 
         public ElbowConfig modifyMotorConfig(TalonFX motor) {

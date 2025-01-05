@@ -18,6 +18,8 @@ public class FM2024 extends Config {
         operator.setAttached(true);
         pivot.setAttached(true);
         pilot.setAttached(true);
+        elbow.setAttached(false);
+        shoulder.setAttached(false);
 
         // Pivot CANCoder configs
         /**

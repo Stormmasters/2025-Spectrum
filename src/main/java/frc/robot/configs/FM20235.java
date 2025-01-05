@@ -2,9 +2,9 @@ package frc.robot.configs;
 
 import frc.robot.Robot.Config;
 
-public class FM20235 extends Config{
+public class FM20235 extends Config {
 
-    //2023.5 Off-season Robot
+    // 2023.5 Off-season Robot
 
     public FM20235() {
         super();
@@ -14,6 +14,8 @@ public class FM20235 extends Config{
         pilot.setAttached(true);
         operator.setAttached(true);
         intake.setAttached(true);
+        shoulder.setAttached(true);
+        elbow.setAttached(true);
 
         ampTrap.setAttached(false);
         climber.setAttached(false);
