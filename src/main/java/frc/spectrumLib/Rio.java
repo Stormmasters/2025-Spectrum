@@ -24,6 +24,7 @@ public enum Rio {
     FM_2024("032B1F69", true),
     PHOTON_2024("0329AD07", true),
     SUMMER_2024("00", false), // TODO:GET Summer Serial Number
+    FM_20235("030cbc99", false),
     SIM("", true), // e.g. test default or simulation
     UNKNOWN(null, true);
 
