@@ -9,8 +9,13 @@ import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
 import frc.robot.climber.Climber.ClimberConfig;
+import frc.robot.configs.FM20235;
 import frc.robot.configs.FM2024;
 import frc.robot.configs.PM2024;
+import frc.robot.elbow.Elbow;
+import frc.robot.elbow.Elbow.ElbowConfig;
+import frc.robot.shoulder.Shoulder;
+import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.feeder.Feeder;
@@ -59,6 +64,8 @@ public class Robot extends SpectrumRobot {
         public LedFullConfig leds = new LedFullConfig();
         public PilotConfig pilot = new PilotConfig();
         public OperatorConfig operator = new OperatorConfig();
+        public ElbowConfig elbow = new ElbowConfig();
+        public ShoulderConfig shoulder = new ShoulderConfig();
     }
 
     @Getter private static Swerve swerve;
@@ -74,6 +81,8 @@ public class Robot extends SpectrumRobot {
     @Getter private static Pivot pivot;
     @Getter private static VisionSystem visionSystem;
     @Getter private static Auton auton;
+    @Getter private static Elbow elbow;
+    @Getter private static Shoulder shoulder;
 
     public Robot() {
         super();
@@ -91,6 +100,8 @@ public class Robot extends SpectrumRobot {
                 case PM_2024:
                     config = new PM2024();
                     break;
+                case FM_20235:
+                    config = new FM20235();
                 default: // SIM and UNKNOWN
                     config = new FM2024();
                     break;
@@ -121,6 +132,10 @@ public class Robot extends SpectrumRobot {
             intake = new Intake(config.intake);
             Timer.delay(canInitDelay);
             launcher = new Launcher(config.launcher);
+            Timer.delay(canInitDelay);
+            elbow = new Elbow(config.elbow);
+            Timer.delay(canInitDelay);
+            shoulder = new Shoulder(config.shoulder);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
 

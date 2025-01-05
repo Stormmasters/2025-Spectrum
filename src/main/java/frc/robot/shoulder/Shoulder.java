@@ -1,4 +1,4 @@
-package frc.robot.elbow;
+package frc.robot.shoulder;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
@@ -18,12 +18,25 @@ import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
 import lombok.*;
 
-public class Elbow extends Mechanism {
+public class Shoulder extends Mechanism {
 
-    public static class ElbowConfig extends Config {
+    public static class ShoulderConfig extends Config {
+
+            
+        // Positions set as percentage of shoulder
+        @Getter private final int initializedPosition = 20;
+
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
-        @Getter private final double home = -45;
-        @Getter private final double intake = -96;
+        @Getter private final double score = 65;
+        @Getter private final double climbHome = 3;
+        @Getter private final double home = 1;
+        @Getter private final double subwoofer = 81;
+        @Getter private final double intoAmp = 78;
+        @Getter private final double podium = 53.5;
+        @Getter private final double fromAmp = 52;
+        @Getter private final double ampWing = 41;
+        @Getter private final double intake = 50;
+        @Getter private final double manualFeed = 70;
 
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -40,13 +53,13 @@ public class Elbow extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double eblowX = 0.55;
-        @Getter private double elbowY = 0.1;
-        @Getter @Setter private double simRatio = 172.8; //TODO: Set this to actual elbow ratio
+        @Getter private double shoulderX = 0.55;
+        @Getter private double shoulderY = 0.1;
+        @Getter @Setter private double simRatio = 172.8; //TODO: Set this to actual shoulder ratio
         @Getter private double length = 0.4;
 
-        public ElbowConfig() {
-            super("Elbow", 41, Rio.CANIVORE);
+        public ShoulderConfig() {
+            super("Shoulder", 42, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(147000, 161000, 0);
@@ -54,14 +67,14 @@ public class Elbow extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-33.357421875, 30.88671875); // .96
+            configMinMaxRotations(0, 66.0063476563); // .96
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
-            configClockwise_Positive(); // TODO: check if this is right direction
+            configCounterClockwise_Positive(); // TODO: check if this is right direction
         }
 
-        public ElbowConfig modifyMotorConfig(TalonFX motor) {
+        public ShoulderConfig modifyMotorConfig(TalonFX motor) {
             TalonFXConfigurator configurator = motor.getConfigurator();
             TalonFXConfiguration talonConfigMod = getTalonConfig();
 
@@ -71,12 +84,12 @@ public class Elbow extends Mechanism {
         }
     }
 
-    private ElbowConfig config;
+    private ShoulderConfig config;
     private CANcoder m_CANcoder;
-    @Getter private ElbowSim sim;
+    @Getter private ShoulderSim sim;
     CANcoderSimState canCoderSim;
 
-    public Elbow(ElbowConfig config) {
+    public Shoulder(ShoulderConfig config) {
         super(config);
         this.config = config;
 
@@ -89,11 +102,11 @@ public class Elbow extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        ElbowStates.setStates();
+        ShoulderStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        ElbowStates.setupDefaultCommand();
+        ShoulderStates.setupDefaultCommand();
     }
 
     /*-------------------
@@ -119,7 +132,7 @@ public class Elbow extends Mechanism {
     // Custom Commands
     // --------------------------------------------------------------------------------
 
-    public Command zeroElbowRoutine() {
+    public Command zeroShoulderRoutine() {
         return new FunctionalCommand(
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
@@ -129,18 +142,18 @@ public class Elbow extends Mechanism {
                         },
                         () -> false, // isFinished
                         this) // requirement
-                .withName("Elbow.zeroElbowRoutine");
+                .withName("Shoulder.zeroElbowRoutine");
     }
 
     /** Holds the position of the Elbow. */
-    public Command runHoldElbow() {
+    public Command runHoldShoulder() {
         return new Command() {
             double holdPosition = 0; // rotations
 
             // constructor
             {
-                setName("Elbow.holdPosition");
-                addRequirements(Elbow.this);
+                setName("Shoulder.holdPosition");
+                addRequirements(Shoulder.this);
             }
 
             @Override
@@ -160,7 +173,7 @@ public class Elbow extends Mechanism {
         };
     }
 
-    public boolean ElbowHasError() {
+    public boolean ShoulderHasError() {
         if (isAttached()) {
             return getPositionRotations() > config.getMaxRotations();
         }
@@ -172,7 +185,7 @@ public class Elbow extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            sim = new ElbowSim(motor.getSimState(), RobotSim.leftView);
+            sim = new ShoulderSim(motor.getSimState(), RobotSim.leftView);
 
             // m_CANcoder.setPosition(0);
         }
@@ -186,19 +199,19 @@ public class Elbow extends Mechanism {
         }
     }
 
-    class ElbowSim extends ArmSim {
-        public ElbowSim(TalonFXSimState elbowMotorSim, Mechanism2d mech) {
+    class ShoulderSim extends ArmSim {
+        public ShoulderSim(TalonFXSimState shoulderMotorSim, Mechanism2d mech) {
             super(
                     new ArmConfig(
-                            config.eblowX,
-                            config.elbowY,
+                            config.shoulderX,
+                            config.shoulderY,
                             config.simRatio,
                             config.length,
                             config.getMinRotations(),
                             80, // config.getMaxRotation() * config.getRatio(),
                             config.getMinRotations()),
                     mech,
-                    elbowMotorSim,
+                    shoulderMotorSim,
                     config.getName());
         }
     }
