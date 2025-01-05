@@ -54,12 +54,6 @@ public class ElbowStates {
         return elbow.ensureBrakeMode().withName("Elbow.BrakeMode");
     }
 
-    public static Command switchFeedSpot() {
-        return elbow.runOnce(elbow::switchFeedSpot)
-                .withName("Elbow.switchFeedSpot")
-                .ignoringDisable(true);
-    }
-
     // Tune value command
     public static Command tuneElbow() {
         return elbow.moveToPercentage(new TuneValue("Tune Elbow", 0).getSupplier())

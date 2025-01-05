@@ -29,11 +29,6 @@ public class Shoulder extends Mechanism {
         @Getter private final double score = 65;
         @Getter private final double climbHome = 3;
         @Getter private final double home = 1;
-        @Getter private final double subwoofer = 81;
-        @Getter private final double intoAmp = 78;
-        @Getter private final double podium = 53.5;
-        @Getter private final double fromAmp = 52;
-        @Getter private final double ampWing = 41;
         @Getter private final double intake = 50;
         @Getter private final double manualFeed = 70;
 

@@ -41,8 +41,8 @@ public class Pilot extends Gamepad {
     public final Trigger fpv_rs = rightStickClick.and(teleop); // Remapped to Right back button
 
     // DISABLED TRIGGERS
-    public final Trigger coastOn_dB = disabled.and(B);
-    public final Trigger coastOff_dA = disabled.and(A);
+    public final Trigger coastOn_dB = disabled;
+    //public final Trigger coastOff_dA = disabled.and(A);
 
     // TEST TRIGGERS
     public final Trigger tuneElevator_tB = testMode.and(B);
