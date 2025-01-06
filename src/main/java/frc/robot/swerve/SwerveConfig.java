@@ -206,8 +206,7 @@ public class SwerveConfig {
                         .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
                         .withCouplingGearRatio(coupleRatio)
                         .withDriveMotorInitialConfigs(driveInitialConfigs)
-                        .withSteerMotorInitialConfigs(steerInitialConfigs)
-                        .withCANcoderInitialConfigs(cancoderInitialConfigs);
+                        .withSteerMotorInitialConfigs(steerInitialConfigs);
 
         frontLeft =
                 constantCreator.createModuleConstants(

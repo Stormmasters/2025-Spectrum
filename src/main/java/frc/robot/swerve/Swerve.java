@@ -341,6 +341,7 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
                         DCMotor.getKrakenX60(1),
                         config.getSlipCurrent(),
                         1);
+
         RobotConfig robotConfig = // Have directly call this to avoid name space problem
                 new RobotConfig(
                         Units.lbsToKilograms(150),
