@@ -3,53 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.28,
-        "y": 6.4
+        "x": 1.89,
+        "y": 5.83
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.620000000000001,
-        "y": 6.4
+        "x": 3.107078351417738,
+        "y": 5.542105433084535
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.07240297052732,
-        "y": 4.15
+        "x": 3.66,
+        "y": 5.12
       },
       "prevControl": {
-        "x": 7.382031205831318,
-        "y": 5.1735182321015545
-      },
-      "nextControl": {
-        "x": 8.522469321189595,
-        "y": 3.4827491952671417
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.278252447992267,
-        "y": 6.49
-      },
-      "prevControl": {
-        "x": 6.98182532133645,
-        "y": 7.214420168091265
+        "x": 2.5641638043367996,
+        "y": 5.531772874642805
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 130.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -62,11 +41,11 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 180.0
+    "velocity": 0,
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "Front",
+  "folder": "2025 - Clean Side 4 Rush ",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

@@ -1,0 +1,73 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "1 - Clean Side Preload"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2 - Clean Side Source 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3 - Clean Side Source 2 Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 - Clean Side Source 2 Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3 - Clean Side Source 2 Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 - Clean Side Source 2 Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5 - Clean Side Source 3 Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6 - Clean Side Source 3 Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5 - Clean Side Source 3 Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6 - Clean Side Source 3 Score"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "2025",
+  "choreoAuto": false
+}

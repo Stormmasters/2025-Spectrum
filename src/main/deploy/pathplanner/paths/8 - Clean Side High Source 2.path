@@ -3,53 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.25,
-        "y": 3.0
+        "x": 3.94,
+        "y": 5.29
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.728705597729251,
-        "y": 2.3716851923881577
+        "x": 3.1907897711822972,
+        "y": 5.960636641093942
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.28,
-        "y": 1.25
+        "x": 1.69,
+        "y": 7.36
       },
       "prevControl": {
-        "x": 8.236643764643937,
-        "y": 1.8641897677472978
-      },
-      "nextControl": {
-        "x": 8.326726830774763,
-        "y": 0.5880619625890434
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 2.23,
-        "y": 3.35
-      },
-      "prevControl": {
-        "x": 3.2339554361229297,
-        "y": 1.9162030450431264
+        "x": 2.2513942862375624,
+        "y": 6.864887926084878
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Clean Side Source"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -63,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 141.0
+    "rotation": -53.5
   },
   "reversed": false,
-  "folder": "Madtown",
+  "folder": "2025 - Clean Side 4 Rush ",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -59.99999999999999
   },
   "useDefaultConstraints": true
 }
