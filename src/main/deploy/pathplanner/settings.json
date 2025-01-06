@@ -3,15 +3,11 @@
   "robotLength": 0.93,
   "holonomicMode": true,
   "pathFolders": [
-    "2025 - Clean Side 4-3",
-    "Basic Paths",
-    "Front",
-    "Madtown",
-    "2025 - Clean Side 4 Rush "
+    " Clean Side 5High ",
+    "Clean Side 3High 2Mid"
   ],
   "autoFolders": [
-    "2024",
-    "2025"
+    "Clean Side"
   ],
   "defaultMaxVel": 6.0,
   "defaultMaxAccel": 6.0,
