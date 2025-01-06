@@ -38,7 +38,8 @@ public class Intake extends Mechanism {
         @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {
-            super("Intake", 5, Rio.CANIVORE);
+            // super("Intake", 5, Rio.CANIVORE);
+            super("Intake", 5, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12.0 / 30.0);

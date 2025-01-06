@@ -31,6 +31,7 @@ public class Shoulder extends Mechanism {
         @Getter private final double home = 1;
         @Getter private final double intake = 50;
         @Getter private final double manualFeed = 70;
+        @Getter private final double ninetyDegrees = 38;
 
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;

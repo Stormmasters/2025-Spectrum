@@ -20,11 +20,12 @@ public class ShoulderStates {
 
     public static void setStates() {
         // missing bindTriggers
-        //intaking.whileTrue(log(subwoofer()));
+        // intaking.whileTrue(log(subwoofer()));
         ampPrep.whileTrue(log(home()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        test.whileTrue(moveToPercentage(config::getNinetyDegrees));
     }
 
     // missing distance based Shoulder commands
@@ -45,9 +46,11 @@ public class ShoulderStates {
         return shoulder.moveToPercentage(config::getManualFeed).withName("Shoulder.manualFeed");
     }
 
+    public static Command moveToPercentage(DoubleSupplier percent) {
+        return shoulder.moveToPercentage(percent).withName("Shoulder.moveToPercentage");
+    }
+
     /* Scoring positions */
-
-
 
     // missing auton Shoulder commands, add when auton is added
 

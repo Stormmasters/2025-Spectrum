@@ -40,7 +40,7 @@ public class Elbow extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double eblowX = 0.55;
+        @Getter private double elbowX = 0.55;
         @Getter private double elbowY = 0.1;
         @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual elbow ratio
         @Getter private double length = 0.4;
@@ -190,7 +190,7 @@ public class Elbow extends Mechanism {
         public ElbowSim(TalonFXSimState elbowMotorSim, Mechanism2d mech) {
             super(
                     new ArmConfig(
-                            config.eblowX,
+                            config.elbowX,
                             config.elbowY,
                             config.simRatio,
                             config.length,
