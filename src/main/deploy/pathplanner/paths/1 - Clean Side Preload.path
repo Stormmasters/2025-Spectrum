@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.812155727502089,
-        "y": 5.159630053156865
+        "x": 7.0398264900540735,
+        "y": 4.9549813218215935
       },
       "isLocked": false,
       "linkedName": "Clean Side Start"
     },
     {
       "anchor": {
-        "x": 5.02,
-        "y": 5.3
+        "x": 5.32,
+        "y": 5.14
       },
       "prevControl": {
-        "x": 5.9198188611022875,
-        "y": 5.197942142188608
+        "x": 5.8240355253883385,
+        "y": 5.122818882980027
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Clean Side 3High 2Mid",
+  "folder": "Clean Side Preload-Source 5High",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0

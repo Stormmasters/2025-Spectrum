@@ -31,18 +31,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3 - Clean Side Source 2 Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4 - Clean Side Source 2 Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "5 - Clean Side Source 3 Intake"
           }
         },
@@ -55,13 +43,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5 - Clean Side Source 3 Intake"
+            "pathName": "7 - Clean Side Soruce 4 Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "6 - Clean Side Source 3 Score"
+            "pathName": "8 - Clean Side Source 4 Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "9 - Clean Side Source 5 Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "10 - Clean Side Source 5 Score"
           }
         }
       ]

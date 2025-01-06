@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 3.12,
-        "y": 4.19
+        "y": 4.2
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7597279420731025,
-        "y": 5.122715612812179
+        "x": 2.815093801676119,
+        "y": 4.847052656902617
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 7.36
       },
       "prevControl": {
-        "x": 1.9883047634024078,
-        "y": 6.670556157879898
+        "x": 1.9212962468236356,
+        "y": 6.8792687508759816
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": -53.5
   },
   "reversed": false,
-  "folder": " Clean Side Preload Only 5High ",
+  "folder": "Clean Side Preload-Source 5High",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
