@@ -22,7 +22,9 @@ public class Pilot extends Gamepad {
     public final Trigger subwooferPrep_fRT = rightTrigger.and(fn, teleop);
     public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
-    public final Trigger test_B = B.and(noFn, teleop);
+    // public final Trigger test_B = B.and(n, teleop);
+
+    public final Trigger elbow_B = B.and(noFn, teleop);
 
     public final Trigger retract_X = X.and(noFn, teleop);
     public final Trigger manual_Y = Y.and(noFn, teleop);

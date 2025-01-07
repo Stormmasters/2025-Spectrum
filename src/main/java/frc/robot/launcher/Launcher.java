@@ -39,7 +39,8 @@ public class Launcher extends Mechanism {
         private final InterpolatingDoubleTreeMap distanceMap = new InterpolatingDoubleTreeMap();
 
         public LauncherConfig() {
-            super("LeftLauncher", 42, Rio.CANIVORE);
+            super("LeftLauncher", 100, Rio.CANIVORE);
+            System.out.println("test");
             configPIDGains(0, velocityKp, 0.0, 0.0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(1.0 / 2.0);

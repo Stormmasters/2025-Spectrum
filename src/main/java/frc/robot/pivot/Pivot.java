@@ -79,7 +79,7 @@ public class Pivot extends Mechanism {
         @Getter private double length = 0.4;
 
         public PivotConfig() {
-            super("Pivot", 41, Rio.CANIVORE);
+            super("Pivot", 101, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(147000, 161000, 0);

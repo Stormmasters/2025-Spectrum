@@ -3,6 +3,8 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -44,7 +46,8 @@ import lombok.Getter;
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
  * in command-based projects easily.
  */
-public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSendable {
+public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
+        implements SpectrumSubsystem, NTSendable {
     private SwerveConfig config;
     private Notifier simNotifier = null;
     private double lastSimTime;
@@ -72,7 +75,12 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
      *     configurations.
      */
     public Swerve(SwerveConfig config) {
-        super(config.getDrivetrainConstants(), config.getModules());
+        super(
+                TalonFX::new,
+                TalonFX::new,
+                CANcoder::new,
+                config.getDrivetrainConstants(),
+                config.getModules());
         // this.robotConfig = robotConfig;
         this.config = config;
         configurePathPlanner();
@@ -347,7 +355,6 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
                         Units.lbsToKilograms(150),
                         1,
                         moduleConfig,
-                        Units.inchesToMeters(26),
                         Units.inchesToMeters(
                                 26)); // TODO Fix this line and line above with real numbers
         AutoBuilder.configure(

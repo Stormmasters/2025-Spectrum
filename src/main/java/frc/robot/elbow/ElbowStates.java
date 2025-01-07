@@ -20,10 +20,11 @@ public class ElbowStates {
 
     public static void setStates() {
         // missing bindTriggers
-        ampPrep.whileTrue(log(home()));
+        test.whileTrue(log(home()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        // test.whileTrue(log(runElbow(() -> .3)));
     }
 
     // missing distance based Elbow commands

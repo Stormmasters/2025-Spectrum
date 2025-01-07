@@ -54,7 +54,8 @@ public class Shoulder extends Mechanism {
         @Getter private double length = 0.4;
 
         public ShoulderConfig() {
-            super("Shoulder", 42, Rio.CANIVORE);
+            // super("Shoulder", 42, Rio.CANIVORE);
+            super("Shoulder", 42, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(147000, 161000, 0);

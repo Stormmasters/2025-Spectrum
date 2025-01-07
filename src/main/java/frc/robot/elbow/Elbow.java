@@ -46,7 +46,8 @@ public class Elbow extends Mechanism {
         @Getter private double length = 0.4;
 
         public ElbowConfig() {
-            super("Elbow", 41, Rio.CANIVORE);
+            // super("Elbow", 41, Rio.CANIVORE);
+            super("Elbow", 41, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(147000, 161000, 0);

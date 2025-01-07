@@ -25,7 +25,9 @@ public class ShoulderStates {
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        test.whileTrue(moveToPercentage(config::getNinetyDegrees));
+        // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
+        // test.whileTrue(runShoulder(() -> 0.1));
+
     }
 
     // missing distance based Shoulder commands

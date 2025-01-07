@@ -29,7 +29,7 @@ public class PilotStates {
 
     /**
      * Command that can be used to turn on the slow mode. Slow mode modifies the fwd, left, and CCW
-     * methods, we don't want these to require the pilot subsystem
+     * methods, we don't want these to require the pilot subsystem arm
      */
     public static Command slowMode() {
         return Commands.startEnd(() -> pilot.setSlowMode(true), () -> pilot.setSlowMode(false))
