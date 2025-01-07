@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.69,
-        "y": 7.36
+        "x": 1.676123595505618,
+        "y": 7.369030898876405
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.035191372958819,
-        "y": 7.0164199540446965
+        "x": 2.021314968464437,
+        "y": 7.025450852921101
       },
       "isLocked": false,
       "linkedName": "Clean Side Source"
@@ -45,7 +45,7 @@
     "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "Clean Side Preload-Source 5High",
+  "folder": "Clean Side Source Only 5High",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -53.5

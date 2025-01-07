@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.372758718348552,
-        "y": 5.692980913984651
+        "x": 5.268391193840689,
+        "y": 5.198326687001825
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.69,
-        "y": 7.36
+        "x": 5.17,
+        "y": 5.23
       },
       "prevControl": {
-        "x": 2.4104539957220275,
-        "y": 6.8890732042516225
+        "x": 4.939796949521809,
+        "y": 5.327501566913233
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Clean Side Source"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.5
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": " Clean Side Preload Only 5High ",
+  "folder": " Clean Side Preload-Source 5High ",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.99999999999999

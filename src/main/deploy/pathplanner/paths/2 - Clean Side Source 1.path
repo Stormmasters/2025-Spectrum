@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.69,
-        "y": 7.36
+        "x": 1.676123595505618,
+        "y": 7.369030898876405
       },
       "prevControl": {
-        "x": 2.718400795602399,
-        "y": 6.674961037889625
+        "x": 2.7045243911080172,
+        "y": 6.68399193676603
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": -53.5
   },
   "reversed": false,
-  "folder": "Clean Side Preload-Source 5High",
+  "folder": "Clean Side Source Only 5High",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.99999999999999

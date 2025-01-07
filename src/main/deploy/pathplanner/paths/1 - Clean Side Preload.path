@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.075,
+        "x": 7.12,
         "y": 4.97
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.0398264900540735,
+        "x": 6.084826490054074,
         "y": 4.9549813218215935
       },
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Clean Side Preload-Source 5High",
+  "folder": "Clean Side Source Only 5High",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0

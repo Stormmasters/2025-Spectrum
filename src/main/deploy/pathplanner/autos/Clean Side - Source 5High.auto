@@ -43,25 +43,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "7 - Clean Side Soruce 4 Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "8 - Clean Side Source 4 Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "9 - Clean Side Source 5 Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "10 - Clean Side Source 5 Score"
+            "pathName": "11"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "7 - Clean Side Soruce 4 Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "10 - Clean Side Source Barage 1"
           }
         }
       ]

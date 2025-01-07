@@ -61,7 +61,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "10 - Clean Side High Source 3"
+            "pathName": "10 - Clean Side High Algae 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "11 - Clean Side High Barage 1"
           }
         }
       ]
