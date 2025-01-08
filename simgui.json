@@ -7,24 +7,23 @@
       "window": {
         "visible": true
       }
-    },
-    "Other Devices": {
-      "Talon FX (v6)[5]": {
-        "header": {
-          "open": true
-        }
-      }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/LeftView": "Mechanism2d",
       "/SmartDashboard/Scheduler": "Scheduler",
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d"
     },
     "windows": {
+      "/SmartDashboard/Alerts": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/LeftView": {
         "window": {
           "visible": true
@@ -80,14 +79,17 @@
         "open": true
       },
       "SmartDashboard": {
+        "Elbow": {
+          "open": true
+        },
+        "Shoulder": {
+          "open": true
+        },
         "open": true
       }
     }
   },
   "NetworkTables Info": {
     "visible": true
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }
