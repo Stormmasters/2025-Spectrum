@@ -26,7 +26,7 @@ public class Intake extends Mechanism {
         @Getter private double slowIntakePercentage = 0.06;
 
         /* Intake config values */
-        @Getter private double currentLimit = 30;
+        @Getter private double currentLimit = 40;
         @Getter private double torqueCurrentLimit = 120;
         @Getter private double velocityKp = 12; // 0.156152;
         @Getter private double velocityKv = 0.2; // 0.12;
@@ -44,7 +44,7 @@ public class Intake extends Mechanism {
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12.0 / 30.0);
             configSupplyCurrentLimit(currentLimit, true);
-            configStatorCurrentLimit(30, true);
+            configStatorCurrentLimit(120, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configNeutralBrakeMode(true);

@@ -27,7 +27,7 @@ public class FeederStates {
         intaking.or(operator.feederFwd_Y).whileTrue(log(intake()));
         ejecting.or(operator.feederRev_fY).whileTrue(log(eject()));
         score.whileTrue(log(score()));
-        noteToAmp.whileTrue(log(feedToAmp()));
+        // noteToAmp.whileTrue(log(feedToAmp()));
 
         // Feed a note to the amp trap if we are climbing and the elevator hasn't gone up
         climbRoutine.and(ElevatorStates.isHome, AmpTrapStates.noNote).whileTrue(log(feedToAmp()));

@@ -50,7 +50,7 @@ public class Elbow extends Mechanism {
             super("Elbow", 41, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configMotionMagic(147000, 161000, 0);
+            configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
             configGearRatio(1);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
@@ -105,6 +105,10 @@ public class Elbow extends Mechanism {
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
             builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty(
+                    "Position Percent",
+                    () -> getPositionRotations() / config.getMaxRotations(),
+                    null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);

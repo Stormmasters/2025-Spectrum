@@ -8,7 +8,7 @@ public class FM20235 extends Config {
 
     public FM20235() {
         super();
-        swerve.configEncoderOffsets(323.877, 67.4121, 136.49414, 7.998);
+        swerve.configEncoderOffsets(-0.399170, -0.189209, 0.121826, -0.021973);
 
         // Attached Mechanisms
         pilot.setAttached(true);

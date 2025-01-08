@@ -31,7 +31,7 @@ public class Shoulder extends Mechanism {
         @Getter private final double home = 1;
         @Getter private final double intake = 50;
         @Getter private final double manualFeed = 70;
-        @Getter private final double ninetyDegrees = 38;
+        @Getter private final double ninetyDegrees = 39;
 
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -58,7 +58,7 @@ public class Shoulder extends Mechanism {
             super("Shoulder", 42, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configMotionMagic(147000, 161000, 0);
+            configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);
             configGearRatio(1);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
@@ -113,6 +113,10 @@ public class Shoulder extends Mechanism {
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
             builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty(
+                    "Position Percent",
+                    () -> getPositionRotations() / config.getMaxRotations(),
+                    null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);

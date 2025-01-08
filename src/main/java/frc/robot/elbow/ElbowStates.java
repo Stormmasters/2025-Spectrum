@@ -15,16 +15,22 @@ public class ElbowStates {
 
     public static void setupDefaultCommand() {
         elbow.setDefaultCommand(
-                log(elbow.runHoldElbow().ignoringDisable(true).withName("Elbow.default")));
+                elbow.runHoldElbow().ignoringDisable(true).withName("Elbow.default"));
     }
 
     public static void setStates() {
         // missing bindTriggers
-        test.whileTrue(log(home()));
+        // test.whileTrue(log(home()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         // test.whileTrue(log(runElbow(() -> .3)));
+        // moveElbow.whileTrue(runElbow(() -> 0.1));
+        // // home.whileTrue(home());
+        // homeElbow.whileTrue(runElbow(() -> -0.1));
+        // moveElbow.whileFalse(elbow.runHoldElbow());
+        // homeElbow.whileFalse(elbow.runHoldElbow());
+        moveElbow.whileTrue(home());
     }
 
     // missing distance based Elbow commands

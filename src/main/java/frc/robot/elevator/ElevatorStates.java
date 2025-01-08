@@ -34,7 +34,7 @@ public class ElevatorStates {
     }
 
     public static void setStates() {
-        ampPrep.whileTrue(Telemetry.log(amp()));
+        // ampPrep.whileTrue(Telemetry.log(amp()));
         score.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
