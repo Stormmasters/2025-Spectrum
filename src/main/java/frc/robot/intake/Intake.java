@@ -20,7 +20,7 @@ public class Intake extends Mechanism {
         @Getter private double maxSpeed = 5000;
         @Getter private double intake = 2000;
         @Getter private double eject = -2000;
-        @Getter private double slowIntake = 1000;
+        @Getter private double slowIntake = -1000;
 
         /* Percentage Intake Output */
         @Getter private double slowIntakePercentage = 0.06;

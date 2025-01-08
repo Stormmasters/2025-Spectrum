@@ -17,7 +17,10 @@ public class IntakeStates {
 
     public static void setupDefaultCommand() {
         intake.setDefaultCommand(
-                log(intake.runStop().ignoringDisable(true).withName("Intake.default")));
+                log(
+                        intake.runVelocity(() -> config.getSlowIntake())
+                                .ignoringDisable(false)
+                                .withName("Intake.default")));
     }
 
     public static void setStates() {
