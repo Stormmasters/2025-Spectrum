@@ -21,7 +21,7 @@ public class PivotStates {
     public static void setStates() {
         // missing bindTriggers
         intaking.whileTrue(log(subwoofer()));
-        ampPrep.whileTrue(log(home()));
+        // ampPrep.whileTrue(log(home()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));

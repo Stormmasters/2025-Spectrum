@@ -314,6 +314,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * is started and reverted when the command is ended.
      */
     public Command coastMode() {
+        System.out.println(getName() + " in COAST");
         return startEnd(() -> setBrakeMode(false), () -> setBrakeMode(true))
                 .ignoringDisable(true)
                 .withName(getName() + ".coastMode");
@@ -321,6 +322,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     /** Sets the motor to brake mode if it is in coast mode */
     public Command ensureBrakeMode() {
+        System.out.println(getName() + " in BRAKE");
         return runOnce(() -> setBrakeMode(true))
                 .onlyIf(
                         () ->

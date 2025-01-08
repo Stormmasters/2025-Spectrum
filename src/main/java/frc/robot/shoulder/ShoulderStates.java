@@ -21,13 +21,13 @@ public class ShoulderStates {
     public static void setStates() {
         // missing bindTriggers
         // intaking.whileTrue(log(subwoofer()));
-        ampPrep.whileTrue(log(home()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
-        // test.whileTrue(runShoulder(() -> 0.1));
-
+        test.whileTrue(runShoulder(() -> 0.1));
+        // home.whileTrue(home());
+        home.whileTrue(runShoulder(() -> -0.1));
     }
 
     // missing distance based Shoulder commands

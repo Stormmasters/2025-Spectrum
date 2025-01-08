@@ -25,7 +25,7 @@ public class AmpTrapStates {
     public static void setStates() {
         intaking.whileTrue(log(intake()));
         ejecting.whileTrue(log(eject()));
-        noteToAmp.and(noNote).whileTrue(log(amp()));
+        // noteToAmp.and(noNote).whileTrue(log(amp()));
         score.whileTrue(log(score()));
 
         coastMode.whileTrue(log(coastMode()));

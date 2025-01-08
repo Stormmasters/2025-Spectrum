@@ -16,15 +16,18 @@ public class Pilot extends Gamepad {
     public final Trigger noFn = fn.not();
     public final Trigger intake_A = A.and(noFn, teleop);
     public final Trigger eject_fA = A.and(fn, teleop);
-    public final Trigger ampPrep_B = Y.and(noFn, teleop); // change back to B
+    // public final Trigger ampPrep_B = Y.and(noFn, teleop); // change back to B
     public final Trigger score_RB = rightBumper.and(teleop);
     public final Trigger launchPrep_RT = rightTrigger.and(noFn, teleop);
     public final Trigger subwooferPrep_fRT = rightTrigger.and(fn, teleop);
     public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
-    // public final Trigger test_B = B.and(n, teleop);
+    public final Trigger shoulder_B = B.and(noFn, teleop);
+    public final Trigger homeShoulder_fB = B.and(fn, teleop);
+    public final Trigger elbow_Y = Y.and(noFn, teleop);
+    public final Trigger homeElbow_fY = Y.and(fn, teleop);
 
-    public final Trigger elbow_B = B.and(noFn, teleop);
+    // public final Trigger elbow_B = B.and(no, teleop);
 
     public final Trigger retract_X = X.and(noFn, teleop);
     public final Trigger manual_Y = Y.and(noFn, teleop);
@@ -44,8 +47,8 @@ public class Pilot extends Gamepad {
     public final Trigger fpv_rs = rightStickClick.and(teleop); // Remapped to Right back button
 
     // DISABLED TRIGGERS
-    public final Trigger coastOn_dB = disabled;
-    // public final Trigger coastOff_dA = disabled.and(A);
+    public final Trigger coastOn_dB = disabled.and(B);
+    public final Trigger coastOff_dA = disabled.and(A);
 
     // TEST TRIGGERS
     public final Trigger tuneElevator_tB = testMode.and(B);

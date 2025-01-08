@@ -49,10 +49,14 @@ public class RobotStates {
     public static final Trigger climbRoutine =
             pilot.climbRoutine_start; // TODO: Add a check for hooks up
 
-    public static final Trigger ampPrep = pilot.ampPrep_B; // .and(ampZone);
-    public static final Trigger noteToAmp = pilot.ampPrep_B.or(operator.noteToAmp_B, climbPrep);
+    // public static final Trigger ampPrep = pilot.ampPrep_B; // .and(ampZone);
+    // public static final Trigger noteToAmp = pilot.ampPrep_B.or(operator.noteToAmp_B, climbPrep);
 
-    public static final Trigger test = pilot.elbow_B;
+    public static final Trigger test = pilot.shoulder_B;
+    public static final Trigger home = pilot.homeShoulder_fB;
+
+    public static final Trigger moveElbow = pilot.elbow_Y;
+    public static final Trigger homeElbow = pilot.homeElbow_fY;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
@@ -62,7 +66,7 @@ public class RobotStates {
     // Setup any binding to set states
     public static void setupStates() {
         pilot.coastOn_dB.and(sim.not()).onTrue(coastMode.setTrue());
-        // pilot.coastOff_dA.and(sim.not()).onTrue(coastMode.setFalse());
+        pilot.coastOff_dA.and(sim.not()).onTrue(coastMode.setFalse());
     }
 
     private RobotStates() {
