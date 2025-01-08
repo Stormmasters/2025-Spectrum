@@ -40,7 +40,7 @@ public class Elbow extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double elbowX = 0.55;
+        @Getter private double elbowX = 0.65;
         @Getter private double elbowY = 0.1;
         @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual elbow ratio
         @Getter private double length = 0.4;
