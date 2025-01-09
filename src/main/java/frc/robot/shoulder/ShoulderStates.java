@@ -25,7 +25,9 @@ public class ShoulderStates {
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
-        test.whileTrue(runShoulder(() -> 0.1));
+        test.whileTrue(moveToPercentage(() -> 75));
+        testy.whileTrue(moveToPercentage(() -> 94));
+        algaeFloor.whileTrue(moveToPercentage(() -> 0));
         // home.whileTrue(home());
         home.whileTrue(runShoulder(() -> -0.1));
     }

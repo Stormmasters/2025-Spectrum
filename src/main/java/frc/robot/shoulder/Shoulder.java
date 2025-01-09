@@ -39,7 +39,7 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private boolean shortFeed = false;
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
-        @Getter private final double velocityKp = 186; // 200 w/ 0.013 good
+        @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
         @Getter private final double velocityKv = 0.018;
         @Getter private final double velocityKs = 0;
 

@@ -24,13 +24,16 @@ public class ElbowStates {
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        test.whileTrue(elbow.moveToPercentage(() -> -74));
+        testy.whileTrue(elbow.moveToPercentage(() -> -97));
+        algaeFloor.whileTrue(elbow.moveToPercentage(() -> -92));
         // test.whileTrue(log(runElbow(() -> .3)));
         // moveElbow.whileTrue(runElbow(() -> 0.1));
         // // home.whileTrue(home());
         // homeElbow.whileTrue(runElbow(() -> -0.1));
         // moveElbow.whileFalse(elbow.runHoldElbow());
         // homeElbow.whileFalse(elbow.runHoldElbow());
-        moveElbow.whileTrue(home());
+        // moveElbow.whileTrue(home());
     }
 
     // missing distance based Elbow commands

@@ -52,11 +52,13 @@ public class RobotStates {
     // public static final Trigger ampPrep = pilot.ampPrep_B; // .and(ampZone);
     // public static final Trigger noteToAmp = pilot.ampPrep_B.or(operator.noteToAmp_B, climbPrep);
 
-    public static final Trigger test = pilot.shoulder_B;
+    public static final Trigger test = pilot.testB;
+    public static final Trigger testy = pilot.testY;
+    public static final Trigger algaeFloor = pilot.algaeFloorY;
     public static final Trigger home = pilot.homeShoulder_fB;
 
-    public static final Trigger moveElbow = pilot.elbow_Y;
-    public static final Trigger homeElbow = pilot.homeElbow_fY;
+    // public static final Trigger moveElbow = pilot.elbow_Y;
+    // public static final Trigger homeElbow = pilot.homeElbow_fY;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.

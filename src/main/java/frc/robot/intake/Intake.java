@@ -18,7 +18,7 @@ public class Intake extends Mechanism {
 
         /* Revolutions per min Intake Output */
         @Getter private double maxSpeed = 5000;
-        @Getter private double intake = 2000;
+        @Getter private double intake = -5000;
         @Getter private double eject = -2000;
         @Getter private double slowIntake = -1000;
 
