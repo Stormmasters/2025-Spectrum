@@ -33,6 +33,8 @@ public class Shoulder extends Mechanism {
         @Getter private final double manualFeed = 70;
         @Getter private final double ninetyDegrees = 39;
 
+        @Getter @Setter private double floorAlgaeTest = 0;
+
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
 
@@ -120,6 +122,8 @@ public class Shoulder extends Mechanism {
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
+            builder.addDoubleProperty(
+                    "AlgaeTest", config::getFloorAlgaeTest, config::setFloorAlgaeTest);
         }
     }
 

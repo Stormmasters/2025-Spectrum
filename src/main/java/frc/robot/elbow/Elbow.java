@@ -24,6 +24,7 @@ public class Elbow extends Mechanism {
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = -45;
         @Getter private final double intake = -96;
+        @Getter @Setter private double tuneElbow = 0;
 
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -34,6 +35,8 @@ public class Elbow extends Mechanism {
         @Getter private final double velocityKp = 186; // 200 w/ 0.013 good
         @Getter private final double velocityKv = 0.018;
         @Getter private final double velocityKs = 0;
+
+        @Getter @Setter private double floorAlgaeTest = -92;
 
         // Need to add auto launching positions when auton is added
 
@@ -112,6 +115,10 @@ public class Elbow extends Mechanism {
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
+            builder.addDoubleProperty(
+                    "#AlgaeTest", config::getFloorAlgaeTest, config::setFloorAlgaeTest);
+            builder.addDoubleProperty(
+                    "#Tune Position Percent", config::getTuneElbow, config::setTuneElbow);
         }
     }
 

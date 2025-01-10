@@ -52,18 +52,21 @@ public class RobotStates {
     // public static final Trigger ampPrep = pilot.ampPrep_B; // .and(ampZone);
     // public static final Trigger noteToAmp = pilot.ampPrep_B.or(operator.noteToAmp_B, climbPrep);
 
-    public static final Trigger test = pilot.testB;
-    public static final Trigger testy = pilot.testY;
+    public static final Trigger lThreeAlgae = pilot.l3Algae;
+    public static final Trigger lTwoAlgae = pilot.l2Algae;
     public static final Trigger algaeFloor = pilot.algaeFloorY;
-    public static final Trigger home = pilot.homeShoulder_fB;
+    public static final Trigger lThreeCoral = pilot.l3Coral;
+    // public static final Trigger home = pilot.homeShoulder_fB;
 
     // public static final Trigger moveElbow = pilot.elbow_Y;
     // public static final Trigger homeElbow = pilot.homeElbow_fY;
 
-    // Robot States
+    // Robot States````
     // These are states that aren't directly tied to hardware or buttons, etc.
     // If they should be set by multiple Triggers do that in SetupStates()
     public static final SpectrumState coastMode = new SpectrumState("coast");
+    public static final Trigger coastOn = pilot.coastOn_dB;
+    public static final Trigger coastOff = pilot.coastOff_dA;
 
     // Setup any binding to set states
     public static void setupStates() {

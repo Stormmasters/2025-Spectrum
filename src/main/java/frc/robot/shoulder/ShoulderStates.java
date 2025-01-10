@@ -24,12 +24,15 @@ public class ShoulderStates {
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        coastOn.onTrue(log(coastMode()));
+        coastOff.onTrue(log(ensureBrakeMode()));
         // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
-        test.whileTrue(moveToPercentage(() -> 75));
-        testy.whileTrue(moveToPercentage(() -> 94));
+        lThreeAlgae.whileTrue(moveToPercentage(() -> 75));
+        lTwoAlgae.whileTrue(moveToPercentage(() -> 94));
         algaeFloor.whileTrue(moveToPercentage(() -> 0));
+        lThreeCoral.whileTrue(moveToPercentage(() -> 94));
         // home.whileTrue(home());
-        home.whileTrue(runShoulder(() -> -0.1));
+        // home.whileTrue(runShoulder(() -> -0.1));
     }
 
     // missing distance based Shoulder commands

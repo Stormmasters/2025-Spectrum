@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.elbow.Elbow.ElbowConfig;
 import frc.spectrumLib.Telemetry;
-import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
 public class ElbowStates {
@@ -24,9 +23,12 @@ public class ElbowStates {
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        test.whileTrue(elbow.moveToPercentage(() -> -74));
-        testy.whileTrue(elbow.moveToPercentage(() -> -97));
+        coastOn.onTrue(log(coastMode()));
+        coastOff.onTrue(log(ensureBrakeMode()));
+        lThreeAlgae.whileTrue(elbow.moveToPercentage(() -> -74));
+        lTwoAlgae.whileTrue(elbow.moveToPercentage(() -> -97));
         algaeFloor.whileTrue(elbow.moveToPercentage(() -> -92));
+        lThreeCoral.whileTrue(elbow.moveToPercentage(() -> -49));
         // test.whileTrue(log(runElbow(() -> .3)));
         // moveElbow.whileTrue(runElbow(() -> 0.1));
         // // home.whileTrue(home());
@@ -66,8 +68,9 @@ public class ElbowStates {
 
     // Tune value command
     public static Command tuneElbow() {
-        return elbow.moveToPercentage(new TuneValue("Tune Elbow", 0).getSupplier())
-                .withName("Elbow.Tune");
+        // return elbow.moveToPercentage(new TuneValue("Tune Elbow", 0).getSupplier())
+        //         .withName("Elbow.Tune");
+        return elbow.moveToPercentage(config::getTuneElbow);
     }
 
     // Log Command
