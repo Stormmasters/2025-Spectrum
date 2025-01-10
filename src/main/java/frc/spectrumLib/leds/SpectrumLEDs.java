@@ -37,7 +37,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         @Getter @Setter private int endingIndex = 0;
         @Getter @Setter private int port = 0;
         @Getter @Setter private int length;
-        // LED strip densitry
+        // LED strip density
         @Getter @Setter private Distance ledSpacing = Meters.of(1 / 120.0);
 
         public Config(String name, int length) {
@@ -146,7 +146,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     }
 
     /**
-     * LED Patter Stripe, takes in a double perecent and sets the first length number of LEDs to one
+     * LED Patter Stripe, takes in a double percent and sets the first length number of LEDs to one
      * color and the rest of the strip to another
      */
     public LEDPattern stripe(double percent, Color color1, Color color2) {

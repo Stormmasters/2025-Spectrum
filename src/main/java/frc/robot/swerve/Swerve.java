@@ -307,7 +307,6 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
                         Units.lbsToKilograms(150),
                         1,
                         moduleConfig,
-                        Units.inchesToMeters(26),
                         Units.inchesToMeters(
                                 26)); // TODO Fix this line and line above with real numbers
         AutoBuilder.configure(
