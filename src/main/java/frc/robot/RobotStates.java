@@ -66,7 +66,6 @@ public class RobotStates {
     // If they should be set by multiple Triggers do that in SetupStates()
     public static final SpectrumState coastMode = new SpectrumState("coast");
     public static final Trigger coastOn = pilot.coastOn_dB;
-    public static final Trigger coastOff = pilot.coastOff_dA;
 
     // Setup any binding to set states
     public static void setupStates() {

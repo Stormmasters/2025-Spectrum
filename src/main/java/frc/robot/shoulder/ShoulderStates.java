@@ -16,16 +16,17 @@ public class ShoulderStates {
     public static void setupDefaultCommand() {
         shoulder.setDefaultCommand(
                 log(shoulder.runHoldShoulder().ignoringDisable(true).withName("Shoulder.default")));
+        // shoulder.setDefaultCommand(
+        //     log(shoulder.runHoldShoulder().ignoringDisable(true).withName("Shoulder.default")));
     }
 
     public static void setStates() {
         // missing bindTriggers
         // intaking.whileTrue(log(subwoofer()));
 
-        coastMode.whileTrue(log(coastMode()));
+        coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        coastOn.onTrue(log(coastMode()));
-        coastOff.onTrue(log(ensureBrakeMode()));
+        coastOn.whileTrue(coastMode().withName("coastOn"));
         // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
         lThreeAlgae.whileTrue(moveToPercentage(() -> 75));
         lTwoAlgae.whileTrue(moveToPercentage(() -> 94));

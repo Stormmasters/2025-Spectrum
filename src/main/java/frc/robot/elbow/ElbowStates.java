@@ -21,10 +21,10 @@ public class ElbowStates {
         // missing bindTriggers
         // test.whileTrue(log(home()));
 
-        coastMode.whileTrue(log(coastMode()));
+        coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        coastOn.onTrue(log(coastMode()));
-        coastOff.onTrue(log(ensureBrakeMode()));
+        coastOn.whileTrue(coastMode().withName("EcoastOn"));
+        // coastOff.onTrue(log(ensureBrakeMode()));
         lThreeAlgae.whileTrue(elbow.moveToPercentage(() -> -74));
         lTwoAlgae.whileTrue(elbow.moveToPercentage(() -> -97));
         algaeFloor.whileTrue(elbow.moveToPercentage(() -> -92));
