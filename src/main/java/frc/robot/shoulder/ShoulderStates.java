@@ -3,6 +3,7 @@ package frc.robot.shoulder;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.spectrumLib.Telemetry;
@@ -24,8 +25,10 @@ public class ShoulderStates {
         // missing bindTriggers
         // intaking.whileTrue(log(subwoofer()));
 
-        coastMode.onTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.onTrue(
+                log(coastMode())
+                        .alongWith(new PrintCommand("this works again").ignoringDisable(true)));
+        coastMode.onFalse(log(ensureBrakeMode()));
         // coastOn.whileTrue(coastMode().withName("coastOn"));
         // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
         lThreeAlgae.whileTrue(moveToPercentage(() -> 75));
