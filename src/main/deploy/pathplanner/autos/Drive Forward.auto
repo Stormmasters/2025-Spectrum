@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center 1 Coral 1 Algae"
+            "pathName": "Drive Forward"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Possible Autos",
+  "folder": null,
   "choreoAuto": false
 }
