@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.0,
-        "y": 6.0
+        "x": 5.83,
+        "y": 4.02
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.25,
-        "y": 6.0
+        "x": 6.338102892902945,
+        "y": 4.233626834520921
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.0,
-        "y": 6.0
+        "x": 7.71,
+        "y": 4.8
       },
       "prevControl": {
-        "x": 3.75,
-        "y": 6.0
+        "x": 6.881070094071646,
+        "y": 4.476139162622712
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Middle Algae Rush",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
