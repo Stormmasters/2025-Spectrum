@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center 1 Coral 1 Algae"
+            "pathName": "5 Meter"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Possible Autos",
+  "folder": "Test Autos",
   "choreoAuto": false
 }

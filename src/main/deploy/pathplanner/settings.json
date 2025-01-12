@@ -6,11 +6,14 @@
     " Clean Side Preload-Source 5High ",
     "Clean Side Source Only 5High",
     "Middle Algae Rush",
+    "Test Paths",
     "Possible Paths"
   ],
   "autoFolders": [
     "Clean Side",
-    "Processor Side"
+    "Possible Autos",
+    "Processor Side",
+    "Test Autos"
   ],
   "defaultMaxVel": 6.0,
   "defaultMaxAccel": 6.0,
