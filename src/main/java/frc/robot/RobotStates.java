@@ -69,8 +69,8 @@ public class RobotStates {
 
     // Setup any binding to set states
     public static void setupStates() {
-        pilot.coastOn_dB.and(sim.not()).onTrue(coastMode.setTrue());
-        pilot.coastOff_dA.and(sim.not()).onTrue(coastMode.setFalse());
+        pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
+        pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
     }
 
     private RobotStates() {

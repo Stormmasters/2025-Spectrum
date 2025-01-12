@@ -24,9 +24,9 @@ public class ShoulderStates {
         // missing bindTriggers
         // intaking.whileTrue(log(subwoofer()));
 
-        coastMode.onTrue(log(coastMode()));
-        coastMode.onFalse(log(ensureBrakeMode()));
-        coastOn.whileTrue(coastMode().withName("coastOn"));
+        coastMode.onTrue(coastMode());
+        coastMode.onFalse(ensureBrakeMode());
+        // coastOn.whileTrue(coastMode().withName("coastOn"));
         // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
         lThreeAlgae.whileTrue(moveToPercentage(() -> 75));
         lTwoAlgae.whileTrue(moveToPercentage(() -> 94));
