@@ -6,6 +6,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,10 +51,10 @@ public class Shoulder extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double shoulderX = 0.55;
-        @Getter private double shoulderY = 0.1;
+        @Getter private double shoulderX = 0.8;
+        @Getter private double shoulderY = 0.9;
         @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual shoulder ratio
-        @Getter private double length = 0.4;
+        @Getter private double length = 0.5;
 
         public ShoulderConfig() {
             // super("Shoulder", 42, Rio.CANIVORE);
@@ -117,7 +118,7 @@ public class Shoulder extends Mechanism {
             builder.addDoubleProperty("Position", this::getPositionRotations, null);
             builder.addDoubleProperty(
                     "Position Percent",
-                    () -> getPositionRotations() / config.getMaxRotations(),
+                    () -> (getPositionRotations() / config.getMaxRotations()) * 100,
                     null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
@@ -211,12 +212,12 @@ public class Shoulder extends Mechanism {
                             config.shoulderY,
                             config.simRatio,
                             config.length,
-                            config.getMinRotations(),
-                            80, // config.getMaxRotation() * config.getRatio(),
-                            config.getMinRotations()),
+                            -90 + Units.rotationsToDegrees(config.getMinRotations()),
+                            -90 + Units.rotationsToDegrees(config.getMaxRotations()),
+                            -90),
                     mech,
                     shoulderMotorSim,
-                    config.getName());
+                    "1" + config.getName()); // added 1 to the name to create it first
         }
     }
 }

@@ -1,5 +1,7 @@
 package frc.spectrumLib.sim;
 
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +25,7 @@ public class ArmConfig {
     @Getter private double initMountX;
     @Getter private double initMountY;
     @Getter private double initMountAngle;
+    @Getter private Color8Bit color = new Color8Bit(Color.kBlue);
 
     public ArmConfig(
             double initialX,
@@ -41,6 +44,11 @@ public class ArmConfig {
         this.initialY = initialY;
         this.pivotX = initialX;
         this.pivotY = initialY;
+    }
+
+    public ArmConfig setColor(Color8Bit color) {
+        this.color = color;
+        return this;
     }
 
     public ArmConfig setMount(LinearSim sim) {

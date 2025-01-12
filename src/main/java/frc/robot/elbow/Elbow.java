@@ -6,10 +6,14 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
@@ -43,10 +47,10 @@ public class Elbow extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double elbowX = 0.65;
-        @Getter private double elbowY = 0.1;
+        @Getter private double elbowX = 0.8;
+        @Getter private double elbowY = 0.4;
         @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual elbow ratio
-        @Getter private double length = 0.4;
+        @Getter private double length = 0.3;
 
         public ElbowConfig() {
             // super("Elbow", 41, Rio.CANIVORE);
@@ -110,7 +114,7 @@ public class Elbow extends Mechanism {
             builder.addDoubleProperty("Position", this::getPositionRotations, null);
             builder.addDoubleProperty(
                     "Position Percent",
-                    () -> getPositionRotations() / config.getMaxRotations(),
+                    () -> (getPositionRotations() / config.getMaxRotations()) * 100,
                     null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
@@ -202,13 +206,15 @@ public class Elbow extends Mechanism {
         public ElbowSim(TalonFXSimState elbowMotorSim, Mechanism2d mech) {
             super(
                     new ArmConfig(
-                            config.elbowX,
-                            config.elbowY,
-                            config.simRatio,
-                            config.length,
-                            config.getMinRotations(),
-                            80, // config.getMaxRotation() * config.getRatio(),
-                            config.getMinRotations()),
+                                    config.elbowX,
+                                    config.elbowY,
+                                    config.simRatio,
+                                    config.length,
+                                    180 + Units.rotationsToDegrees(config.getMinRotations()),
+                                    180 + Units.rotationsToDegrees(config.getMaxRotations()),
+                                    180)
+                            .setColor(new Color8Bit(Color.kAqua))
+                            .setMount(Robot.getShoulder().getSim()),
                     mech,
                     elbowMotorSim,
                     config.getName());

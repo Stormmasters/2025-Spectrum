@@ -14,7 +14,7 @@ public class ElbowStates {
 
     public static void setupDefaultCommand() {
         elbow.setDefaultCommand(
-                elbow.runHoldElbow().ignoringDisable(true).withName("Elbow.default"));
+                log(elbow.runHoldElbow().ignoringDisable(true).withName("Elbow.default")));
     }
 
     public static void setStates() {

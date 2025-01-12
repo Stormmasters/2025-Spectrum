@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import lombok.Getter;
 
 public class ArmSim implements Mount, Mountable {
@@ -44,7 +42,7 @@ public class ArmSim implements Mount, Mountable {
                                 config.getLength(),
                                 config.getMinAngle(),
                                 5.0,
-                                new Color8Bit(Color.kBlue)));
+                                config.getColor()));
     }
 
     public void simulationPeriodic() {

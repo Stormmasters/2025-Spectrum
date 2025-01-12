@@ -130,13 +130,13 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             feeder = new Feeder(config.feeder);
             Timer.delay(canInitDelay);
-            intake = new Intake(config.intake);
-            Timer.delay(canInitDelay);
             launcher = new Launcher(config.launcher);
+            Timer.delay(canInitDelay);
+            shoulder = new Shoulder(config.shoulder);
             Timer.delay(canInitDelay);
             elbow = new Elbow(config.elbow);
             Timer.delay(canInitDelay);
-            shoulder = new Shoulder(config.shoulder);
+            intake = new Intake(config.intake);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
 

@@ -3,6 +3,7 @@ package frc.robot.intake;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
@@ -33,8 +34,8 @@ public class Intake extends Mechanism {
         @Getter private double velocityKs = 14;
 
         /* Sim Configs */
-        @Getter private double intakeX = 0.325;
-        @Getter private double intakeY = 0.05;
+        @Getter private double intakeX = 0.8;
+        @Getter private double intakeY = 0.2;
         @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {
@@ -120,7 +121,8 @@ public class Intake extends Mechanism {
         public IntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
             super(
                     new RollerConfig(config.wheelDiameter)
-                            .setPosition(config.intakeX, config.intakeY),
+                            .setPosition(config.intakeX, config.intakeY)
+                            .setMount(Robot.getElbow().getSim()),
                     mech,
                     rollerMotorSim,
                     config.getName());

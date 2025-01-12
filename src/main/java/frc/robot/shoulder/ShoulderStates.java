@@ -17,8 +17,6 @@ public class ShoulderStates {
     public static void setupDefaultCommand() {
         shoulder.setDefaultCommand(
                 log(shoulder.runHoldShoulder().ignoringDisable(true).withName("Shoulder.default")));
-        // shoulder.setDefaultCommand(
-        //     log(shoulder.runHoldShoulder().ignoringDisable(true).withName("Shoulder.default")));
     }
 
     public static void setStates() {
