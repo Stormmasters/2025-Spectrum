@@ -345,7 +345,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
                 new ModuleConfig(
                         config.getWheelRadius(),
                         config.getSpeedAt12Volts(),
-                        1,
+                        .8,
                         DCMotor.getKrakenX60(1),
                         config.getSlipCurrent(),
                         1);
@@ -366,7 +366,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
                                 AutoRequest.withSpeeds(
                                         speeds)), // Consumer of ChassisSpeeds to drive the robot
                 new PPHolonomicDriveController(
-                        new PIDConstants(5, 0, 0), new PIDConstants(5, 0, 0), Robot.kDefaultPeriod),
+                        new PIDConstants(100, 0, 0),
+                        new PIDConstants(5, 0, 0),
+                        Robot.kDefaultPeriod),
                 robotConfig,
                 () ->
                         DriverStation.getAlliance().orElse(Alliance.Blue)

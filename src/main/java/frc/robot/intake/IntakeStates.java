@@ -16,11 +16,11 @@ public class IntakeStates {
     public static final Trigger noNote = hasNote.not();
 
     public static void setupDefaultCommand() {
-        intake.setDefaultCommand(
-                log(
-                        intake.runVelocity(() -> config.getSlowIntake())
-                                .ignoringDisable(false)
-                                .withName("Intake.default")));
+        // intake.setDefaultCommand(
+        //         log(
+        //                 intake.runVelocity(() -> config.getSlowIntake())
+        //                         .ignoringDisable(false)
+        //                         .withName("Intake.default")));
         // intake.setDefaultCommand(
         //         log(intake.runStop().ignoringDisable(true).withName("Intake.default")));
     }

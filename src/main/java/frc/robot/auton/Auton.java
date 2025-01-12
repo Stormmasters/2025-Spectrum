@@ -38,12 +38,21 @@ public class Auton {
      */
     public void setupSelectors() {
 
-        pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
+        pathChooser.setDefaultOption(
+                "Do Nothing", Commands.print("Do Nothing Auto ran").withName(null));
         // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto"));
         // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto"));
 
-        pathChooser.addOption("Basic Front 4", spectrumAuton("Basic Front 4"));
-        pathChooser.addOption("Madtown", spectrumAuton("Madtown"));
+        pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
+
+        // pathChooser.addOption(
+        //         "Clean Side - Preplace 5High | Left",
+        //         SpectrumAuton("Clean Side - Preplace 5High", false)
+        //                 .withName("Clean Side - Preplace 5High"));
+        // pathChooser.addOption(
+        //         "Clean Side - Preplace 5High | Right",
+        //         SpectrumAuton("Clean Side - Preplace 5High", true)
+        //                 .withName("Clean Side - Preplace 5High"));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
@@ -77,8 +86,10 @@ public class Auton {
      * @param autoName the name of the autonomous routine to execute
      * @return a Command that represents the SpectrumAuton sequence
      */
-    public Command spectrumAuton(String autoName) {
-        return Commands.waitSeconds(0.01).andThen(new PathPlannerAuto(autoName));
+    public Command SpectrumAuton(String autoName, boolean flipped) {
+        return Commands.waitSeconds(0.01)
+                .andThen(new PathPlannerAuto(autoName, flipped))
+                .alongWith(Commands.print(autoName + " Auto ran"));
     }
 
     /**
