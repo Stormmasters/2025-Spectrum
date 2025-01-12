@@ -2,21 +2,29 @@
   "robotWidth": 0.93,
   "robotLength": 0.93,
   "holonomicMode": true,
-  "pathFolders": [],
-  "autoFolders": [],
-  "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 3.0,
+  "pathFolders": [
+    " Clean Side Preload-Source 5High ",
+    "Clean Side Source Only 5High",
+    "Middle Algae Rush",
+    "Possible Paths"
+  ],
+  "autoFolders": [
+    "Clean Side",
+    "Processor Side"
+  ],
+  "defaultMaxVel": 6.0,
+  "defaultMaxAccel": 6.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
-  "robotMass": 54.4311,
-  "robotMOI": 6.883,
+  "robotMass": 55.0,
+  "robotMOI": 7.0,
   "robotTrackwidth": 0.604,
-  "driveWheelRadius": 0.048,
-  "driveGearing": 5.35714285714,
+  "driveWheelRadius": 0.0550418,
+  "driveGearing": 7.363636364,
   "maxDriveSpeed": 6.0,
   "driveMotorType": "krakenX60FOC",
-  "driveCurrentLimit": 75.0,
+  "driveCurrentLimit": 35.0,
   "wheelCOF": 0.8,
   "flModuleX": 0.273,
   "flModuleY": 0.273,
@@ -28,5 +36,16 @@
   "brModuleY": -0.273,
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
-  "robotFeatures": []
+  "robotFeatures": [
+    "{\"name\":\"Triangle 1\",\"type\":\"line\",\"data\":{\"start\":{\"x\":-0.1,\"y\":0.2},\"end\":{\"x\":0.2,\"y\":0.0},\"strokeWidth\":0.02}}",
+    "{\"name\":\"Triangle 2\",\"type\":\"line\",\"data\":{\"start\":{\"x\":-0.1,\"y\":-0.2},\"end\":{\"x\":0.2,\"y\":0.0},\"strokeWidth\":0.02}}",
+    "{\"name\":\"Triangle 3\",\"type\":\"line\",\"data\":{\"start\":{\"x\":-0.1,\"y\":0.2},\"end\":{\"x\":-0.1,\"y\":-0.2},\"strokeWidth\":0.02}}",
+    "{\"name\":\"Inner Line 1\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.0,\"y\":0.0},\"end\":{\"x\":0.2,\"y\":0.0},\"strokeWidth\":0.02}}",
+    "{\"name\":\"Inner Line 2\",\"type\":\"line\",\"data\":{\"start\":{\"x\":-0.1,\"y\":-0.2},\"end\":{\"x\":0.0,\"y\":0.0},\"strokeWidth\":0.02}}",
+    "{\"name\":\"Inner Line 3\",\"type\":\"line\",\"data\":{\"start\":{\"x\":-0.1,\"y\":0.2},\"end\":{\"x\":0.0,\"y\":0.0},\"strokeWidth\":0.02}}",
+    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.05,\"y\":0.35},\"end\":{\"x\":0.13,\"y\":0.05},\"strokeWidth\":0.03}}",
+    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.14,\"y\":-0.35},\"end\":{\"x\":0.15,\"y\":-0.04},\"strokeWidth\":0.01}}",
+    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.09,\"y\":-0.35},\"end\":{\"x\":0.15,\"y\":-0.04},\"strokeWidth\":0.01}}",
+    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.03,\"y\":-0.35},\"end\":{\"x\":0.15,\"y\":-0.04},\"strokeWidth\":0.01}}"
+  ]
 }

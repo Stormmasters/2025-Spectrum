@@ -3,44 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Drive Forward.path
-        "x": 3.0,
-        "y": 6.0
+        "x": 7.71,
+        "y": 5.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.25,
-        "y": 6.0
-========
-        "x": 5.19,
-        "y": 2.85
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 6.19,
-        "y": 2.8499999999999996
->>>>>>>> origin/auton:src/main/deploy/pathplanner/paths/7 - Algae Rush.path
+        "x": 6.54863276047279,
+        "y": 5.797932875944241
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Drive Forward.path
-        "x": 4.0,
-        "y": 6.0
+        "x": 5.39810393258427,
+        "y": 5.783286516853933
       },
       "prevControl": {
-        "x": 3.75,
-        "y": 6.0
-========
-        "x": 7.71,
-        "y": 5.6
+        "x": 5.900975310499799,
+        "y": 5.8488538579681535
+      },
+      "nextControl": {
+        "x": 4.899211476315595,
+        "y": 5.718237971050688
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.78,
+        "y": 5.2
       },
       "prevControl": {
-        "x": 6.71,
-        "y": 5.6
->>>>>>>> origin/auton:src/main/deploy/pathplanner/paths/7 - Algae Rush.path
+        "x": 4.28119382022472,
+        "y": 5.6436797752809
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,17 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 119.99999999999999
   },
   "reversed": false,
   "folder": "Middle Algae Rush",
   "idealStartingState": {
     "velocity": 0,
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Drive Forward.path
     "rotation": 0.0
-========
-    "rotation": -59.99999999999999
->>>>>>>> origin/auton:src/main/deploy/pathplanner/paths/7 - Algae Rush.path
   },
   "useDefaultConstraints": true
 }

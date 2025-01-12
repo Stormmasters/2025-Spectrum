@@ -7,11 +7,7 @@
         {
           "type": "path",
           "data": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/autos/Drive Forward.auto
-            "pathName": "Drive Forward"
-========
-            "pathName": "2 Algae + 3 High"
->>>>>>>> origin/auton:src/main/deploy/pathplanner/autos/Co-op + 3 High.auto
+            "pathName": "Center 1 Coral 1 Algae"
           }
         }
       ]

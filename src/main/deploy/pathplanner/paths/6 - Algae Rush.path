@@ -3,44 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Drive Forward.path
-        "x": 3.0,
-        "y": 6.0
+        "x": 7.71,
+        "y": 5.2
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.25,
-        "y": 6.0
-========
-        "x": 5.19,
-        "y": 2.85
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 6.19,
-        "y": 2.8499999999999996
->>>>>>>> origin/auton:src/main/deploy/pathplanner/paths/7 - Algae Rush.path
+        "x": 7.506896337623104,
+        "y": 5.054229967657642
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Drive Forward.path
-        "x": 4.0,
-        "y": 6.0
+        "x": 6.713,
+        "y": 3.893539325842697
       },
       "prevControl": {
-        "x": 3.75,
-        "y": 6.0
-========
-        "x": 7.71,
-        "y": 5.6
+        "x": 7.284650848072167,
+        "y": 4.468284989568138
+      },
+      "nextControl": {
+        "x": 6.354464996819769,
+        "y": 3.533063278152813
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.19,
+        "y": 2.85
       },
       "prevControl": {
-        "x": 6.71,
-        "y": 5.6
->>>>>>>> origin/auton:src/main/deploy/pathplanner/paths/7 - Algae Rush.path
+        "x": 5.583985754339202,
+        "y": 3.0157351542580595
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,17 +58,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": "Middle Algae Rush",
   "idealStartingState": {
     "velocity": 0,
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Drive Forward.path
     "rotation": 0.0
-========
-    "rotation": -59.99999999999999
->>>>>>>> origin/auton:src/main/deploy/pathplanner/paths/7 - Algae Rush.path
   },
   "useDefaultConstraints": true
 }

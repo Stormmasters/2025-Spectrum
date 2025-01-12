@@ -3,44 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Drive Forward.path
-        "x": 3.0,
-        "y": 6.0
+        "x": 5.83,
+        "y": 4.02
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.25,
-        "y": 6.0
-========
-        "x": 5.19,
-        "y": 2.85
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 6.19,
-        "y": 2.8499999999999996
->>>>>>>> origin/auton:src/main/deploy/pathplanner/paths/7 - Algae Rush.path
+        "x": 6.338102892902945,
+        "y": 4.233626834520921
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Drive Forward.path
-        "x": 4.0,
-        "y": 6.0
-      },
-      "prevControl": {
-        "x": 3.75,
-        "y": 6.0
-========
         "x": 7.71,
-        "y": 5.6
+        "y": 4.8
       },
       "prevControl": {
-        "x": 6.71,
-        "y": 5.6
->>>>>>>> origin/auton:src/main/deploy/pathplanner/paths/7 - Algae Rush.path
+        "x": 6.881070094071646,
+        "y": 4.476139162622712
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,11 +48,7 @@
   "folder": "Middle Algae Rush",
   "idealStartingState": {
     "velocity": 0,
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Drive Forward.path
     "rotation": 0.0
-========
-    "rotation": -59.99999999999999
->>>>>>>> origin/auton:src/main/deploy/pathplanner/paths/7 - Algae Rush.path
   },
   "useDefaultConstraints": true
 }
