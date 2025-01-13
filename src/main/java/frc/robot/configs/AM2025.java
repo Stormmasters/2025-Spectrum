@@ -4,7 +4,7 @@ import frc.robot.Robot.Config;
 
 public class AM2025 extends Config {
 
-    // 2023.5 Off-season Robot
+    //Alpha Robot
 
     public AM2025() {
         super();

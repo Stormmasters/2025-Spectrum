@@ -10,12 +10,11 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * Contains various field dimensions and useful reference points. All units are in meters and poses
@@ -26,7 +25,9 @@ public class Field {
     @Getter private static final double halfLength = fieldLength / 2.0;
     @Getter public static final double fieldWidth = Units.inchesToMeters(317);
     @Getter private static final double halfWidth = fieldWidth / 2.0;
-    @Getter public static final double startingLineX =
+
+    @Getter
+    public static final double startingLineX =
             Units.inchesToMeters(299.438); // Measured from the inside of starting line
 
     public static class Processor {
