@@ -4,7 +4,7 @@ import static frc.robot.auton.Auton.*;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.crescendo.Field;
+import frc.reefscape.Field;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.swerve.Swerve;
@@ -34,12 +34,12 @@ public class RobotStates {
     public static final Trigger ejecting = pilot.eject_fA.or(operator.eject_fA);
 
     public static final Trigger ampZone =
-            swerve.inXzoneAlliance(0, Field.getHalfLengh() / 2)
+            swerve.inXzoneAlliance(0, Field.getHalfLength() / 2)
                     .and(swerve.inYzone(Field.getHalfWidth(), Field.getFieldWidth()));
 
     public static final Trigger score = pilot.score_RB;
 
-    public static final Trigger speakerZone = swerve.inXzoneAlliance(0, Field.getHalfLengh() - 1);
+    public static final Trigger speakerZone = swerve.inXzoneAlliance(0, Field.getHalfLength() - 1);
     public static final Trigger speakerPrep = pilot.launchPrep_RT.and(speakerZone);
 
     public static final Trigger subwooferPrep = pilot.subwooferPrep_fRT;

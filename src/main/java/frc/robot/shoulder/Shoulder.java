@@ -214,7 +214,7 @@ public class Shoulder extends Mechanism {
                             config.length,
                             -90 + Units.rotationsToDegrees(config.getMinRotations()),
                             -90 + Units.rotationsToDegrees(config.getMaxRotations()),
-                            -90),
+                            90),
                     mech,
                     shoulderMotorSim,
                     "1" + config.getName()); // added 1 to the name to create it first
