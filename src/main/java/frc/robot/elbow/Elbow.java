@@ -31,6 +31,7 @@ public class Elbow extends Mechanism {
         @Getter private final double floorIntake = -92;
         @Getter private final double l2Algae = -97;
         @Getter private final double l3Algae = -74;
+        @Getter private final double l2Coral = 0; // TODO: Find this value
         @Getter private final double l3Coral = -49;
         @Getter @Setter private double tuneElbow = 0;
 
@@ -123,8 +124,6 @@ public class Elbow extends Mechanism {
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
-            builder.addDoubleProperty(
-                    "#AlgaeTest", config::getFloorAlgaeTest, config::setFloorAlgaeTest);
             builder.addDoubleProperty(
                     "#Tune Position Percent", config::getTuneElbow, config::setTuneElbow);
         }

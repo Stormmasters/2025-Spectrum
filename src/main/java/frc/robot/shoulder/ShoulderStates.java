@@ -21,7 +21,6 @@ public class ShoulderStates {
 
     public static void setStates() {
         // missing bindTriggers
-        // intaking.whileTrue(log(subwoofer()));
 
         coastMode.onTrue(
                 log(coastMode())
@@ -30,9 +29,10 @@ public class ShoulderStates {
         // coastOn.whileTrue(coastMode().withName("coastOn"));
         // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
         algaeFloor.whileTrue(moveToPercentage(config::getFloorIntake));
-        lTwoAlgae.whileTrue(moveToPercentage(config::getL2Algae));
-        lThreeAlgae.whileTrue(moveToPercentage(config::getL3Algae));
-        lThreeCoral.whileTrue(moveToPercentage(config::getL3Coral));
+        lTwoAlgae.whileTrue(lTwoAlgae());
+        lThreeAlgae.whileTrue(lThreeAlgae());
+        lTwoCoral.whileTrue(lTwoCoral());
+        lThreeCoral.whileTrue(lThreeCoral());
         // home.whileTrue(home());
         // home.whileTrue(runShoulder(() -> -0.1));
     }
@@ -60,6 +60,22 @@ public class ShoulderStates {
     }
 
     /* Scoring positions */
+
+    public static Command lTwoAlgae() {
+        return shoulder.moveToPercentage(config::getL2Algae).withName("Shoulder.lTwoAlgae");
+    }
+
+    public static Command lThreeAlgae() {
+        return shoulder.moveToPercentage(config::getL3Algae).withName("Shoulder.lThreeAlgae");
+    }
+
+    public static Command lTwoCoral() {
+        return shoulder.moveToPercentage(config::getL2Coral).withName("Shoulder.lTwoCoral");
+    }
+
+    public static Command lThreeCoral() {
+        return shoulder.moveToPercentage(config::getL3Coral).withName("Shoulder.lThreeCoral");
+    }
 
     // missing auton Shoulder commands, add when auton is added
 

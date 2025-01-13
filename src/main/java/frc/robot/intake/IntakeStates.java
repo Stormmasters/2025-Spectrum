@@ -3,7 +3,6 @@ package frc.robot.intake;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.intake.Intake.IntakeConfig;
 import frc.spectrumLib.Telemetry;
@@ -11,9 +10,6 @@ import frc.spectrumLib.Telemetry;
 public class IntakeStates {
     private static Intake intake = Robot.getIntake();
     private static IntakeConfig config = Robot.getConfig().intake;
-
-    public static final Trigger hasNote = intake.hasNote;
-    public static final Trigger noNote = hasNote.not();
 
     public static void setupDefaultCommand() {
         // intake.setDefaultCommand(

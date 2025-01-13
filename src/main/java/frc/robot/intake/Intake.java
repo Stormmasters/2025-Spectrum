@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
-import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
@@ -56,8 +55,6 @@ public class Intake extends Mechanism {
 
     private IntakeConfig config;
     private RollerSim sim;
-
-    protected SpectrumState hasNote = new SpectrumState("IntakeHasNote");
 
     public Intake(IntakeConfig config) {
         super(config);

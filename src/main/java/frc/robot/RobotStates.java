@@ -38,22 +38,14 @@ public class RobotStates {
 
     public static final Trigger score = pilot.score_RB;
 
-    public static final Trigger speakerZone = swerve.inXzoneAlliance(0, Field.getHalfLength() - 1);
-    public static final Trigger speakerPrep = pilot.launchPrep_RT.and(speakerZone);
-
-    public static final Trigger subwooferPrep = pilot.subwooferPrep_fRT;
-    public static final Trigger feedPrep = pilot.launchPrep_RT.and(speakerZone.not());
-
     public static final Trigger climbPrep = pilot.climbPrep_RDP;
     public static final Trigger climbRoutine =
             pilot.climbRoutine_start; // TODO: Add a check for hooks up
 
-    // public static final Trigger ampPrep = pilot.ampPrep_B; // .and(ampZone);
-    // public static final Trigger noteToAmp = pilot.ampPrep_B.or(operator.noteToAmp_B, climbPrep);
-
-    public static final Trigger lThreeAlgae = pilot.l3Algae;
-    public static final Trigger lTwoAlgae = pilot.l2Algae;
     public static final Trigger algaeFloor = pilot.algaeFloorY;
+    public static final Trigger lTwoAlgae = pilot.l2Algae;
+    public static final Trigger lThreeAlgae = pilot.l3Algae;
+    public static final Trigger lTwoCoral = pilot.l2Coral;
     public static final Trigger lThreeCoral = pilot.l3Coral;
     // public static final Trigger home = pilot.homeShoulder_fB;
 

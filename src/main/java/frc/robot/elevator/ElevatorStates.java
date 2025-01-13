@@ -21,8 +21,6 @@ public class ElevatorStates {
 
     /* Check Elevator States */
     // Is Amp Height
-    public static final Trigger isAtAmp =
-            elevator.atPercentage(config::getAmp, config::getTolerance);
     public static final Trigger isUp =
             elevator.atPercentage(config::getElevatorUpHeight, config::getTolerance);
     public static final Trigger isHome =
@@ -61,12 +59,6 @@ public class ElevatorStates {
 
     private static Command fullExtend() {
         return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
-    }
-
-    private static Command amp() {
-        return elevator.moveToRotations(config::getAmp)
-                .alongWith(elevator.checkMaxCurrent(() -> 100))
-                .withName("Elevator.amp");
     }
 
     private static Command home() {

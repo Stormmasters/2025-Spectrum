@@ -25,9 +25,10 @@ public class ElbowStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         // coastOff.onTrue(log(ensureBrakeMode()));
         algaeFloor.whileTrue(elbow.moveToPercentage(config::getFloorIntake));
-        lTwoAlgae.whileTrue(elbow.moveToPercentage(config::getL2Algae));
-        lThreeAlgae.whileTrue(elbow.moveToPercentage(config::getL3Algae));
-        lThreeCoral.whileTrue(elbow.moveToPercentage(config::getL3Coral));
+        lTwoAlgae.whileTrue(lTwoAlgae());
+        lThreeAlgae.whileTrue(lThreeAlgae());
+        lTwoCoral.whileTrue(lTwoCoral());
+        lThreeCoral.whileTrue(lThreeCoral());
         // test.whileTrue(log(runElbow(() -> .3)));
         // moveElbow.whileTrue(runElbow(() -> 0.1));
         // // home.whileTrue(home());
@@ -45,6 +46,23 @@ public class ElbowStates {
 
     public static Command home() {
         return elbow.moveToPercentage(config::getHome).withName("Elbow.home");
+    }
+
+    /* Scoring positions */
+    public static Command lTwoAlgae() {
+        return elbow.moveToPercentage(config::getL2Algae).withName("Elbow.lTwoAlgae");
+    }
+
+    public static Command lThreeAlgae() {
+        return elbow.moveToPercentage(config::getL3Algae).withName("Elbow.lThreeAlgae");
+    }
+
+    public static Command lTwoCoral() {
+        return elbow.moveToPercentage(config::getL2Coral).withName("Elbow.lTwoCoral");
+    }
+
+    public static Command lThreeCoral() {
+        return elbow.moveToPercentage(config::getL3Coral).withName("Elbow.lThreeCoral");
     }
 
     // missing auton Elbow commands, add when auton is added

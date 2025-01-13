@@ -25,7 +25,6 @@ public class Elevator extends Mechanism {
         /* Elevator positions in rotations */
         @Getter @Setter private double fullExtend = maxRotations;
         @Getter private double home = minRotations;
-        @Getter private double amp = 15;
 
         @Getter private double tolerance = 0.95;
         @Getter private double elevatorUpHeight = 5;

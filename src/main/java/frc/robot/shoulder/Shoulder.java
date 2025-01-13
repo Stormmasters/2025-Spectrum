@@ -36,8 +36,8 @@ public class Shoulder extends Mechanism {
         @Getter private final double ninetyDegrees = 39;
         @Getter private final double l2Algae = 94;
         @Getter private final double l3Algae = 75;
+        @Getter private final double l2Coral = 0; // TODO: Find this value
         @Getter private final double l3Coral = 94;
-
 
         @Getter @Setter private double floorAlgaeTest = 0;
 
@@ -128,8 +128,6 @@ public class Shoulder extends Mechanism {
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
-            builder.addDoubleProperty(
-                    "AlgaeTest", config::getFloorAlgaeTest, config::setFloorAlgaeTest);
         }
     }
 
