@@ -19,12 +19,11 @@ import java.util.Map;
  */
 
 public enum Rio {
-    AM_2024("032B1F69", false),
-    PM_2024("032B4BB3", true),
     FM_2024("032B1F69", true),
     // PHOTON_2024("0329AD07", true),
     SUMMER_2024("00", false), // TODO:GET Summer Serial Number
     FM_20235("0329AD07", true),
+    AM2025("0329AD07", true),
     SIM("", true), // e.g. test default or simulation
     UNKNOWN(null, true);
 

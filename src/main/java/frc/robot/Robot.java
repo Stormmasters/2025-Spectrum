@@ -4,32 +4,23 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.amptrap.AmpTrap;
-import frc.robot.amptrap.AmpTrap.AmpTrapConfig;
 import frc.robot.auton.Auton;
 import frc.robot.climber.Climber;
 import frc.robot.climber.Climber.ClimberConfig;
+import frc.robot.configs.AM2025;
 import frc.robot.configs.FM20235;
-import frc.robot.configs.FM2024;
-import frc.robot.configs.PM2024;
 import frc.robot.elbow.Elbow;
 import frc.robot.elbow.Elbow.ElbowConfig;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorConfig;
-import frc.robot.feeder.Feeder;
-import frc.robot.feeder.Feeder.FeederConfig;
 import frc.robot.intake.Intake;
 import frc.robot.intake.Intake.IntakeConfig;
-import frc.robot.launcher.Launcher;
-import frc.robot.launcher.Launcher.LauncherConfig;
 import frc.robot.leds.LedFull;
 import frc.robot.leds.LedFull.LedFullConfig;
 import frc.robot.operator.Operator;
 import frc.robot.operator.Operator.OperatorConfig;
 import frc.robot.pilot.Pilot;
 import frc.robot.pilot.Pilot.PilotConfig;
-import frc.robot.pivot.Pivot;
-import frc.robot.pivot.Pivot.PivotConfig;
 import frc.robot.shoulder.Shoulder;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.robot.swerve.Swerve;
@@ -55,11 +46,7 @@ public class Robot extends SpectrumRobot {
     public static class Config {
         public SwerveConfig swerve = new SwerveConfig();
         public IntakeConfig intake = new IntakeConfig();
-        public FeederConfig feeder = new FeederConfig();
         public ElevatorConfig elevator = new ElevatorConfig();
-        public AmpTrapConfig ampTrap = new AmpTrapConfig();
-        public PivotConfig pivot = new PivotConfig();
-        public LauncherConfig launcher = new LauncherConfig();
         public ClimberConfig climber = new ClimberConfig();
         public LedFullConfig leds = new LedFullConfig();
         public PilotConfig pilot = new PilotConfig();
@@ -69,16 +56,12 @@ public class Robot extends SpectrumRobot {
     }
 
     @Getter private static Swerve swerve;
-    @Getter private static AmpTrap ampTrap;
     @Getter private static Climber climber;
     @Getter private static Elevator elevator;
-    @Getter private static Feeder feeder;
     @Getter private static Intake intake;
-    @Getter private static Launcher launcher;
     @Getter private static LedFull leds;
     @Getter private static Operator operator;
     @Getter private static Pilot pilot;
-    @Getter private static Pivot pivot;
     @Getter private static VisionSystem visionSystem;
     @Getter private static Auton auton;
     @Getter private static Elbow elbow;
@@ -94,11 +77,8 @@ public class Robot extends SpectrumRobot {
 
             /** Set up the config */
             switch (Rio.id) {
-                case FM_2024:
-                    config = new FM2024();
-                    break;
-                case PM_2024:
-                    config = new PM2024();
+                case AM2025:
+                    config = new AM2025();
                     break;
                 case FM_20235:
                     config = new FM20235();
@@ -122,15 +102,7 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             elevator = new Elevator(config.elevator);
             Timer.delay(canInitDelay);
-            pivot = new Pivot(config.pivot);
-            Timer.delay(canInitDelay);
-            ampTrap = new AmpTrap(config.ampTrap);
-            Timer.delay(canInitDelay);
             climber = new Climber(config.climber);
-            Timer.delay(canInitDelay);
-            feeder = new Feeder(config.feeder);
-            Timer.delay(canInitDelay);
-            launcher = new Launcher(config.launcher);
             Timer.delay(canInitDelay);
             shoulder = new Shoulder(config.shoulder);
             Timer.delay(canInitDelay);
