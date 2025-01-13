@@ -28,6 +28,10 @@ public class Elbow extends Mechanism {
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = -45;
         @Getter private final double intake = -96;
+        @Getter private final double floorIntake = -92;
+        @Getter private final double l2Algae = -97;
+        @Getter private final double l3Algae = -74;
+        @Getter private final double l3Coral = -49;
         @Getter @Setter private double tuneElbow = 0;
 
         /* Elbow config settings */

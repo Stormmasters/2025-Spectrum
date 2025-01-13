@@ -26,17 +26,22 @@ public class Shoulder extends Mechanism {
         // Positions set as percentage of shoulder
         @Getter private final int initializedPosition = 20;
 
-        /* Elbow positions in percentage of max rotation || 0 is horizontal */
+        /* Shoulder positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double score = 65;
         @Getter private final double climbHome = 3;
         @Getter private final double home = 1;
         @Getter private final double intake = 50;
+        @Getter private final double floorIntake = 0;
         @Getter private final double manualFeed = 70;
         @Getter private final double ninetyDegrees = 39;
+        @Getter private final double l2Algae = 94;
+        @Getter private final double l3Algae = 75;
+        @Getter private final double l3Coral = 94;
+
 
         @Getter @Setter private double floorAlgaeTest = 0;
 
-        /* Elbow config settings */
+        /* Shoulder config settings */
         @Getter private final double zeroSpeed = -0.1;
 
         @Getter @Setter private boolean shortFeed = false;
@@ -147,10 +152,10 @@ public class Shoulder extends Mechanism {
                         },
                         () -> false, // isFinished
                         this) // requirement
-                .withName("Shoulder.zeroElbowRoutine");
+                .withName("Shoulder.zeroShoulderRoutine");
     }
 
-    /** Holds the position of the Elbow. */
+    /** Holds the position of the Shoulder. */
     public Command runHoldShoulder() {
         return new Command() {
             double holdPosition = 0; // rotations
@@ -214,7 +219,7 @@ public class Shoulder extends Mechanism {
                             config.length,
                             -90 + Units.rotationsToDegrees(config.getMinRotations()),
                             -90 + Units.rotationsToDegrees(config.getMaxRotations()),
-                            90),
+                            -90),
                     mech,
                     shoulderMotorSim,
                     "1" + config.getName()); // added 1 to the name to create it first

@@ -35,7 +35,7 @@ public class Intake extends Mechanism {
 
         /* Sim Configs */
         @Getter private double intakeX = 0.8;
-        @Getter private double intakeY = 0.2;
+        @Getter private double intakeY = 0.8;
         @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {

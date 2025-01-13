@@ -22,9 +22,8 @@ public class RobotStates {
      * when entering the state Use onFalse/whileFalse to run a command when leaving the state
      * RobotType Triggers
      */
-    public static final Trigger pm = new Trigger(() -> Rio.id == Rio.PM_2024);
+    public static final Trigger am = new Trigger(() -> Rio.id == Rio.AM_2025);
 
-    public static final Trigger am = new Trigger(() -> Rio.id == Rio.AM_2024);
     public static final Trigger fm = new Trigger(() -> Rio.id == Rio.FM_2024);
     public static final Trigger sim = new Trigger(RobotBase::isSimulation);
 

@@ -77,7 +77,7 @@ public class Robot extends SpectrumRobot {
 
             /** Set up the config */
             switch (Rio.id) {
-                case AM2025:
+                case AM_2025:
                     config = new AM2025();
                     break;
                 case FM_20235:

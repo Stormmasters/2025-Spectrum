@@ -4,7 +4,7 @@ import frc.robot.Robot.Config;
 
 public class AM2025 extends Config {
 
-    //Alpha Robot
+    // Alpha Robot
 
     public AM2025() {
         super();

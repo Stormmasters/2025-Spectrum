@@ -24,10 +24,10 @@ public class ElbowStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         // coastOff.onTrue(log(ensureBrakeMode()));
-        lThreeAlgae.whileTrue(elbow.moveToPercentage(() -> -74));
-        lTwoAlgae.whileTrue(elbow.moveToPercentage(() -> -97));
-        algaeFloor.whileTrue(elbow.moveToPercentage(() -> -92));
-        lThreeCoral.whileTrue(elbow.moveToPercentage(() -> -49));
+        algaeFloor.whileTrue(elbow.moveToPercentage(config::getFloorIntake));
+        lTwoAlgae.whileTrue(elbow.moveToPercentage(config::getL2Algae));
+        lThreeAlgae.whileTrue(elbow.moveToPercentage(config::getL3Algae));
+        lThreeCoral.whileTrue(elbow.moveToPercentage(config::getL3Coral));
         // test.whileTrue(log(runElbow(() -> .3)));
         // moveElbow.whileTrue(runElbow(() -> 0.1));
         // // home.whileTrue(home());
