@@ -24,6 +24,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Auto Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/LeftView": {
         "window": {
           "visible": true

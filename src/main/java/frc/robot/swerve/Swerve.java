@@ -8,7 +8,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -17,7 +16,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
@@ -341,22 +339,15 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
 
-        ModuleConfig moduleConfig =
-                new ModuleConfig(
-                        config.getWheelRadius(),
-                        config.getSpeedAt12Volts(),
-                        .8,
-                        DCMotor.getKrakenX60(1),
-                        config.getSlipCurrent(),
-                        1);
+        RobotConfig robotConfig = null; // Initialize with null in case of exception
+        try {
+            robotConfig =
+                    RobotConfig.fromGUISettings(); // Takes config from Robot Config on Pathplanner
+            // Settings
+        } catch (Exception e) {
+            e.printStackTrace(); // Fallback to a default configuration
+        }
 
-        RobotConfig robotConfig = // Have directly call this to avoid name space problem
-                new RobotConfig(
-                        Units.lbsToKilograms(150),
-                        1,
-                        moduleConfig,
-                        Units.inchesToMeters(
-                                26)); // TODO Fix this line and line above with real numbers
         AutoBuilder.configure(
                 () -> this.getState().Pose, // Supplier of current robot pose
                 this::resetPose, // Consumer for seeding pose against auto
@@ -366,9 +357,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
                                 AutoRequest.withSpeeds(
                                         speeds)), // Consumer of ChassisSpeeds to drive the robot
                 new PPHolonomicDriveController(
-                        new PIDConstants(100, 0, 0),
-                        new PIDConstants(5, 0, 0),
-                        Robot.kDefaultPeriod),
+                        new PIDConstants(5, 0, 0), new PIDConstants(5, 0, 0), Robot.kDefaultPeriod),
                 robotConfig,
                 () ->
                         DriverStation.getAlliance().orElse(Alliance.Blue)

@@ -45,14 +45,14 @@ public class Auton {
 
         pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
 
-        // pathChooser.addOption(
-        //         "Clean Side - Preplace 5High | Left",
-        //         SpectrumAuton("Clean Side - Preplace 5High", false)
-        //                 .withName("Clean Side - Preplace 5High"));
-        // pathChooser.addOption(
-        //         "Clean Side - Preplace 5High | Right",
-        //         SpectrumAuton("Clean Side - Preplace 5High", true)
-        //                 .withName("Clean Side - Preplace 5High"));
+        pathChooser.addOption(
+                "Clean Side - Preplace 5High | Left",
+                SpectrumAuton("Clean Side - Preplace 5High", false)
+                        .withName("Clean Side - Preplace 5High"));
+        pathChooser.addOption(
+                "Clean Side - Preplace 5High | Right",
+                SpectrumAuton("Clean Side - Preplace 5High", true)
+                        .withName("Clean Side - Preplace 5High"));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
