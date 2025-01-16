@@ -29,7 +29,7 @@ public class ShoulderStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         // coastOn.whileTrue(coastMode().withName("coastOn"));
         // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
-        // lThreeAlgae.whileTrue(moveToPercentage(() -> 75));
+        lThreeAlgae.whileTrue(moveToPercentage(() -> 75));
         lTwoAlgae.whileTrue(moveToPercentage(() -> 94));
         algaeFloor.whileTrue(moveToPercentage(() -> 0));
         lThreeCoral.whileTrue(moveToPercentage(() -> 94));

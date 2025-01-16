@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
+import frc.spectrumLib.util.Util;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,8 +27,7 @@ public class Pilot extends Gamepad {
     // public final Trigger shoulder_B = B.and(noFn, teleop);
     // public final Trigger elbow_Y = Y.and(noFn, teleop);
     // public final Trigger homeElbow_fY = Y.and(fn, teleop);
-    // public final Trigger l3Algae = B.and(noFn, teleop);
-    public final Trigger autoTest = B.and(noFn, teleop);
+    public final Trigger l3Algae = B.and(noFn, teleop);
     public final Trigger l2Algae = Y.and(fn, teleop);
     public final Trigger algaeFloorY = Y.and(noFn, teleop);
     public final Trigger l3Coral = B.and(fn, teleop);
@@ -96,8 +96,8 @@ public class Pilot extends Gamepad {
         this.config = config;
         Robot.add(this);
 
-        driving = leftStickX.or(leftStickY);
-        steer = rightStickX.or(rightStickY);
+        driving = Util.teleop.and(leftStickX.or(leftStickY));
+        steer = Util.teleop.and(rightStickX.or(rightStickY));
 
         Telemetry.print("Pilot Subsystem Initialized: ");
     }

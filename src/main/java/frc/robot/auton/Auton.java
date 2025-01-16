@@ -38,21 +38,18 @@ public class Auton {
      */
     public void setupSelectors() {
 
-        pathChooser.setDefaultOption(
-                "Do Nothing", Commands.print("Do Nothing Auto ran").withName(null));
+        pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
         // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto"));
         // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto"));
 
-        pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
+        pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
 
         pathChooser.addOption(
                 "Clean Side - Preplace 5High | Left",
-                SpectrumAuton("Clean Side - Preplace 5High", false)
-                        .withName("Clean Side - Preplace 5High"));
+                SpectrumAuton("Clean Side - Preplace 5High", false));
         pathChooser.addOption(
                 "Clean Side - Preplace 5High | Right",
-                SpectrumAuton("Clean Side - Preplace 5High", true)
-                        .withName("Clean Side - Preplace 5High"));
+                SpectrumAuton("Clean Side - Preplace 5High", true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
@@ -68,7 +65,6 @@ public class Auton {
         if (autonCommand != null) {
             autonCommand.schedule();
             startAutonTimer();
-            System.out.println("autoCommand has been scheduled");
         } else {
             Telemetry.print("No Auton Command Found");
         }
@@ -89,13 +85,14 @@ public class Auton {
      */
     public Command SpectrumAuton(String autoName, boolean flipped) {
         Command autoCommand = new PathPlannerAuto(autoName, flipped);
-        return Commands.waitSeconds(0.01)
-                .andThen(autoCommand)
-                .alongWith(
-                        Commands.print(
-                                autoName
-                                        + " Auto ran\nRequirements: "
-                                        + autoCommand.getRequirements()));
+        return (Commands.waitSeconds(0.01)
+                        .andThen(autoCommand)
+                        .alongWith(
+                                Commands.print(
+                                        autoName
+                                                + " Auto ran\nRequirements: "
+                                                + autoCommand.getRequirements())))
+                .withName(autoName);
     }
 
     /**

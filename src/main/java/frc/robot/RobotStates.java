@@ -2,7 +2,6 @@ package frc.robot;
 
 import static frc.robot.auton.Auton.*;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.crescendo.Field;
@@ -53,8 +52,7 @@ public class RobotStates {
     // public static final Trigger ampPrep = pilot.ampPrep_B; // .and(ampZone);
     // public static final Trigger noteToAmp = pilot.ampPrep_B.or(operator.noteToAmp_B, climbPrep);
 
-    // public static final Trigger lThreeAlgae = pilot.l3Algae;
-    public static final Trigger autoTest = pilot.autoTest;
+    public static final Trigger lThreeAlgae = pilot.l3Algae;
     public static final Trigger lTwoAlgae = pilot.l2Algae;
     public static final Trigger algaeFloor = pilot.algaeFloorY;
     public static final Trigger lThreeCoral = pilot.l3Coral;
@@ -73,7 +71,6 @@ public class RobotStates {
     public static void setupStates() {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
-        pilot.autoTest.onTrue(new PathPlannerAuto("Drive Forward", false));
     }
 
     private RobotStates() {
