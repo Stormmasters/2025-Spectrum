@@ -25,8 +25,9 @@ public class Pilot extends Gamepad {
     // public final Trigger homeShoulder_fB = B.and(fn, teleop);
     // public final Trigger shoulder_B = B.and(noFn, teleop);
     // public final Trigger elbow_Y = Y.and(noFn, teleop);
-    //    public final Trigger homeElbow_fY = Y.and(fn, teleop);
-    public final Trigger l3Algae = B.and(noFn, teleop);
+    // public final Trigger homeElbow_fY = Y.and(fn, teleop);
+    // public final Trigger l3Algae = B.and(noFn, teleop);
+    public final Trigger autoTest = B.and(noFn, teleop);
     public final Trigger l2Algae = Y.and(fn, teleop);
     public final Trigger algaeFloorY = Y.and(noFn, teleop);
     public final Trigger l3Coral = B.and(fn, teleop);

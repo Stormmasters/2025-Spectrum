@@ -68,6 +68,7 @@ public class Auton {
         if (autonCommand != null) {
             autonCommand.schedule();
             startAutonTimer();
+            System.out.println("autoCommand has been scheduled");
         } else {
             Telemetry.print("No Auton Command Found");
         }
@@ -87,9 +88,14 @@ public class Auton {
      * @return a Command that represents the SpectrumAuton sequence
      */
     public Command SpectrumAuton(String autoName, boolean flipped) {
+        Command autoCommand = new PathPlannerAuto(autoName, flipped);
         return Commands.waitSeconds(0.01)
-                .andThen(new PathPlannerAuto(autoName, flipped))
-                .alongWith(Commands.print(autoName + " Auto ran"));
+                .andThen(autoCommand)
+                .alongWith(
+                        Commands.print(
+                                autoName
+                                        + " Auto ran\nRequirements: "
+                                        + autoCommand.getRequirements()));
     }
 
     /**
