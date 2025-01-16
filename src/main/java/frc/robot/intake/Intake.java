@@ -33,8 +33,8 @@ public class Intake extends Mechanism {
         @Getter private double velocityKs = 14;
 
         /* Sim Configs */
-        @Getter private double intakeX = 0.8;
-        @Getter private double intakeY = 0.8;
+        @Getter private double intakeX = 0.1; // 0.5; // relative to elbow at 0 degrees
+        @Getter private double intakeY = 0.5; // relative to elbow at 0 degrees
         @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {

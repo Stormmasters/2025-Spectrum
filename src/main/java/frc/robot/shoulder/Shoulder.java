@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
@@ -27,19 +28,22 @@ public class Shoulder extends Mechanism {
         @Getter private final int initializedPosition = 20;
 
         /* Shoulder positions in percentage of max rotation || 0 is horizontal */
-        @Getter private final double score = 65;
-        @Getter private final double climbHome = 3;
-        @Getter private final double home = 1;
-        @Getter private final double intake = 50;
-        @Getter private final double floorIntake = 0;
-        @Getter private final double manualFeed = 70;
-        @Getter private final double ninetyDegrees = 39;
-        @Getter private final double l2Algae = 94;
-        @Getter private final double l3Algae = 75;
-        @Getter private final double l2Coral = 0; // TODO: Find this value
-        @Getter private final double l3Coral = 94;
-
-        @Getter @Setter private double floorAlgaeTest = 0;
+        // TODO: Find shoulder positions
+        @Getter private final double score = 100 - 65;
+        @Getter private final double climbHome = 100 - 3;
+        @Getter private final double home = 100 - 1;
+        @Getter private final double intake = 44; // 100 - 50; // (FM20235)
+        @Getter private final double floorIntake = 99;
+        @Getter private final double manualFeed = 100 - 70;
+        @Getter private final double ninetyDegrees = 100 - 39;
+        @Getter private final double l1 = 63;
+        @Getter private final double l2Algae = 90; // 100 - 94; // (FM20235)
+        @Getter private final double l3Algae = 90; // 100 - 75; // (FM20235)
+        @Getter private final double l2Coral = 90; // 0; // (FM20235)
+        @Getter private final double l3Coral = 90; // 100 - 94; // (FM20235)
+        @Getter private final double l4 = 57;
+        @Getter private final double barge = 57;
+        @Getter @Setter private double tuneShoulder = 0;
 
         /* Shoulder config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -57,13 +61,12 @@ public class Shoulder extends Mechanism {
 
         /* Sim properties */
         @Getter private double shoulderX = 0.8;
-        @Getter private double shoulderY = 0.9;
+        @Getter private double shoulderY = 0.7;
         @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual shoulder ratio
-        @Getter private double length = 0.5;
+        @Getter private double length = 0.3;
 
         public ShoulderConfig() {
-            // super("Shoulder", 42, Rio.CANIVORE);
-            super("Shoulder", 42, Rio.RIO_CANBUS);
+            super("Shoulder", 42, Rio.RIO_CANBUS); // Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);
@@ -71,7 +74,7 @@ public class Shoulder extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(0, 66.0063476563); // .96
+            configMinMaxRotations(0, 132.0126953); // 66.0063476563); // .96
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
@@ -128,6 +131,8 @@ public class Shoulder extends Mechanism {
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
+            builder.addDoubleProperty(
+                    "#Tune Position Percent", config::getTuneShoulder, config::setTuneShoulder);
         }
     }
 
@@ -211,16 +216,17 @@ public class Shoulder extends Mechanism {
         public ShoulderSim(TalonFXSimState shoulderMotorSim, Mechanism2d mech) {
             super(
                     new ArmConfig(
-                            config.shoulderX,
-                            config.shoulderY,
-                            config.simRatio,
-                            config.length,
-                            -90 + Units.rotationsToDegrees(config.getMinRotations()),
-                            -90 + Units.rotationsToDegrees(config.getMaxRotations()),
-                            -90),
+                                    config.shoulderX,
+                                    config.shoulderY,
+                                    config.simRatio,
+                                    config.length,
+                                    225 - Units.rotationsToDegrees(config.getMaxRotations()) - 90,
+                                    225 - Units.rotationsToDegrees(config.getMinRotations()) - 90,
+                                    -45 - 90)
+                            .setMount(Robot.getElevator().getSim()),
                     mech,
                     shoulderMotorSim,
-                    "1" + config.getName()); // added 1 to the name to create it first
+                    "3" + config.getName()); // added 3 to the name to create it third
         }
     }
 }

@@ -23,8 +23,12 @@ public class Elevator extends Mechanism {
         @Getter private double minRotations = 0;
 
         /* Elevator positions in rotations */
+        // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations;
         @Getter private double home = minRotations;
+        @Getter private final double l3 = 10; // made up for testing
+        @Getter private final double l4 = 0;
+        @Getter private final double barge = 0;
 
         @Getter private double tolerance = 0.95;
         @Getter private double elevatorUpHeight = 5;
@@ -40,11 +44,11 @@ public class Elevator extends Mechanism {
         @Getter private double kElevatorGearing = 5;
         @Getter private double kCarriageMass = 1;
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
-        @Getter private double initialX = 0.5;
-        @Getter private double initialY = 0.0;
-        @Getter private double angle = 180.0 - 72.0;
-        @Getter private double staticLength = 20;
-        @Getter private double movingLength = 20;
+        @Getter private double initialX = 0.8;
+        @Getter private double initialY = 0.2;
+        @Getter private double angle = 90; // 180.0 - 72.0;
+        @Getter private double staticLength = 30;
+        @Getter private double movingLength = 30;
 
         public ElevatorConfig() {
             super("Elevator", 52, Rio.CANIVORE);
@@ -193,7 +197,7 @@ public class Elevator extends Mechanism {
                             .setStaticLength(config.getStaticLength()),
                     mech,
                     elevatorMotorSim,
-                    config.getName());
+                    "1" + config.getName()); // added 1 to the name to create it first
         }
     }
 }

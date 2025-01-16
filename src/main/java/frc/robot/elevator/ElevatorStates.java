@@ -47,6 +47,9 @@ public class ElevatorStates {
 
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        score.whileTrue(home());
+        lThreeAlgae.whileTrue(l3());
+        lThreeCoral.whileTrue(l3());
     }
 
     private static Command runElevator(DoubleSupplier speed) {
@@ -65,6 +68,14 @@ public class ElevatorStates {
         return elevator.moveToRotations(config::getHome)
                 .alongWith(elevator.checkMaxCurrent(() -> 100))
                 .withName("Elevator.home");
+    }
+
+    private static Command l3() {
+        return elevator.moveToRotations(config::getL3).withName("Elevator.l3");
+    }
+
+    private static Command l4() {
+        return elevator.moveToRotations(config::getL4).withName("Elevator.l3");
     }
 
     private static Command zero() {

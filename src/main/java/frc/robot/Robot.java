@@ -84,7 +84,7 @@ public class Robot extends SpectrumRobot {
                     config = new FM20235();
                     break;
                 default: // SIM and UNKNOWN
-                    config = new FM20235();
+                    config = new AM2025();
                     break;
             }
 

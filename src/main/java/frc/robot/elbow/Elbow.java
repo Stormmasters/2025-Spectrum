@@ -26,13 +26,17 @@ public class Elbow extends Mechanism {
 
     public static class ElbowConfig extends Config {
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
-        @Getter private final double home = -45;
-        @Getter private final double intake = -96;
-        @Getter private final double floorIntake = -92;
-        @Getter private final double l2Algae = -97;
-        @Getter private final double l3Algae = -74;
-        @Getter private final double l2Coral = 0; // TODO: Find this value
-        @Getter private final double l3Coral = -49;
+        // TODO: Find elbow positions
+        @Getter private final double home = 1; // -45; // (FM20235)
+        @Getter private final double intake = 87; // -96; // (FM20235)
+        @Getter private final double floorIntake = 90; // -92; // (FM20235)
+        @Getter private final double l1 = 99;
+        @Getter private final double l2Algae = 81; // -97; // (FM20235)
+        @Getter private final double l3Algae = 36; // -74; // (FM20235)
+        @Getter private final double l2Coral = 81;
+        @Getter private final double l3Coral = 36; // -49; // (FM20235)
+        @Getter private final double l4 = 72;
+        @Getter private final double barge = 72;
         @Getter @Setter private double tuneElbow = 0;
 
         /* Elbow config settings */
@@ -52,14 +56,15 @@ public class Elbow extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double elbowX = 0.8;
-        @Getter private double elbowY = 0.4;
-        @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual elbow ratio
-        @Getter private double length = 0.3;
+        @Getter private double elbowX = 0.6; // 1.0;
+        @Getter private double elbowY = 0.5;
+
+        @Getter @Setter private double simRatio = 172.8; // TODO: Set to actual elbow ratio
+
+        @Getter private double length = 0.4;
 
         public ElbowConfig() {
-            // super("Elbow", 41, Rio.CANIVORE);
-            super("Elbow", 41, Rio.RIO_CANBUS);
+            super("Elbow", 41, Rio.RIO_CANBUS); // Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
@@ -67,7 +72,7 @@ public class Elbow extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-33.357421875, 30.88671875);
+            configMinMaxRotations(-66, 66); // -33.357421875, 30.88671875);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
@@ -213,14 +218,14 @@ public class Elbow extends Mechanism {
                                     config.elbowY,
                                     config.simRatio,
                                     config.length,
-                                    180 + Units.rotationsToDegrees(config.getMinRotations()),
-                                    180 + Units.rotationsToDegrees(config.getMaxRotations()),
-                                    180)
+                                    -180 + Units.rotationsToDegrees(config.getMinRotations()),
+                                    -180 + Units.rotationsToDegrees(config.getMaxRotations()),
+                                    -180)
                             .setColor(new Color8Bit(Color.kAqua))
                             .setMount(Robot.getShoulder().getSim()),
                     mech,
                     elbowMotorSim,
-                    config.getName());
+                    "2" + config.getName()); // added 2 to the name to create it second
         }
     }
 }

@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.spectrumLib.Telemetry;
-import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
 public class ShoulderStates {
@@ -28,6 +27,8 @@ public class ShoulderStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         // coastOn.whileTrue(coastMode().withName("coastOn"));
         // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
+        intaking.whileTrue(tuneShoulder()); // using intake button to test
+        score.whileTrue(home());
         algaeFloor.whileTrue(moveToPercentage(config::getFloorIntake));
         lTwoAlgae.whileTrue(lTwoAlgae());
         lThreeAlgae.whileTrue(lThreeAlgae());
@@ -97,8 +98,9 @@ public class ShoulderStates {
 
     // Tune value command
     public static Command tuneShoulder() {
-        return shoulder.moveToPercentage(new TuneValue("Tune Shoulder", 0).getSupplier())
-                .withName("Shoulder.Tune");
+        // return shoulder.moveToPercentage(new TuneValue("Tune Shoulder", 0).getSupplier())
+        //         .withName("Shoulder.Tune");
+        return shoulder.moveToPercentage(config::getTuneShoulder);
     }
 
     // Log Command

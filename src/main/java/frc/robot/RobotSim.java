@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 // Always move the root/origin to change it's display position
 // Looking at the robot from the left view (right side of the robot)
 public class RobotSim {
-    public static final double height = 60;
+    public static final double height = 70; // 60;
     public static final double width = 30;
 
     public static final Translation2d origin =
