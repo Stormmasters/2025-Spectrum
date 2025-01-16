@@ -18,27 +18,18 @@ public class ElbowStates {
     }
 
     public static void setStates() {
-        // missing bindTriggers
-        // test.whileTrue(log(home()));
-
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        // coastOff.onTrue(log(ensureBrakeMode()));
         algaeFloor.whileTrue(elbow.moveToPercentage(config::getFloorIntake));
         lTwoAlgae.whileTrue(lTwoAlgae());
         lThreeAlgae.whileTrue(lThreeAlgae());
         lTwoCoral.whileTrue(lTwoCoral());
         lThreeCoral.whileTrue(lThreeCoral());
-        // test.whileTrue(log(runElbow(() -> .3)));
-        // moveElbow.whileTrue(runElbow(() -> 0.1));
-        // // home.whileTrue(home());
-        // homeElbow.whileTrue(runElbow(() -> -0.1));
+        // home.whileTrue(home());
         // moveElbow.whileFalse(elbow.runHoldElbow());
         // homeElbow.whileFalse(elbow.runHoldElbow());
         // moveElbow.whileTrue(home());
     }
-
-    // missing distance based Elbow commands
 
     public static Command runElbow(DoubleSupplier speed) {
         return elbow.runPercentage(speed).withName("Elbow.runElbow");

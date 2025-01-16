@@ -19,14 +19,10 @@ public class ShoulderStates {
     }
 
     public static void setStates() {
-        // missing bindTriggers
-
         coastMode.onTrue(
                 log(coastMode())
                         .alongWith(new PrintCommand("this works again").ignoringDisable(true)));
         coastMode.onFalse(log(ensureBrakeMode()));
-        // coastOn.whileTrue(coastMode().withName("coastOn"));
-        // test.whileTrue(moveToPercentage(config::getNinetyDegrees));
         intaking.whileTrue(tuneShoulder()); // using intake button to test
         score.whileTrue(home());
         algaeFloor.whileTrue(moveToPercentage(config::getFloorIntake));
@@ -35,10 +31,7 @@ public class ShoulderStates {
         lTwoCoral.whileTrue(lTwoCoral());
         lThreeCoral.whileTrue(lThreeCoral());
         // home.whileTrue(home());
-        // home.whileTrue(runShoulder(() -> -0.1));
     }
-
-    // missing distance based Shoulder commands
 
     public static Command runShoulder(DoubleSupplier speed) {
         return shoulder.runPercentage(speed).withName("Shoulder.runShoulder");

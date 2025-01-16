@@ -20,7 +20,6 @@ public class ElevatorStates {
     private static Operator operator = Robot.getOperator();
 
     /* Check Elevator States */
-    // Is Amp Height
     public static final Trigger isUp =
             elevator.atPercentage(config::getElevatorUpHeight, config::getTolerance);
     public static final Trigger isHome =
@@ -32,7 +31,6 @@ public class ElevatorStates {
     }
 
     public static void setStates() {
-        // ampPrep.whileTrue(Telemetry.log(amp()));
         score.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
