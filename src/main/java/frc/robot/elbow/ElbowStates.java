@@ -20,11 +20,13 @@ public class ElbowStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        intaking.whileTrue(tuneElbow());
         algaeFloor.whileTrue(elbow.moveToPercentage(config::getFloorIntake));
-        lTwoAlgae.whileTrue(lTwoAlgae());
-        lThreeAlgae.whileTrue(lThreeAlgae());
-        lTwoCoral.whileTrue(lTwoCoral());
-        lThreeCoral.whileTrue(lThreeCoral());
+        L2Algae.whileTrue(lTwoAlgae());
+        L3Algae.whileTrue(lThreeAlgae());
+        L2Coral.whileTrue(lTwoCoral());
+        L3Coral.whileTrue(lThreeCoral());
+        L4Coral.whileTrue(lFourCoral());
         // home.whileTrue(home());
         // moveElbow.whileFalse(elbow.runHoldElbow());
         // homeElbow.whileFalse(elbow.runHoldElbow());
@@ -54,6 +56,10 @@ public class ElbowStates {
 
     public static Command lThreeCoral() {
         return elbow.moveToPercentage(config::getL3Coral).withName("Elbow.lThreeCoral");
+    }
+
+    public static Command lFourCoral() {
+        return elbow.moveToPercentage(config::getL4Coral).withName("Elbow.lFourCoral");
     }
 
     // missing auton Elbow commands, add when auton is added

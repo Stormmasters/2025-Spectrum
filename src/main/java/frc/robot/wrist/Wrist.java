@@ -221,7 +221,7 @@ public class Wrist extends Mechanism {
                                     225 - Units.rotationsToDegrees(config.getMaxRotations()) - 90,
                                     225 - Units.rotationsToDegrees(config.getMinRotations()) - 90,
                                     -45 - 90)
-                            .setMount(Robot.getElevator().getSim()),
+                            .setMount(Robot.getElevator().getSim(), false),
                     mech,
                     wristMotorSim,
                     "3" + config.getName()); // added 3 to the name to create it third

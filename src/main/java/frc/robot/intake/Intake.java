@@ -33,13 +33,12 @@ public class Intake extends Mechanism {
         @Getter private double velocityKs = 14;
 
         /* Sim Configs */
-        @Getter private double intakeX = 0.1; // 0.5; // relative to elbow at 0 degrees
-        @Getter private double intakeY = 0.5; // relative to elbow at 0 degrees
+        @Getter private double intakeX = 1.0; // relative to unattached elbow
+        @Getter private double intakeY = 1.1; // relative to unattached elbow
         @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {
-            // super("Intake", 5, Rio.CANIVORE);
-            super("Intake", 5, Rio.RIO_CANBUS);
+            super("Intake", 5, Rio.RIO_CANBUS); // Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12.0 / 30.0);

@@ -26,10 +26,11 @@ public class ShoulderStates {
         intaking.whileTrue(tuneShoulder()); // using intake button to test
         score.whileTrue(home());
         algaeFloor.whileTrue(moveToPercentage(config::getFloorIntake));
-        lTwoAlgae.whileTrue(lTwoAlgae());
-        lThreeAlgae.whileTrue(lThreeAlgae());
-        lTwoCoral.whileTrue(lTwoCoral());
-        lThreeCoral.whileTrue(lThreeCoral());
+        L2Algae.whileTrue(lTwoAlgae());
+        L3Algae.whileTrue(lThreeAlgae());
+        L2Coral.whileTrue(lTwoCoral());
+        L3Coral.whileTrue(lThreeCoral());
+        L4Coral.whileTrue(lFourCoral());
         // home.whileTrue(home());
     }
 
@@ -69,6 +70,10 @@ public class ShoulderStates {
 
     public static Command lThreeCoral() {
         return shoulder.moveToPercentage(config::getL3Coral).withName("Shoulder.lThreeCoral");
+    }
+
+    public static Command lFourCoral() {
+        return shoulder.moveToPercentage(config::getL4Coral).withName("Shoulder.lFourCoral");
     }
 
     // missing auton Shoulder commands, add when auton is added
