@@ -26,11 +26,11 @@ public class ShoulderStates {
         intaking.whileTrue(tuneShoulder()); // using intake button to test
         score.whileTrue(home());
         algaeFloor.whileTrue(moveToPercentage(config::getFloorIntake));
-        L2Algae.whileTrue(lTwoAlgae());
-        L3Algae.whileTrue(lThreeAlgae());
-        L2Coral.whileTrue(lTwoCoral());
-        L3Coral.whileTrue(lThreeCoral());
-        L4Coral.whileTrue(lFourCoral());
+        L2Algae.whileTrue(l2Algae());
+        L3Algae.whileTrue(l3Algae());
+        L2Coral.whileTrue(l2Coral());
+        L3Coral.whileTrue(l3Coral());
+        L4Coral.whileTrue(l4Coral());
         // home.whileTrue(home());
     }
 
@@ -56,24 +56,24 @@ public class ShoulderStates {
 
     /* Scoring positions */
 
-    public static Command lTwoAlgae() {
-        return shoulder.moveToPercentage(config::getL2Algae).withName("Shoulder.lTwoAlgae");
+    public static Command l2Algae() {
+        return shoulder.moveToPercentage(config::getL2Algae).withName("Shoulder.l2Algae");
     }
 
-    public static Command lThreeAlgae() {
-        return shoulder.moveToPercentage(config::getL3Algae).withName("Shoulder.lThreeAlgae");
+    public static Command l3Algae() {
+        return shoulder.moveToPercentage(config::getL3Algae).withName("Shoulder.l3Algae");
     }
 
-    public static Command lTwoCoral() {
-        return shoulder.moveToPercentage(config::getL2Coral).withName("Shoulder.lTwoCoral");
+    public static Command l2Coral() {
+        return shoulder.moveToPercentage(config::getL2Coral).withName("Shoulder.l2Coral");
     }
 
-    public static Command lThreeCoral() {
-        return shoulder.moveToPercentage(config::getL3Coral).withName("Shoulder.lThreeCoral");
+    public static Command l3Coral() {
+        return shoulder.moveToPercentage(config::getL3Coral).withName("Shoulder.l3Coral");
     }
 
-    public static Command lFourCoral() {
-        return shoulder.moveToPercentage(config::getL4Coral).withName("Shoulder.lFourCoral");
+    public static Command l4Coral() {
+        return shoulder.moveToPercentage(config::getL4Coral).withName("Shoulder.l4Coral");
     }
 
     // missing auton Shoulder commands, add when auton is added
