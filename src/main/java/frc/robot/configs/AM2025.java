@@ -16,6 +16,7 @@ public class AM2025 extends Config {
         intake.setAttached(true);
         shoulder.setAttached(true);
         elbow.setAttached(true);
+        wrist.setAttached(true);
         climber.setAttached(false);
         elevator.setAttached(true);
     }
