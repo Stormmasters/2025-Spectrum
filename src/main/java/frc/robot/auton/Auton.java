@@ -24,9 +24,14 @@ public class Auton {
 
     // Setup EventTriggers
     // Should all be public static final
-    public static final EventTrigger autonIntake = new EventTrigger("intake");
-    public static final EventTrigger autonSpitReady = new EventTrigger("spitReady");
+    public static final EventTrigger autonGorundIntake = new EventTrigger("groundIntake");
+    public static final EventTrigger autonSourceIntake = new EventTrigger("sourceIntake");
+    public static final EventTrigger autonLowAlgae = new EventTrigger("lowAlgae");
+    public static final EventTrigger autonHighAlgae = new EventTrigger("highAlgae");
     public static final EventTrigger autonScore = new EventTrigger("score");
+    public static final EventTrigger autonL4 = new EventTrigger("L4");
+    public static final EventTrigger autonNet = new EventTrigger("net");
+    public static final EventTrigger autonProcessor = new EventTrigger("processor");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;
