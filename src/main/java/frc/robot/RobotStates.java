@@ -28,8 +28,7 @@ public class RobotStates {
     public static final Trigger sim = new Trigger(RobotBase::isSimulation);
 
     public static final Trigger visionIntaking = Trigger.kFalse;
-    public static final Trigger intaking =
-            pilot.intake_A.or(visionIntaking, operator.intake_A);
+    public static final Trigger intaking = pilot.intake_A.or(visionIntaking, operator.intake_A);
     public static final Trigger ejecting = pilot.eject_fA.or(operator.eject_fA);
 
     public static final Trigger ampZone =

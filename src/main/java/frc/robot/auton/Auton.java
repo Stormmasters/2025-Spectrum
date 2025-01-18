@@ -48,13 +48,13 @@ public class Auton {
         // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto"));
 
         pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
+        pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
+        pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
         pathChooser.addOption(
-                "Clean Side - Preplace 5High | Left",
-                SpectrumAuton("Clean Side - Preplace 5High", false));
+                "Left - Preplace 5High", SpectrumAuton("Clean Side - Preplace 5High", false));
         pathChooser.addOption(
-                "Clean Side - Preplace 5High | Right",
-                SpectrumAuton("Clean Side - Preplace 5High", true));
+                "Right - Preplace 5High", SpectrumAuton("Clean Side - Preplace 5High", true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
@@ -86,17 +86,14 @@ public class Auton {
      * executes a PathPlannerAuto command with the specified autonomous routine name.
      *
      * @param autoName the name of the autonomous routine to execute
+     * @param mirrored whether the autonomous routine should be mirrored
      * @return a Command that represents the SpectrumAuton sequence
      */
-    public Command SpectrumAuton(String autoName, boolean flipped) {
-        Command autoCommand = new PathPlannerAuto(autoName, flipped);
+    public Command SpectrumAuton(String autoName, boolean mirrored) {
+        Command autoCommand = new PathPlannerAuto(autoName, mirrored);
         return (Commands.waitSeconds(0.01)
                         .andThen(autoCommand)
-                        .alongWith(
-                                Commands.print(
-                                        autoName
-                                                + " Auto ran\nRequirements: "
-                                                + autoCommand.getRequirements())))
+                        .alongWith(Commands.print(autoName + " Auto Selected")))
                 .withName(autoName);
     }
 
