@@ -41,7 +41,7 @@ public class ClimberStates {
         // Once Elevator is full up, hooks go to home
         climbRoutine.and(ElevatorStates.isUp.not()).whileTrue(log(midClimb()));
         climbRoutine.and(ElevatorStates.isUp).whileTrue(log(home()));
-        pilot.retract_X.whileTrue(log(home()));
+        pilot.home_fX.whileTrue(log(home()));
 
         operator.topClimb_fUdp.whileTrue(log(fullExtend()));
         operator.midClimb_fDdp.whileTrue(log(midClimb()));

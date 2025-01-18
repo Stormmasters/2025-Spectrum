@@ -30,10 +30,8 @@ public class Wrist extends Mechanism {
         /* wrist positions in percentage of max rotation || 0 is horizontal */
         // TODO: Find wrist positions
         @Getter private final double score = 100 - 65;
-        @Getter private final double climbHome = 100 - 3;
         @Getter private final double home = 100 - 1;
-        @Getter private final double intake = 44; // 100 - 50; // (FM20235)
-        @Getter private final double floorIntake = 99;
+        @Getter private final double intake = 100;
         @Getter private final double manualFeed = 100 - 70;
         @Getter private final double ninetyDegrees = 100 - 39;
         @Getter private final double l1 = 63;

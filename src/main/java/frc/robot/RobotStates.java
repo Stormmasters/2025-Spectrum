@@ -27,31 +27,32 @@ public class RobotStates {
     public static final Trigger fm = new Trigger(() -> Rio.id == Rio.FM_2024);
     public static final Trigger sim = new Trigger(RobotBase::isSimulation);
 
+    // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger intaking = pilot.intake_A.or(visionIntaking, operator.intake_A);
     public static final Trigger ejecting = pilot.eject_fA.or(operator.eject_fA);
 
-    public static final Trigger ampZone =
-            swerve.inXzoneAlliance(0, Field.getHalfLength() / 2)
-                    .and(swerve.inYzone(Field.getHalfWidth(), Field.getFieldWidth()));
-
+    // score Triggers
     public static final Trigger score = pilot.score_RB;
 
+    // climb Triggers
     public static final Trigger climbPrep = pilot.climbPrep_RDP;
-    public static final Trigger climbRoutine =
-            pilot.climbRoutine_start; // TODO: Add a check for hooks up
+    public static final Trigger climbRoutine = pilot.climbRoutine_start;
 
+    // mechanism preset Triggers (Wrist, Elevator, etc.)
     public static final Trigger algaeFloor = pilot.algaeFloorY;
-    public static final Trigger lTwoAlgae = pilot.l2Algae;
-    public static final Trigger lThreeAlgae = pilot.l3Algae;
-    public static final Trigger lTwoCoral = pilot.l2Coral;
-    public static final Trigger lThreeCoral = pilot.l3Coral;
+    public static final Trigger L2Algae = pilot.L2Algae_fY;
+    public static final Trigger L3Algae = pilot.L3Algae_B;
+    public static final Trigger L1Coral = pilot.L1Coral_B;
+    public static final Trigger L2Coral = pilot.L2Coral_X;
+    public static final Trigger L3Coral = pilot.L3Coral_fB;
+    public static final Trigger L4Coral = pilot.L4Coral_fX;
     // public static final Trigger home = pilot.homeShoulder_fB;
 
     // public static final Trigger moveElbow = pilot.elbow_Y;
     // public static final Trigger homeElbow = pilot.homeElbow_fY;
 
-    // Robot States````
+    // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
     // If they should be set by multiple Triggers do that in SetupStates()
     public static final SpectrumState coastMode = new SpectrumState("coast");

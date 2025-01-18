@@ -15,25 +15,21 @@ public class Pilot extends Gamepad {
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
+
+    //TODO: Finalize Buttons
     public final Trigger intake_A = A.and(noFn, teleop);
     public final Trigger eject_fA = A.and(fn, teleop);
     public final Trigger score_RB = rightBumper.and(fn, teleop);
     public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
-    // public final Trigger homeShoulder_fB = B.and(fn, teleop);
-    // public final Trigger shoulder_B = B.and(noFn, teleop);
-    // public final Trigger elbow_Y = Y.and(noFn, teleop);
-    // public final Trigger homeElbow_fY = Y.and(fn, teleop);
+    public final Trigger home_fX = X.and(fn, teleop);
     public final Trigger algaeFloorY = Y.and(noFn, teleop);
-    public final Trigger l2Algae = Y.and(fn, teleop); // TODO: finalize button
-    public final Trigger l3Algae = B.and(noFn, teleop); // TODO: finalize button
-    public final Trigger l2Coral = X.and(noFn, teleop); // TODO: finalize button
-    public final Trigger l3Coral = B.and(fn, teleop); // TODO: finalize button
-
-    // public final Trigger elbow_B = B.and(no, teleop);
-
-    public final Trigger retract_X = X.and(noFn, teleop);
-    public final Trigger manual_Y = Y.and(noFn, teleop);
+    public final Trigger L2Algae_fY = Y.and(fn, teleop);
+    public final Trigger L3Algae_B = B.and(noFn, teleop);
+    public final Trigger L1Coral_B = B.and(noFn, teleop);
+    public final Trigger L2Coral_X = X.and(noFn, teleop);
+    public final Trigger L3Coral_fB = B.and(fn, teleop);
+    public final Trigger L4Coral_fX = X.and(fn, teleop);
 
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);

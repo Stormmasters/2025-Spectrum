@@ -2,8 +2,7 @@ package frc.robot.wrist;
 
 import static frc.robot.RobotStates.*;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.wrist.Wrist.WristConfig;
 import frc.spectrumLib.Telemetry;
@@ -19,18 +18,8 @@ public class WristStates {
     }
 
     public static void setStates() {
-        coastMode.onTrue(
-                log(coastMode())
-                        .alongWith(new PrintCommand("this works again").ignoringDisable(true)));
+        coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        intaking.whileTrue(tuneWrist()); // using intake button to test
-        score.whileTrue(home());
-        algaeFloor.whileTrue(moveToPercentage(config::getFloorIntake));
-        lTwoAlgae.whileTrue(lTwoAlgae());
-        lThreeAlgae.whileTrue(lThreeAlgae());
-        lTwoCoral.whileTrue(lTwoCoral());
-        lThreeCoral.whileTrue(lThreeCoral());
-        // home.whileTrue(home());
     }
 
     public static Command runWrist(DoubleSupplier speed) {
@@ -41,37 +30,35 @@ public class WristStates {
         return wrist.moveToPercentage(config::getHome).withName("Wrist.home");
     }
 
-    public static Command climbHome() {
-        return wrist.moveToPercentage(config::getClimbHome).withName("Wrist.climbHome");
-    }
-
-    public static Command manualFeed() {
-        return wrist.moveToPercentage(config::getManualFeed).withName("Wrist.manualFeed");
-    }
-
     public static Command moveToPercentage(DoubleSupplier percent) {
         return wrist.moveToPercentage(percent).withName("Wrist.moveToPercentage");
     }
 
     /* Scoring positions */
 
-    public static Command lTwoAlgae() {
-        return wrist.moveToPercentage(config::getL2Algae).withName("Wrist.lTwoAlgae");
+    public static Command L2Algae() {
+        return wrist.moveToPercentage(config::getL2Algae).withName("Wrist.L2Algae");
     }
 
-    public static Command lThreeAlgae() {
-        return wrist.moveToPercentage(config::getL3Algae).withName("Wrist.lThreeAlgae");
+    public static Command L3Algae() {
+        return wrist.moveToPercentage(config::getL3Algae).withName("Wrist.L3Algae");
     }
 
-    public static Command lTwoCoral() {
-        return wrist.moveToPercentage(config::getL2Coral).withName("Wrist.lTwoCoral");
+    public static Command L2Coral() {
+        return wrist.moveToPercentage(config::getL2Coral).withName("Wrist.L2Coral");
     }
 
-    public static Command lThreeCoral() {
-        return wrist.moveToPercentage(config::getL3Coral).withName("Wrist.lThreeCoral");
+    public static Command L3Coral() {
+        return wrist.moveToPercentage(config::getL3Coral).withName("Wrist.L3Coral");
     }
 
-    // missing auton Wrist commands, add when auton is added
+    public static Command L1Coral() {
+        return wrist.moveToPercentage(config::getL1).withName("Wrist.L1Coral");
+    }
+
+    public static Command L4Coral() {
+        return wrist.moveToPercentage(config::getL4).withName("Wrist.L4Coral");
+    }
 
     public static Command intake() {
         return wrist.moveToPercentage(config::getIntake).withName("Wrist.intake");
@@ -91,9 +78,7 @@ public class WristStates {
 
     // Tune value command
     public static Command tuneWrist() {
-        // return wrist.moveToPercentage(new TuneValue("Tune Wrist", 0).getSupplier())
-        //         .withName("Wrist.Tune");
-        return wrist.moveToPercentage(config::getTuneWrist);
+        return wrist.moveToPercentage(config::getTuneWrist).withName("Wrist.tune");
     }
 
     // Log Command
