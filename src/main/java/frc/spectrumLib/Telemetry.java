@@ -69,7 +69,8 @@ public class Telemetry extends DogLog implements Subsystem {
                         Commands.startEnd(
                                 () -> log("Commands", "Init: " + cmd.getName()),
                                 () -> log("Commands", "End: " + cmd.getName())))
-                .ignoringDisable(true);
+                .ignoringDisable(true)
+                .withName(cmd.getName());
     }
 
     /** Print a statement if they are enabled */

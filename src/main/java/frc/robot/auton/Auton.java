@@ -38,21 +38,18 @@ public class Auton {
      */
     public void setupSelectors() {
 
-        pathChooser.setDefaultOption(
-                "Do Nothing", Commands.print("Do Nothing Auto ran").withName(null));
+        pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
         // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto"));
         // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto"));
 
-        pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
+        pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
 
-        // pathChooser.addOption(
-        //         "Clean Side - Preplace 5High | Left",
-        //         SpectrumAuton("Clean Side - Preplace 5High", false)
-        //                 .withName("Clean Side - Preplace 5High"));
-        // pathChooser.addOption(
-        //         "Clean Side - Preplace 5High | Right",
-        //         SpectrumAuton("Clean Side - Preplace 5High", true)
-        //                 .withName("Clean Side - Preplace 5High"));
+        pathChooser.addOption(
+                "Clean Side - Preplace 5High | Left",
+                SpectrumAuton("Clean Side - Preplace 5High", false));
+        pathChooser.addOption(
+                "Clean Side - Preplace 5High | Right",
+                SpectrumAuton("Clean Side - Preplace 5High", true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
@@ -87,9 +84,15 @@ public class Auton {
      * @return a Command that represents the SpectrumAuton sequence
      */
     public Command SpectrumAuton(String autoName, boolean flipped) {
-        return Commands.waitSeconds(0.01)
-                .andThen(new PathPlannerAuto(autoName, flipped))
-                .alongWith(Commands.print(autoName + " Auto ran"));
+        Command autoCommand = new PathPlannerAuto(autoName, flipped);
+        return (Commands.waitSeconds(0.01)
+                        .andThen(autoCommand)
+                        .alongWith(
+                                Commands.print(
+                                        autoName
+                                                + " Auto ran\nRequirements: "
+                                                + autoCommand.getRequirements())))
+                .withName(autoName);
     }
 
     /**

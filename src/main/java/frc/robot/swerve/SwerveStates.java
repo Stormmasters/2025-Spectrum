@@ -19,8 +19,7 @@ public class SwerveStates {
     static SwerveConfig config = Robot.getConfig().swerve;
     static Pilot pilot = Robot.getPilot();
 
-    static Command pilotSteerCommand =
-            log(pilotDrive().ignoringDisable(true).withName("SwerveCommands.pilotSteer"));
+    static Command pilotSteerCommand = log(pilotDrive().withName("SwerveCommands.pilotSteer"));
     static SpectrumState steeringLock = new SpectrumState("SteeringLock");
 
     protected static void setupDefaultCommand() {

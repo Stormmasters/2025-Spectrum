@@ -1,7 +1,13 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auton.Auton;
@@ -31,12 +37,18 @@ import frc.spectrumLib.SpectrumRobot;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.Telemetry.PrintPriority;
 import frc.spectrumLib.util.CrashTracker;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
+import org.json.simple.parser.ParseException;
 
 public class Robot extends SpectrumRobot {
     @Getter private static RobotSim robotSim;
     @Getter private static Config config;
     private static Telemetry telemetry = new Telemetry();
+    private final Field2d m_field = new Field2d();
 
     // TODO: Create robot faults
     public enum RobotFault {
@@ -151,8 +163,14 @@ public class Robot extends SpectrumRobot {
         RobotStates.setupStates();
     }
 
+    public void setupAutoVisualizer() {
+        SmartDashboard.putData("Auto Visualizer", m_field);
+    }
+
     @Override // Deprecated
-    public void robotInit() {}
+    public void robotInit() {
+        setupAutoVisualizer();
+    }
 
     /* ROBOT PERIODIC  */
     /**
@@ -189,7 +207,37 @@ public class Robot extends SpectrumRobot {
     }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        String autoName = "";
+        String newAutoName;
+        List<PathPlannerPath> pathPlannerPaths = new ArrayList<>();
+        newAutoName = (auton.getAutonomousCommand()).getName();
+        if (autoName != newAutoName) {
+            autoName = newAutoName;
+            if (AutoBuilder.getAllAutoNames().contains(autoName)) {
+                try {
+                    pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
+                } catch (IOException a) {
+                } catch (ParseException b) {
+                } finally {
+                }
+                ;
+                List<Pose2d> poses = new ArrayList<>();
+                for (PathPlannerPath path : pathPlannerPaths) {
+                    poses.addAll(
+                            path.getAllPathPoints().stream()
+                                    .map(
+                                            point ->
+                                                    new Pose2d(
+                                                            point.position.getX(),
+                                                            point.position.getY(),
+                                                            new Rotation2d()))
+                                    .collect(Collectors.toList()));
+                }
+                m_field.getObject("path").setPoses(poses);
+            }
+        }
+    }
 
     @Override
     public void disabledExit() {
