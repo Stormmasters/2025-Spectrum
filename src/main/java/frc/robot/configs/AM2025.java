@@ -16,6 +16,7 @@ public class AM2025 extends Config {
         operator.setAttached(true);
         algaeIntake.setAttached(true);
         coralIntake.setAttached(true);
+        algaePivot.setAttached(true);
         shoulder.setAttached(true);
         elbow.setAttached(true);
         wrist.setAttached(true);

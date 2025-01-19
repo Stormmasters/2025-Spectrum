@@ -29,6 +29,8 @@ import frc.robot.operator.Operator;
 import frc.robot.operator.Operator.OperatorConfig;
 import frc.robot.pilot.Pilot;
 import frc.robot.pilot.Pilot.PilotConfig;
+import frc.robot.algaePivot.algaePivot;
+import frc.robot.algaePivot.algaePivot.algaePivotConfig;
 import frc.robot.shoulder.Shoulder;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.robot.swerve.Swerve;
@@ -68,6 +70,7 @@ public class Robot extends SpectrumRobot {
         public LedFullConfig leds = new LedFullConfig();
         public PilotConfig pilot = new PilotConfig();
         public OperatorConfig operator = new OperatorConfig();
+        public algaePivotConfig algaePivot = new algaePivotConfig();
         public ElbowConfig elbow = new ElbowConfig();
         public ShoulderConfig shoulder = new ShoulderConfig();
         public WristConfig wrist = new WristConfig();
@@ -83,6 +86,7 @@ public class Robot extends SpectrumRobot {
     @Getter private static Pilot pilot;
     @Getter private static VisionSystem visionSystem;
     @Getter private static Auton auton;
+    @Getter private static algaePivot algaePivot;
     @Getter private static Elbow elbow;
     @Getter private static Shoulder shoulder;
     @Getter private static Wrist wrist;
@@ -126,11 +130,14 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             climber = new Climber(config.climber);
             Timer.delay(canInitDelay);
+            algaePivot = new algaePivot(config.algaePivot);
+            Timer.delay(canInitDelay);
             shoulder = new Shoulder(config.shoulder);
             Timer.delay(canInitDelay);
             elbow = new Elbow(config.elbow);
             Timer.delay(canInitDelay);
             algaeIntake = new algaeIntake(config.algaeIntake);
+            Timer.delay(canInitDelay);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
 
