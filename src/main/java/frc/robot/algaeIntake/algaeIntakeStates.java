@@ -1,15 +1,15 @@
-package frc.robot.intake;
+package frc.robot.algaeIntake;
 
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.intake.Intake.IntakeConfig;
+import frc.robot.algaeIntake.algaeIntake.algaeIntakeConfig;
 import frc.spectrumLib.Telemetry;
 
-public class IntakeStates {
-    private static Intake intake = Robot.getIntake();
-    private static IntakeConfig config = Robot.getConfig().intake;
+public class algaeIntakeStates {
+    private static algaeIntake algaeIntake = Robot.getAlgaeIntake();
+    private static algaeIntakeConfig config = Robot.getConfig().algaeIntake;
 
     public static void setupDefaultCommand() {
         // intake.setDefaultCommand(
@@ -17,8 +17,8 @@ public class IntakeStates {
         //                 intake.runVelocity(() -> config.getSlowIntake())
         //                         .ignoringDisable(false)
         //                         .withName("Intake.default")));
-        intake.setDefaultCommand(
-                log(intake.runStop().ignoringDisable(true).withName("Intake.default")));
+        algaeIntake.setDefaultCommand(
+                log(algaeIntake.runStop().ignoringDisable(true).withName("intake.default")));
     }
 
     public static void setStates() {
@@ -31,19 +31,19 @@ public class IntakeStates {
     }
 
     private static Command intake() {
-        return intake.runVelocityTcFocRpm(config::getIntake).withName("Intake.intake");
+        return algaeIntake.runVelocityTcFocRpm(config::getIntake).withName("algaeIntake.intake");
     }
 
     private static Command eject() {
-        return intake.runVelocityTcFocRpm(config::getEject).withName("Intake.eject");
+        return algaeIntake.runVelocityTcFocRpm(config::getEject).withName("algaeIntake.eject");
     }
 
     private static Command coastMode() {
-        return intake.coastMode();
+        return algaeIntake.coastMode();
     }
 
     private static Command ensureBrakeMode() {
-        return intake.ensureBrakeMode();
+        return algaeIntake.ensureBrakeMode();
     }
 
     // Log Command

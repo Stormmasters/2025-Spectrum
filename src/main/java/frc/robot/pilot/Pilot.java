@@ -16,7 +16,7 @@ public class Pilot extends Gamepad {
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
 
-    //TODO: Finalize Buttons
+    // TODO: Finalize Buttons
     public final Trigger intake_A = A.and(noFn, teleop);
     public final Trigger eject_fA = A.and(fn, teleop);
     public final Trigger score_RB = rightBumper.and(fn, teleop);

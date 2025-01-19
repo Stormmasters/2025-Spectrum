@@ -1,4 +1,4 @@
-package frc.robot.intake;
+package frc.robot.algaeIntake;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
@@ -12,9 +12,9 @@ import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
 import lombok.Getter;
 
-public class Intake extends Mechanism {
+public class algaeIntake extends Mechanism {
 
-    public static class IntakeConfig extends Config {
+    public static class algaeIntakeConfig extends Config {
 
         /* Revolutions per min Intake Output */
         @Getter private double maxSpeed = 5000;
@@ -37,9 +37,9 @@ public class Intake extends Mechanism {
         @Getter private double intakeY = 0.5; // relative to elbow at 0 degrees
         @Getter private double wheelDiameter = 5.0;
 
-        public IntakeConfig() {
+        public algaeIntakeConfig() {
             // super("Intake", 5, Rio.CANIVORE);
-            super("Intake", 5, Rio.RIO_CANBUS);
+            super("algaeIntake", 5, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12.0 / 30.0);
@@ -53,10 +53,10 @@ public class Intake extends Mechanism {
         }
     }
 
-    private IntakeConfig config;
+    private algaeIntakeConfig config;
     private RollerSim sim;
 
-    public Intake(IntakeConfig config) {
+    public algaeIntake(algaeIntakeConfig config) {
         super(config);
         this.config = config;
 
@@ -69,11 +69,11 @@ public class Intake extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        IntakeStates.setStates();
+        algaeIntakeStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        IntakeStates.setupDefaultCommand();
+        algaeIntakeStates.setupDefaultCommand();
     }
 
     /*-------------------

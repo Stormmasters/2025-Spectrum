@@ -11,9 +11,11 @@ public class AM2025 extends Config {
         swerve.configEncoderOffsets(-0.399170, -0.189209, 0.121826, -0.021973);
 
         // Attached Mechanisms
+        //TODO: Add mechanism pivot based off elbow
         pilot.setAttached(true);
         operator.setAttached(true);
-        intake.setAttached(true);
+        algaeIntake.setAttached(true);
+        coralIntake.setAttached(true);
         shoulder.setAttached(true);
         elbow.setAttached(true);
         wrist.setAttached(true);

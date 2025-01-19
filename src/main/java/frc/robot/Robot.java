@@ -19,8 +19,10 @@ import frc.robot.elbow.Elbow;
 import frc.robot.elbow.Elbow.ElbowConfig;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorConfig;
-import frc.robot.intake.Intake;
-import frc.robot.intake.Intake.IntakeConfig;
+import frc.robot.algaeIntake.algaeIntake;
+import frc.robot.algaeIntake.algaeIntake.algaeIntakeConfig;
+import frc.robot.coralIntake.coralIntake;
+import frc.robot.coralIntake.coralIntake.coralIntakeConfig;
 import frc.robot.leds.LedFull;
 import frc.robot.leds.LedFull.LedFullConfig;
 import frc.robot.operator.Operator;
@@ -29,11 +31,11 @@ import frc.robot.pilot.Pilot;
 import frc.robot.pilot.Pilot.PilotConfig;
 import frc.robot.shoulder.Shoulder;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
-import frc.robot.wrist.Wrist;
-import frc.robot.wrist.Wrist.WristConfig;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.SwerveConfig;
 import frc.robot.vision.VisionSystem;
+import frc.robot.wrist.Wrist;
+import frc.robot.wrist.Wrist.WristConfig;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumRobot;
 import frc.spectrumLib.Telemetry;
@@ -59,7 +61,8 @@ public class Robot extends SpectrumRobot {
 
     public static class Config {
         public SwerveConfig swerve = new SwerveConfig();
-        public IntakeConfig intake = new IntakeConfig();
+        public algaeIntakeConfig algaeIntake = new algaeIntakeConfig();
+        public coralIntakeConfig coralIntake = new coralIntakeConfig();
         public ElevatorConfig elevator = new ElevatorConfig();
         public ClimberConfig climber = new ClimberConfig();
         public LedFullConfig leds = new LedFullConfig();
@@ -73,7 +76,8 @@ public class Robot extends SpectrumRobot {
     @Getter private static Swerve swerve;
     @Getter private static Climber climber;
     @Getter private static Elevator elevator;
-    @Getter private static Intake intake;
+    @Getter private static algaeIntake algaeIntake;
+    @Getter private static coralIntake coralIntake;
     @Getter private static LedFull leds;
     @Getter private static Operator operator;
     @Getter private static Pilot pilot;
@@ -126,7 +130,7 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             elbow = new Elbow(config.elbow);
             Timer.delay(canInitDelay);
-            intake = new Intake(config.intake);
+            algaeIntake = new algaeIntake(config.algaeIntake);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
 
