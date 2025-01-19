@@ -5,19 +5,12 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
-import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import frc.robot.Robot;
-import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
-import frc.spectrumLib.sim.ArmConfig;
-import frc.spectrumLib.sim.ArmSim;
 import lombok.*;
 
 public class Wrist extends Mechanism {
@@ -91,7 +84,7 @@ public class Wrist extends Mechanism {
 
     private WristConfig config;
     private CANcoder m_CANcoder;
-    @Getter private WristSim sim;
+    // @Getter private WristSim sim;
     CANcoderSimState canCoderSim;
 
     public Wrist(WristConfig config) {
@@ -196,35 +189,37 @@ public class Wrist extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            sim = new WristSim(motor.getSimState(), RobotSim.leftView);
+            // sim = new WristSim(motor.getSimState(), RobotSim.leftView);
 
-            // m_CANcoder.setPosition(0);
+            // // m_CANcoder.setPosition(0);
         }
     }
 
     @Override
     public void simulationPeriodic() {
-        if (isAttached()) {
-            sim.simulationPeriodic();
-            // m_CANcoder.getSimState().setRawPosition(sim.getAngleRads() / 0.202);
-        }
+        // if (isAttached()) {
+        //     sim.simulationPeriodic();
+        //     // m_CANcoder.getSimState().setRawPosition(sim.getAngleRads() / 0.202);
+        // }
     }
 
-    class WristSim extends ArmSim {
-        public WristSim(TalonFXSimState wristMotorSim, Mechanism2d mech) {
-            super(
-                    new ArmConfig(
-                                    config.wristX,
-                                    config.wristY,
-                                    config.simRatio,
-                                    config.length,
-                                    225 - Units.rotationsToDegrees(config.getMaxRotations()) - 90,
-                                    225 - Units.rotationsToDegrees(config.getMinRotations()) - 90,
-                                    -45 - 90)
-                            .setMount(Robot.getElevator().getSim(), false),
-                    mech,
-                    wristMotorSim,
-                    "3" + config.getName()); // added 3 to the name to create it third
-        }
-    }
+    // class WristSim extends ArmSim {
+    //     public WristSim(TalonFXSimState wristMotorSim, Mechanism2d mech) {
+    //         super(
+    //                 new ArmConfig(
+    //                                 config.wristX,
+    //                                 config.wristY,
+    //                                 config.simRatio,
+    //                                 config.length,
+    //                                 225 - Units.rotationsToDegrees(config.getMaxRotations()) -
+    // 90,
+    //                                 225 - Units.rotationsToDegrees(config.getMinRotations()) -
+    // 90,
+    //                                 -45 - 90)
+    //                         .setMount(Robot.getElevator().getSim(), false),
+    //                 mech,
+    //                 wristMotorSim,
+    //                 "3" + config.getName()); // added 3 to the name to create it third
+    //     }
+    // }
 }
