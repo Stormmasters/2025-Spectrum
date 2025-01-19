@@ -39,13 +39,13 @@ public class RobotStates {
     public static final Trigger climbRoutine = pilot.climbRoutine_start;
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-    public static final Trigger algaeFloor = pilot.algaeFloorY;
-    public static final Trigger L2Algae = pilot.L2Algae_fY;
-    public static final Trigger L3Algae = pilot.L3Algae_B;
-    public static final Trigger L1Coral = pilot.L1Coral_B;
-    public static final Trigger L2Coral = pilot.L2Coral_X;
-    public static final Trigger L3Coral = pilot.L3Coral_fB;
-    public static final Trigger L4Coral = pilot.L4Coral_fX;
+    public static final Trigger algaeFloor = pilot.algaeFloorA;
+    public static final Trigger L2Algae = pilot.L2Algae_fB;
+    public static final Trigger L3Algae = pilot.L3Algae_fX;
+    public static final Trigger L1Coral = pilot.L1Coral_Y;
+    public static final Trigger L2Coral = pilot.L2Coral_B;
+    public static final Trigger L3Coral = pilot.L3Coral_X;
+    public static final Trigger L4Coral = pilot.L4Coral_fY;
     // public static final Trigger home = pilot.homeShoulder_fB;
 
     // public static final Trigger moveElbow = pilot.elbow_Y;

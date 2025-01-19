@@ -25,6 +25,7 @@ public class ArmConfig {
     @Getter private double initMountX;
     @Getter private double initMountY;
     @Getter private double initMountAngle;
+    @Getter private boolean absAngle;
     @Getter private Color8Bit color = new Color8Bit(Color.kBlue);
 
     public ArmConfig(
@@ -51,24 +52,26 @@ public class ArmConfig {
         return this;
     }
 
-    public ArmConfig setMount(LinearSim sim) {
+    public ArmConfig setMount(LinearSim sim, boolean fixedAngle) {
         if (sim != null) {
             mounted = true;
             mount = sim;
             initMountX = sim.getConfig().getInitialX();
             initMountY = sim.getConfig().getInitialY();
             initMountAngle = Math.toRadians(sim.getConfig().getAngle());
+            this.absAngle = fixedAngle;
         }
         return this;
     }
 
-    public ArmConfig setMount(ArmSim sim) {
+    public ArmConfig setMount(ArmSim sim, boolean absAngle) {
         if (sim != null) {
             mounted = true;
             mount = sim;
             initMountX = sim.getConfig().getInitialX();
             initMountY = sim.getConfig().getInitialY();
             initMountAngle = sim.getConfig().getStartingAngle();
+            this.absAngle = absAngle;
         }
         return this;
     }

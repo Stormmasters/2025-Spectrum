@@ -6,7 +6,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,12 +35,12 @@ public class Shoulder extends Mechanism {
         @Getter private final double floorIntake = 99;
         @Getter private final double manualFeed = 100 - 70;
         @Getter private final double ninetyDegrees = 100 - 39;
-        @Getter private final double l1 = 63;
+        @Getter private final double l1Coral = 63;
         @Getter private final double l2Algae = 90; // 100 - 94; // (FM20235)
         @Getter private final double l3Algae = 90; // 100 - 75; // (FM20235)
         @Getter private final double l2Coral = 90; // 0; // (FM20235)
         @Getter private final double l3Coral = 90; // 100 - 94; // (FM20235)
-        @Getter private final double l4 = 57;
+        @Getter private final double l4Coral = 57;
         @Getter private final double barge = 57;
         @Getter @Setter private double tuneShoulder = 0;
 
@@ -61,8 +60,10 @@ public class Shoulder extends Mechanism {
 
         /* Sim properties */
         @Getter private double shoulderX = 0.8;
-        @Getter private double shoulderY = 0.7;
-        @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual shoulder ratio
+        @Getter private double shoulderY = 0.8;
+
+        @Getter @Setter private double simRatio = 1; // TODO: Set this to actual shoulder ratio
+
         @Getter private double length = 0.3;
 
         public ShoulderConfig() {
@@ -70,15 +71,16 @@ public class Shoulder extends Mechanism {
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);
-            configGearRatio(1);
+            configGearRatio(1); // 50.43);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(0, 132.0126953); // 66.0063476563); // .96
+            configMinMaxRotations(0, 11.57142857); // 66.0063476563); // 132.0126953
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive();
+            setSimRatio(15.429);
         }
 
         public ShoulderConfig modifyMotorConfig(TalonFX motor) {
@@ -220,10 +222,10 @@ public class Shoulder extends Mechanism {
                                     config.shoulderY,
                                     config.simRatio,
                                     config.length,
-                                    225 - Units.rotationsToDegrees(config.getMaxRotations()) - 90,
-                                    225 - Units.rotationsToDegrees(config.getMinRotations()) - 90,
-                                    -45 - 90)
-                            .setMount(Robot.getElevator().getSim()),
+                                    -45,
+                                    270 - 45,
+                                    -45)
+                            .setMount(Robot.getElevator().getSim(), true),
                     mech,
                     shoulderMotorSim,
                     "3" + config.getName()); // added 3 to the name to create it third

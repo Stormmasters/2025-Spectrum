@@ -20,11 +20,13 @@ public class ElbowStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        intaking.whileTrue(tuneElbow());
         algaeFloor.whileTrue(elbow.moveToPercentage(config::getFloorIntake));
-        lTwoAlgae.whileTrue(lTwoAlgae());
-        lThreeAlgae.whileTrue(lThreeAlgae());
-        lTwoCoral.whileTrue(lTwoCoral());
-        lThreeCoral.whileTrue(lThreeCoral());
+        L2Algae.whileTrue(l2Algae());
+        L3Algae.whileTrue(l3Algae());
+        L2Coral.whileTrue(l2Coral());
+        L3Coral.whileTrue(l3Coral());
+        L4Coral.whileTrue(l4Coral());
         // home.whileTrue(home());
         // moveElbow.whileFalse(elbow.runHoldElbow());
         // homeElbow.whileFalse(elbow.runHoldElbow());
@@ -40,20 +42,24 @@ public class ElbowStates {
     }
 
     /* Scoring positions */
-    public static Command lTwoAlgae() {
-        return elbow.moveToPercentage(config::getL2Algae).withName("Elbow.lTwoAlgae");
+    public static Command l2Algae() {
+        return elbow.moveToPercentage(config::getL2Algae).withName("Elbow.l2Algae");
     }
 
-    public static Command lThreeAlgae() {
-        return elbow.moveToPercentage(config::getL3Algae).withName("Elbow.lThreeAlgae");
+    public static Command l3Algae() {
+        return elbow.moveToPercentage(config::getL3Algae).withName("Elbow.l3Algae");
     }
 
-    public static Command lTwoCoral() {
-        return elbow.moveToPercentage(config::getL2Coral).withName("Elbow.lTwoCoral");
+    public static Command l2Coral() {
+        return elbow.moveToPercentage(config::getL2Coral).withName("Elbow.l2Coral");
     }
 
-    public static Command lThreeCoral() {
-        return elbow.moveToPercentage(config::getL3Coral).withName("Elbow.lThreeCoral");
+    public static Command l3Coral() {
+        return elbow.moveToPercentage(config::getL3Coral).withName("Elbow.l3Coral");
+    }
+
+    public static Command l4Coral() {
+        return elbow.moveToPercentage(config::getL4Coral).withName("Elbow.l4Coral");
     }
 
     // missing auton Elbow commands, add when auton is added

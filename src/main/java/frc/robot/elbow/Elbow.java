@@ -6,7 +6,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.util.Color;
@@ -27,16 +26,16 @@ public class Elbow extends Mechanism {
     public static class ElbowConfig extends Config {
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
         // TODO: Find elbow positions
-        @Getter private final double home = 1; // -45; // (FM20235)
-        @Getter private final double intake = 87; // -96; // (FM20235)
-        @Getter private final double floorIntake = 90; // -92; // (FM20235)
-        @Getter private final double l1 = 99;
-        @Getter private final double l2Algae = 81; // -97; // (FM20235)
-        @Getter private final double l3Algae = 36; // -74; // (FM20235)
-        @Getter private final double l2Coral = 81;
-        @Getter private final double l3Coral = 36; // -49; // (FM20235)
-        @Getter private final double l4 = 72;
-        @Getter private final double barge = 72;
+        @Getter private final double home = 0;
+        @Getter private final double intake = 35.5;
+        @Getter private final double floorIntake = 87.8;
+        @Getter private final double l1Coral = 87.8;
+        @Getter private final double l2Algae = 20;
+        @Getter private final double l3Algae = 20;
+        @Getter private final double l2Coral = 20;
+        @Getter private final double l3Coral = 20;
+        @Getter private final double l4Coral = 31.1;
+        @Getter private final double barge = 31.1;
         @Getter @Setter private double tuneElbow = 0;
 
         /* Elbow config settings */
@@ -45,22 +44,18 @@ public class Elbow extends Mechanism {
         @Getter @Setter private boolean shortFeed = false;
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
-        @Getter private final double velocityKp = 186; // 200 w/ 0.013 good
+        @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
         @Getter private final double velocityKv = 0.018;
         @Getter private final double velocityKs = 0;
-
-        @Getter @Setter private double floorAlgaeTest = -92;
 
         // Need to add auto launching positions when auton is added
 
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double elbowX = 0.6; // 1.0;
-        @Getter private double elbowY = 0.5;
-
-        @Getter @Setter private double simRatio = 172.8; // TODO: Set to actual elbow ratio
-
+        @Getter private double elbowX = 0.6 + 0.4; // 1.0;
+        @Getter private double elbowY = 0.6;
+        @Getter @Setter private double simRatio = 1; // TODO: Set to actual elbow ratio
         @Getter private double length = 0.4;
 
         public ElbowConfig() {
@@ -72,11 +67,14 @@ public class Elbow extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-66, 66); // -33.357421875, 30.88671875);
+            configMinMaxRotations(
+                    -7.714285714,
+                    7.714285714); // -88.008467, 88.008467); // -33.357421875, 30.88671875);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
-            configClockwise_Positive();
+            configCounterClockwise_Positive();
+            setSimRatio(15.429);
         }
 
         public ElbowConfig modifyMotorConfig(TalonFX motor) {
@@ -218,11 +216,15 @@ public class Elbow extends Mechanism {
                                     config.elbowY,
                                     config.simRatio,
                                     config.length,
-                                    -180 + Units.rotationsToDegrees(config.getMinRotations()),
-                                    -180 + Units.rotationsToDegrees(config.getMaxRotations()),
-                                    -180)
+                                    -90,
+                                    // 180 - 45 +
+                                    // Units.rotationsToDegrees(config.getMinRotations()),
+                                    180 + 90,
+                                    // 180 - 45 +
+                                    // Units.rotationsToDegrees(config.getMaxRotations()),
+                                    180 - 90)
                             .setColor(new Color8Bit(Color.kAqua))
-                            .setMount(Robot.getShoulder().getSim()),
+                            .setMount(Robot.getShoulder().getSim(), true),
                     mech,
                     elbowMotorSim,
                     "2" + config.getName()); // added 2 to the name to create it second
