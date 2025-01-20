@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Telemetry;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
 
@@ -38,30 +38,26 @@ public class Auton {
      */
     public void setupSelectors() {
 
-        pathChooser.setDefaultOption(
-                "Do Nothing", Commands.print("Do Nothing Auto ran").withName(null));
+        pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
         // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto"));
         // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto"));
 
+        pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
+
         pathChooser.addOption(
                 "Clean Side - Preplace 5High | Left",
-                SpectrumAuton("Clean Side - Preplace 5High", false)
-                        .withName("Clean Side - Preplace 5High"));
+                SpectrumAuton("Clean Side - Preplace 5High", false));
         pathChooser.addOption(
                 "Clean Side - Preplace 5High | Right",
-                SpectrumAuton("Clean Side - Preplace 5High", true)
-                        .withName("Clean Side - Preplace 5High"));
+                SpectrumAuton("Clean Side - Preplace 5High", true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
 
     public Auton() {
         setupSelectors(); // runs the command to start the chooser for auto on shuffleboard
-
-        RobotTelemetry.print("Auton Subsystem Initialized: ");
+        Telemetry.print("Auton Subsystem Initialized: ");
     }
-
-    public static Pose2d autoStartingPos;
 
     public void init() {
         Command autonCommand = getAutonomousCommand();
@@ -70,7 +66,7 @@ public class Auton {
             autonCommand.schedule();
             startAutonTimer();
         } else {
-            RobotTelemetry.print("No Auton Command Found");
+            Telemetry.print("No Auton Command Found");
         }
     }
 
@@ -88,7 +84,15 @@ public class Auton {
      * @return a Command that represents the SpectrumAuton sequence
      */
     public Command SpectrumAuton(String autoName, boolean flipped) {
-        return Commands.waitSeconds(0.01).andThen(new PathPlannerAuto(autoName, flipped));
+        Command autoCommand = new PathPlannerAuto(autoName, flipped);
+        return (Commands.waitSeconds(0.01)
+                        .andThen(autoCommand)
+                        .alongWith(
+                                Commands.print(
+                                        autoName
+                                                + " Auto ran\nRequirements: "
+                                                + autoCommand.getRequirements())))
+                .withName(autoName);
     }
 
     /**
@@ -122,12 +126,12 @@ public class Auton {
         if (autoCommand != null) {
             if (!autoCommand.isScheduled() && !autoMessagePrinted) {
                 if (DriverStation.isAutonomousEnabled()) {
-                    RobotTelemetry.print(
+                    Telemetry.print(
                             String.format(
                                     "*** Auton finished in %.2f secs ***",
                                     Timer.getFPGATimestamp() - autonStart));
                 } else {
-                    RobotTelemetry.print(
+                    Telemetry.print(
                             String.format(
                                     "*** Auton CANCELLED in %.2f secs ***",
                                     Timer.getFPGATimestamp() - autonStart));
@@ -137,11 +141,11 @@ public class Auton {
         }
     }
 
-    public static Command followSinglePath(String PathName) {
+    public static Command followSinglePath(String pathName) {
         // Load the path you want to follow using its name in the GUI
         PathPlannerPath path;
         try {
-            path = PathPlannerPath.fromPathFile(PathName);
+            path = PathPlannerPath.fromPathFile(pathName);
 
             // Create a path following command using AutoBuilder. This will also trigger event
             // markers.

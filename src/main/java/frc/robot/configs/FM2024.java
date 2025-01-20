@@ -1,8 +1,8 @@
 package frc.robot.configs;
 
-import frc.robot.RobotConfig.ConfigHolder;
+import frc.robot.Robot.Config;
 
-public class FM2024 extends ConfigHolder {
+public class FM2024 extends Config {
 
     public FM2024() {
         super();
@@ -18,6 +18,8 @@ public class FM2024 extends ConfigHolder {
         operator.setAttached(true);
         pivot.setAttached(true);
         pilot.setAttached(true);
+        elbow.setAttached(false);
+        shoulder.setAttached(false);
 
         // Pivot CANCoder configs
         /**

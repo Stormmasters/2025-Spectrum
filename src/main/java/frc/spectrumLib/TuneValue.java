@@ -1,4 +1,4 @@
-package frc.spectrumLib.util;
+package frc.spectrumLib;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.DoubleSupplier;
@@ -10,10 +10,10 @@ public class TuneValue {
     @Getter private double value;
     @Getter private String name;
 
-    public TuneValue(String Name, double defaultValue) {
-        SmartDashboard.putNumber(Name, defaultValue);
+    public TuneValue(String name, double defaultValue) {
+        SmartDashboard.putNumber(name, defaultValue);
         value = defaultValue;
-        name = Name;
+        this.name = name;
     }
 
     public Double update() {
@@ -22,6 +22,6 @@ public class TuneValue {
     }
 
     public DoubleSupplier getSupplier() {
-        return () -> update();
+        return this::update;
     }
 }

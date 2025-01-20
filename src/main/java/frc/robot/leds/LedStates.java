@@ -3,13 +3,15 @@ package frc.robot.leds;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elevator.ElevatorStates;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.leds.SpectrumLEDs;
 import frc.spectrumLib.util.Util;
 
-public class LedCommands {
+public class LedStates {
     private static LedFull leds = Robot.getLeds();
     private static LedRight right = leds.getRight();
     private static LedLeft left = leds.getLeft();
@@ -22,7 +24,6 @@ public class LedCommands {
 
         // Elevator Led Commands
         elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
-        xButtonLED(Robot.getPilot().X, 3);
     }
 
     /** Default LED commands for each mode */
@@ -38,26 +39,20 @@ public class LedCommands {
                 "right.disabledPattern", right, right.ombre(right.purple, right.white), trigger);
         ledDefaultCommand(
                 "left.disabledPattern", left, left.ombre(left.purple, left.white), trigger);
-    };
+    }
 
     static void teleopPattern(Trigger trigger) {
         ledDefaultCommand("right.teleopPattern", right, right.bounce(right.purple, 3), trigger);
         ledDefaultCommand("left.teleopPattern", left, left.bounce(left.purple, 3), trigger);
-    };
+    }
 
     static void autoPattern(Trigger trigger) {
         ledDefaultCommand(
-                "right.autoPattern",
-                right,
-                right.countdown(() -> Timer.getFPGATimestamp(), 15),
-                trigger);
+                "right.autoPattern", right, right.countdown(Timer::getFPGATimestamp, 15), trigger);
 
         ledDefaultCommand(
-                "left.autoPattern",
-                left,
-                left.countdown(() -> Timer.getFPGATimestamp(), 15),
-                trigger);
-    };
+                "left.autoPattern", left, left.countdown(Timer::getFPGATimestamp, 15), trigger);
+    }
 
     static void testModePattern(Trigger trigger) {
         ledDefaultCommand("right.testModePattern", right, right.chase(Color.kRed, 0.2, 1), trigger);
@@ -68,7 +63,7 @@ public class LedCommands {
     private static Trigger ledCommand(
             String name, SpectrumLEDs sLed, LEDPattern pattern, int priority, Trigger trigger) {
         return trigger.and(sLed.checkPriority(priority))
-                .whileTrue(sLed.setPattern(pattern, priority).withName(name));
+                .whileTrue(log(sLed.setPattern(pattern, priority).withName(name)));
     }
 
     static void elevatorUpLED(Trigger trigger, int priority) {
@@ -76,8 +71,8 @@ public class LedCommands {
         ledCommand("left.ElevatorUp", left, left.blink(Color.kBlue, 0.25), priority, trigger);
     }
 
-    static void xButtonLED(Trigger trigger, int priority) {
-        ledCommand("right.XButton", right, right.rainbow(), priority, trigger);
-        ledCommand("left.XButton", left, left.rainbow(), priority, trigger);
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

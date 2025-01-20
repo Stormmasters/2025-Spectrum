@@ -2,9 +2,8 @@ package frc.robot.operator;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
-import lombok.Getter;
 
 public class Operator extends Gamepad {
     // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
@@ -53,10 +52,9 @@ public class Operator extends Gamepad {
 
     public static class OperatorConfig extends Config {
 
-        @Getter private final double triggersDeadzone = 0;
-
         public OperatorConfig() {
             super("Operator", 1);
+            setTriggersDeadzone(0.0);
         }
     }
 
@@ -65,8 +63,8 @@ public class Operator extends Gamepad {
     public Operator(OperatorConfig config) {
         super(config);
         this.config = config;
-        Robot.subsystems.add(this);
-        RobotTelemetry.print("Operator Subsystem Initialized: ");
+        Robot.add(this);
+        Telemetry.print("Operator Subsystem Initialized: ");
     }
 
     public void setupStates() {

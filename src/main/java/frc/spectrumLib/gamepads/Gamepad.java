@@ -1,6 +1,7 @@
 package frc.spectrumLib.gamepads;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -20,28 +21,31 @@ import lombok.Setter;
 
 // Gamepad class
 public abstract class Gamepad implements SpectrumSubsystem {
+    private Alert disconnectedAlert;
+
+    public static final Trigger kFalse = new Trigger(() -> false);
 
     private CommandXboxController xboxController;
-    public Trigger A = Trigger.kFalse;
-    public Trigger B = Trigger.kFalse;
-    public Trigger X = Trigger.kFalse;
-    public Trigger Y = Trigger.kFalse;
-    public Trigger leftBumper = Trigger.kFalse;
-    public Trigger rightBumper = Trigger.kFalse;
-    public Trigger leftTrigger = Trigger.kFalse;
-    public Trigger rightTrigger = Trigger.kFalse;
-    public Trigger leftStickClick = Trigger.kFalse;
-    public Trigger rightStickClick = Trigger.kFalse;
-    public Trigger start = Trigger.kFalse;
-    public Trigger select = Trigger.kFalse;
-    public Trigger upDpad = Trigger.kFalse;
-    public Trigger downDpad = Trigger.kFalse;
-    public Trigger leftDpad = Trigger.kFalse;
-    public Trigger rightDpad = Trigger.kFalse;
-    public Trigger leftStickY = Trigger.kFalse;
-    public Trigger leftStickX = Trigger.kFalse;
-    public Trigger rightStickY = Trigger.kFalse;
-    public Trigger rightStickX = Trigger.kFalse;
+    protected Trigger A = kFalse;
+    protected Trigger B = kFalse;
+    protected Trigger X = kFalse;
+    protected Trigger Y = kFalse;
+    protected Trigger leftBumper = kFalse;
+    protected Trigger rightBumper = kFalse;
+    protected Trigger leftTrigger = kFalse;
+    protected Trigger rightTrigger = kFalse;
+    protected Trigger leftStickClick = kFalse;
+    protected Trigger rightStickClick = kFalse;
+    protected Trigger start = kFalse;
+    protected Trigger select = kFalse;
+    protected Trigger upDpad = kFalse;
+    protected Trigger downDpad = kFalse;
+    protected Trigger leftDpad = kFalse;
+    protected Trigger rightDpad = kFalse;
+    protected Trigger leftStickY = kFalse;
+    protected Trigger leftStickX = kFalse;
+    protected Trigger rightStickY = kFalse;
+    protected Trigger rightStickX = kFalse;
 
     // Setup function bumper and trigger buttons
     public Trigger noBumpers = rightBumper.negate().and(leftBumper.negate());
@@ -59,7 +63,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
     private boolean configured =
             false; // Used to determine if we detected the gamepad is plugged and we have configured
     // it
-    private boolean printed = false; // Used to only print Gamepad Not Deteceted once
+    private boolean printed = false; // Used to only print Gamepad Not Detected once
 
     @Getter protected final ExpCurve leftStickCurve;
     @Getter protected final ExpCurve rightStickCurve;
@@ -75,7 +79,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
         @Getter private int port; // USB port on the DriverStation app
 
         // A configured value to say if we should use this controller on this robot
-        @Getter @Setter private Boolean attached;
+        @Getter @Setter private boolean attached;
 
         @Getter @Setter double leftStickDeadzone = 0.001;
         @Getter @Setter double leftStickExp = 1.0;
@@ -106,9 +110,12 @@ public abstract class Gamepad implements SpectrumSubsystem {
      *     using exponential curves. - If the gamepad is attached, initializes the Xbox controller
      *     and its buttons, triggers, sticks, and D-pad.
      */
-    public Gamepad(Config config) {
+    protected Gamepad(Config config) {
         this.config = config;
-        // Curve objects that we use to configure the controller axis ojbects
+        disconnectedAlert =
+                new Alert(config.name + " Gamepad Disconnected", Alert.AlertType.kError);
+
+        // Curve objects that we use to configure the controller axis objects
         leftStickCurve =
                 new ExpCurve(
                         config.getLeftStickExp(),
@@ -154,6 +161,10 @@ public abstract class Gamepad implements SpectrumSubsystem {
             leftStickX = leftXTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
             rightStickY = rightYTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
             rightStickX = rightXTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
+            leftStickY = leftYTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
+            leftStickX = leftXTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
+            rightStickY = rightYTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
+            rightStickX = rightXTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
         }
 
         CommandScheduler.getInstance().registerSubsystem(this);
@@ -166,8 +177,10 @@ public abstract class Gamepad implements SpectrumSubsystem {
 
     // Configure the pilot controller
     public void configure() {
-        if (config.getAttached()) {
-            // Detect whether the xbox controller has been plugged in after start-up
+        if (config.isAttached()) {
+            disconnectedAlert.set(!isConnected()); // Display if the controller is disconnected
+
+            // Detect whether the Xbox controller has been plugged in after start-up
             if (!configured) {
                 if (!isConnected()) {
                     if (!printed) {
@@ -316,33 +329,29 @@ public abstract class Gamepad implements SpectrumSubsystem {
     }
 
     public Trigger leftYTrigger(Threshold t, double threshold) {
-        return axisTrigger(t, threshold, () -> getLeftY());
+        return axisTrigger(t, threshold, this::getLeftY);
     }
 
     public Trigger leftXTrigger(Threshold t, double threshold) {
-        return axisTrigger(t, threshold, () -> getLeftX());
+        return axisTrigger(t, threshold, this::getLeftX);
     }
 
     public Trigger rightYTrigger(Threshold t, double threshold) {
-        return axisTrigger(t, threshold, () -> getRightY());
+        return axisTrigger(t, threshold, this::getRightY);
     }
 
     public Trigger rightXTrigger(Threshold t, double threshold) {
-        return axisTrigger(t, threshold, () -> getRightX());
+        return axisTrigger(t, threshold, this::getRightX);
     }
 
     public Trigger rightStick(double threshold) {
         return new Trigger(
-                () -> {
-                    return Math.abs(getRightX()) >= threshold || Math.abs(getRightY()) >= threshold;
-                });
+                () -> Math.abs(getRightX()) >= threshold || Math.abs(getRightY()) >= threshold);
     }
 
     public Trigger leftStick(double threshold) {
         return new Trigger(
-                () -> {
-                    return Math.abs(getLeftX()) >= threshold || Math.abs(getLeftY()) >= threshold;
-                });
+                () -> Math.abs(getLeftX()) >= threshold || Math.abs(getLeftY()) >= threshold);
     }
 
     private Trigger axisTrigger(Threshold t, double threshold, DoubleSupplier v) {
@@ -362,7 +371,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
                 });
     }
 
-    public static enum Threshold {
+    public enum Threshold {
         GREATER,
         LESS,
         ABS_GREATER;
@@ -405,49 +414,49 @@ public abstract class Gamepad implements SpectrumSubsystem {
         }
     }
 
-    public double getRightTriggerAxis() {
+    protected double getRightTriggerAxis() {
         if (!isConnected()) {
             return 0.0;
         }
         return xboxController.getRightTriggerAxis();
     }
 
-    public double getLeftTriggerAxis() {
+    protected double getLeftTriggerAxis() {
         if (!isConnected()) {
             return 0.0;
         }
         return xboxController.getLeftTriggerAxis();
     }
 
-    public double getTwist() {
+    protected double getTwist() {
         double right = getRightTriggerAxis();
         double left = getLeftTriggerAxis();
         double value = right - left;
         return value;
     }
 
-    public double getLeftX() {
+    protected double getLeftX() {
         if (!isConnected()) {
             return 0.0;
         }
         return xboxController.getLeftX();
     }
 
-    public double getLeftY() {
+    protected double getLeftY() {
         if (!isConnected()) {
             return 0.0;
         }
         return xboxController.getLeftY();
     }
 
-    public double getRightX() {
+    protected double getRightX() {
         if (!isConnected()) {
             return 0.0;
         }
         return xboxController.getRightX();
     }
 
-    public double getRightY() {
+    protected double getRightY() {
         if (!isConnected()) {
             return 0.0;
         }

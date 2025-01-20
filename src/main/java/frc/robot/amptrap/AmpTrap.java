@@ -4,10 +4,10 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import frc.robot.Robot;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
@@ -44,10 +44,10 @@ public class AmpTrap extends Mechanism {
         @Getter private double wheelDiameter = 5.0;
 
         public AmpTrapConfig() {
-            super("AmpTrap", 51, RobotConfig.RIO_CANBUS);
+            super("AmpTrap", 51, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configGearRatio(12 / 30);
+            configGearRatio(12.0 / 30.0);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
@@ -69,7 +69,7 @@ public class AmpTrap extends Mechanism {
 
         simulationInit();
         telemetryInit();
-        RobotTelemetry.print(getName() + " Subsystem Initialized");
+        Telemetry.print(getName() + " Subsystem Initialized");
     }
 
     @Override
@@ -91,8 +91,9 @@ public class AmpTrap extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
-            builder.addDoubleProperty("Velocity RPS", this::getVelocityRPS, null);
+            builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
+            builder.addDoubleProperty("VelocityRPM", this::getVelocityRPM, null);
+            builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
         }
     }
 

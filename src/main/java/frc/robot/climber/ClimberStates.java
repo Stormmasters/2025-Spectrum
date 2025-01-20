@@ -9,7 +9,9 @@ import frc.robot.climber.Climber.ClimberConfig;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
-import frc.spectrumLib.util.TuneValue;
+import frc.spectrumLib.Telemetry;
+import frc.spectrumLib.TuneValue;
+import java.util.function.DoubleSupplier;
 
 public class ClimberStates {
     private static Climber climber = Robot.getClimber();
@@ -27,7 +29,8 @@ public class ClimberStates {
             climber.atPercentage(config::getHome, config::getTolerance);
 
     public static void setupDefaultCommand() {
-        climber.setDefaultCommand(holdPosition().ignoringDisable(true).withName("Climber.default"));
+        climber.setDefaultCommand(
+                log(holdPosition().ignoringDisable(true).withName("Climber.default")));
     }
 
     public static void setStates() {
@@ -36,19 +39,24 @@ public class ClimberStates {
         // What does the climber do in auto climb sequence?
         // Hooks go to mid climb, until Elevator is full up
         // Once Elevator is full up, hooks go to home
-        climbRoutine.and(ElevatorStates.isUp.not()).whileTrue(midClimb());
-        climbRoutine.and(ElevatorStates.isUp).whileTrue(home());
-        pilot.retract_X.whileTrue(home());
+        climbRoutine.and(ElevatorStates.isUp.not()).whileTrue(log(midClimb()));
+        climbRoutine.and(ElevatorStates.isUp).whileTrue(log(home()));
+        pilot.retract_X.whileTrue(log(home()));
 
-        operator.topClimb_fUdp.whileTrue(fullExtend());
-        operator.midClimb_fDdp.whileTrue(midClimb());
-        operator.botClimb_fRdp.whileTrue(home());
+        operator.topClimb_fUdp.whileTrue(log(fullExtend()));
+        operator.midClimb_fDdp.whileTrue(log(midClimb()));
+        operator.botClimb_fRdp.whileTrue(log(home()));
 
-        operator.safeClimb_START.whileTrue(safeClimb());
-        operator.zeroClimber.whileTrue(climber.zeroClimberRoutine());
+        operator.safeClimb_START.whileTrue(log(safeClimb()));
+        operator.zeroClimber.whileTrue(log(climber.zeroClimberRoutine()));
+        operator.overrideClimber.whileTrue(log(runClimber(operator::getClimberOverride)));
 
-        coastMode.onTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.onTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
+    }
+
+    private static Command runClimber(DoubleSupplier speed) {
+        return climber.runPercentage(speed).withName("Elevator.runElevator");
     }
 
     private static Command holdPosition() {
@@ -82,5 +90,10 @@ public class ClimberStates {
     private static Command tuneClimber() {
         return climber.moveToPercentage(new TuneValue("Tune Climber", 0).getSupplier())
                 .withName("Climber.Tune");
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

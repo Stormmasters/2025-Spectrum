@@ -3,19 +3,21 @@ package frc.robot.elevator;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.climber.ClimberStates;
 import frc.robot.elevator.Elevator.ElevatorConfig;
+import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
-import frc.spectrumLib.util.TuneValue;
+import frc.spectrumLib.Telemetry;
+import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
 public class ElevatorStates {
     private static Elevator elevator = Robot.getElevator();
     private static ElevatorConfig config = Robot.getConfig().elevator;
     private static Pilot pilot = Robot.getPilot();
+    private static Operator operator = Robot.getOperator();
 
     /* Check Elevator States */
     // Is Amp Height
@@ -32,63 +34,67 @@ public class ElevatorStates {
     }
 
     public static void setStates() {
-        // Test statements to show how these triggers work
-        isAtAmp.onTrue(Commands.print("At Amp Height"));
-        isUp.onTrue(Commands.print("Elevator Up"));
-
-        ampPrep.whileTrue(amp());
+        // ampPrep.whileTrue(Telemetry.log(amp()));
         score.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
-        climbRoutine.and(ClimberStates.atMidClimbPos).onTrue(fullExtend());
+        climbRoutine.and(ClimberStates.atMidClimbPos).onTrue(log(fullExtend()));
+
+        operator.overrideElevator.whileTrue(
+                log(runElevator(operator::getElevatorOverride).withName("Elevator.operator")));
+        operator.zeroElevator.whileTrue(log(zero()));
 
         // Test Mode Buttons
-        pilot.tuneElevator_tB.whileTrue(tuneElevator());
+        pilot.tuneElevator_tB.whileTrue(log(tuneElevator()));
 
-        coastMode.onTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.onTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
     }
 
-    public static Command runElevator(DoubleSupplier speed) {
-
+    private static Command runElevator(DoubleSupplier speed) {
         return elevator.runPercentage(speed).withName("Elevator.runElevator");
     }
 
-    public static Command holdPosition() {
+    private static Command holdPosition() {
         return elevator.holdPosition().withName("Elevator.holdPosition");
     }
 
-    public static Command fullExtend() {
+    private static Command fullExtend() {
         return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
     }
 
-    public static Command amp() {
-        return elevator.moveToRotations(config::getAmp).withName("Elevator.amp");
+    private static Command amp() {
+        return elevator.moveToRotations(config::getAmp)
+                .alongWith(elevator.checkMaxCurrent(() -> 100))
+                .withName("Elevator.amp");
     }
 
-    public static Command trap() {
-        return elevator.moveToRotations(config::getTrap).withName("Elevator.trap");
+    private static Command home() {
+        return elevator.moveToRotations(config::getHome)
+                .alongWith(elevator.checkMaxCurrent(() -> 100))
+                .withName("Elevator.home");
     }
 
-    public static Command home() {
-        return elevator.moveToRotations(config::getHome).withName("Elevator.home");
-    }
-
-    public static Command zero() {
+    private static Command zero() {
         return elevator.zeroElevatorRoutine().withName("Zero Elevator");
     }
 
-    public static Command coastMode() {
+    private static Command coastMode() {
         return elevator.coastMode().withName("Elevator.CoastMode");
     }
 
-    public static Command ensureBrakeMode() {
+    private static Command ensureBrakeMode() {
         return elevator.ensureBrakeMode().withName("Elevator.BrakeMode");
     }
 
     // Example of a TuneValue that is used to tune a single value in the code
-    public static Command tuneElevator() {
+    private static Command tuneElevator() {
         return elevator.moveToRotations(new TuneValue("Tune Elevator", 0).getSupplier())
                 .withName("Elevator.Tune");
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

@@ -19,10 +19,10 @@ import frc.spectrumLib.util.CanDeviceId;
  */
 public class TalonFXFactory {
 
-    private static NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
-    private static InvertedValue INVERT_VALUE = InvertedValue.CounterClockwise_Positive;
-    private static double NEUTRAL_DEADBAND = 0.04;
-    private static double SUPPLY_CURRENT_LIMIT = 40;
+    private static NeutralModeValue neutralMode = NeutralModeValue.Brake;
+    private static InvertedValue invertValue = InvertedValue.CounterClockwise_Positive;
+    private static double neutralDeadband = 0.04;
+    private static double supplyCurrentLimit = 40;
 
     private TalonFXFactory() {}
 
@@ -41,16 +41,16 @@ public class TalonFXFactory {
 
     // Create a new follower talon with same configuration as the leader talon
     public static TalonFX createPermanentFollowerTalon(
-            CanDeviceId follower_id, TalonFX leaderTalonFX, boolean opposeLeaderDirection) {
+            CanDeviceId followerId, TalonFX leaderTalonFX, boolean opposeLeaderDirection) {
         String leaderCanBus = leaderTalonFX.getNetwork();
         int leaderId = leaderTalonFX.getDeviceID();
-        if (!follower_id.getBus().equals(leaderCanBus)) {
+        if (!followerId.getBus().equals(leaderCanBus)) {
             throw new RuntimeException("Leader and Follwer Talons must be on the same CAN bus");
         }
 
         TalonFXConfiguration followerConfig = getDefaultConfig();
         leaderTalonFX.getConfigurator().refresh(followerConfig);
-        final TalonFX talon = createConfigTalon(follower_id, followerConfig);
+        final TalonFX talon = createConfigTalon(followerId, followerConfig);
 
         talon.setControl(new Follower(leaderId, opposeLeaderDirection));
         return talon;
@@ -59,13 +59,13 @@ public class TalonFXFactory {
     public static TalonFXConfiguration getDefaultConfig() {
         TalonFXConfiguration config = new TalonFXConfiguration();
 
-        config.MotorOutput.NeutralMode = NEUTRAL_MODE;
-        config.MotorOutput.Inverted = INVERT_VALUE;
-        config.MotorOutput.DutyCycleNeutralDeadband = NEUTRAL_DEADBAND;
+        config.MotorOutput.NeutralMode = neutralMode;
+        config.MotorOutput.Inverted = invertValue;
+        config.MotorOutput.DutyCycleNeutralDeadband = neutralDeadband;
         config.MotorOutput.PeakForwardDutyCycle = 1.0;
         config.MotorOutput.PeakReverseDutyCycle = -1.0;
 
-        config.CurrentLimits.SupplyCurrentLimit = SUPPLY_CURRENT_LIMIT;
+        config.CurrentLimits.SupplyCurrentLimit = supplyCurrentLimit;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimitEnable = false;
 

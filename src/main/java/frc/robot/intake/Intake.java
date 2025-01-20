@@ -3,10 +3,11 @@ package frc.robot.intake;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import frc.robot.RobotConfig;
+import frc.robot.Robot;
 import frc.robot.RobotSim;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
@@ -18,36 +19,37 @@ public class Intake extends Mechanism {
 
         /* Revolutions per min Intake Output */
         @Getter private double maxSpeed = 5000;
-        @Getter private double intake = 2000;
-        @Getter private double eject = -2000;
-        @Getter private double slowIntake = 1000;
+        @Getter private double intake = -5000;
+        @Getter private double eject = 2000;
+        @Getter private double slowIntake = -1000;
 
         /* Percentage Intake Output */
         @Getter private double slowIntakePercentage = 0.06;
 
         /* Intake config values */
-        @Getter private double currentLimit = 30;
+        @Getter private double currentLimit = 40;
         @Getter private double torqueCurrentLimit = 120;
         @Getter private double velocityKp = 12; // 0.156152;
         @Getter private double velocityKv = 0.2; // 0.12;
         @Getter private double velocityKs = 14;
 
         /* Sim Configs */
-        @Getter private double intakeX = 0.325;
-        @Getter private double intakeY = 0.05;
+        @Getter private double intakeX = 0.8;
+        @Getter private double intakeY = 0.2;
         @Getter private double wheelDiameter = 5.0;
 
         public IntakeConfig() {
-            super("Intake", 8, RobotConfig.CANIVORE);
+            // super("Intake", 5, Rio.CANIVORE);
+            super("Intake", 5, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configGearRatio(12 / 30);
+            configGearRatio(12.0 / 30.0);
             configSupplyCurrentLimit(currentLimit, true);
-            configStatorCurrentLimit(30, true);
+            configStatorCurrentLimit(120, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive(); // might be different on actual robot
+            configClockwise_Positive(); // might be different on actual robot
             configMotionMagic(51, 205, 0);
         }
     }
@@ -63,7 +65,7 @@ public class Intake extends Mechanism {
 
         simulationInit();
         telemetryInit();
-        RobotTelemetry.print(getName() + " Subsystem Initialized");
+        Telemetry.print(getName() + " Subsystem Initialized");
     }
 
     @Override
@@ -85,8 +87,9 @@ public class Intake extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
-            builder.addDoubleProperty("Velocity RPS", this::getVelocityRPS, null);
+            builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
+            builder.addDoubleProperty("Velocity RPM", this::getVelocityRPM, null);
+            builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
         }
     }
 
@@ -118,7 +121,8 @@ public class Intake extends Mechanism {
         public IntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
             super(
                     new RollerConfig(config.wheelDiameter)
-                            .setPosition(config.intakeX, config.intakeY),
+                            .setPosition(config.intakeX, config.intakeY)
+                            .setMount(Robot.getElbow().getSim()),
                     mech,
                     rollerMotorSim,
                     config.getName());

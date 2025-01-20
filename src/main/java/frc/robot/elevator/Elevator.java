@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.LinearConfig;
 import frc.spectrumLib.sim.LinearSim;
@@ -19,14 +19,13 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxHeight = 29.8;
-        @Getter private double minHeight = 0;
+        @Getter private double maxRotations = 29.8;
+        @Getter private double minRotations = 0;
 
         /* Elevator positions in rotations */
-        @Getter @Setter private double fullExtend = maxHeight;
-        @Getter private double home = minHeight;
+        @Getter @Setter private double fullExtend = maxRotations;
+        @Getter private double home = minRotations;
         @Getter private double amp = 15;
-        @Getter private double trap = 5;
 
         @Getter private double tolerance = 0.95;
         @Getter private double elevatorUpHeight = 5;
@@ -44,13 +43,13 @@ public class Elevator extends Mechanism {
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.5;
         @Getter private double initialY = 0.0;
-        @Getter private double angle = 180 - 72;
+        @Getter private double angle = 180.0 - 72.0;
         @Getter private double staticLength = 20;
         @Getter private double movingLength = 20;
 
         public ElevatorConfig() {
-            super("Elevator", 52, RobotConfig.CANIVORE);
-            setFollowerConfigs(new FollowerConfig("left", 53, RobotConfig.CANIVORE, false));
+            super("Elevator", 52, Rio.CANIVORE);
+            configMinMaxRotations(minRotations, maxRotations);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);
             configMotionMagic(700, 900, 0); // 40, 120 FOC // 120, 195 Regular
@@ -58,8 +57,8 @@ public class Elevator extends Mechanism {
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configForwardSoftLimit(maxHeight, true);
-            configReverseSoftLimit(minHeight, true);
+            configForwardSoftLimit(maxRotations, true);
+            configReverseSoftLimit(minRotations, true);
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive();
         }
@@ -80,7 +79,7 @@ public class Elevator extends Mechanism {
 
         simulationInit();
         telemetryInit();
-        RobotTelemetry.print(getName() + " Subsystem Initialized");
+        Telemetry.print(getName() + " Subsystem Initialized");
     }
 
     @Override
@@ -101,8 +100,10 @@ public class Elevator extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Position Percentage", this::getPositionPercentage, null);
+            builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
+            builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
             builder.addDoubleProperty("#FullExtend", config::getFullExtend, config::setFullExtend);
         }
     }
@@ -155,7 +156,7 @@ public class Elevator extends Mechanism {
         return new FunctionalCommand(
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
-                        (b) -> {
+                        b -> {
                             tareMotor();
                             toggleReverseSoftLimit(true); // end
                         },

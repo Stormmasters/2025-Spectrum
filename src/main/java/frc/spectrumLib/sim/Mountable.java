@@ -8,6 +8,9 @@ public interface Mountable {
             MountType mountType,
             double initialX,
             double initialY,
+            double initMountX,
+            double initMountY,
+            double initMountAngle,
             double mountX,
             double mountY,
             double displacementX,
@@ -15,14 +18,21 @@ public interface Mountable {
             double mountAngle) {
         switch (mountType) {
             case LINEAR:
-                return initialX + displacementX;
+                return getXWithAngle(
+                        getDistance(initialX, initialY, initMountX, initMountY),
+                        mountAngle
+                                + getAngleOffset(
+                                        initialX, initialY, initMountX, initMountY, initMountAngle),
+                        initMountX + displacementX);
             case ARM:
                 return getXWithAngle(
-                        getMountRootDistance(initialX, initialY, mountX, mountY),
-                        mountAngle,
-                        displacementX + mountX);
+                        getDistance(initialX, initialY, initMountX, initMountY),
+                        mountAngle
+                                + getAngleOffset(
+                                        initialX, initialY, initMountX, initMountY, initMountAngle),
+                        mountX);
             default:
-                return 0;
+                return initialX;
         }
     }
 
@@ -30,6 +40,9 @@ public interface Mountable {
             MountType mountType,
             double initialX,
             double initialY,
+            double initMountX,
+            double initMountY,
+            double initMountAngle,
             double mountX,
             double mountY,
             double displacementX,
@@ -37,14 +50,21 @@ public interface Mountable {
             double mountAngle) {
         switch (mountType) {
             case LINEAR:
-                return initialY + displacementY;
+                return getYWithAngle(
+                        getDistance(initialX, initialY, initMountX, initMountY),
+                        mountAngle
+                                + getAngleOffset(
+                                        initialX, initialY, initMountX, initMountY, initMountAngle),
+                        initMountY + displacementY);
             case ARM:
                 return getYWithAngle(
-                        getMountRootDistance(initialX, initialY, mountX, mountY),
-                        mountAngle,
-                        displacementY + mountY);
+                        getDistance(initialX, initialY, initMountX, initMountY),
+                        mountAngle
+                                + getAngleOffset(
+                                        initialX, initialY, initMountX, initMountY, initMountAngle),
+                        mountY);
             default:
-                return 0;
+                return initialY;
         }
     }
 
@@ -54,8 +74,11 @@ public interface Mountable {
                 mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
-                config.getMountX(),
-                config.getMountY(),
+                config.getInitMountX(),
+                config.getInitMountY(),
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
                 mount.getDisplacementX(),
                 mount.getDisplacementY(),
                 mount.getAngle());
@@ -67,8 +90,11 @@ public interface Mountable {
                 mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
-                config.getMountX(),
-                config.getMountY(),
+                config.getInitMountX(),
+                config.getInitMountY(),
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
                 mount.getDisplacementX(),
                 mount.getDisplacementY(),
                 mount.getAngle());
@@ -80,8 +106,11 @@ public interface Mountable {
                 mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
-                config.getMountX(),
-                config.getMountY(),
+                config.getInitMountX(),
+                config.getInitMountY(),
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
                 mount.getDisplacementX(),
                 mount.getDisplacementY(),
                 mount.getAngle());
@@ -93,8 +122,11 @@ public interface Mountable {
                 mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
-                config.getMountX(),
-                config.getMountY(),
+                config.getInitMountX(),
+                config.getInitMountY(),
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
                 mount.getDisplacementX(),
                 mount.getDisplacementY(),
                 mount.getAngle());
@@ -106,8 +138,11 @@ public interface Mountable {
                 mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
-                config.getMountX(),
-                config.getMountY(),
+                config.getInitMountX(),
+                config.getInitMountY(),
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
                 mount.getDisplacementX(),
                 mount.getDisplacementY(),
                 mount.getAngle());
@@ -119,16 +154,34 @@ public interface Mountable {
                 mount.getMountType(),
                 config.getInitialX(),
                 config.getInitialY(),
-                config.getMountX(),
-                config.getMountY(),
+                config.getInitMountX(),
+                config.getInitMountY(),
+                config.getInitMountAngle(),
+                mount.getMountX(),
+                mount.getMountY(),
                 mount.getDisplacementX(),
                 mount.getDisplacementY(),
                 mount.getAngle());
     }
 
-    static double getMountRootDistance(
-            double initialX, double initialY, double mountX, double mountY) {
-        return Math.sqrt(Math.pow(initialX - mountX, 2) + Math.pow(initialY - mountY, 2));
+    /**
+     * Returns the radians a mounted object should be away from a mount based on their initial
+     * positions
+     */
+    static double getAngleOffset(
+            double initialX, double initialY, double mountX, double mountY, double startingAngle) {
+        double hypotenuse = getDistance(initialX, initialY, mountX, mountY);
+        if (initialX >= mountX) {
+            return Math.asin((initialY - mountY) / hypotenuse) - startingAngle;
+        } else {
+            return Math.toRadians(180)
+                    - Math.asin((initialY - mountY) / hypotenuse)
+                    - startingAngle;
+        }
+    }
+
+    static double getDistance(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
     static double getXWithAngle(double radius, double angle, double displacementX) {

@@ -18,12 +18,14 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Robot;
+import frc.spectrumLib.CachedDouble;
+import frc.spectrumLib.SpectrumRobot;
 import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.talonFX.TalonFXFactory;
 import frc.spectrumLib.util.CanDeviceId;
@@ -42,7 +44,14 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     @Getter protected TalonFX[] followerMotors;
     public Config config;
 
-    public Mechanism(Config config) {
+    Alert currentAlert = new Alert("", AlertType.kWarning);
+
+    private final CachedDouble cachedRotations;
+    private final CachedDouble cachedPercentage;
+    private final CachedDouble cachedVelocity;
+    private final CachedDouble cachedCurrent;
+
+    protected Mechanism(Config config) {
         this.config = config;
 
         if (isAttached()) {
@@ -57,11 +66,17 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
                                 config.followerConfigs[i].opposeLeader);
             }
         }
-        Robot.subsystems.add(this);
-        CommandScheduler.getInstance().registerSubsystem(this);
+
+        cachedCurrent = new CachedDouble(this::updateCurrent);
+        cachedRotations = new CachedDouble(this::updatePositionRotations);
+        cachedPercentage = new CachedDouble(this::updatePositionPercentage);
+        cachedVelocity = new CachedDouble(this::updateVelocityRPM);
+
+        SpectrumRobot.add(this);
+        this.register();
     }
 
-    public Mechanism(Config config, boolean attached) {
+    protected Mechanism(Config config, boolean attached) {
         this(config);
         config.attached = attached;
     }
@@ -142,13 +157,42 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
                 () -> getVelocityRPM() > (target.getAsDouble() - tolerance.getAsDouble()));
     }
 
+    public Trigger atCurrent(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> Math.abs(getCurrent() - target.getAsDouble()) < tolerance.getAsDouble());
+    }
+
+    public Trigger belowCurrent(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(() -> getCurrent() < (target.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    public Trigger aboveCurrent(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(() -> getCurrent() > (target.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    /**
+     * Update the value of the stator current for the motor
+     *
+     * @return
+     */
+    public double updateCurrent() {
+        if (config.attached) {
+            return motor.getStatorCurrent().getValueAsDouble();
+        }
+        return 0;
+    }
+
+    public double getCurrent() {
+        return cachedCurrent.getAsDouble();
+    }
+
     /**
      * Percentage to Rotations
      *
      * @return
      */
     public double percentToRotations(DoubleSupplier percent) {
-        return (percent.getAsDouble() / 100) * config.maxRotation;
+        return (percent.getAsDouble() / 100) * config.maxRotations;
     }
 
     /**
@@ -158,15 +202,19 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * @return
      */
     public double rotationsToPercent(DoubleSupplier rotations) {
-        return (rotations.getAsDouble() / config.maxRotation) * 100;
+        return (rotations.getAsDouble() / config.maxRotations) * 100;
+    }
+
+    public double getPositionRotations() {
+        return cachedRotations.getAsDouble();
     }
 
     /**
-     * Gets the position of the motor
+     * Updates the position of the motor
      *
      * @return motor position in rotations
      */
-    public double getPositionRotations() {
+    private double updatePositionRotations() {
         if (config.attached) {
             return motor.getPosition().getValueAsDouble();
         }
@@ -174,24 +222,32 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     public double getPositionPercentage() {
-        return rotationsToPercent(() -> getPositionRotations());
+        return cachedPercentage.getAsDouble();
+    }
+
+    private double updatePositionPercentage() {
+        return rotationsToPercent(this::getPositionRotations);
     }
 
     /**
-     * Gets the velocity of the motor
+     * Updates the velocity of the motor
      *
      * @return motor velocity in rotations/sec which are the CTRE native units
      */
-    public double getVelocityRPS() {
+    private double updateVelocityRPS() {
         if (config.attached) {
             return motor.getVelocity().getValueAsDouble();
         }
         return 0;
     }
 
-    // Get Velocity in RPM
     public double getVelocityRPM() {
-        return Conversions.RPStoRPM(getVelocityRPS());
+        return cachedVelocity.getAsDouble();
+    }
+
+    // Get Velocity in RPM
+    private double updateVelocityRPM() {
+        return Conversions.RPStoRPM(updateVelocityRPS());
     }
 
     /* Commands: see method in lambda for more information */
@@ -250,7 +306,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     public Command runStop() {
-        return run(() -> stop()).withName(getName() + ".runStop");
+        return run(this::stop).withName(getName() + ".runStop");
     }
 
     /**
@@ -258,6 +314,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * is started and reverted when the command is ended.
      */
     public Command coastMode() {
+        System.out.println(getName() + " in COAST");
         return startEnd(() -> setBrakeMode(false), () -> setBrakeMode(true))
                 .ignoringDisable(true)
                 .withName(getName() + ".coastMode");
@@ -265,10 +322,8 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     /** Sets the motor to brake mode if it is in coast mode */
     public Command ensureBrakeMode() {
-        return runOnce(
-                        () -> {
-                            setBrakeMode(true);
-                        })
+        System.out.println(getName() + " in BRAKE");
+        return runOnce(() -> setBrakeMode(true))
                 .onlyIf(
                         () ->
                                 config.attached
@@ -435,6 +490,107 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         }
     }
 
+    public Command checkAvgCurrent(DoubleSupplier expectedCurrent, DoubleSupplier tolerance) {
+        return new Command() {
+            double totalCurrent = 0;
+            int count = 0;
+            String alertText = config.name + " AvgCurrent Error";
+
+            @Override
+            public void initialize() {
+                totalCurrent = 0;
+                count = 0;
+            }
+
+            @Override
+            public void execute() {
+                totalCurrent += getCurrent();
+                count++;
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                double avgCurrent = totalCurrent / count;
+                if (Math.abs(avgCurrent - expectedCurrent.getAsDouble())
+                        > tolerance.getAsDouble()) {
+                    currentAlert.setText(
+                            alertText
+                                    + " Expected: "
+                                    + expectedCurrent.getAsDouble()
+                                    + " Actual: "
+                                    + avgCurrent);
+                    currentAlert.set(true);
+                }
+            }
+        };
+    }
+
+    public Command checkMaxCurrent(DoubleSupplier expectedCurrent) {
+        return new Command() {
+            double maxCurrent = 0;
+            String alertText = config.name + " MaxCurrent Error";
+
+            @Override
+            public void initialize() {
+                maxCurrent = 0;
+            }
+
+            @Override
+            public void execute() {
+                double current = getCurrent();
+                if (current > maxCurrent) {
+                    maxCurrent = current;
+                }
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                if (maxCurrent > expectedCurrent.getAsDouble()) {
+                    currentAlert.setText(
+                            alertText
+                                    + " Expected: "
+                                    + expectedCurrent.getAsDouble()
+                                    + " Actual: "
+                                    + maxCurrent);
+                    currentAlert.set(true);
+                }
+            }
+        };
+    }
+
+    public Command checkMinThresholdCurrent(DoubleSupplier expectedCurrent) {
+        return new Command() {
+            double maxCurrent = 0;
+            String alertText = config.name + " Current Error";
+
+            @Override
+            public void initialize() {
+                maxCurrent = 0;
+            }
+
+            @Override
+            public void execute() {
+                double current = getCurrent();
+                if (current > maxCurrent) {
+                    maxCurrent = current;
+                }
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                if (maxCurrent < expectedCurrent.getAsDouble()) {
+                    currentAlert.setText(
+                            alertText
+                                    + " Expected at least: "
+                                    + expectedCurrent.getAsDouble()
+                                    + " Actual: "
+                                    + maxCurrent);
+                    currentAlert.set(true);
+                }
+            }
+        };
+    }
+
     public static class FollowerConfig {
         @Getter private String name;
         @Getter private CanDeviceId id;
@@ -455,8 +611,8 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         @Getter protected TalonFXConfiguration talonConfig;
         @Getter private int numMotors = 1;
         @Getter private double voltageCompSaturation = 12.0; // 12V by default
-        @Getter private double minRotation;
-        @Getter private double maxRotation;
+        @Getter private double minRotations = 0;
+        @Getter private double maxRotations = 1;
 
         @Getter private FollowerConfig[] followerConfigs = new FollowerConfig[0];
 
@@ -706,8 +862,8 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
          * @param maxRotation
          */
         protected void configMinMaxRotations(double minRotation, double maxRotation) {
-            this.minRotation = minRotation;
-            this.maxRotation = maxRotation;
+            this.minRotations = minRotation;
+            this.maxRotations = maxRotation;
         }
     }
 }

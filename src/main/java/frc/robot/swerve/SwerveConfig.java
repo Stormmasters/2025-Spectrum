@@ -33,14 +33,14 @@ public class SwerveConfig {
     // -----------------------------------------------------------------------
     @Getter private double maxAngularVelocity = 2 * Math.PI; // rad/s
     @Getter private double maxAngularAcceleration = Math.pow(maxAngularVelocity, 2); // rad/s^2
-    @Getter @Setter private double kPRotationController = 8.0;
+    @Getter private double kPRotationController = 8.0;
     @Getter private double kIRotationController = 0.0;
-    @Getter @Setter private double kDRotationController = 0.2;
+    @Getter private double kDRotationController = 0.2;
     @Getter private double rotationTolerance = (Math.PI / 360); // rads
 
-    @Getter @Setter private double kPHoldController = 12.0;
+    @Getter private double kPHoldController = 12.0;
     @Getter private double kIHoldController = 0.0;
-    @Getter @Setter private double kDHoldController = 0.0;
+    @Getter private double kDHoldController = 0.0;
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     @Getter private final Rotation2d blueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
@@ -206,8 +206,7 @@ public class SwerveConfig {
                         .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
                         .withCouplingGearRatio(coupleRatio)
                         .withDriveMotorInitialConfigs(driveInitialConfigs)
-                        .withSteerMotorInitialConfigs(steerInitialConfigs)
-                        .withCANcoderInitialConfigs(cancoderInitialConfigs);
+                        .withSteerMotorInitialConfigs(steerInitialConfigs);
 
         frontLeft =
                 constantCreator.createModuleConstants(
@@ -218,7 +217,8 @@ public class SwerveConfig {
                         frontLeftXPos,
                         frontLeftYPos,
                         invertLeftSide,
-                        steerMotorReversed);
+                        steerMotorReversed,
+                        false);
 
         frontRight =
                 constantCreator.createModuleConstants(
@@ -229,7 +229,8 @@ public class SwerveConfig {
                         frontRightXPos,
                         frontRightYPos,
                         invertRightSide,
-                        steerMotorReversed);
+                        steerMotorReversed,
+                        false);
 
         backLeft =
                 constantCreator.createModuleConstants(
@@ -240,7 +241,8 @@ public class SwerveConfig {
                         backLeftXPos,
                         backLeftYPos,
                         invertLeftSide,
-                        steerMotorReversed);
+                        steerMotorReversed,
+                        false);
 
         backRight =
                 constantCreator.createModuleConstants(
@@ -251,7 +253,8 @@ public class SwerveConfig {
                         backRightXPos,
                         backRightYPos,
                         invertRightSide,
-                        steerMotorReversed);
+                        steerMotorReversed,
+                        false);
 
         return this;
     }

@@ -2,8 +2,9 @@ package frc.robot.pilot;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
+import frc.spectrumLib.util.Util;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,12 +17,23 @@ public class Pilot extends Gamepad {
     public final Trigger noFn = fn.not();
     public final Trigger intake_A = A.and(noFn, teleop);
     public final Trigger eject_fA = A.and(fn, teleop);
-    public final Trigger ampPrep_B = B.and(noFn, teleop);
-    public final Trigger score_RB = rightBumper.and(teleop);
+    // public final Trigger ampPrep_B = Y.and(noFn, teleop); // change back to B
+    public final Trigger score_RB = rightBumper.and(fn, teleop);
     public final Trigger launchPrep_RT = rightTrigger.and(noFn, teleop);
     public final Trigger subwooferPrep_fRT = rightTrigger.and(fn, teleop);
     public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
+    // public final Trigger homeShoulder_fB = B.and(fn, teleop);
+    // public final Trigger shoulder_B = B.and(noFn, teleop);
+    // public final Trigger elbow_Y = Y.and(noFn, teleop);
+    // public final Trigger homeElbow_fY = Y.and(fn, teleop);
+    public final Trigger l3Algae = B.and(noFn, teleop);
+    public final Trigger l2Algae = Y.and(fn, teleop);
+    public final Trigger algaeFloorY = Y.and(noFn, teleop);
+    public final Trigger l3Coral = B.and(fn, teleop);
+    // public final Trigger l2Coral = Y.and(fn, teleop);
+
+    // public final Trigger elbow_B = B.and(no, teleop);
 
     public final Trigger retract_X = X.and(noFn, teleop);
     public final Trigger manual_Y = Y.and(noFn, teleop);
@@ -82,12 +94,12 @@ public class Pilot extends Gamepad {
     public Pilot(PilotConfig config) {
         super(config);
         this.config = config;
-        Robot.subsystems.add(this);
+        Robot.add(this);
 
-        driving = leftStickX.or(leftStickY);
-        steer = rightStickX.or(rightStickY);
+        driving = Util.teleop.and(leftStickX.or(leftStickY));
+        steer = Util.teleop.and(rightStickX.or(rightStickY));
 
-        RobotTelemetry.print("Pilot Subsystem Initialized: ");
+        Telemetry.print("Pilot Subsystem Initialized: ");
     }
 
     public void setupStates() {
@@ -109,7 +121,7 @@ public class Pilot extends Gamepad {
     }
 
     // Positive is forward, up on the left stick is positive
-    // Applies Expontial Curve, Deadzone, and Slow Mode toggle
+    // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveFwdPositive() {
         double fwdPositive = leftStickCurve.calculate(-1 * getLeftY());
         if (isSlowMode) {
@@ -119,7 +131,7 @@ public class Pilot extends Gamepad {
     }
 
     // Positive is left, left on the left stick is positive
-    // Applies Expontial Curve, Deadzone, and Slow Mode toggle
+    // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveLeftPositive() {
         double leftPositive = -1 * leftStickCurve.calculate(getLeftX());
         if (isSlowMode) {

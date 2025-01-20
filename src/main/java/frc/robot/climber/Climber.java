@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.LinearConfig;
 import frc.spectrumLib.sim.LinearSim;
@@ -44,12 +44,13 @@ public class Climber extends Mechanism {
         @Getter private double kClimberDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initalX = 0.95;
         @Getter private double initalY = 0;
-        @Getter private double angle = 180 - 38;
+        @Getter private double angle = 180.0 - 38;
         @Getter private double staticLength = 30;
         @Getter private double movingLength = 1;
 
         public ClimberConfig() {
-            super("Climber", 54, RobotConfig.CANIVORE); // motor id was originally 53
+            super("Climber", 53, Rio.CANIVORE); // motor id was originally 53
+            configMinMaxRotations(-1, 104);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);
             configMotionMagic(14700, 16100, 0); // 40, 120 FOC // 120, 195 Regular
@@ -57,9 +58,8 @@ public class Climber extends Mechanism {
             configStatorCurrentLimit(statorCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-1, 104);
-            configForwardSoftLimit(getMaxRotation(), true);
-            configReverseSoftLimit(getMinRotation(), true);
+            configForwardSoftLimit(getMaxRotations(), true);
+            configReverseSoftLimit(getMinRotations(), true);
             configNeutralBrakeMode(true);
             // configMotionMagicPosition(0.12);
             configCounterClockwise_Positive(); // might be different on actual robot
@@ -75,7 +75,7 @@ public class Climber extends Mechanism {
 
         simulationInit();
         telemetryInit();
-        RobotTelemetry.print(getName() + " Subsystem Initialized");
+        Telemetry.print(getName() + " Subsystem Initialized");
     }
 
     @Override
@@ -97,12 +97,10 @@ public class Climber extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
-            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
-            builder.addDoubleProperty(
-                    "Position Percentage",
-                    () -> getPositionRotations() / config.getMaxRotation() * 100,
-                    null);
+            builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
+            builder.addDoubleProperty("Position Percentage", this::getPositionPercentage, null);
+            builder.addDoubleProperty("VelocityRPM", this::getVelocityRPM, null);
+            builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
         }
     }
 

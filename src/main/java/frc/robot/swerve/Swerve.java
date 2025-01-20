@@ -3,10 +3,11 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -15,22 +16,25 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.crescendo.Field;
 import frc.robot.Robot;
-import frc.robot.RobotTelemetry;
 import frc.spectrumLib.SpectrumSubsystem;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.Util;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -40,10 +44,11 @@ import lombok.Getter;
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
  * in command-based projects easily.
  */
-public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSendable {
+public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
+        implements SpectrumSubsystem, NTSendable {
     private SwerveConfig config;
-    private Notifier m_simNotifier = null;
-    private double m_lastSimTime;
+    private Notifier simNotifier = null;
+    private double lastSimTime;
     private RotationController rotationController;
 
     @Getter
@@ -55,6 +60,12 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
 
     private final SwerveRequest.ApplyRobotSpeeds AutoRequest = new SwerveRequest.ApplyRobotSpeeds();
 
+    // Logging publisher
+    StructArrayPublisher<SwerveModuleState> publisher =
+            NetworkTableInstance.getDefault()
+                    .getStructArrayTopic("SwerveStates", SwerveModuleState.struct)
+                    .publish();
+
     /**
      * Constructs a new Swerve drive subsystem.
      *
@@ -62,7 +73,12 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
      *     configurations.
      */
     public Swerve(SwerveConfig config) {
-        super(config.getDrivetrainConstants(), config.getModules());
+        super(
+                TalonFX::new,
+                TalonFX::new,
+                CANcoder::new,
+                config.getDrivetrainConstants(),
+                config.getModules());
         // this.robotConfig = robotConfig;
         this.config = config;
         configurePathPlanner();
@@ -73,10 +89,16 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
             startSimThread();
         }
 
-        SendableRegistry.add(this, "SwerveDrive");
-        Robot.subsystems.add(this);
-        CommandScheduler.getInstance().registerSubsystem(this);
-        RobotTelemetry.print(getName() + " Subsystem Initialized: ");
+        SendableRegistry.add(this, "Swerve");
+        SmartDashboard.putData(this);
+        Robot.add(this);
+        this.register();
+        registerTelemetry(this::log);
+        Telemetry.print(getName() + " Subsystem Initialized: ");
+    }
+
+    protected void log(SwerveDriveState state) {
+        publisher.set(state.ModuleStates);
     }
 
     /**
@@ -90,11 +112,11 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
 
     public void setupStates() {
         SwerveStates.setStates();
-    };
+    }
 
     public void setupDefaultCommand() {
         SwerveStates.setupDefaultCommand();
-    };
+    }
 
     /**
      * The `initSendable` function sets up properties for a SmartDashboard type "SwerveDrive" with
@@ -104,9 +126,32 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
      */
     @Override
     public void initSendable(NTSendableBuilder builder) {
-        builder.setSmartDashboardType("SwerveDrive");
-        builder.addDoubleProperty("Position", () -> 2, null);
-        builder.addDoubleProperty("Velocity", () -> 4, null);
+        SmartDashboard.putData(
+                "Swerve Drive",
+                new Sendable() {
+                    @Override
+                    public void initSendable(SendableBuilder builder) {
+                        builder.setSmartDashboardType("SwerveDrive");
+
+                        addModuleProperties(builder, "Front Left", 0);
+                        addModuleProperties(builder, "Front Right", 1);
+                        addModuleProperties(builder, "Back Left", 2);
+                        addModuleProperties(builder, "Back Right", 3);
+
+                        builder.addDoubleProperty("Robot Angle", () -> getRotationRadians(), null);
+                    }
+                });
+    }
+
+    private void addModuleProperties(SendableBuilder builder, String moduleName, int moduleNumber) {
+        builder.addDoubleProperty(
+                moduleName + " Angle",
+                () -> getModule(moduleNumber).getCurrentState().angle.getRadians(),
+                null);
+        builder.addDoubleProperty(
+                moduleName + " Velocity",
+                () -> getModule(moduleNumber).getCurrentState().speedMetersPerSecond,
+                null);
     }
 
     /**
@@ -191,7 +236,7 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         if (!hasAppliedPilotPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance()
                     .ifPresent(
-                            (allianceColor) -> {
+                            allianceColor -> {
                                 this.setOperatorPerspectiveForward(
                                         allianceColor == Alliance.Red
                                                 ? config.getRedAlliancePerspectiveRotation()
@@ -286,34 +331,28 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
         // Seed robot to mid field at start (Paths will change this starting position)
         resetPose(
                 new Pose2d(
-                        Units.feetToMeters(27),
-                        Units.feetToMeters(27 / 2),
+                        Units.feetToMeters(27.0),
+                        Units.feetToMeters(27.0 / 2.0),
                         config.getBlueAlliancePerspectiveRotation()));
         double driveBaseRadius = .4;
         for (var moduleLocation : getModuleLocations()) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
 
-        ModuleConfig moduleConfig =
-                new ModuleConfig(
-                        config.getWheelRadius(),
-                        config.getSpeedAt12Volts(),
-                        1,
-                        DCMotor.getKrakenX60(1),
-                        config.getSlipCurrent(),
-                        1);
-        RobotConfig robotConfig = // Have directly call this to avoid name space problem
-                new RobotConfig(
-                        Units.lbsToKilograms(150),
-                        1,
-                        moduleConfig,
-                        Units.inchesToMeters(
-                                26)); // TODO Fix this line and line above with real numbers
+        RobotConfig robotConfig = null; // Initialize with null in case of exception
+        try {
+            robotConfig =
+                    RobotConfig.fromGUISettings(); // Takes config from Robot Config on Pathplanner
+            // Settings
+        } catch (Exception e) {
+            e.printStackTrace(); // Fallback to a default configuration
+        }
+
         AutoBuilder.configure(
                 () -> this.getState().Pose, // Supplier of current robot pose
                 this::resetPose, // Consumer for seeding pose against auto
                 this::getCurrentRobotChassisSpeeds,
-                (speeds) ->
+                speeds ->
                         this.setControl(
                                 AutoRequest.withSpeeds(
                                         speeds)), // Consumer of ChassisSpeeds to drive the robot
@@ -332,19 +371,19 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
     // Simulation
     // --------------------------------------------------------------------------------
     private void startSimThread() {
-        m_lastSimTime = Utils.getCurrentTimeSeconds();
+        lastSimTime = Utils.getCurrentTimeSeconds();
 
         /* Run simulation at a faster rate so PID gains behave more reasonably */
-        m_simNotifier =
+        simNotifier =
                 new Notifier(
                         () -> {
                             final double currentTime = Utils.getCurrentTimeSeconds();
-                            double deltaTime = currentTime - m_lastSimTime;
-                            m_lastSimTime = currentTime;
+                            double deltaTime = currentTime - lastSimTime;
+                            lastSimTime = currentTime;
 
                             /* use the measured time delta, get battery voltage from WPILib */
                             updateSimState(deltaTime, RobotController.getBatteryVoltage());
                         });
-        m_simNotifier.startPeriodic(config.getSimLoopPeriod());
+        simNotifier.startPeriodic(config.getSimLoopPeriod());
     }
 }

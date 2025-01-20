@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.CANcoderSimState;
@@ -15,9 +14,9 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import frc.robot.RobotConfig;
 import frc.robot.RobotSim;
-import frc.robot.RobotTelemetry;
+import frc.spectrumLib.Rio;
+import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
@@ -80,7 +79,7 @@ public class Pivot extends Mechanism {
         @Getter private double length = 0.4;
 
         public PivotConfig() {
-            super("Pivot", 41, RobotConfig.CANIVORE);
+            super("Pivot", 101, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(147000, 161000, 0);
@@ -89,8 +88,8 @@ public class Pivot extends Mechanism {
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configMinMaxRotations(0, 30); // .96
-            configReverseSoftLimit(getMinRotation(), true);
-            configForwardSoftLimit(getMaxRotation(), true);
+            configReverseSoftLimit(getMinRotations(), true);
+            configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive(); // might be different on actual robot
             setRatio(Math.abs(172.8)); // getGearRatio()));
@@ -136,19 +135,18 @@ public class Pivot extends Mechanism {
 
         if (config.isCANcoderAttached()) {
             config.modifyMotorConfig(motor); // Modify configuration to use remote CANcoder fused
-            m_CANcoder = new CANcoder(config.getCANcoderID(), RobotConfig.CANIVORE);
+            m_CANcoder = new CANcoder(config.getCANcoderID(), Rio.CANIVORE);
             CANcoderConfiguration cancoderConfigs = new CANcoderConfiguration();
             cancoderConfigs.MagnetSensor.MagnetOffset = config.getCANcoderOffset();
             cancoderConfigs.MagnetSensor.SensorDirection =
                     SensorDirectionValue.CounterClockwise_Positive;
-            cancoderConfigs.MagnetSensor.AbsoluteSensorRange =
-                    AbsoluteSensorRangeValue.Unsigned_0To1;
+            cancoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1;
             checkCANcoderResponse(m_CANcoder.getConfigurator().apply(cancoderConfigs));
         }
 
         simulationInit();
         telemetryInit();
-        RobotTelemetry.print(getName() + " Subsystem Initialized");
+        Telemetry.print(getName() + " Subsystem Initialized");
     }
 
     @Override
@@ -188,23 +186,22 @@ public class Pivot extends Mechanism {
 
     public void increaseOffset(double amount) {
         config.setOFFSET(config.getOFFSET() + amount);
-        RobotTelemetry.print("Pivot offset increased to: " + config.getOFFSET());
+        Telemetry.print("Pivot offset increased to: " + config.getOFFSET());
     }
 
     public void decreaseOffset(double amount) {
         config.setOFFSET(config.getOFFSET() - amount);
-        RobotTelemetry.print("Pivot offset decreased to: " + config.getOFFSET());
+        Telemetry.print("Pivot offset decreased to: " + config.getOFFSET());
     }
 
     public void resetOffset() {
         config.setOFFSET(config.getSTARTING_OFFSET());
-        RobotTelemetry.print("Pivot offset reset to: " + config.getOFFSET());
+        Telemetry.print("Pivot offset reset to: " + config.getOFFSET());
     }
 
     public void switchFeedSpot() {
         config.setShortFeed(!(config.isShortFeed()));
-        RobotTelemetry.print(
-                "Feed spot switched to " + ((config.isShortFeed()) ? " short" : " long"));
+        Telemetry.print("Feed spot switched to " + ((config.isShortFeed()) ? " short" : " long"));
     }
 
     // --------------------------------------------------------------------------------
@@ -254,14 +251,14 @@ public class Pivot extends Mechanism {
 
     public boolean pivotHasError() {
         if (isAttached()) {
-            return getPositionRotations() > config.getMaxRotation();
+            return getPositionRotations() > config.getMaxRotations();
         }
         return false;
     }
 
     public void checkCANcoderResponse(StatusCode response) {
         if (!response.isOK()) {
-            System.out.println(
+            Telemetry.print(
                     "Pivot CANcoder ID "
                             + config.getCANcoderID()
                             + " failed config with error "
@@ -296,9 +293,9 @@ public class Pivot extends Mechanism {
                             config.pivotY,
                             config.ratio,
                             config.length,
-                            config.getMinRotation(),
+                            config.getMinRotations(),
                             80, // config.getMaxRotation() * config.getRatio(),
-                            config.getMinRotation()),
+                            config.getMinRotations()),
                     mech,
                     pivotMotorSim,
                     config.getName());

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.launcher.Launcher.LauncherConfig;
+import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
 
 public class LauncherStates {
@@ -19,14 +20,14 @@ public class LauncherStates {
     }
 
     public static void setStates() {
-        subwooferPrep.whileTrue(subwooferRPM());
-        speakerPrep.whileTrue(defaultLauncherRPM());
-        ejecting.whileTrue(ejectRPM());
-        score.and(atZeroRPM).onTrue(spitRpm());
-        score.onFalse(launcher.runStop());
+        subwooferPrep.whileTrue(log(subwooferRPM()));
+        speakerPrep.whileTrue(log(defaultLauncherRPM()));
+        ejecting.whileTrue(log(ejectRPM()));
+        score.and(atZeroRPM).onTrue(log(spitRpm()));
+        score.onFalse(log(launcher.runStop()));
 
-        coastMode.whileTrue(coastMode());
-        coastMode.onFalse(ensureBrakeMode());
+        coastMode.whileTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
     }
 
     private static Command defaultLauncherRPM() {
@@ -60,5 +61,10 @@ public class LauncherStates {
 
     private static Command ensureBrakeMode() {
         return launcher.ensureBrakeMode().withName("Launcher.BrakeMode");
+    }
+
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }
