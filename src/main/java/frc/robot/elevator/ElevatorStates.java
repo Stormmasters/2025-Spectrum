@@ -34,15 +34,7 @@ public class ElevatorStates {
         score.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
-        climbRoutine.and(ClimberStates.atMidClimbPos).onTrue(log(fullExtend()));
-
-        operator.overrideElevator.whileTrue(
-                log(runElevator(operator::getElevatorOverride).withName("Elevator.operator")));
-        operator.zeroElevator.whileTrue(log(zero()));
-
         // Test Mode Buttons
-        pilot.tuneElevator_tB.whileTrue(log(tuneElevator()));
-
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         score.whileTrue(home());

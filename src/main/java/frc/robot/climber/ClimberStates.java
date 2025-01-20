@@ -43,14 +43,7 @@ public class ClimberStates {
         climbRoutine.and(ElevatorStates.isUp).whileTrue(log(home()));
         pilot.home_fX.whileTrue(log(home()));
 
-        operator.topClimb_fUdp.whileTrue(log(fullExtend()));
-        operator.midClimb_fDdp.whileTrue(log(midClimb()));
-        operator.botClimb_fRdp.whileTrue(log(home()));
-
-        operator.safeClimb_START.whileTrue(log(safeClimb()));
-        operator.zeroClimber.whileTrue(log(climber.zeroClimberRoutine()));
-        operator.overrideClimber.whileTrue(log(runClimber(operator::getClimberOverride)));
-
+       
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }
