@@ -12,7 +12,11 @@ public class ArmConfig {
     @Getter @Setter private double initialY = 0.3;
     @Getter @Setter private double pivotX = 0.7;
     @Getter @Setter private double pivotY = 0.3;
-    @Getter @Setter private double ratio = 50;
+
+    @Getter @Setter
+    private double ratio =
+            50; // the number of rotations it takes for the mechanism to do one revolution
+
     @Getter @Setter private double length = 0.5;
     @Getter @Setter private double simMOI = 1.2;
     @Getter @Setter private double simCGLength = 0.2;

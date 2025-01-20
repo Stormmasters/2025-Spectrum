@@ -28,10 +28,10 @@ public class Wrist extends Mechanism {
         @Getter private final double manualFeed = 100 - 70;
         @Getter private final double ninetyDegrees = 100 - 39;
         @Getter private final double l1 = 63;
-        @Getter private final double l2Algae = 90; // 100 - 94; // (FM20235)
-        @Getter private final double l3Algae = 90; // 100 - 75; // (FM20235)
-        @Getter private final double l2Coral = 90; // 0; // (FM20235)
-        @Getter private final double l3Coral = 90; // 100 - 94; // (FM20235)
+        @Getter private final double l2Algae = 90;
+        @Getter private final double l3Algae = 90;
+        @Getter private final double l2Coral = 90;
+        @Getter private final double l3Coral = 90;
         @Getter private final double l4 = 57;
         @Getter private final double barge = 57;
         @Getter @Setter private double tuneWrist = 0;
@@ -57,7 +57,7 @@ public class Wrist extends Mechanism {
         @Getter private double length = 0.3;
 
         public WristConfig() {
-            super("Wrist", 42, Rio.RIO_CANBUS); // Rio.CANIVORE);
+            super("Wrist", 42, Rio.RIO_CANBUS); // Rio.CANIVORE); // TODO: update ID
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);

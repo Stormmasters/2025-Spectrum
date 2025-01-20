@@ -5,7 +5,6 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
-import frc.robot.coralIntake.coralIntakeStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
@@ -13,9 +12,9 @@ import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
 import lombok.Getter;
 
-public class coralIntake extends Mechanism {
+public class CoralIntake extends Mechanism {
 
-    public static class coralIntakeConfig extends Config {
+    public static class CoralIntakeConfig extends Config {
 
         /* Revolutions per min Intake Output */
         @Getter private double maxSpeed = 5000;
@@ -38,9 +37,8 @@ public class coralIntake extends Mechanism {
         @Getter private double intakeY = 0.5; // relative to elbow at 0 degrees
         @Getter private double wheelDiameter = 5.0;
 
-        public coralIntakeConfig() {
-            // super("Intake", 5, Rio.CANIVORE);
-            super("coralIntake", 5, Rio.RIO_CANBUS);
+        public CoralIntakeConfig() {
+            super("CoralIntake", 5, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12.0 / 30.0);
@@ -54,10 +52,10 @@ public class coralIntake extends Mechanism {
         }
     }
 
-    private coralIntakeConfig config;
-    private RollerSim sim;
+    private CoralIntakeConfig config;
+    private CoralIntakeSim sim;
 
-    public coralIntake(coralIntakeConfig config) {
+    public CoralIntake(CoralIntakeConfig config) {
         super(config);
         this.config = config;
 
@@ -70,11 +68,11 @@ public class coralIntake extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        coralIntakeStates.setStates();
+        CoralIntakeStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        coralIntakeStates.setupDefaultCommand();
+        CoralIntakeStates.setupDefaultCommand();
     }
 
     /*-------------------
@@ -102,7 +100,7 @@ public class coralIntake extends Mechanism {
     public void simulationInit() {
         if (isAttached()) {
             // Create a new RollerSim with the left view, the motor's sim state, and a 6 in diameter
-            sim = new IntakeSim(RobotSim.leftView, motor.getSimState());
+            sim = new CoralIntakeSim(RobotSim.leftView, motor.getSimState());
         }
     }
 
@@ -115,8 +113,8 @@ public class coralIntake extends Mechanism {
         }
     }
 
-    class IntakeSim extends RollerSim {
-        public IntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
+    class CoralIntakeSim extends RollerSim {
+        public CoralIntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
             super(
                     new RollerConfig(config.wheelDiameter)
                             .setPosition(config.intakeX, config.intakeY)

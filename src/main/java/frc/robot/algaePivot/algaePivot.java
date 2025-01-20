@@ -11,10 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
-import frc.robot.elbow.Elbow;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
@@ -22,9 +20,9 @@ import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
 import lombok.*;
 
-public class algaePivot extends Mechanism {
+public class AlgaePivot extends Mechanism {
 
-    public static class algaePivotConfig extends Config {
+    public static class AlgaePivotConfig extends Config {
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = 0;
         @Getter private final double intake = 35.5;
@@ -58,8 +56,8 @@ public class algaePivot extends Mechanism {
         @Getter @Setter private double simRatio = 1; // TODO: Set to actual pivot ratio
         @Getter private double length = 0.4;
 
-        public algaePivotConfig() {
-            super("algaePivot", 41, Rio.RIO_CANBUS); // Rio.CANIVORE);
+        public AlgaePivotConfig() {
+            super("AlgaePivot", 41, Rio.RIO_CANBUS); // Rio.CANIVORE);  
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
@@ -77,7 +75,7 @@ public class algaePivot extends Mechanism {
             setSimRatio(15.429);
         }
 
-        public algaePivotConfig modifyMotorConfig(TalonFX motor) {
+        public AlgaePivotConfig modifyMotorConfig(TalonFX motor) {
             TalonFXConfigurator configurator = motor.getConfigurator();
             TalonFXConfiguration talonConfigMod = getTalonConfig();
 
@@ -87,12 +85,12 @@ public class algaePivot extends Mechanism {
         }
     }
 
-    private algaePivotConfig config;
+    private AlgaePivotConfig config;
     private CANcoder m_CANcoder;
     @Getter private ElbowSim sim;
     CANcoderSimState canCoderSim;
 
-    public algaePivot(algaePivotConfig config) {
+    public AlgaePivot(AlgaePivotConfig config) {
         super(config);
         this.config = config;
 
@@ -105,11 +103,11 @@ public class algaePivot extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        algaePivotStates.setStates();
+        AlgaePivotStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        algaePivotStates.setupDefaultCommand();
+        AlgaePivotStates.setupDefaultCommand();
     }
 
     /*-------------------
@@ -141,7 +139,7 @@ public class algaePivot extends Mechanism {
     // Custom Commands
     // --------------------------------------------------------------------------------
 
-    //TODO: Pivot hold position run commands needed
+    // TODO: Pivot hold position run commands needed
 
     public Command runHoldalgaePivot() {
         return new Command() {
@@ -150,7 +148,7 @@ public class algaePivot extends Mechanism {
             // constructor
             {
                 setName("Pivot.holdPosition");
-                addRequirements(algaePivot.this);
+                addRequirements(AlgaePivot.this);
             }
 
             @Override
@@ -169,7 +167,6 @@ public class algaePivot extends Mechanism {
             }
         };
     }
-
 
     // --------------------------------------------------------------------------------
     // Simulation

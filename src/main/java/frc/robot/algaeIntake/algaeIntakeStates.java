@@ -4,12 +4,12 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.algaeIntake.algaeIntake.algaeIntakeConfig;
+import frc.robot.algaeIntake.AlgaeIntake.AlgaeIntakeConfig;
 import frc.spectrumLib.Telemetry;
 
-public class algaeIntakeStates {
-    private static algaeIntake algaeIntake = Robot.getAlgaeIntake();
-    private static algaeIntakeConfig config = Robot.getConfig().algaeIntake;
+public class AlgaeIntakeStates {
+    private static AlgaeIntake algaeIntake = Robot.getAlgaeIntake();
+    private static AlgaeIntakeConfig config = Robot.getConfig().algaeIntake;
 
     public static void setupDefaultCommand() {
         // intake.setDefaultCommand(

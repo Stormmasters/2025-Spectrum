@@ -62,7 +62,7 @@ public class Shoulder extends Mechanism {
         @Getter private double shoulderX = 0.8;
         @Getter private double shoulderY = 0.8;
 
-        @Getter @Setter private double simRatio = 1; // TODO: Set this to actual shoulder ratio
+        @Getter @Setter private double simRatio = 1;
 
         @Getter private double length = 0.3;
 
@@ -70,12 +70,12 @@ public class Shoulder extends Mechanism {
             super("Shoulder", 42, Rio.RIO_CANBUS); // Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);
+            configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
             configGearRatio(1); // 50.43);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(0, 11.57142857); // 66.0063476563); // 132.0126953
+            configMinMaxRotations(0, 11.57142857);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);

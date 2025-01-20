@@ -14,7 +14,6 @@ public class Operator extends Gamepad {
     public final Trigger intake_A = A.and(noFn, teleop);
     public final Trigger eject_fA = A.and(fn, teleop);
 
-   
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);
     public final Trigger coastOff_dA = disabled.and(A);

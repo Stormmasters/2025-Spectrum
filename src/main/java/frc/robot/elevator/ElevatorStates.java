@@ -5,7 +5,6 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.climber.ClimberStates;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;

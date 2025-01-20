@@ -48,14 +48,12 @@ public class Elbow extends Mechanism {
         @Getter private final double velocityKv = 0.018;
         @Getter private final double velocityKs = 0;
 
-        // Need to add auto launching positions when auton is added
-
         // Removed implementation of tree map
 
         /* Sim properties */
         @Getter private double elbowX = 0.6 + 0.4; // 1.0;
         @Getter private double elbowY = 0.6;
-        @Getter @Setter private double simRatio = 1; // TODO: Set to actual elbow ratio
+        @Getter @Setter private double simRatio = 1;
         @Getter private double length = 0.4;
 
         public ElbowConfig() {
@@ -67,9 +65,7 @@ public class Elbow extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(
-                    -7.714285714,
-                    7.714285714); // -88.008467, 88.008467); // -33.357421875, 30.88671875);
+            configMinMaxRotations(-7.714285714, 7.714285714);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);

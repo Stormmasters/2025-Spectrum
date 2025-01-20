@@ -12,9 +12,9 @@ import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
 import lombok.Getter;
 
-public class algaeIntake extends Mechanism {
+public class AlgaeIntake extends Mechanism {
 
-    public static class algaeIntakeConfig extends Config {
+    public static class AlgaeIntakeConfig extends Config {
 
         /* Revolutions per min Intake Output */
         @Getter private double maxSpeed = 5000;
@@ -37,9 +37,8 @@ public class algaeIntake extends Mechanism {
         @Getter private double intakeY = 0.5; // relative to elbow at 0 degrees
         @Getter private double wheelDiameter = 5.0;
 
-        public algaeIntakeConfig() {
-            // super("Intake", 5, Rio.CANIVORE);
-            super("algaeIntake", 5, Rio.RIO_CANBUS);
+        public AlgaeIntakeConfig() {
+            super("AlgaeIntake", 5, Rio.RIO_CANBUS); // TODO: new ID
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12.0 / 30.0);
@@ -53,10 +52,10 @@ public class algaeIntake extends Mechanism {
         }
     }
 
-    private algaeIntakeConfig config;
-    private RollerSim sim;
+    private AlgaeIntakeConfig config;
+    private AlgaeIntakeSim sim;
 
-    public algaeIntake(algaeIntakeConfig config) {
+    public AlgaeIntake(AlgaeIntakeConfig config) {
         super(config);
         this.config = config;
 
@@ -69,11 +68,11 @@ public class algaeIntake extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        algaeIntakeStates.setStates();
+        AlgaeIntakeStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        algaeIntakeStates.setupDefaultCommand();
+        AlgaeIntakeStates.setupDefaultCommand();
     }
 
     /*-------------------
@@ -101,7 +100,7 @@ public class algaeIntake extends Mechanism {
     public void simulationInit() {
         if (isAttached()) {
             // Create a new RollerSim with the left view, the motor's sim state, and a 6 in diameter
-            sim = new IntakeSim(RobotSim.leftView, motor.getSimState());
+            sim = new AlgaeIntakeSim(RobotSim.leftView, motor.getSimState());
         }
     }
 
@@ -114,8 +113,8 @@ public class algaeIntake extends Mechanism {
         }
     }
 
-    class IntakeSim extends RollerSim {
-        public IntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
+    class AlgaeIntakeSim extends RollerSim {
+        public AlgaeIntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
             super(
                     new RollerConfig(config.wheelDiameter)
                             .setPosition(config.intakeX, config.intakeY)

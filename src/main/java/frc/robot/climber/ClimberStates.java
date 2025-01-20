@@ -43,7 +43,6 @@ public class ClimberStates {
         climbRoutine.and(ElevatorStates.isUp).whileTrue(log(home()));
         pilot.home_fX.whileTrue(log(home()));
 
-       
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }

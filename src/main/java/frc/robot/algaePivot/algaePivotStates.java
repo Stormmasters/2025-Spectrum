@@ -4,17 +4,21 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.algaePivot.algaePivot.algaePivotConfig;
+import frc.robot.algaePivot.AlgaePivot.AlgaePivotConfig;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
 
-public class algaePivotStates {
-    private static algaePivot algaePivot = Robot.getAlgaePivot();
-    private static algaePivotConfig config = Robot.getConfig().algaePivot;
+public class AlgaePivotStates {
+    private static AlgaePivot algaePivot = Robot.getAlgaePivot();
+    private static AlgaePivotConfig config = Robot.getConfig().algaePivot;
 
     public static void setupDefaultCommand() {
         algaePivot.setDefaultCommand(
-                log(algaePivot.runHoldalgaePivot().ignoringDisable(true).withName("algaePivot.default")));
+                log(
+                        algaePivot
+                                .runHoldalgaePivot()
+                                .ignoringDisable(true)
+                                .withName("algaePivot.default")));
     }
 
     public static void setStates() {
