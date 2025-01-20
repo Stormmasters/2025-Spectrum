@@ -331,8 +331,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         // Seed robot to mid field at start (Paths will change this starting position)
         resetPose(
                 new Pose2d(
-                        Units.feetToMeters(27.0),
-                        Units.feetToMeters(27.0 / 2.0),
+                        Units.feetToMeters(27),
+                        Units.feetToMeters(27 / 2.0),
                         config.getBlueAlliancePerspectiveRotation()));
         double driveBaseRadius = .4;
         for (var moduleLocation : getModuleLocations()) {
