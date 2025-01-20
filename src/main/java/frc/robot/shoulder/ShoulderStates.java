@@ -46,9 +46,6 @@ public class ShoulderStates {
         return shoulder.moveToPercentage(config::getClimbHome).withName("Shoulder.climbHome");
     }
 
-    public static Command manualFeed() {
-        return shoulder.moveToPercentage(config::getManualFeed).withName("Shoulder.manualFeed");
-    }
 
     public static Command moveToPercentage(DoubleSupplier percent) {
         return shoulder.moveToPercentage(percent).withName("Shoulder.moveToPercentage");
