@@ -18,11 +18,11 @@ public class AlgaeIntakeStates {
         //                         .ignoringDisable(false)
         //                         .withName("Intake.default")));
         algaeIntake.setDefaultCommand(
-                log(algaeIntake.runStop().ignoringDisable(true).withName("intake.default")));
+                log(algaeIntake.runStop().ignoringDisable(true).withName("AlgaeIntake.default")));
     }
 
     public static void setStates() {
-        intaking.whileTrue(log(intake()));
+        algaeFloor.whileTrue(log(intake()));
         ejecting.whileTrue(log(eject()));
         score.whileTrue(log(intake()));
 
@@ -31,11 +31,11 @@ public class AlgaeIntakeStates {
     }
 
     private static Command intake() {
-        return algaeIntake.runVelocityTcFocRpm(config::getIntake).withName("algaeIntake.intake");
+        return algaeIntake.runVelocityTcFocRpm(config::getIntake).withName("AlgaeIntake.intake");
     }
 
     private static Command eject() {
-        return algaeIntake.runVelocityTcFocRpm(config::getEject).withName("algaeIntake.eject");
+        return algaeIntake.runVelocityTcFocRpm(config::getEject).withName("AlgaeIntake.eject");
     }
 
     private static Command coastMode() {

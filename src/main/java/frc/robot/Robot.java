@@ -35,9 +35,9 @@ import frc.robot.shoulder.Shoulder;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.SwerveConfig;
+import frc.robot.twist.Twist;
+import frc.robot.twist.Twist.TwistConfig;
 import frc.robot.vision.VisionSystem;
-import frc.robot.wrist.Wrist;
-import frc.robot.wrist.Wrist.WristConfig;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumRobot;
 import frc.spectrumLib.Telemetry;
@@ -73,7 +73,7 @@ public class Robot extends SpectrumRobot {
         public AlgaePivotConfig algaePivot = new AlgaePivotConfig();
         public ElbowConfig elbow = new ElbowConfig();
         public ShoulderConfig shoulder = new ShoulderConfig();
-        public WristConfig wrist = new WristConfig();
+        public TwistConfig twist = new TwistConfig();
     }
 
     @Getter private static Swerve swerve;
@@ -89,7 +89,7 @@ public class Robot extends SpectrumRobot {
     @Getter private static AlgaePivot algaePivot;
     @Getter private static Elbow elbow;
     @Getter private static Shoulder shoulder;
-    @Getter private static Wrist wrist;
+    @Getter private static Twist twist;
 
     public Robot() {
         super();
@@ -126,17 +126,19 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             elevator = new Elevator(config.elevator);
             Timer.delay(canInitDelay);
-            wrist = new Wrist(config.wrist);
-            Timer.delay(canInitDelay);
             climber = new Climber(config.climber);
             Timer.delay(canInitDelay);
             algaePivot = new AlgaePivot(config.algaePivot);
+            Timer.delay(canInitDelay);
+            algaeIntake = new AlgaeIntake(config.algaeIntake);
             Timer.delay(canInitDelay);
             shoulder = new Shoulder(config.shoulder);
             Timer.delay(canInitDelay);
             elbow = new Elbow(config.elbow);
             Timer.delay(canInitDelay);
-            algaeIntake = new AlgaeIntake(config.algaeIntake);
+            twist = new Twist(config.twist);
+            Timer.delay(canInitDelay);
+            coralIntake = new CoralIntake(config.coralIntake);
             Timer.delay(canInitDelay);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);

@@ -24,46 +24,43 @@ public class AlgaePivotStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        intaking.whileTrue(tuneElbow());
-        // algaeFloor.whileTrue(elbow.moveToPercentage(config::getFloorIntake));
+        algaeFloor.whileTrue(log(intake()));
+        // algaeFloor.whileTrue(algaePivot.moveToPercentage(config::getFloorIntake));
         // L2Algae.whileTrue(l2Algae());
         // L3Algae.whileTrue(l3Algae());
         // L2Coral.whileTrue(l2Coral());
         // L3Coral.whileTrue(l3Coral());
         // L4Coral.whileTrue(l4Coral());
         // // home.whileTrue(home());
-        // // moveElbow.whileFalse(elbow.runHoldElbow());
-        // // homeElbow.whileFalse(elbow.runHoldElbow());
-        // // moveElbow.whileTrue(home());
     }
 
-    public static Command runElbow(DoubleSupplier speed) {
-        return algaePivot.runPercentage(speed).withName("Elbow.runElbow");
+    public static Command runAlgaePivot(DoubleSupplier speed) {
+        return algaePivot.runPercentage(speed).withName("AlgaePivot.runAlgaePivot");
     }
 
-    // missing auton Elbow commands, add when auton is added
+    // missing auton AlgaePivot commands, add when auton is added
 
     public static Command intake() {
-        return algaePivot.moveToPercentage(config::getIntake).withName("Elbow.intake");
+        return algaePivot.moveToPercentage(config::getIntake).withName("AlgaePivot.intake");
     }
 
     public static Command coastMode() {
-        return algaePivot.coastMode().withName("Elbow.CoastMode");
+        return algaePivot.coastMode().withName("AlgaePivot.CoastMode");
     }
 
     public static Command stopMotor() {
-        return algaePivot.runStop().withName("Elbow.stop");
+        return algaePivot.runStop().withName("AlgaePivot.stop");
     }
 
     public static Command ensureBrakeMode() {
-        return algaePivot.ensureBrakeMode().withName("Elbow.BrakeMode");
+        return algaePivot.ensureBrakeMode().withName("AlgaePivot.BrakeMode");
     }
 
     // Tune value command
-    public static Command tuneElbow() {
-        // return pivot.moveToPercentage(new TuneValue("Tune Elbow", 0).getSupplier())
-        //         .withName("Elbow.Tune");
-        return algaePivot.moveToPercentage(config::getTuneElbow);
+    public static Command tuneAlgaePivot() {
+        // return pivot.moveToPercentage(new TuneValue("Tune AlgaePivot", 0).getSupplier())
+        //         .withName("AlgaePivot.Tune");
+        return algaePivot.moveToPercentage(config::getTuneAlgaePivot);
     }
 
     // Log Command

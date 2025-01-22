@@ -8,11 +8,7 @@ import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
-import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
@@ -23,7 +19,7 @@ import lombok.*;
 public class AlgaePivot extends Mechanism {
 
     public static class AlgaePivotConfig extends Config {
-        /* Elbow positions in percentage of max rotation || 0 is horizontal */
+        /* AlgaePivot positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = 0;
         @Getter private final double intake = 35.5;
         @Getter private final double floorIntake = 87.8;
@@ -34,12 +30,11 @@ public class AlgaePivot extends Mechanism {
         @Getter private final double l3Coral = 20;
         @Getter private final double l4Coral = 31.1;
         @Getter private final double barge = 31.1;
-        @Getter @Setter private double tuneElbow = 0;
+        @Getter @Setter private double tuneAlgaePivot = 0;
 
-        /* Elbow config settings */
+        /* AlgaePivot config settings */
         @Getter private final double zeroSpeed = -0.1;
 
-        @Getter @Setter private boolean shortFeed = false;
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
         @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
@@ -51,13 +46,16 @@ public class AlgaePivot extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double elbowX = 0.6 + 0.4; // 1.0;
-        @Getter private double elbowY = 0.6;
-        @Getter @Setter private double simRatio = 1; // TODO: Set to actual pivot ratio
+        @Getter private double algaePivotX = 0.6 + 0.4; // 1.0;
+        @Getter private double algaePivotY = 0.6;
+
+        @Getter @Setter
+        private double simRatio = 1; // TODO: Set to number of rotations per mech revolution
+
         @Getter private double length = 0.4;
 
         public AlgaePivotConfig() {
-            super("AlgaePivot", 41, Rio.RIO_CANBUS); // Rio.CANIVORE);  
+            super("AlgaePivot", 41, Rio.RIO_CANBUS); // Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
@@ -65,9 +63,7 @@ public class AlgaePivot extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(
-                    -7.714285714,
-                    7.714285714); // -88.008467, 88.008467); // -33.357421875, 30.88671875);
+            configMinMaxRotations(-7.714285714, 7.714285714); // TODO: find minmax rotations
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
@@ -87,7 +83,7 @@ public class AlgaePivot extends Mechanism {
 
     private AlgaePivotConfig config;
     private CANcoder m_CANcoder;
-    @Getter private ElbowSim sim;
+    // @Getter private AlgaePivotSim sim;
     CANcoderSimState canCoderSim;
 
     public AlgaePivot(AlgaePivotConfig config) {
@@ -126,13 +122,8 @@ public class AlgaePivot extends Mechanism {
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
             builder.addDoubleProperty(
-                    "#Tune Position Percent", config::getTuneElbow, config::setTuneElbow);
+                    "#Tune Position Percent", config::getTuneAlgaePivot, config::setTuneAlgaePivot);
         }
-    }
-
-    public void switchFeedSpot() {
-        config.setShortFeed(!(config.isShortFeed()));
-        Telemetry.print("Feed spot switched to " + ((config.isShortFeed()) ? " short" : " long"));
     }
 
     // --------------------------------------------------------------------------------
@@ -173,7 +164,7 @@ public class AlgaePivot extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            sim = new ElbowSim(motor.getSimState(), RobotSim.leftView);
+            // sim = new AlgaePivotSim(motor.getSimState(), RobotSim.leftView);
 
             // m_CANcoder.setPosition(0);
         }
@@ -182,30 +173,28 @@ public class AlgaePivot extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic();
+            // sim.simulationPeriodic();
             // m_CANcoder.getSimState().setRawPosition(sim.getAngleRads() / 0.202);
         }
     }
 
-    class ElbowSim extends ArmSim {
-        public ElbowSim(TalonFXSimState elbowMotorSim, Mechanism2d mech) {
+    class AlgaePivotSim extends ArmSim {
+        public AlgaePivotSim(TalonFXSimState algaePivotMotorSim, Mechanism2d mech) {
             super(
                     new ArmConfig(
-                                    config.elbowX,
-                                    config.elbowY,
-                                    config.simRatio,
-                                    config.length,
-                                    -90,
-                                    // 180 - 45 +
-                                    // Units.rotationsToDegrees(config.getMinRotations()),
-                                    180 + 90,
-                                    // 180 - 45 +
-                                    // Units.rotationsToDegrees(config.getMaxRotations()),
-                                    180 - 90)
-                            .setColor(new Color8Bit(Color.kAqua))
-                            .setMount(Robot.getShoulder().getSim(), true),
+                            config.algaePivotX,
+                            config.algaePivotY,
+                            config.simRatio,
+                            config.length,
+                            -90,
+                            // 180 - 45 +
+                            // Units.rotationsToDegrees(config.getMinRotations()),
+                            180 + 90,
+                            // 180 - 45 +
+                            // Units.rotationsToDegrees(config.getMaxRotations()),
+                            180 - 90),
                     mech,
-                    elbowMotorSim,
+                    algaePivotMotorSim,
                     "2" + config.getName()); // added 2 to the name to create it second
         }
     }

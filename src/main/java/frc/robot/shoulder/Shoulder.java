@@ -31,15 +31,14 @@ public class Shoulder extends Mechanism {
         @Getter private final double score = 100 - 65;
         @Getter private final double climbHome = 100 - 3;
         @Getter private final double home = 100 - 1;
-        @Getter private final double intake = 44; // 100 - 50; // (FM20235)
+        @Getter private final double coralIntake = 44;
         @Getter private final double floorIntake = 99;
-        @Getter private final double manualFeed = 100 - 70;
         @Getter private final double ninetyDegrees = 100 - 39;
         @Getter private final double l1Coral = 63;
-        @Getter private final double l2Algae = 90; // 100 - 94; // (FM20235)
-        @Getter private final double l3Algae = 90; // 100 - 75; // (FM20235)
-        @Getter private final double l2Coral = 90; // 0; // (FM20235)
-        @Getter private final double l3Coral = 90; // 100 - 94; // (FM20235)
+        @Getter private final double l2Algae = 90;
+        @Getter private final double l3Algae = 90;
+        @Getter private final double l2Coral = 90;
+        @Getter private final double l3Coral = 90;
         @Getter private final double l4Coral = 57;
         @Getter private final double barge = 57;
         @Getter @Setter private double tuneShoulder = 0;
@@ -47,7 +46,6 @@ public class Shoulder extends Mechanism {
         /* Shoulder config settings */
         @Getter private final double zeroSpeed = -0.1;
 
-        @Getter @Setter private boolean shortFeed = false;
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
         @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
@@ -136,11 +134,6 @@ public class Shoulder extends Mechanism {
             builder.addDoubleProperty(
                     "#Tune Position Percent", config::getTuneShoulder, config::setTuneShoulder);
         }
-    }
-
-    public void switchFeedSpot() {
-        config.setShortFeed(!(config.isShortFeed()));
-        Telemetry.print("Feed spot switched to " + ((config.isShortFeed()) ? " short" : " long"));
     }
 
     // --------------------------------------------------------------------------------

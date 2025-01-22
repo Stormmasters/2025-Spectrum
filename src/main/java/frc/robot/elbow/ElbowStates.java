@@ -20,17 +20,14 @@ public class ElbowStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        intaking.whileTrue(tuneElbow());
-        algaeFloor.whileTrue(elbow.moveToPercentage(config::getFloorIntake));
-        L2Algae.whileTrue(l2Algae());
-        L3Algae.whileTrue(l3Algae());
-        L2Coral.whileTrue(l2Coral());
-        L3Coral.whileTrue(l3Coral());
-        L4Coral.whileTrue(l4Coral());
+        intaking.whileTrue(log(coralIntake()));
+        algaeFloor.whileTrue(log(floorIntake()));
+        L2Algae.whileTrue(log(l2Algae()));
+        L3Algae.whileTrue(log(l3Algae()));
+        L2Coral.whileTrue(log(l2Coral()));
+        L3Coral.whileTrue(log(l3Coral()));
+        L4Coral.whileTrue(log(l4Coral()));
         // home.whileTrue(home());
-        // moveElbow.whileFalse(elbow.runHoldElbow());
-        // homeElbow.whileFalse(elbow.runHoldElbow());
-        // moveElbow.whileTrue(home());
     }
 
     public static Command runElbow(DoubleSupplier speed) {
@@ -64,8 +61,12 @@ public class ElbowStates {
 
     // missing auton Elbow commands, add when auton is added
 
-    public static Command intake() {
-        return elbow.moveToPercentage(config::getIntake).withName("Elbow.intake");
+    public static Command floorIntake() {
+        return elbow.moveToPercentage(config::getFloorIntake).withName("Elbow.FloorIntake");
+    }
+
+    public static Command coralIntake() {
+        return elbow.moveToPercentage(config::getCoralIntake).withName("Elbow.CoralIntake");
     }
 
     public static Command coastMode() {

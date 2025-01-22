@@ -19,7 +19,7 @@ public class AM2025 extends Config {
         algaePivot.setAttached(true);
         shoulder.setAttached(true);
         elbow.setAttached(true);
-        wrist.setAttached(true);
+        twist.setAttached(true);
         climber.setAttached(false);
         elevator.setAttached(true);
     }

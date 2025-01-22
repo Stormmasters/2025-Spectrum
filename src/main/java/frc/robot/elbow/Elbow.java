@@ -27,7 +27,7 @@ public class Elbow extends Mechanism {
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
         // TODO: Find elbow positions
         @Getter private final double home = 0;
-        @Getter private final double intake = 35.5;
+        @Getter private final double coralIntake = 35.5;
         @Getter private final double floorIntake = 87.8;
         @Getter private final double l1Coral = 87.8;
         @Getter private final double l2Algae = 20;
@@ -41,7 +41,6 @@ public class Elbow extends Mechanism {
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
 
-        @Getter @Setter private boolean shortFeed = false;
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
         @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
@@ -126,11 +125,6 @@ public class Elbow extends Mechanism {
             builder.addDoubleProperty(
                     "#Tune Position Percent", config::getTuneElbow, config::setTuneElbow);
         }
-    }
-
-    public void switchFeedSpot() {
-        config.setShortFeed(!(config.isShortFeed()));
-        Telemetry.print("Feed spot switched to " + ((config.isShortFeed()) ? " short" : " long"));
     }
 
     // --------------------------------------------------------------------------------

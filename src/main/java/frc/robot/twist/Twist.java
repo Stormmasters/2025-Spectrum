@@ -1,4 +1,4 @@
-package frc.robot.wrist;
+package frc.robot.twist;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
@@ -13,19 +13,18 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import lombok.*;
 
-public class Wrist extends Mechanism {
+public class Twist extends Mechanism {
 
-    public static class WristConfig extends Config {
+    public static class TwistConfig extends Config {
 
-        // Positions set as percentage of wrist
+        // Positions set as percentage of Twist
         @Getter private final int initializedPosition = 20;
 
-        /* wrist positions in percentage of max rotation || 0 is horizontal */
-        // TODO: Find wrist positions
+        /* twist positions in percentage of max rotation || 0 is horizontal */
+        // TODO: Find twist positions
         @Getter private final double score = 100 - 65;
         @Getter private final double home = 100 - 1;
         @Getter private final double intake = 100;
-        @Getter private final double manualFeed = 100 - 70;
         @Getter private final double ninetyDegrees = 100 - 39;
         @Getter private final double l1 = 63;
         @Getter private final double l2Algae = 90;
@@ -34,12 +33,11 @@ public class Wrist extends Mechanism {
         @Getter private final double l3Coral = 90;
         @Getter private final double l4 = 57;
         @Getter private final double barge = 57;
-        @Getter @Setter private double tuneWrist = 0;
+        @Getter @Setter private double tuneTwist = 0;
 
-        /* Wrist config settings */
+        /* Twist config settings */
         @Getter private final double zeroSpeed = -0.1;
 
-        @Getter @Setter private boolean shortFeed = false;
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
         @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
@@ -51,13 +49,13 @@ public class Wrist extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double wristX = 0.8;
-        @Getter private double wristY = 0.7;
-        @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual wrist ratio
+        @Getter private double twistX = 0.8;
+        @Getter private double twistY = 0.7;
+        @Getter @Setter private double simRatio = 172.8; // TODO: Set this to actual twist ratio
         @Getter private double length = 0.3;
 
-        public WristConfig() {
-            super("Wrist", 42, Rio.RIO_CANBUS); // Rio.CANIVORE); // TODO: update ID
+        public TwistConfig() {
+            super("Twist", 42, Rio.RIO_CANBUS); // Rio.CANIVORE); // TODO: update ID
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);
@@ -72,7 +70,7 @@ public class Wrist extends Mechanism {
             configCounterClockwise_Positive();
         }
 
-        public WristConfig modifyMotorConfig(TalonFX motor) {
+        public TwistConfig modifyMotorConfig(TalonFX motor) {
             TalonFXConfigurator configurator = motor.getConfigurator();
             TalonFXConfiguration talonConfigMod = getTalonConfig();
 
@@ -82,12 +80,12 @@ public class Wrist extends Mechanism {
         }
     }
 
-    private WristConfig config;
+    private TwistConfig config;
     private CANcoder m_CANcoder;
-    // @Getter private WristSim sim;
+    // @Getter private TwistSim sim;
     CANcoderSimState canCoderSim;
 
-    public Wrist(WristConfig config) {
+    public Twist(TwistConfig config) {
         super(config);
         this.config = config;
 
@@ -100,11 +98,11 @@ public class Wrist extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        WristStates.setStates();
+        TwistStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        WristStates.setupDefaultCommand();
+        TwistStates.setupDefaultCommand();
     }
 
     /*-------------------
@@ -123,20 +121,15 @@ public class Wrist extends Mechanism {
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
             builder.addDoubleProperty(
-                    "#Tune Position Percent", config::getTuneWrist, config::setTuneWrist);
+                    "#Tune Position Percent", config::getTuneTwist, config::setTuneTwist);
         }
-    }
-
-    public void switchFeedSpot() {
-        config.setShortFeed(!(config.isShortFeed()));
-        Telemetry.print("Feed spot switched to " + ((config.isShortFeed()) ? " short" : " long"));
     }
 
     // --------------------------------------------------------------------------------
     // Custom Commands
     // --------------------------------------------------------------------------------
 
-    public Command zeroWristRoutine() {
+    public Command zeroTwistRoutine() {
         return new FunctionalCommand(
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
@@ -146,18 +139,18 @@ public class Wrist extends Mechanism {
                         },
                         () -> false, // isFinished
                         this) // requirement
-                .withName("Wrist.zeroWristRoutine");
+                .withName("Twist.zeroTwistRoutine");
     }
 
-    /** Holds the position of the Wrist. */
-    public Command runHoldWrist() {
+    /** Holds the position of the Twist. */
+    public Command runHoldTwist() {
         return new Command() {
             double holdPosition = 0; // rotations
 
             // constructor
             {
-                setName("Wrist.holdPosition");
-                addRequirements(Wrist.this);
+                setName("Twist.holdPosition");
+                addRequirements(Twist.this);
             }
 
             @Override
@@ -177,7 +170,7 @@ public class Wrist extends Mechanism {
         };
     }
 
-    public boolean WristHasError() {
+    public boolean TwistHasError() {
         if (isAttached()) {
             return getPositionRotations() > config.getMaxRotations();
         }
@@ -189,7 +182,7 @@ public class Wrist extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            // sim = new WristSim(motor.getSimState(), RobotSim.leftView);
+            // sim = new TwistSim(motor.getSimState(), RobotSim.leftView);
 
             // // m_CANcoder.setPosition(0);
         }
@@ -203,12 +196,12 @@ public class Wrist extends Mechanism {
         // }
     }
 
-    // class WristSim extends ArmSim {
-    //     public WristSim(TalonFXSimState wristMotorSim, Mechanism2d mech) {
+    // class TwistSim extends ArmSim {
+    //     public TwistSim(TalonFXSimState twistMotorSim, Mechanism2d mech) {
     //         super(
     //                 new ArmConfig(
-    //                                 config.wristX,
-    //                                 config.wristY,
+    //                                 config.twistX,
+    //                                 config.twistY,
     //                                 config.simRatio,
     //                                 config.length,
     //                                 225 - Units.rotationsToDegrees(config.getMaxRotations()) -
@@ -218,7 +211,7 @@ public class Wrist extends Mechanism {
     //                                 -45 - 90)
     //                         .setMount(Robot.getElevator().getSim(), false),
     //                 mech,
-    //                 wristMotorSim,
+    //                 twistMotorSim,
     //                 "3" + config.getName()); // added 3 to the name to create it third
     //     }
     // }

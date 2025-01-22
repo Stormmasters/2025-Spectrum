@@ -3,7 +3,6 @@ package frc.robot.shoulder;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.spectrumLib.Telemetry;
@@ -19,18 +18,16 @@ public class ShoulderStates {
     }
 
     public static void setStates() {
-        coastMode.onTrue(
-                log(coastMode())
-                        .alongWith(new PrintCommand("this works again").ignoringDisable(true)));
+        coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        intaking.whileTrue(tuneShoulder()); // using intake button to test
+        intaking.whileTrue(log(coralIntake())); // using intake button to test
         score.whileTrue(home());
-        algaeFloor.whileTrue(moveToPercentage(config::getFloorIntake));
-        L2Algae.whileTrue(l2Algae());
-        L3Algae.whileTrue(l3Algae());
-        L2Coral.whileTrue(l2Coral());
-        L3Coral.whileTrue(l3Coral());
-        L4Coral.whileTrue(l4Coral());
+        algaeFloor.whileTrue(log(floorIntake()));
+        L2Algae.whileTrue(log(l2Algae()));
+        L3Algae.whileTrue(log(l3Algae()));
+        L2Coral.whileTrue(log(l2Coral()));
+        L3Coral.whileTrue(log(l3Coral()));
+        L4Coral.whileTrue(log(l4Coral()));
         // home.whileTrue(home());
     }
 
@@ -44,10 +41,6 @@ public class ShoulderStates {
 
     public static Command climbHome() {
         return shoulder.moveToPercentage(config::getClimbHome).withName("Shoulder.climbHome");
-    }
-
-    public static Command moveToPercentage(DoubleSupplier percent) {
-        return shoulder.moveToPercentage(percent).withName("Shoulder.moveToPercentage");
     }
 
     /* Scoring positions */
@@ -74,8 +67,12 @@ public class ShoulderStates {
 
     // missing auton Shoulder commands, add when auton is added
 
-    public static Command intake() {
-        return shoulder.moveToPercentage(config::getIntake).withName("Shoulder.intake");
+    public static Command floorIntake() {
+        return shoulder.moveToPercentage(config::getFloorIntake).withName("Shoulder.floorIntake");
+    }
+
+    public static Command coralIntake() {
+        return shoulder.moveToPercentage(config::getCoralIntake).withName("Shoulder.coralIntake");
     }
 
     public static Command coastMode() {
