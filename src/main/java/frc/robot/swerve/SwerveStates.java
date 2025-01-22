@@ -50,14 +50,6 @@ public class SwerveStates {
                 .and(pilot.steer.not())
                 .onTrue(log(lockToClosest45degDrive().withName("Swerve.45headingLock")));
 
-        // ampPrep.whileTrue(
-        //         log(
-        //                 pilotAimDrive(() -> Field.flipAimAngleIfBlue(270))
-        //                         .withName("Swerve.AimToAmp")));
-
-        // TODO:Should replace with method that gives us angle to the speaker
-        // speakerPrep.whileTrue(pilotAimDrive(() -> 0));
-
         pilot.fpv_rs.whileTrue(log(fpvDrive()));
         pilot.snapSteer.whileTrue(log(snapSteerDrive()));
 

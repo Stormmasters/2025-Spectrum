@@ -132,7 +132,7 @@ public class AlgaePivot extends Mechanism {
 
     // TODO: Pivot hold position run commands needed
 
-    public Command runHoldalgaePivot() {
+    public Command runHoldAlgaePivot() {
         return new Command() {
             double holdPosition = 0; // rotations
 

@@ -27,7 +27,7 @@ public class Elevator extends Mechanism {
         @Getter @Setter private double fullExtend = maxRotations;
         @Getter private double home = minRotations;
         @Getter private final double l2 = 15.412;
-        @Getter private final double l3 = 24.4168; // made up for testing
+        @Getter private final double l3 = 24.4168;
         @Getter private final double l4 = maxRotations;
         @Getter private final double barge = maxRotations;
 

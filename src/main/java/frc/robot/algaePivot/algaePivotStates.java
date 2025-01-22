@@ -16,7 +16,7 @@ public class AlgaePivotStates {
         algaePivot.setDefaultCommand(
                 log(
                         algaePivot
-                                .runHoldalgaePivot()
+                                .runHoldAlgaePivot()
                                 .ignoringDisable(true)
                                 .withName("algaePivot.default")));
     }
