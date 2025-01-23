@@ -49,7 +49,7 @@ public class Climber extends Mechanism {
         @Getter private double movingLength = 1;
 
         public ClimberConfig() {
-            super("Climber", 53, Rio.CANIVORE); // motor id was originally 53
+            super("Climber", 53, Rio.CANIVORE);
             configMinMaxRotations(-1, 104);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);

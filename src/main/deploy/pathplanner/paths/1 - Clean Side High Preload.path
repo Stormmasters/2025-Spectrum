@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.13,
+        "y": 4.97
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.33002071965177,
+        "y": 4.975757691684121
+      },
+      "isLocked": false,
+      "linkedName": "Clean Side Start"
+    },
+    {
+      "anchor": {
+        "x": 5.3,
+        "y": 5.11
+      },
+      "prevControl": {
+        "x": 5.994396290802737,
+        "y": 5.021604347847863
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 6.0,
+    "maxAcceleration": 6.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -119.99999999999999
+  },
+  "reversed": false,
+  "folder": " Clean Side Preload-Source 5High ",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

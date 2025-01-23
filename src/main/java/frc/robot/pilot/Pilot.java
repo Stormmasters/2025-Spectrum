@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
+import frc.spectrumLib.util.Util;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,17 +15,21 @@ public class Pilot extends Gamepad {
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
-    public final Trigger intake_A = A.and(noFn, teleop);
+
+    // TODO: Finalize Buttons
+    public final Trigger intake_A = Y.and(noFn, teleop);
     public final Trigger eject_fA = A.and(fn, teleop);
-    public final Trigger ampPrep_B = B.and(noFn, teleop);
-    public final Trigger score_RB = rightBumper.and(teleop);
-    public final Trigger launchPrep_RT = rightTrigger.and(noFn, teleop);
-    public final Trigger subwooferPrep_fRT = rightTrigger.and(fn, teleop);
+    public final Trigger score_RB = rightBumper.and(fn, teleop);
     public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
-
-    public final Trigger retract_X = X.and(noFn, teleop);
-    public final Trigger manual_Y = Y.and(noFn, teleop);
+    public final Trigger home_fX = X.and(fn, teleop);
+    public final Trigger algaeFloorA = A.and(noFn, teleop); // not enough buttons
+    public final Trigger L2Algae_fB = B.and(fn, teleop);
+    public final Trigger L3Algae_fX = X.and(fn, teleop);
+    public final Trigger L1Coral_Y = Y.and(noFn, teleop);
+    public final Trigger L2Coral_B = B.and(noFn, teleop);
+    public final Trigger L3Coral_X = X.and(noFn, teleop);
+    public final Trigger L4Coral_fY = Y.and(fn, teleop);
 
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);
@@ -84,8 +89,8 @@ public class Pilot extends Gamepad {
         this.config = config;
         Robot.add(this);
 
-        driving = leftStickX.or(leftStickY);
-        steer = rightStickX.or(rightStickY);
+        driving = Util.teleop.and(leftStickX.or(leftStickY));
+        steer = Util.teleop.and(rightStickX.or(rightStickY));
 
         Telemetry.print("Pilot Subsystem Initialized: ");
     }

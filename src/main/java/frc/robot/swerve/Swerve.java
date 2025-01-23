@@ -3,10 +3,11 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -15,7 +16,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.crescendo.Field;
+import frc.reefscape.Field;
 import frc.robot.Robot;
 import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.Telemetry;
@@ -44,7 +44,8 @@ import lombok.Getter;
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem so it can be used
  * in command-based projects easily.
  */
-public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSendable {
+public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
+        implements SpectrumSubsystem, NTSendable {
     private SwerveConfig config;
     private Notifier simNotifier = null;
     private double lastSimTime;
@@ -72,7 +73,12 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
      *     configurations.
      */
     public Swerve(SwerveConfig config) {
-        super(config.getDrivetrainConstants(), config.getModules());
+        super(
+                TalonFX::new,
+                TalonFX::new,
+                CANcoder::new,
+                config.getDrivetrainConstants(),
+                config.getModules());
         // this.robotConfig = robotConfig;
         this.config = config;
         configurePathPlanner();
@@ -333,22 +339,15 @@ public class Swerve extends SwerveDrivetrain implements SpectrumSubsystem, NTSen
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
 
-        ModuleConfig moduleConfig =
-                new ModuleConfig(
-                        config.getWheelRadius(),
-                        config.getSpeedAt12Volts(),
-                        1,
-                        DCMotor.getKrakenX60(1),
-                        config.getSlipCurrent(),
-                        1);
-        RobotConfig robotConfig = // Have directly call this to avoid name space problem
-                new RobotConfig(
-                        Units.lbsToKilograms(150),
-                        1,
-                        moduleConfig,
-                        Units.inchesToMeters(26),
-                        Units.inchesToMeters(
-                                26)); // TODO Fix this line and line above with real numbers
+        RobotConfig robotConfig = null; // Initialize with null in case of exception
+        try {
+            robotConfig =
+                    RobotConfig.fromGUISettings(); // Takes config from Robot Config on Pathplanner
+            // Settings
+        } catch (Exception e) {
+            e.printStackTrace(); // Fallback to a default configuration
+        }
+
         AutoBuilder.configure(
                 () -> this.getState().Pose, // Supplier of current robot pose
                 this::resetPose, // Consumer for seeding pose against auto

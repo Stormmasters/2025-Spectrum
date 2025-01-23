@@ -7,11 +7,9 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.crescendo.Field;
 import frc.robot.Robot;
 import frc.robot.climber.ClimberStates;
 import frc.robot.pilot.Pilot;
-import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
@@ -21,11 +19,12 @@ public class SwerveStates {
     static SwerveConfig config = Robot.getConfig().swerve;
     static Pilot pilot = Robot.getPilot();
 
-    static Command pilotSteerCommand =
-            log(pilotDrive().ignoringDisable(true).withName("SwerveCommands.pilotSteer"));
+    static Command pilotSteerCommand = log(pilotDrive().withName("SwerveCommands.pilotSteer"));
     static SpectrumState steeringLock = new SpectrumState("SteeringLock");
 
     protected static void setupDefaultCommand() {
+        // TODO: change this back
+        /*
         if (Rio.id == Rio.PHOTON_2024) {
             // Use this to set a different command based on robotType
             // Robot.swerve.setDefaultCommand(PhotonPilotCommands.pilotDrive());
@@ -34,6 +33,8 @@ public class SwerveStates {
         } else {
             swerve.setDefaultCommand(pilotSteerCommand);
         }
+        */
+        swerve.setDefaultCommand(pilotSteerCommand);
     }
 
     protected static void setStates() {
@@ -48,14 +49,6 @@ public class SwerveStates {
         steeringLock
                 .and(pilot.steer.not())
                 .onTrue(log(lockToClosest45degDrive().withName("Swerve.45headingLock")));
-
-        ampPrep.whileTrue(
-                log(
-                        pilotAimDrive(() -> Field.flipAimAngleIfBlue(270))
-                                .withName("Swerve.AimToAmp")));
-
-        // TODO:Should replace with method that gives us angle to the speaker
-        // speakerPrep.whileTrue(pilotAimDrive(() -> 0));
 
         pilot.fpv_rs.whileTrue(log(fpvDrive()));
         pilot.snapSteer.whileTrue(log(snapSteerDrive()));

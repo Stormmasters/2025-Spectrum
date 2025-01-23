@@ -5,7 +5,6 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.climber.ClimberStates;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
@@ -20,9 +19,6 @@ public class ElevatorStates {
     private static Operator operator = Robot.getOperator();
 
     /* Check Elevator States */
-    // Is Amp Height
-    public static final Trigger isAtAmp =
-            elevator.atPercentage(config::getAmp, config::getTolerance);
     public static final Trigger isUp =
             elevator.atPercentage(config::getElevatorUpHeight, config::getTolerance);
     public static final Trigger isHome =
@@ -34,21 +30,18 @@ public class ElevatorStates {
     }
 
     public static void setStates() {
-        ampPrep.whileTrue(Telemetry.log(amp()));
         score.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
-        climbRoutine.and(ClimberStates.atMidClimbPos).onTrue(log(fullExtend()));
-
-        operator.overrideElevator.whileTrue(
-                log(runElevator(operator::getElevatorOverride).withName("Elevator.operator")));
-        operator.zeroElevator.whileTrue(log(zero()));
-
         // Test Mode Buttons
-        pilot.tuneElevator_tB.whileTrue(log(tuneElevator()));
-
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        score.whileTrue(home());
+        L2Algae.whileTrue(l2());
+        L2Coral.whileTrue(l2());
+        L3Algae.whileTrue(l3());
+        L3Coral.whileTrue(l3());
+        L4Coral.whileTrue(l4());
     }
 
     private static Command runElevator(DoubleSupplier speed) {
@@ -63,16 +56,22 @@ public class ElevatorStates {
         return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
     }
 
-    private static Command amp() {
-        return elevator.moveToRotations(config::getAmp)
-                .alongWith(elevator.checkMaxCurrent(() -> 100))
-                .withName("Elevator.amp");
-    }
-
     private static Command home() {
         return elevator.moveToRotations(config::getHome)
                 .alongWith(elevator.checkMaxCurrent(() -> 100))
                 .withName("Elevator.home");
+    }
+
+    private static Command l2() {
+        return elevator.moveToRotations(config::getL2).withName("Elevator.l2");
+    }
+
+    private static Command l3() {
+        return elevator.moveToRotations(config::getL3).withName("Elevator.l3");
+    }
+
+    private static Command l4() {
+        return elevator.moveToRotations(config::getL4).withName("Elevator.l3");
     }
 
     private static Command zero() {

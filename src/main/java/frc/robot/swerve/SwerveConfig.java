@@ -206,8 +206,7 @@ public class SwerveConfig {
                         .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
                         .withCouplingGearRatio(coupleRatio)
                         .withDriveMotorInitialConfigs(driveInitialConfigs)
-                        .withSteerMotorInitialConfigs(steerInitialConfigs)
-                        .withCANcoderInitialConfigs(cancoderInitialConfigs);
+                        .withSteerMotorInitialConfigs(steerInitialConfigs);
 
         frontLeft =
                 constantCreator.createModuleConstants(
@@ -218,7 +217,8 @@ public class SwerveConfig {
                         frontLeftXPos,
                         frontLeftYPos,
                         invertLeftSide,
-                        steerMotorReversed);
+                        steerMotorReversed,
+                        false);
 
         frontRight =
                 constantCreator.createModuleConstants(
@@ -229,7 +229,8 @@ public class SwerveConfig {
                         frontRightXPos,
                         frontRightYPos,
                         invertRightSide,
-                        steerMotorReversed);
+                        steerMotorReversed,
+                        false);
 
         backLeft =
                 constantCreator.createModuleConstants(
@@ -240,7 +241,8 @@ public class SwerveConfig {
                         backLeftXPos,
                         backLeftYPos,
                         invertLeftSide,
-                        steerMotorReversed);
+                        steerMotorReversed,
+                        false);
 
         backRight =
                 constantCreator.createModuleConstants(
@@ -251,7 +253,8 @@ public class SwerveConfig {
                         backRightXPos,
                         backRightYPos,
                         invertRightSide,
-                        steerMotorReversed);
+                        steerMotorReversed,
+                        false);
 
         return this;
     }
