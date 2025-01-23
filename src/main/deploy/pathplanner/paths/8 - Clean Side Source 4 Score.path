@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.04,
-        "y": 5.3
+        "x": 5.2,
+        "y": 5.225
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.339827524744137,
-        "y": 5.729814331099088
+        "x": 4.499827524744137,
+        "y": 5.654814331099088
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef IJ"
     },
     {
       "anchor": {
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Clean Side Source"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],

@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.33002071965177,
-        "y": 4.975757691684121
+        "x": 5.880288772592196,
+        "y": 5.064390383638881
       },
       "isLocked": false,
       "linkedName": "Clean Side Start"
     },
     {
       "anchor": {
-        "x": 5.3,
-        "y": 5.11
+        "x": 5.2,
+        "y": 5.225
       },
       "prevControl": {
-        "x": 5.994396290802737,
-        "y": 5.021604347847863
+        "x": 6.090130096506848,
+        "y": 5.1244762812097315
       },
       "nextControl": null,
       "isLocked": false,
