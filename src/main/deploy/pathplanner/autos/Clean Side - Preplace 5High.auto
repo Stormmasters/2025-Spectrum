@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "score"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "2 - Clean Side High Preplace 1"
@@ -20,6 +26,12 @@
           "type": "path",
           "data": {
             "pathName": "3 - Clean Side High Score 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "score"
           }
         },
         {
@@ -35,6 +47,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "score"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "6 - Clean Side High Source 1"
@@ -44,6 +62,12 @@
           "type": "path",
           "data": {
             "pathName": "7 - Clean Side High Score 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "score"
           }
         },
         {
@@ -59,9 +83,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "score"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "10- Clean Side High Barage 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "score"
           }
         }
       ]
