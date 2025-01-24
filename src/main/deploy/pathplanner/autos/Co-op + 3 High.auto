@@ -18,6 +18,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Possible Autos",
   "choreoAuto": false
 }

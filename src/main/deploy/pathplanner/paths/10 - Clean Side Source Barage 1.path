@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.04,
-        "y": 5.3
+        "x": 5.2,
+        "y": 5.225
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.163627848641606,
-        "y": 4.850267942955801
+        "x": 5.681110334269989,
+        "y": 5.192940770847437
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef IJ"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 5.043820224719101
       },
       "prevControl": {
-        "x": 6.662967183399582,
-        "y": 5.070607125484419
+        "x": 5.812765726650337,
+        "y": 5.18875793076106
       },
       "nextControl": null,
       "isLocked": false,
@@ -56,7 +56,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Clean Side Source Only 5High",
