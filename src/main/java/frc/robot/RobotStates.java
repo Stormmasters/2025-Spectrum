@@ -28,7 +28,8 @@ public class RobotStates {
 
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
-    public static final Trigger intaking = pilot.intake_A.or(visionIntaking, operator.intake_A);
+    public static final Trigger intaking =
+            pilot.intake_A.or(visionIntaking, operator.intake_A, autonSourceIntake);
     public static final Trigger ejecting = pilot.eject_fA.or(operator.eject_fA);
 
     // score Triggers

@@ -19,7 +19,7 @@ public class Pilot extends Gamepad {
     // TODO: Finalize Buttons
     public final Trigger intake_A = Y.and(noFn, teleop);
     public final Trigger eject_fA = A.and(fn, teleop);
-    public final Trigger score_RB = rightBumper.and(fn, teleop);
+    public final Trigger score_RB = rightBumper.and(noFn, teleop);
     public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
     public final Trigger home_fX = X.and(fn, teleop);
