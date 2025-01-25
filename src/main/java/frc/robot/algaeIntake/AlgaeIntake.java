@@ -114,13 +114,13 @@ public class AlgaeIntake extends Mechanism {
     }
 
     class AlgaeIntakeSim extends RollerSim {
-        public AlgaeIntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
+        public AlgaeIntakeSim(Mechanism2d mech, TalonFXSimState algaeRollerMotorSim) {
             super(
                     new RollerConfig(config.wheelDiameter)
                             .setPosition(config.intakeX, config.intakeY)
                             .setMount(Robot.getAlgaePivot().getSim()),
                     mech,
-                    rollerMotorSim,
+                    algaeRollerMotorSim,
                     config.getName());
         }
     }

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
-import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
@@ -193,7 +192,7 @@ public class Shoulder extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            sim = new ShoulderSim(motor.getSimState(), RobotSim.leftView);
+            // sim = new ShoulderSim(motor.getSimState(), RobotSim.leftView);
 
             // m_CANcoder.setPosition(0);
         }
@@ -202,7 +201,7 @@ public class Shoulder extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic();
+            // sim.simulationPeriodic();
             // m_CANcoder.getSimState().setRawPosition(sim.getAngleRads() / 0.202);
         }
     }

@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
@@ -197,8 +196,7 @@ public class AlgaePivot extends Mechanism {
                                     // 180 - 45 +
                                     // Units.rotationsToDegrees(config.getMaxRotations()),
                                     0)
-                            .setColor(new Color8Bit(Color.kBrown))
-                            .setMount(Robot.getElevator().getSim(), true),
+                            .setColor(new Color8Bit(Color.kBrown)),
                     mech,
                     algaePivotMotorSim,
                     config.getName());

@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
-import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
@@ -184,7 +183,7 @@ public class Elbow extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            sim = new ElbowSim(motor.getSimState(), RobotSim.leftView);
+            // sim = new ElbowSim(motor.getSimState(), RobotSim.leftView);
 
             // m_CANcoder.setPosition(0);
         }
@@ -193,7 +192,7 @@ public class Elbow extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic();
+            // sim.simulationPeriodic();
             // m_CANcoder.getSimState().setRawPosition(sim.getAngleRads() / 0.202);
         }
     }
