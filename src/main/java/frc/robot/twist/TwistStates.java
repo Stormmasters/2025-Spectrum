@@ -18,6 +18,9 @@ public class TwistStates {
     }
 
     public static void setStates() {
+        algaeFloor.whileTrue(tuneTwist());
+        L2Coral.whileTrue(runTwist(() -> .1));
+        L3Coral.whileTrue(runTwist(() -> -.1));
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }

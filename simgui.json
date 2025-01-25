@@ -116,8 +116,14 @@
         "Shoulder": {
           "open": true
         },
+        "Twist": {
+          "open": true
+        },
         "open": true
       }
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
   }
 }
