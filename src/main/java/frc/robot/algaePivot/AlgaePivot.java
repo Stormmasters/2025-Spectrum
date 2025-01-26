@@ -58,7 +58,7 @@ public class AlgaePivot extends Mechanism {
         @Getter private double length = 0.4;
 
         public AlgaePivotConfig() {
-            super("AlgaePivot", 8, Rio.RIO_CANBUS); // Rio.CANIVORE);
+            super("AlgaePivot", 55, Rio.RIO_CANBUS); // Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
