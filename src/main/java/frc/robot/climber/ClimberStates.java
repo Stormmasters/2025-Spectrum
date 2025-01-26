@@ -3,85 +3,58 @@ package frc.robot.climber;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.climber.Climber.ClimberConfig;
-import frc.robot.elevator.ElevatorStates;
-import frc.robot.operator.Operator;
-import frc.robot.pilot.Pilot;
 import frc.spectrumLib.Telemetry;
-import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
 public class ClimberStates {
     private static Climber climber = Robot.getClimber();
     private static ClimberConfig config = Robot.getConfig().climber;
-    private static Pilot pilot = Robot.getPilot();
-    private static Operator operator = Robot.getOperator();
-
-    public static final Trigger atMidClimbPos =
-            climber.atPercentage(config::getMidClimb, config::getTolerance);
-    public static final Trigger belowMidClimbPos =
-            climber.belowPercentage(config::getMidClimb, config::getTolerance);
-    public static final Trigger atFullExtendPos =
-            climber.atPercentage(config::getFullExtend, config::getTolerance);
-    public static final Trigger atHomePos =
-            climber.atPercentage(config::getHome, config::getTolerance);
 
     public static void setupDefaultCommand() {
         climber.setDefaultCommand(
-                log(holdPosition().ignoringDisable(true).withName("Climber.default")));
+                log(climber.runHoldClimber().ignoringDisable(true).withName("climber.default")));
     }
 
     public static void setStates() {
-        climbPrep.whileTrue(fullExtend());
-
-        // What does the climber do in auto climb sequence?
-        // Hooks go to mid climb, until Elevator is full up
-        // Once Elevator is full up, hooks go to home
-        climbRoutine.and(ElevatorStates.isUp.not()).whileTrue(log(midClimb()));
-        climbRoutine.and(ElevatorStates.isUp).whileTrue(log(home()));
-        pilot.home.whileTrue(log(home()));
-
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        climbPrep.whileTrue(log(prepClimber()));
+        homeAll.whileTrue(log(home()));
     }
 
-    private static Command runClimber(DoubleSupplier speed) {
-        return climber.runPercentage(speed).withName("Elevator.runElevator");
+    public static Command runClimber(DoubleSupplier speed) {
+        return climber.runPercentage(speed).withName("Climber.runClimber");
     }
 
-    private static Command holdPosition() {
-        return climber.holdPosition().withName("Climber.holdPosition");
+    public static Command prepClimber() {
+        return climber.moveToPercentage(config::getPrepClimber).withName("Climber.prepClimber");
     }
 
-    private static Command fullExtend() {
-        return climber.moveToPercentage(config::getFullExtend).withName("Climber.fullExtend");
-    }
+    // missing auton Climber commands, add when auton is added
 
-    private static Command home() {
+    public static Command home() {
         return climber.moveToPercentage(config::getHome).withName("Climber.home");
     }
 
-    private static Command midClimb() {
-        return climber.moveToPercentage(config::getMidClimb).withName("Climber.midClimb");
-    }
-
-    private static Command safeClimb() {
-        return climber.moveToPercentage(config::getSafeClimb).withName("Climber.safeClimb");
-    }
-
-    private static Command coastMode() {
+    public static Command coastMode() {
         return climber.coastMode().withName("Climber.CoastMode");
     }
 
-    private static Command ensureBrakeMode() {
+    public static Command stopMotor() {
+        return climber.runStop().withName("Climber.stop");
+    }
+
+    public static Command ensureBrakeMode() {
         return climber.ensureBrakeMode().withName("Climber.BrakeMode");
     }
 
-    private static Command tuneClimber() {
-        return climber.moveToPercentage(new TuneValue("Tune Climber", 0).getSupplier())
-                .withName("Climber.Tune");
+    // Tune value command
+    public static Command tuneClimber() {
+        // return pivot.moveToPercentage(new TuneValue("Tune Climber", 0).getSupplier())
+        //         .withName("Climber.Tune");
+        return climber.moveToPercentage(config::getTuneClimber);
     }
 
     // Log Command
