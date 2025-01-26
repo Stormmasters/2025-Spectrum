@@ -55,7 +55,7 @@ public class Twist extends Mechanism {
         @Getter private double length = 0.3;
 
         public TwistConfig() {
-            super("Twist", 42, Rio.RIO_CANBUS); // Rio.CANIVORE); // TODO: update ID
+            super("Twist", 44, Rio.RIO_CANBUS); // Rio.CANIVORE); // TODO: update ID
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);

@@ -22,7 +22,7 @@ public class Pilot extends Gamepad {
     public final Trigger score_RB = rightBumper.and(noFn, teleop);
     public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
-    public final Trigger home_fX = X.and(fn, teleop);
+    public final Trigger home = X.and(fn, teleop);
     public final Trigger algaeFloorA = A.and(noFn, teleop); // not enough buttons
     public final Trigger L2Algae_fB = B.and(fn, teleop);
     public final Trigger L3Algae_fX = X.and(fn, teleop);
