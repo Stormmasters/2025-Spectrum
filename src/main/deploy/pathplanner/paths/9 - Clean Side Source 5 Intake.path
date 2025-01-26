@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.12,
-        "y": 4.2
+        "x": 3.08,
+        "y": 4.0
       },
       "prevControl": {
-        "x": 2.9833958939833094,
-        "y": 4.435206181831333
+        "x": 2.9433958939833094,
+        "y": 4.235206181831333
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef AB"
     }
   ],
   "rotationTargets": [],

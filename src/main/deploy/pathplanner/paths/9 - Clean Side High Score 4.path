@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.33946707350042,
-        "y": 6.943934856201932
+        "x": 2.5963483146067414,
+        "y": 7.056811797752809
       },
       "isLocked": false,
       "linkedName": "Clean Side Source"
     },
     {
       "anchor": {
-        "x": 5.04,
-        "y": 5.3
+        "x": 5.2,
+        "y": 5.225
       },
       "prevControl": {
-        "x": 4.314810547569473,
-        "y": 5.722381254933797
+        "x": 4.937991573033708,
+        "y": 5.9147471910112355
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "L4",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 6.0,
     "maxAcceleration": 6.0,
@@ -42,7 +49,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 59.99999999999999
   },
   "reversed": false,
   "folder": " Clean Side Preload-Source 5High ",

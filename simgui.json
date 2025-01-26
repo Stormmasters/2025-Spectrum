@@ -36,12 +36,25 @@
         }
       },
       "/SmartDashboard/Auto Visualizer": {
-        "bottom": 1476,
-        "height": 8.210550308227539,
-        "left": 150,
-        "right": 2961,
-        "top": 79,
-        "width": 16.541748046875,
+        "bottom": 1638,
+        "builtin": "2025 Reefscape",
+        "height": 8.051901817321777,
+        "left": 534,
+        "path": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "selectable": false,
+          "style": "Line",
+          "weight": 1.0
+        },
+        "right": 3466,
+        "top": 291,
+        "width": 17.54825210571289,
         "window": {
           "visible": true
         }
@@ -76,19 +89,20 @@
         "apriltag": {
           "image": "./images/tag-blue.png"
         },
-        "bottom": 1476,
+        "bottom": 1638,
+        "builtin": "2025 Reefscape",
         "cameras": {
           "length": 0.10000000149011612,
           "width": 0.10000000149011612
         },
-        "height": 8.210550308227539,
-        "left": 150,
-        "right": 2961,
-        "top": 79,
+        "height": 8.051901817321777,
+        "left": 534,
+        "right": 3466,
+        "top": 291,
         "visibleTargetPoses": {
           "image": "./images/tag-green.png"
         },
-        "width": 16.541748046875,
+        "width": 17.54825210571289,
         "window": {
           "visible": true
         }

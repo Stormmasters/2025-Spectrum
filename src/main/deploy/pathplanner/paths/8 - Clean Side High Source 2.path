@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.94,
-        "y": 5.29
+        "x": 3.78,
+        "y": 5.25
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1907897711822972,
-        "y": 5.960636641093942
+        "x": 3.030789771182297,
+        "y": 5.920636641093942
       },
       "isLocked": false,
       "linkedName": null
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "sourceIntake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 6.0,
     "maxAcceleration": 6.0,
@@ -48,7 +55,7 @@
   "folder": " Clean Side Preload-Source 5High ",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }

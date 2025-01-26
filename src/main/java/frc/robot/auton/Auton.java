@@ -55,6 +55,10 @@ public class Auton {
                 "Left - Preplace 5High", SpectrumAuton("Clean Side - Preplace 5High", false));
         pathChooser.addOption(
                 "Right - Preplace 5High", SpectrumAuton("Clean Side - Preplace 5High", true));
+        pathChooser.addOption(
+                "Left - Source 5High", SpectrumAuton("Clean Side - Source 5High", false));
+        pathChooser.addOption(
+                "Right - Source 5High", SpectrumAuton("Clean Side - Source 5High", true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }

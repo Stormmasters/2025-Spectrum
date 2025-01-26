@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.04,
-        "y": 5.3
+        "x": 5.2,
+        "y": 5.225
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.268391193840689,
-        "y": 5.198326687001825
+        "x": 6.285463483146067,
+        "y": 4.961657303370787
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.17,
-        "y": 5.23
+        "x": 7.731530898876404,
+        "y": 5.068469101123596
       },
       "prevControl": {
-        "x": 4.939796949521809,
-        "y": 5.327501566913233
+        "x": 6.651709862914937,
+        "y": 5.110728901283111
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": " Clean Side Preload-Source 5High ",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
 }

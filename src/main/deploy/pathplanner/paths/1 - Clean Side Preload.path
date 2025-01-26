@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.32,
-        "y": 5.14
+        "x": 5.2,
+        "y": 5.225
       },
       "prevControl": {
-        "x": 5.8240355253883385,
-        "y": 5.122818882980027
+        "x": 5.704035525388338,
+        "y": 5.207818882980027
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "Clean Side Source Only 5High",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }
