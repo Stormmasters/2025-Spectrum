@@ -52,7 +52,7 @@ public class Elevator extends Mechanism {
         @Getter private double movingLength = 40;
 
         public ElevatorConfig() {
-            super("Elevator", 52, Rio.CANIVORE);
+            super("Elevator", 40, Rio.CANIVORE);
             configMinMaxRotations(minRotations, maxRotations);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(0, positionKv, 0, 0);

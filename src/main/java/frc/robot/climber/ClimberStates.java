@@ -41,7 +41,7 @@ public class ClimberStates {
         // Once Elevator is full up, hooks go to home
         climbRoutine.and(ElevatorStates.isUp.not()).whileTrue(log(midClimb()));
         climbRoutine.and(ElevatorStates.isUp).whileTrue(log(home()));
-        pilot.home_fX.whileTrue(log(home()));
+        pilot.home.whileTrue(log(home()));
 
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
