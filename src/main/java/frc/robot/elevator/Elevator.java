@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
@@ -173,14 +174,14 @@ public class Elevator extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) { // Only run simulation if it's attached
-            // sim = new ElevatorSim(motor.getSimState(), RobotSim.leftView);
+            sim = new ElevatorSim(motor.getSimState(), RobotSim.leftView);
         }
     }
 
     @Override
     public void simulationPeriodic() {
         if (isAttached()) { // Only run if it's attached
-            // sim.simulationPeriodic();
+            sim.simulationPeriodic();
         }
     }
 

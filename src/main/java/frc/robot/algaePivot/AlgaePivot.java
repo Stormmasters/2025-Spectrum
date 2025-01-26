@@ -25,7 +25,7 @@ public class AlgaePivot extends Mechanism {
         /* AlgaePivot positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = 0;
         @Getter private final double intake = 35.5;
-        @Getter private final double floorIntake = 70;
+        @Getter private final double floorIntake = 80;
         @Getter private final double l1Coral = 87.8;
         @Getter private final double l2Algae = 20;
         @Getter private final double l3Algae = 20;
@@ -58,7 +58,7 @@ public class AlgaePivot extends Mechanism {
         @Getter private double length = 0.4;
 
         public AlgaePivotConfig() {
-            super("AlgaePivot", 41, Rio.RIO_CANBUS); // Rio.CANIVORE);
+            super("AlgaePivot", 8, Rio.RIO_CANBUS); // Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);

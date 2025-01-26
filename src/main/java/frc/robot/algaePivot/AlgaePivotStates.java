@@ -25,6 +25,7 @@ public class AlgaePivotStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         algaeFloor.whileTrue(log(floorIntake()));
+        homeAll.onTrue(log(home()));
         // algaeFloor.whileTrue(algaePivot.moveToPercentage(config::getFloorIntake));
         // L2Algae.whileTrue(l2Algae());
         // L3Algae.whileTrue(l3Algae());
@@ -42,6 +43,10 @@ public class AlgaePivotStates {
 
     public static Command intake() {
         return algaePivot.moveToPercentage(config::getIntake).withName("AlgaePivot.intake");
+    }
+
+    public static Command home() {
+        return algaePivot.moveToPercentage(config::getHome).withName("AlgaePivot.home");
     }
 
     public static Command floorIntake() {
