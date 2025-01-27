@@ -19,8 +19,8 @@ public class TwistStates {
 
     public static void setStates() {
         intaking.whileTrue(log(coralIntake()));
-        // intaking.whileTrue(tuneTwist());
-        // algaeFloor.whileTrue(log(floorIntake()));
+        // algaeFloor.whileTrue(tuneTwist());
+        algaeFloor.whileTrue(log(floorIntake()));
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
         L2Coral.whileTrue(log(l2Coral()));
