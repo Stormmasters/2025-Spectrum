@@ -8,7 +8,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
-import frc.robot.climber.ClimberStates;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
@@ -57,11 +56,6 @@ public class SwerveStates {
         pilot.leftReorient.onTrue(log(reorientLeft()));
         pilot.downReorient.onTrue(log(reorientBack()));
         pilot.rightReorient.onTrue(log(reorientRight()));
-
-        // Drive fwd while the climber is below mid climb and not home
-        climbRoutine
-                .and(ClimberStates.belowMidClimbPos, ClimberStates.atHomePos.not())
-                .whileTrue(log(climbDrive()));
     }
 
     /** Pilot Commands ************************************************************************ */
