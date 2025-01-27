@@ -184,7 +184,7 @@ public class Climber extends Mechanism {
                                     180,
                                     // 180 - 45 +
                                     // Units.rotationsToDegrees(config.getMaxRotations()),
-                                    0)
+                                    180)
                             .setColor(new Color8Bit(Color.kBlueViolet)),
                     mech,
                     climberMotorSim,
