@@ -28,7 +28,8 @@ public class RobotStates {
 
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
-    public static final Trigger intaking = pilot.intake_A.or(visionIntaking, operator.intake_A);
+    public static final Trigger intaking =
+            pilot.intake_A.or(visionIntaking, operator.intake_A, autonSourceIntake);
     public static final Trigger ejecting = pilot.eject_fA.or(operator.eject_fA);
 
     // score Triggers
@@ -46,6 +47,7 @@ public class RobotStates {
     public static final Trigger L2Coral = pilot.L2Coral_B;
     public static final Trigger L3Coral = pilot.L3Coral_X;
     public static final Trigger L4Coral = pilot.L4Coral_fY.or(autonL4);
+    public static final Trigger homeAll = pilot.home;
     // public static final Trigger home = pilot.homeShoulder_fB;
 
     // public static final Trigger moveElbow = pilot.elbow_Y;

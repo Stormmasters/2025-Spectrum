@@ -7,6 +7,11 @@
       "window": {
         "visible": true
       }
+    },
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
     }
   },
   "NTProvider": {
@@ -106,6 +111,9 @@
   },
   "NetworkTables": {
     "transitory": {
+      "CameraPublisher": {
+        "open": true
+      },
       "Robot": {
         "open": true
       },

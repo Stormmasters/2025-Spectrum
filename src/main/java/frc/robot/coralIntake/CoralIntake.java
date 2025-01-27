@@ -114,13 +114,13 @@ public class CoralIntake extends Mechanism {
     }
 
     class CoralIntakeSim extends RollerSim {
-        public CoralIntakeSim(Mechanism2d mech, TalonFXSimState rollerMotorSim) {
+        public CoralIntakeSim(Mechanism2d mech, TalonFXSimState coralRollerMotorSim) {
             super(
                     new RollerConfig(config.wheelDiameter)
                             .setPosition(config.intakeX, config.intakeY)
                             .setMount(Robot.getElbow().getSim()),
                     mech,
-                    rollerMotorSim,
+                    coralRollerMotorSim,
                     config.getName());
         }
     }

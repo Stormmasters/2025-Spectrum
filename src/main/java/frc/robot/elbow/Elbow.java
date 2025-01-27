@@ -57,7 +57,7 @@ public class Elbow extends Mechanism {
         @Getter private double startingAngle = 180 - 90;
 
         public ElbowConfig() {
-            super("Elbow", 41, Rio.RIO_CANBUS); // Rio.CANIVORE);
+            super("Elbow", 43, Rio.RIO_CANBUS); // Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
