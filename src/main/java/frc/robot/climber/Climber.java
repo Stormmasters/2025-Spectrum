@@ -24,7 +24,8 @@ public class Climber extends Mechanism {
     public static class ClimberConfig extends Config {
         /* Climber positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = 0;
-        @Getter private final double prepClimber = 50;
+        @Getter private final double prepClimber = 100;
+        @Getter private final double finishClimb = 50;
         @Getter @Setter private double tuneClimber = 0;
 
         /* Climber config settings */

@@ -21,6 +21,7 @@ public class ClimberStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         climbPrep.whileTrue(log(prepClimber()));
+        climbFinish.whileTrue(log(finishClimb()));
         homeAll.whileTrue(log(home()));
     }
 
@@ -30,6 +31,10 @@ public class ClimberStates {
 
     public static Command prepClimber() {
         return climber.moveToPercentage(config::getPrepClimber).withName("Climber.prepClimber");
+    }
+
+    public static Command finishClimb() {
+        return climber.moveToPercentage(config::getFinishClimb).withName("Climber.finishClimb");
     }
 
     // missing auton Climber commands, add when auton is added
