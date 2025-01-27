@@ -24,8 +24,8 @@ public class ElbowStates {
         // algaeFloor.whileTrue(log(floorIntake()));
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
-        // L2Coral.whileTrue(log(l2Coral()));
-        // L3Coral.whileTrue(log(l3Coral()));
+        L2Coral.whileTrue(log(l2Coral()));
+        L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
         // home.whileTrue(home());
     }
@@ -45,6 +45,10 @@ public class ElbowStates {
 
     public static Command l3Algae() {
         return elbow.moveToPercentage(config::getL3Algae).withName("Elbow.l3Algae");
+    }
+
+    public static Command l1Coral() {
+        return elbow.moveToPercentage(config::getL1Coral).withName("Twist.L1Coral");
     }
 
     public static Command l2Coral() {

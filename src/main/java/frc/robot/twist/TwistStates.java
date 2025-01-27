@@ -18,9 +18,14 @@ public class TwistStates {
     }
 
     public static void setStates() {
-        algaeFloor.whileTrue(tuneTwist());
-        L2Coral.whileTrue(runTwist(() -> .1));
-        L3Coral.whileTrue(runTwist(() -> -.1));
+        intaking.whileTrue(log(coralIntake()));
+        // intaking.whileTrue(tuneTwist());
+        // algaeFloor.whileTrue(log(floorIntake()));
+        L2Algae.whileTrue(log(l2Algae()));
+        L3Algae.whileTrue(log(l3Algae()));
+        L2Coral.whileTrue(log(l2Coral()));
+        L3Coral.whileTrue(log(l3Coral()));
+        L4Coral.whileTrue(log(l4Coral()));
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }
@@ -29,9 +34,9 @@ public class TwistStates {
         return twist.runPercentage(speed).withName("Twist.runTwist");
     }
 
-    public static Command home() {
-        return twist.moveToPercentage(config::getHome).withName("Twist.home");
-    }
+    // public static Command home() {
+    //     return twist.moveToPercentage(config::getHome).withName("Twist.home");
+    // }
 
     public static Command moveToPercentage(DoubleSupplier percent) {
         return twist.moveToPercentage(percent).withName("Twist.moveToPercentage");
@@ -39,32 +44,36 @@ public class TwistStates {
 
     /* Scoring positions */
 
-    public static Command L2Algae() {
-        return twist.moveToPercentage(config::getL2Algae).withName("Twist.L2Algae");
+    public static Command l2Algae() {
+        return twist.moveToPercentage(config::getL2Algae).withName("Twist.l2Algae");
     }
 
-    public static Command L3Algae() {
-        return twist.moveToPercentage(config::getL3Algae).withName("Twist.L3Algae");
+    public static Command l3Algae() {
+        return twist.moveToPercentage(config::getL3Algae).withName("Twist.l3Algae");
     }
 
-    public static Command L2Coral() {
-        return twist.moveToPercentage(config::getL2Coral).withName("Twist.L2Coral");
+    public static Command l1Coral() {
+        return twist.moveToPercentage(config::getL1Coral).withName("Twist.l1Coral");
     }
 
-    public static Command L3Coral() {
-        return twist.moveToPercentage(config::getL3Coral).withName("Twist.L3Coral");
+    public static Command l2Coral() {
+        return twist.moveToPercentage(config::getL2Coral).withName("Twist.l2Coral");
     }
 
-    public static Command L1Coral() {
-        return twist.moveToPercentage(config::getL1).withName("Twist.L1Coral");
+    public static Command l3Coral() {
+        return twist.moveToPercentage(config::getL3Coral).withName("Twist.l3Coral");
     }
 
-    public static Command L4Coral() {
-        return twist.moveToPercentage(config::getL4).withName("Twist.L4Coral");
+    public static Command l4Coral() {
+        return twist.moveToPercentage(config::getL4Coral).withName("Twist.l4Coral");
     }
 
-    public static Command intake() {
-        return twist.moveToPercentage(config::getIntake).withName("Twist.intake");
+    public static Command floorIntake() {
+        return twist.moveToPercentage(config::getFloorIntake).withName("Twist.floorIntake");
+    }
+
+    public static Command coralIntake() {
+        return twist.moveToPercentage(config::getCoralIntake).withName("Twist.coralIntake");
     }
 
     public static Command coastMode() {

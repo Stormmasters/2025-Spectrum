@@ -36,18 +36,17 @@ public class Twist extends Mechanism {
         @Getter private final int initializedPosition = 20;
 
         /* twist positions in percentage of max rotation || 0 is horizontal */
-        // TODO: Find twist positions
-        @Getter private final double score = 100 - 65;
-        @Getter private final double home = 100 - 1;
-        @Getter private final double intake = 100;
-        @Getter private final double ninetyDegrees = 100 - 39;
-        @Getter private final double l1 = 63;
-        @Getter private final double l2Algae = 90;
-        @Getter private final double l3Algae = 90;
-        @Getter private final double l2Coral = 90;
-        @Getter private final double l3Coral = 90;
-        @Getter private final double l4 = 57;
-        @Getter private final double barge = 57;
+        // @Getter private final double score = 100 - 65;
+        // @Getter private final double home = 100 - 1;
+        @Getter private final double coralIntake = 0;
+        @Getter private final double floorIntake = 0;
+        @Getter private final double l1Coral = 50;
+        @Getter private final double l2Algae = 50;
+        @Getter private final double l3Algae = 50;
+        @Getter private final double l2Coral = 50;
+        @Getter private final double l3Coral = 50;
+        @Getter private final double l4Coral = 100;
+        @Getter private final double barge = 100;
         @Getter @Setter private double tuneTwist = 0;
 
         /* Twist config settings */
@@ -67,10 +66,11 @@ public class Twist extends Mechanism {
         @Getter private double twistX = 0.7;
         @Getter private double twistY = 1.2;
         @Getter @Setter private double simRatio = 15.429; // TODO: Set this to actual twist ratio
-        @Getter private double length = 0.25;
+        @Getter private double coralLength = 0.225;
+        @Getter private double algaeLength = 0.125;
 
         public TwistConfig() {
-            super("Twist", 44, Rio.RIO_CANBUS); // Rio.CANIVORE); // TODO: update ID
+            super("Twist", 44, Rio.RIO_CANBUS); // Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);
@@ -78,7 +78,7 @@ public class Twist extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-7.714285714, 7.714285714);
+            configMinMaxRotations(-7.714285714, 7.714285714); // TODO: find minmax rotations
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
@@ -219,8 +219,10 @@ public class Twist extends Mechanism {
         MechanismLigament2d leftProng;
         MechanismLigament2d rightBase;
         MechanismLigament2d rightProng;
-        Color8Bit topColor = new Color8Bit(Color.kBlue);
-        Color8Bit bottomColor = new Color8Bit(Color.kAqua);
+        Color8Bit coralColor = new Color8Bit(Color.kBlue);
+        Color8Bit algaeColor = new Color8Bit(Color.kAqua);
+        double coralLineWeight = 12.0;
+        double algaeLineWeight = 4.0;
         Mount mount;
         double initMountX;
         double initMountY;
@@ -232,7 +234,8 @@ public class Twist extends Mechanism {
                             DCMotor.getKrakenX60Foc(config.getNumMotors()),
                             config.getSimRatio(),
                             1.2,
-                            config.getLength(),
+                            config.getCoralLength(), // placeholder, should really be length of
+                            // forearm
                             Math.toRadians(-180),
                             Math.toRadians(180),
                             false, // Simulate gravity (change back to true)
@@ -243,18 +246,28 @@ public class Twist extends Mechanism {
             leftBase =
                     root.append(
                             new MechanismLigament2d(
-                                    "3LeftTwistBase", config.getLength(), -90.0, 4.0, bottomColor));
+                                    "3LeftTwistBase",
+                                    config.getCoralLength(),
+                                    -90.0,
+                                    4.0,
+                                    coralColor));
             rightBase =
                     root.append(
                             new MechanismLigament2d(
-                                    "2RightTwistBase", config.getLength(), 90.0, 4.0, topColor));
+                                    "2RightTwistBase",
+                                    config.getAlgaeLength(),
+                                    90.0,
+                                    4.0,
+                                    algaeColor));
             leftProng =
                     leftBase.append(
                             new MechanismLigament2d(
-                                    "3LeftTwistProng", 0.15, 90, 10.0, bottomColor));
+                                    "3LeftTwistProng", 0.2, 90, coralLineWeight, coralColor));
             rightProng =
                     rightBase.append(
-                            new MechanismLigament2d("2RightTwistProng", 0.15, -90, 4.0, topColor));
+                            new MechanismLigament2d(
+                                    "2RightTwistProng", 0.2, -90, algaeLineWeight, algaeColor));
+
             mount = Robot.getElbow().getSim();
             initMountX = Robot.getElbow().getConfig().getElbowX();
             initMountY = Robot.getElbow().getConfig().getElbowY();
@@ -298,30 +311,34 @@ public class Twist extends Mechanism {
             rightBase.setAngle(90 + Math.toDegrees(mount.getAngle()));
             leftBase.setAngle(-90 + Math.toDegrees(mount.getAngle()));
 
-            /* changes which side is closest to the viewer */
+            /* changes which side is closest to the viewer; the left prong is always closest to the viewer */
             if (getPositionPercentage() > 0) {
-                leftBase.setColor(topColor);
-                leftProng.setColor(topColor);
-                rightBase.setColor(bottomColor);
-                rightProng.setColor(bottomColor);
-                leftProng.setLineWeight(10.0);
-                rightProng.setLineWeight(4.0);
+                leftBase.setColor(coralColor);
+                leftProng.setColor(coralColor);
+                rightBase.setColor(algaeColor);
+                rightProng.setColor(algaeColor);
+                leftProng.setLineWeight(coralLineWeight);
+                rightProng.setLineWeight(algaeLineWeight);
                 leftBase.setLength(
-                        config.getLength() * ((Math.abs(getPositionPercentage()) - 50) / 50));
+                        calculateBaseLength(config.getCoralLength(), getPositionPercentage()));
                 rightBase.setLength(
-                        config.getLength() * ((Math.abs(getPositionPercentage()) - 50) / 50));
+                        calculateBaseLength(config.getAlgaeLength(), getPositionPercentage()));
             } else {
-                leftBase.setColor(bottomColor);
-                leftProng.setColor(bottomColor);
-                rightBase.setColor(topColor);
-                rightProng.setColor(topColor);
-                leftProng.setLineWeight(4.0);
-                rightProng.setLineWeight(10.0);
+                leftBase.setColor(algaeColor);
+                leftProng.setColor(algaeColor);
+                rightBase.setColor(coralColor);
+                rightProng.setColor(coralColor);
+                leftProng.setLineWeight(algaeLineWeight);
+                rightProng.setLineWeight(coralLineWeight);
                 leftBase.setLength(
-                        -1 * config.getLength() * ((Math.abs(getPositionPercentage()) - 50) / 50));
+                        -1 * calculateBaseLength(config.getAlgaeLength(), getPositionPercentage()));
                 rightBase.setLength(
-                        -1 * config.getLength() * ((Math.abs(getPositionPercentage()) - 50) / 50));
+                        -1 * calculateBaseLength(config.getCoralLength(), getPositionPercentage()));
             }
+        }
+
+        private double calculateBaseLength(double startingLength, double posePercent) {
+            return startingLength * ((Math.abs(posePercent) - 50) / 50);
         }
     }
 }
