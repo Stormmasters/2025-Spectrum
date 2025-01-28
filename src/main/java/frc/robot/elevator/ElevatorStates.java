@@ -71,7 +71,7 @@ public class ElevatorStates {
     }
 
     private static Command l4() {
-        return elevator.moveToRotations(config::getL4).withName("Elevator.l3");
+        return elevator.moveToRotations(config::getL4).withName("Elevator.l4");
     }
 
     private static Command zero() {

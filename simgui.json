@@ -124,6 +124,9 @@
         "Shoulder": {
           "open": true
         },
+        "Twist": {
+          "open": true
+        },
         "open": true
       }
     }

@@ -54,6 +54,7 @@ public class Elbow extends Mechanism {
         @Getter private double elbowY = 0.6;
         @Getter @Setter private double simRatio = 1;
         @Getter private double length = 0.4;
+        @Getter private double startingAngle = 180 - 90;
 
         public ElbowConfig() {
             super("Elbow", 43, Rio.RIO_CANBUS); // Rio.CANIVORE);
@@ -82,7 +83,7 @@ public class Elbow extends Mechanism {
         }
     }
 
-    private ElbowConfig config;
+    @Getter private ElbowConfig config;
     private CANcoder m_CANcoder;
     @Getter private ElbowSim sim;
     CANcoderSimState canCoderSim;
@@ -212,7 +213,7 @@ public class Elbow extends Mechanism {
                                     180 + 90,
                                     // 180 - 45 +
                                     // Units.rotationsToDegrees(config.getMaxRotations()),
-                                    180 - 90)
+                                    config.getStartingAngle())
                             .setColor(new Color8Bit(Color.kAqua))
                             .setMount(Robot.getShoulder().getSim(), true),
                     mech,
