@@ -24,7 +24,7 @@ public class AlgaePivotStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        algaeFloor.whileTrue(log(floorIntake()));
+        algaeFloorIntake.whileTrue(log(floorIntake()));
         homeAll.onTrue(log(home()));
         // algaeFloor.whileTrue(algaePivot.moveToPercentage(config::getFloorIntake));
         // L2Algae.whileTrue(l2Algae());
