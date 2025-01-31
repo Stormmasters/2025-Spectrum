@@ -11,8 +11,15 @@ public class Operator extends Gamepad {
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
-    public final Trigger intake_A = A.and(noFn, teleop);
-    public final Trigger eject_fA = A.and(fn, teleop);
+
+    public final Trigger barge_A = A.and(noFn, teleop);
+    public final Trigger floorScore_B = B.and(noFn, teleop);
+
+    public final Trigger algaeFloor_X = X.and(noFn, teleop);
+    public final Trigger coralFloor_fX = X.and(fn, teleop);
+
+    public final Trigger handOffAlgae_Y = Y.and(noFn, teleop);
+    public final Trigger handOffCoral_fY = Y.and(fn, teleop);
 
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);

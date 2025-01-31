@@ -5,6 +5,7 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.algaePivot.AlgaePivot.AlgaePivotConfig;
+import frc.robot.elbow.ElbowStates;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
 
@@ -26,13 +27,6 @@ public class AlgaePivotStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         algaeFloorIntake.whileTrue(log(floorIntake()));
         homeAll.onTrue(log(home()));
-        // algaeFloor.whileTrue(algaePivot.moveToPercentage(config::getFloorIntake));
-        // L2Algae.whileTrue(l2Algae());
-        // L3Algae.whileTrue(l3Algae());
-        // L2Coral.whileTrue(l2Coral());
-        // L3Coral.whileTrue(l3Coral());
-        // L4Coral.whileTrue(l4Coral());
-        // // home.whileTrue(home());
     }
 
     public static Command runAlgaePivot(DoubleSupplier speed) {
@@ -51,8 +45,13 @@ public class AlgaePivotStates {
 
     public static Command floorIntake() {
         return algaePivot
-                .moveToPercentage(config::getFloorIntake)
-                .withName("AlgaePivot.FloorIntake");
+                .runHoldAlgaePivot()
+                .withName("AlgaePivot.waitingForElbow")
+                .until(() -> (ElbowStates.getPosition().getAsDouble() > 70.0))
+                .andThen(
+                        algaePivot
+                                .moveToPercentage(config::getFloorIntake)
+                                .withName("AlgaePivot.floorIntake"));
     }
 
     public static Command coastMode() {

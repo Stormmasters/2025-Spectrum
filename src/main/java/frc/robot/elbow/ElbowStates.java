@@ -27,7 +27,10 @@ public class ElbowStates {
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
-        // home.whileTrue(home());
+    }
+
+    public static DoubleSupplier getPosition() {
+        return () -> ElbowConfig.getCurrPos();
     }
 
     public static Command runElbow(DoubleSupplier speed) {
