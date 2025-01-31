@@ -33,8 +33,8 @@ public class CoralIntake extends Mechanism {
         @Getter private double velocityKs = 14;
 
         /* Sim Configs */
-        @Getter private double intakeX = 1.0; // 0.5; // relative to elbow at 0 degrees
-        @Getter private double intakeY = 1.1; // relative to elbow at 0 degrees
+        @Getter private double intakeX = 0.8; // relative to elbow at 0 degrees
+        @Getter private double intakeY = 1.0; // relative to elbow at 0 degrees
         @Getter private double wheelDiameter = 5.0;
 
         public CoralIntakeConfig() {
