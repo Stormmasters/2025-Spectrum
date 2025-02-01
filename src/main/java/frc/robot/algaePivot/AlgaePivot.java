@@ -29,6 +29,7 @@ public class AlgaePivot extends Mechanism {
         @Getter @Setter private double tuneAlgaePivot = 0;
         @Getter private final double prepClimber = 50;
         @Getter private final double coralIntake = 95;
+        @Getter private final double processorScore = 65;
 
         /* AlgaePivot config settings */
         @Getter private final double zeroSpeed = -0.1;

@@ -26,6 +26,7 @@ public class TwistStates {
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
+        barge.whileTrue(log(barge()));
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }
@@ -86,6 +87,10 @@ public class TwistStates {
 
     public static Command ensureBrakeMode() {
         return twist.ensureBrakeMode().withName("Twist.BrakeMode");
+    }
+
+    public static Command barge() {
+        return twist.moveToPercentage(config::getBarge).withName("Twist.barge");
     }
 
     // Tune value command

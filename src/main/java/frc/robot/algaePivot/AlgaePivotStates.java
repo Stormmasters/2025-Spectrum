@@ -29,6 +29,7 @@ public class AlgaePivotStates {
         climbPrep.whileTrue(log(climbPrep()));
         homeAll.onTrue(log(home()));
         coralFloorIntake.whileTrue(log(coralIntake()));
+        processorScore.whileTrue(log(processorScore()));
     }
 
     public static Command runAlgaePivot(DoubleSupplier speed) {
@@ -66,6 +67,12 @@ public class AlgaePivotStates {
         return algaePivot
                 .moveToPercentage(config::getCoralIntake)
                 .withName("AlgaePivot.coralIntake");
+    }
+
+    public static Command processorScore() {
+        return algaePivot
+                .moveToPercentage(config::getProcessorScore)
+                .withName("AlgaePivot.processorScore");
     }
 
     public static DoubleSupplier getPosition() {

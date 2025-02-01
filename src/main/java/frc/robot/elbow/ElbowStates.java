@@ -27,6 +27,7 @@ public class ElbowStates {
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
+        barge.whileTrue(log(barge()));
     }
 
     public static DoubleSupplier getPosition() {
@@ -66,6 +67,9 @@ public class ElbowStates {
         return elbow.moveToPercentage(config::getL4Coral).withName("Elbow.l4Coral");
     }
 
+    public static Command barge() {
+        return elbow.moveToPercentage(config::getBarge).withName("Elbow.barge");
+    }
     // missing auton Elbow commands, add when auton is added
 
     public static Command floorIntake() {

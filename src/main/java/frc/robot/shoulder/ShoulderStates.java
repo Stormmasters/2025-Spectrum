@@ -28,6 +28,7 @@ public class ShoulderStates {
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
+        barge.whileTrue(log(barge()));
         // home.whileTrue(home());
     }
 
@@ -67,6 +68,10 @@ public class ShoulderStates {
 
     public static Command l4Coral() {
         return shoulder.moveToPercentage(config::getL4Coral).withName("Shoulder.l4Coral");
+    }
+
+    public static Command barge() {
+        return shoulder.moveToPercentage(config::getBarge).withName("Shoulder.barge");
     }
 
     // missing auton Shoulder commands, add when auton is added

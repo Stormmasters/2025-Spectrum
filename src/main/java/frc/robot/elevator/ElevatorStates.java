@@ -42,6 +42,7 @@ public class ElevatorStates {
         L3Algae.whileTrue(l3());
         L3Coral.whileTrue(l3());
         L4Coral.whileTrue(l4());
+        barge.whileTrue(barge());
     }
 
     private static Command runElevator(DoubleSupplier speed) {
@@ -72,6 +73,10 @@ public class ElevatorStates {
 
     private static Command l4() {
         return elevator.moveToRotations(config::getL4).withName("Elevator.l4");
+    }
+
+    private static Command barge() {
+        return elevator.moveToRotations(config::getBarge).withName("Elevator.barge");
     }
 
     private static Command zero() {
