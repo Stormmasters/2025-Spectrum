@@ -23,6 +23,7 @@ public class AlgaeIntakeStates {
 
     public static void setStates() {
         algaeFloorIntake.whileTrue(log(intake()));
+        coralFloorIntake.whileTrue(log(intake()));
         ejecting.whileTrue(log(eject()));
         score.whileTrue(log(intake()));
 

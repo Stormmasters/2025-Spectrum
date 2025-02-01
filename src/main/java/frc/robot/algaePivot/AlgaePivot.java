@@ -25,9 +25,10 @@ public class AlgaePivot extends Mechanism {
         /* AlgaePivot positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = 0;
         @Getter private final double intake = 35.5;
-        @Getter private final double floorIntake = 80;
+        @Getter private final double floorIntake = 70;
         @Getter @Setter private double tuneAlgaePivot = 0;
         @Getter private final double prepClimber = 50;
+        @Getter private final double coralIntake = 95;
 
         /* AlgaePivot config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -44,7 +45,7 @@ public class AlgaePivot extends Mechanism {
 
         /* Sim properties */
         @Getter private double algaePivotX = 0.1; // 1.0;
-        @Getter private double algaePivotY = 0.35;
+        @Getter private double algaePivotY = 0.55;
 
         @Getter @Setter
         private double simRatio = 1; // TODO: Set to number of rotations per mech revolution
@@ -65,7 +66,7 @@ public class AlgaePivot extends Mechanism {
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive();
-            setSimRatio(15.429);
+            setSimRatio(14);
         }
 
         public AlgaePivotConfig modifyMotorConfig(TalonFX motor) {
@@ -184,7 +185,7 @@ public class AlgaePivot extends Mechanism {
                                     0,
                                     // 180 - 45 +
                                     // Units.rotationsToDegrees(config.getMinRotations()),
-                                    180,
+                                    210,
                                     // 180 - 45 +
                                     // Units.rotationsToDegrees(config.getMaxRotations()),
                                     0)

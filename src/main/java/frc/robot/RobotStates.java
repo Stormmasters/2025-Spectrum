@@ -39,7 +39,7 @@ public class RobotStates {
     public static final Trigger climbFinish = pilot.climbRoutine_start.or(operator.climbFinish_B);
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-    public static final Trigger algaeFloorIntake = operator.algaeFloor_X.or(autonGorundIntake);
+    public static final Trigger algaeFloorIntake = operator.algaeFloor_X.or(autonGroundIntake);
     public static final Trigger coralFloorIntake = operator.coralFloor_fX;
     public static final Trigger handOffAlgae = operator.handOffAlgae_Y;
     public static final Trigger handOffCoral = operator.handOffCoral_fY;

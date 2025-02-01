@@ -22,7 +22,8 @@
       "/SmartDashboard/Auto Visualizer": "Field2d",
       "/SmartDashboard/LeftView": "Mechanism2d",
       "/SmartDashboard/Scheduler": "Scheduler",
-      "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d"
+      "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",
+      "/SmartDashboard/frontView": "Mechanism2d"
     },
     "windows": {
       "/SmartDashboard/Alerts": {
@@ -103,6 +104,11 @@
           "image": "./images/tag-green.png"
         },
         "width": 17.54825210571289,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/frontView": {
         "window": {
           "visible": true
         }

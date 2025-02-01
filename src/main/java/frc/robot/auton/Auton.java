@@ -24,7 +24,7 @@ public class Auton {
 
     // Setup EventTriggers
     // Should all be public static final
-    public static final EventTrigger autonGorundIntake = new EventTrigger("groundIntake");
+    public static final EventTrigger autonGroundIntake = new EventTrigger("groundIntake");
     public static final EventTrigger autonSourceIntake = new EventTrigger("sourceIntake");
     public static final EventTrigger autonLowAlgae = new EventTrigger("lowAlgae");
     public static final EventTrigger autonHighAlgae = new EventTrigger("highAlgae");

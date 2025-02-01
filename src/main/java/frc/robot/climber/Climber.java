@@ -156,7 +156,7 @@ public class Climber extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            sim = new ClimberSim(motor.getSimState(), RobotSim.leftView);
+            sim = new ClimberSim(motor.getSimState(), RobotSim.frontView);
 
             // m_CANcoder.setPosition(0);
         }

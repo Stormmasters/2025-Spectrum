@@ -28,6 +28,7 @@ public class AlgaePivotStates {
         algaeFloorIntake.whileTrue(log(floorIntake()));
         climbPrep.whileTrue(log(climbPrep()));
         homeAll.onTrue(log(home()));
+        coralFloorIntake.whileTrue(log(coralIntake()));
     }
 
     public static Command runAlgaePivot(DoubleSupplier speed) {
@@ -59,6 +60,12 @@ public class AlgaePivotStates {
                         algaePivot
                                 .moveToPercentage(config::getFloorIntake)
                                 .withName("AlgaePivot.floorIntake"));
+    }
+
+    public static Command coralIntake() {
+        return algaePivot
+                .moveToPercentage(config::getCoralIntake)
+                .withName("AlgaePivot.coralIntake");
     }
 
     public static DoubleSupplier getPosition() {

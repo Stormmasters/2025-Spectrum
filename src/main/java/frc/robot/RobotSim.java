@@ -20,8 +20,13 @@ public class RobotSim {
     public static final Mechanism2d leftView =
             new Mechanism2d(Units.inchesToMeters(width) * 2, Units.inchesToMeters(height));
 
+    public static final Mechanism2d frontView =
+            new Mechanism2d(Units.inchesToMeters(width) * 2, Units.inchesToMeters(height));
+
     public RobotSim() {
         SmartDashboard.putData("LeftView", RobotSim.leftView);
+        SmartDashboard.putData("frontView", RobotSim.frontView);
         leftView.setBackgroundColor(new Color8Bit(Color.kLightGray));
+        frontView.setBackgroundColor(new Color8Bit(Color.kLightGray));
     }
 }
