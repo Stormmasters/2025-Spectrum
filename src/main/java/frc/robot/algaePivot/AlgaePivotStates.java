@@ -26,6 +26,7 @@ public class AlgaePivotStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         algaeFloorIntake.whileTrue(log(floorIntake()));
+        climbPrep.whileTrue(log(climbPrep()));
         homeAll.onTrue(log(home()));
     }
 
@@ -43,15 +44,25 @@ public class AlgaePivotStates {
         return algaePivot.moveToPercentage(config::getHome).withName("AlgaePivot.home");
     }
 
+    public static Command climbPrep() {
+        return algaePivot
+                .moveToPercentage(config::getPrepClimber)
+                .withName("AlgaePivot.prepClimber");
+    }
+
     public static Command floorIntake() {
         return algaePivot
                 .runHoldAlgaePivot()
                 .withName("AlgaePivot.waitingForElbow")
-                .until(() -> (ElbowStates.getPosition().getAsDouble() > 70.0))
+                .until(() -> (ElbowStates.getPosition().getAsDouble() < 10.0))
                 .andThen(
                         algaePivot
                                 .moveToPercentage(config::getFloorIntake)
                                 .withName("AlgaePivot.floorIntake"));
+    }
+
+    public static DoubleSupplier getPosition() {
+        return (() -> algaePivot.getPositionPercentage());
     }
 
     public static Command coastMode() {

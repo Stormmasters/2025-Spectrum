@@ -25,12 +25,11 @@ public class Elbow extends Mechanism {
 
     public static class ElbowConfig extends Config {
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
-        @Getter public static double currPos = 0;
 
         // TODO: Find elbow positions
         @Getter private final double home = 0;
         @Getter private final double coralIntake = 35.5;
-        @Getter private final double floorIntake = 87.8;
+        @Getter private final double floorIntake = 0;
         @Getter private final double l1Coral = 87.8;
         @Getter private final double l2Algae = 20;
         @Getter private final double l3Algae = 20;
@@ -100,9 +99,7 @@ public class Elbow extends Mechanism {
     }
 
     @Override
-    public void periodic() {
-        ElbowConfig.currPos = getPositionPercentage();
-    }
+    public void periodic() {}
 
     public void setupStates() {
         ElbowStates.setStates();

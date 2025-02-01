@@ -30,7 +30,7 @@ public class ElbowStates {
     }
 
     public static DoubleSupplier getPosition() {
-        return () -> ElbowConfig.getCurrPos();
+        return () -> elbow.getPositionPercentage();
     }
 
     public static Command runElbow(DoubleSupplier speed) {

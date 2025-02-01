@@ -35,17 +35,16 @@ public class RobotStates {
     public static final Trigger score = pilot.score_RB.or(autonScore);
 
     // climb Triggers
-    public static final Trigger climbPrep = pilot.climbPrep_RDP;
-    public static final Trigger climbFinish = pilot.climbRoutine_start;
+    public static final Trigger climbPrep = pilot.climbPrep_RDP.or(operator.climbPrep_B);
+    public static final Trigger climbFinish = pilot.climbRoutine_start.or(operator.climbFinish_B);
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-
     public static final Trigger algaeFloorIntake = operator.algaeFloor_X.or(autonGorundIntake);
     public static final Trigger coralFloorIntake = operator.coralFloor_fX;
     public static final Trigger handOffAlgae = operator.handOffAlgae_Y;
     public static final Trigger handOffCoral = operator.handOffCoral_fY;
     public static final Trigger barge = operator.barge_A;
-    public static final Trigger floorScore = operator.floorScore_B;
+    public static final Trigger floorScore = operator.floorScore_A;
 
     public static final Trigger L2Algae = pilot.L2Algae_fB.or(autonLowAlgae);
     public static final Trigger L3Algae = pilot.L3Algae_fX.or(autonHighAlgae);

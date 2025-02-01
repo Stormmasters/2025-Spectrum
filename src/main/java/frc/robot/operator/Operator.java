@@ -13,7 +13,10 @@ public class Operator extends Gamepad {
     public final Trigger noFn = fn.not();
 
     public final Trigger barge_A = A.and(noFn, teleop);
-    public final Trigger floorScore_B = B.and(noFn, teleop);
+    public final Trigger floorScore_A = A.and(fn, teleop);
+
+    public final Trigger climbPrep_B = B.and(noFn, teleop);
+    public final Trigger climbFinish_B = B.and(fn, teleop);
 
     public final Trigger algaeFloor_X = X.and(noFn, teleop);
     public final Trigger coralFloor_fX = X.and(fn, teleop);

@@ -59,7 +59,7 @@ public class Climber extends Mechanism {
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive();
+            configClockwise_Positive();
             setSimRatio(15.429);
         }
 
