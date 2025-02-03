@@ -62,7 +62,7 @@ public class AlgaePivot extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-7.714285714, 7.714285714); // TODO: find minmax rotations
+            configMinMaxRotations(0, 7.714285714); // TODO: find minmax rotations
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
