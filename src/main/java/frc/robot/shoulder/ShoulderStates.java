@@ -22,13 +22,15 @@ public class ShoulderStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         intaking.whileTrue(log(coralIntake())); // using intake button to test
         score.whileTrue(home());
-        algaeFloor.whileTrue(log(floorIntake()));
+        algaeFloorIntake.whileTrue(log(floorIntake()));
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
-        // home.whileTrue(home());
+        barge.whileTrue(log(barge()));
+        handOffAlgae.whileTrue(log(home()));
+        homeAll.whileTrue(home());
     }
 
     public static Command runShoulder(DoubleSupplier speed) {
@@ -67,6 +69,10 @@ public class ShoulderStates {
 
     public static Command l4Coral() {
         return shoulder.moveToPercentage(config::getL4Coral).withName("Shoulder.l4Coral");
+    }
+
+    public static Command barge() {
+        return shoulder.moveToPercentage(config::getBarge).withName("Shoulder.barge");
     }
 
     // missing auton Shoulder commands, add when auton is added

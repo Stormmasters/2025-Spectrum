@@ -5,6 +5,7 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
+import frc.robot.elbow.ElbowStates;
 import frc.spectrumLib.Telemetry;
 
 public class CoralIntakeStates {
@@ -25,9 +26,19 @@ public class CoralIntakeStates {
         intaking.whileTrue(log(intake()));
         ejecting.whileTrue(log(eject()));
         score.whileTrue(log(intake()));
+        handOffAlgae.whileTrue(log(handOffAlgae()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+    }
+
+    private static Command handOffAlgae() {
+        return coralIntake
+                .runStop()
+                .withName("coralIntake.handOffAlgaeWait")
+                .until(() -> ElbowStates.getPosition().getAsDouble() > 95.0)
+                .andThen(intake())
+                .withName("coralIntake.handOffAlgae");
     }
 
     private static Command intake() {

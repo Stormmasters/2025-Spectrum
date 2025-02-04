@@ -59,7 +59,7 @@ public class Climber extends Mechanism {
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive();
+            configClockwise_Positive();
             setSimRatio(15.429);
         }
 
@@ -156,7 +156,7 @@ public class Climber extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            sim = new ClimberSim(motor.getSimState(), RobotSim.leftView);
+            sim = new ClimberSim(motor.getSimState(), RobotSim.frontView);
 
             // m_CANcoder.setPosition(0);
         }

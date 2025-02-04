@@ -21,13 +21,19 @@ public class ElbowStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         intaking.whileTrue(log(coralIntake()));
-        algaeFloor.whileTrue(log(floorIntake()));
+        algaeFloorIntake.whileTrue(log(floorIntake()));
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
-        // home.whileTrue(home());
+        barge.whileTrue(log(barge()));
+        handOffAlgae.whileTrue(log(handOffAlgae()));
+        homeAll.whileTrue(log(home()));
+    }
+
+    public static DoubleSupplier getPosition() {
+        return () -> elbow.getPositionPercentage();
     }
 
     public static Command runElbow(DoubleSupplier speed) {
@@ -36,6 +42,10 @@ public class ElbowStates {
 
     public static Command home() {
         return elbow.moveToPercentage(config::getHome).withName("Elbow.home");
+    }
+
+    public static Command handOffAlgae() {
+        return elbow.moveToPercentage(config::getHandAlgae).withName("Elbow.handOffAlgae");
     }
 
     /* Scoring positions */
@@ -63,6 +73,9 @@ public class ElbowStates {
         return elbow.moveToPercentage(config::getL4Coral).withName("Elbow.l4Coral");
     }
 
+    public static Command barge() {
+        return elbow.moveToPercentage(config::getBarge).withName("Elbow.barge");
+    }
     // missing auton Elbow commands, add when auton is added
 
     public static Command floorIntake() {

@@ -34,11 +34,11 @@ public class AlgaeIntake extends Mechanism {
 
         /* Sim Configs */
         @Getter private double intakeX = 0.6; // relative to algaePivot at 0 degrees
-        @Getter private double intakeY = 0.35; // relative to algaePivot at 0 degrees
+        @Getter private double intakeY = 0.55; // relative to algaePivot at 0 degrees
         @Getter private double wheelDiameter = 5.0;
 
         public AlgaeIntakeConfig() {
-            super("AlgaeIntake", 56, Rio.RIO_CANBUS); 
+            super("AlgaeIntake", 56, Rio.RIO_CANBUS);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12.0 / 30.0);

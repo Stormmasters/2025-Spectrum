@@ -19,15 +19,15 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxRotations = 38.27034216; // 29.8;
+        @Getter private double maxRotations = 50; // 29.8;
         @Getter private double minRotations = 0;
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations;
         @Getter private double home = minRotations;
-        @Getter private final double l2 = 15.412;
-        @Getter private final double l3 = 24.4168;
+        @Getter private final double l2 = 24.4168;
+        @Getter private final double l3 = 35;
         @Getter private final double l4 = maxRotations;
         @Getter private final double barge = maxRotations;
 
@@ -48,7 +48,7 @@ public class Elevator extends Mechanism {
         @Getter private double initialX = 0.8;
         @Getter private double initialY = 0.35;
         @Getter private double angle = 90; // 180.0 - 72.0;
-        @Getter private double staticLength = 40;
+        @Getter private double staticLength = 55;
         @Getter private double movingLength = 40;
 
         public ElevatorConfig() {

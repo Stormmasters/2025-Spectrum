@@ -28,30 +28,32 @@ public class RobotStates {
 
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
-    public static final Trigger intaking =
-            pilot.intake_A.or(visionIntaking, operator.intake_A, autonSourceIntake);
-    public static final Trigger ejecting = pilot.eject_fA.or(operator.eject_fA);
+    public static final Trigger intaking = pilot.intake_A.or(visionIntaking, autonSourceIntake);
+    public static final Trigger ejecting = pilot.eject_fA;
 
     // score Triggers
     public static final Trigger score = pilot.score_RB.or(autonScore);
 
     // climb Triggers
-    public static final Trigger climbPrep = pilot.climbPrep_RDP;
-    public static final Trigger climbFinish = pilot.climbRoutine_start;
+    public static final Trigger climbPrep = pilot.climbPrep_RDP.or(operator.climbPrep_B);
+    public static final Trigger climbFinish = pilot.climbRoutine_start.or(operator.climbFinish_B);
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-    public static final Trigger algaeFloor = pilot.algaeFloorA.or(autonGorundIntake);
+    public static final Trigger algaeFloorIntake = operator.algaeFloor_X.or(autonGroundIntake);
+    public static final Trigger coralFloorIntake = operator.coralFloor_fX;
+    public static final Trigger handOffAlgae = operator.handOffAlgae_Y;
+    // potentially everything in position, then elevator goes down while spinning coralIntake
+    public static final Trigger handOffCoral = operator.handOffCoral_fY;
+    public static final Trigger barge = operator.barge_A;
+    public static final Trigger processorScore = operator.floorScore_A;
+
     public static final Trigger L2Algae = pilot.L2Algae_fB.or(autonLowAlgae);
-    public static final Trigger L3Algae = pilot.L3Algae_fX.or(autonHighAlgae);
+    public static final Trigger L3Algae = pilot.L3Algae_A.or(autonHighAlgae);
     public static final Trigger L1Coral = pilot.L1Coral_Y;
     public static final Trigger L2Coral = pilot.L2Coral_B;
     public static final Trigger L3Coral = pilot.L3Coral_X;
     public static final Trigger L4Coral = pilot.L4Coral_fY.or(autonL4);
     public static final Trigger homeAll = pilot.home;
-    // public static final Trigger home = pilot.homeShoulder_fB;
-
-    // public static final Trigger moveElbow = pilot.elbow_Y;
-    // public static final Trigger homeElbow = pilot.homeElbow_fY;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
