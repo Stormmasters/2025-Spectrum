@@ -178,7 +178,9 @@ public class Elevator extends Mechanism {
                         () ->
                                 (ElbowStates.getPosition().getAsDouble() < 50.0)
                                         || ElevatorStates.getPosition().getAsDouble()
-                                                < rotations.getAsDouble())
+                                                < rotations.getAsDouble()
+                                        || ElevatorStates.getPosition().getAsDouble()
+                                                > config.getL2())
                 .andThen(run(() -> setMMPosition(rotations)).withName("Elevator.moveToRotations"));
     }
 
