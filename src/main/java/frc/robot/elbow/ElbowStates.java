@@ -28,6 +28,8 @@ public class ElbowStates {
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
         barge.whileTrue(log(barge()));
+        handOffAlgae.whileTrue(log(handOffAlgae()));
+        homeAll.whileTrue(log(home()));
     }
 
     public static DoubleSupplier getPosition() {
@@ -40,6 +42,10 @@ public class ElbowStates {
 
     public static Command home() {
         return elbow.moveToPercentage(config::getHome).withName("Elbow.home");
+    }
+
+    public static Command handOffAlgae() {
+        return elbow.moveToPercentage(config::getHandAlgae).withName("Elbow.handOffAlgae");
     }
 
     /* Scoring positions */

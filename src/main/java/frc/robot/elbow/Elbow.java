@@ -27,6 +27,7 @@ public class Elbow extends Mechanism {
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
 
         // TODO: Find elbow positions
+        @Getter private final double handAlgae = 99;
         @Getter private final double home = 0;
         @Getter private final double coralIntake = 35.5;
         @Getter private final double floorIntake = 0;

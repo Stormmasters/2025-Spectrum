@@ -25,7 +25,7 @@ public class AlgaePivotStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        algaeFloorIntake.whileTrue(log(floorIntake()));
+        algaeFloorIntake.whileTrue(log(algaeFloorIntake()));
         climbPrep.whileTrue(log(climbPrep()));
         homeAll.onTrue(log(home()));
         coralFloorIntake.whileTrue(log(coralIntake()));
@@ -52,7 +52,7 @@ public class AlgaePivotStates {
                 .withName("AlgaePivot.prepClimber");
     }
 
-    public static Command floorIntake() {
+    public static Command algaeFloorIntake() {
         return algaePivot
                 .runHoldAlgaePivot()
                 .withName("AlgaePivot.waitingForElbow")

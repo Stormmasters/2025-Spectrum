@@ -42,12 +42,13 @@ public class RobotStates {
     public static final Trigger algaeFloorIntake = operator.algaeFloor_X.or(autonGroundIntake);
     public static final Trigger coralFloorIntake = operator.coralFloor_fX;
     public static final Trigger handOffAlgae = operator.handOffAlgae_Y;
+    // potentially everything in position, then elevator goes down while spinning coralIntake
     public static final Trigger handOffCoral = operator.handOffCoral_fY;
     public static final Trigger barge = operator.barge_A;
     public static final Trigger processorScore = operator.floorScore_A;
 
     public static final Trigger L2Algae = pilot.L2Algae_fB.or(autonLowAlgae);
-    public static final Trigger L3Algae = pilot.L3Algae_fX.or(autonHighAlgae);
+    public static final Trigger L3Algae = pilot.L3Algae_A.or(autonHighAlgae);
     public static final Trigger L1Coral = pilot.L1Coral_Y;
     public static final Trigger L2Coral = pilot.L2Coral_B;
     public static final Trigger L3Coral = pilot.L3Coral_X;

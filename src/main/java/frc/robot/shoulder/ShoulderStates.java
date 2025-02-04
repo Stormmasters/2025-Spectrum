@@ -29,7 +29,8 @@ public class ShoulderStates {
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
         barge.whileTrue(log(barge()));
-        // home.whileTrue(home());
+        handOffAlgae.whileTrue(log(home()));
+        homeAll.whileTrue(home());
     }
 
     public static Command runShoulder(DoubleSupplier speed) {
