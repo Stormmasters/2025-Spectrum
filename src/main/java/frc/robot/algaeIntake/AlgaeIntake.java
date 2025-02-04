@@ -34,7 +34,7 @@ public class AlgaeIntake extends Mechanism {
 
         /* Sim Configs */
         @Getter private double intakeX = 0.6; // relative to algaePivot at 0 degrees
-        @Getter private double intakeY = 0.35; // relative to algaePivot at 0 degrees
+        @Getter private double intakeY = 0.55; // relative to algaePivot at 0 degrees
         @Getter private double wheelDiameter = 5.0;
 
         public AlgaeIntakeConfig() {

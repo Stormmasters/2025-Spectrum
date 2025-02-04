@@ -78,24 +78,25 @@
                     }
                   },
                   {
-                    "type": "trajectoryLegacy",
-                    "logKey": "NT:/SmartDashboard/Auto Visualizer/path",
+                    "type": "visionLegacy",
+                    "logKey": "NT:/SmartDashboard/VisionSystemSim-main/Sim Field/visibleTargetPoses",
                     "logType": "NumberArray",
                     "visible": true,
                     "options": {
-                      "color": "#ff0000",
+                      "color": "#00ff00",
                       "size": "normal",
                       "format": "Pose2d"
                     }
                   },
                   {
-                    "type": "trajectory",
-                    "logKey": "NT:/PathPlanner/activePath",
-                    "logType": "Pose2d[]",
+                    "type": "arrowLegacy",
+                    "logKey": "NT:/SmartDashboard/VisionSystemSim-main/Sim Field/apriltag",
+                    "logType": "NumberArray",
                     "visible": true,
                     "options": {
-                      "color": "#00ff00",
-                      "size": "normal"
+                      "position": "front",
+                      "format": "Pose2d",
+                      "units": "degrees"
                     }
                   }
                 ],
@@ -143,8 +144,8 @@
                     "options": {}
                   },
                   {
-                    "type": "trajectoryLegacy",
-                    "logKey": "NT:/SmartDashboard/Auto Visualizer/path",
+                    "type": "visionLegacy",
+                    "logKey": "NT:/SmartDashboard/VisionSystemSim-main/Sim Field/visibleTargetPoses",
                     "logType": "NumberArray",
                     "visible": true,
                     "options": {
@@ -154,13 +155,12 @@
                     }
                   },
                   {
-                    "type": "trajectory",
-                    "logKey": "NT:/PathPlanner/activePath",
-                    "logType": "Pose2d[]",
+                    "type": "aprilTagLegacy",
+                    "logKey": "NT:/SmartDashboard/VisionSystemSim-main/Sim Field/apriltag",
+                    "logType": "NumberArray",
                     "visible": true,
                     "options": {
-                      "color": "#00ff00",
-                      "size": "normal"
+                      "family": "36h11"
                     }
                   }
                 ],
@@ -172,9 +172,9 @@
                 "cameraIndex": -2,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  2,
-                  1,
-                  1.0000000000000002
+                  -0.5683805775262524,
+                  1.08572103773984,
+                  2.140998455169898
                 ],
                 "cameraTarget": [
                   0,
@@ -211,7 +211,7 @@
             },
             {
               "type": 10,
-              "title": "Mechanism",
+              "title": "LeftView",
               "controller": [
                 {
                   "type": "mechanism",
@@ -222,6 +222,22 @@
                 }
               ],
               "controllerUUID": "pexukuzf1mtztxpin1gpbjiim6lc5osf",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 10,
+              "title": "FrontView",
+              "controller": [
+                {
+                  "type": "mechanism",
+                  "logKey": "NT:/SmartDashboard/frontView",
+                  "logType": "Mechanism2d",
+                  "visible": true,
+                  "options": {}
+                }
+              ],
+              "controllerUUID": "1dkegjgopenjxs3q4fablg5z4fudp9zw",
               "renderer": null,
               "controlsHeight": 200
             }

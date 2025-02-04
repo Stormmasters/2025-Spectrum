@@ -5,6 +5,7 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.algaePivot.AlgaePivot.AlgaePivotConfig;
+import frc.robot.elbow.ElbowStates;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
 
@@ -24,15 +25,11 @@ public class AlgaePivotStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        algaeFloor.whileTrue(log(floorIntake()));
+        algaeFloorIntake.whileTrue(log(algaeFloorIntake()));
+        climbPrep.whileTrue(log(climbPrep()));
         homeAll.onTrue(log(home()));
-        // algaeFloor.whileTrue(algaePivot.moveToPercentage(config::getFloorIntake));
-        // L2Algae.whileTrue(l2Algae());
-        // L3Algae.whileTrue(l3Algae());
-        // L2Coral.whileTrue(l2Coral());
-        // L3Coral.whileTrue(l3Coral());
-        // L4Coral.whileTrue(l4Coral());
-        // // home.whileTrue(home());
+        coralFloorIntake.whileTrue(log(coralIntake()));
+        processorScore.whileTrue(log(processorScore()));
     }
 
     public static Command runAlgaePivot(DoubleSupplier speed) {
@@ -49,10 +46,37 @@ public class AlgaePivotStates {
         return algaePivot.moveToPercentage(config::getHome).withName("AlgaePivot.home");
     }
 
-    public static Command floorIntake() {
+    public static Command climbPrep() {
         return algaePivot
-                .moveToPercentage(config::getFloorIntake)
-                .withName("AlgaePivot.FloorIntake");
+                .moveToPercentage(config::getPrepClimber)
+                .withName("AlgaePivot.prepClimber");
+    }
+
+    public static Command algaeFloorIntake() {
+        return algaePivot
+                .runHoldAlgaePivot()
+                .withName("AlgaePivot.waitingForElbow")
+                .until(() -> (ElbowStates.getPosition().getAsDouble() < 10.0))
+                .andThen(
+                        algaePivot
+                                .moveToPercentage(config::getFloorIntake)
+                                .withName("AlgaePivot.floorIntake"));
+    }
+
+    public static Command coralIntake() {
+        return algaePivot
+                .moveToPercentage(config::getCoralIntake)
+                .withName("AlgaePivot.coralIntake");
+    }
+
+    public static Command processorScore() {
+        return algaePivot
+                .moveToPercentage(config::getProcessorScore)
+                .withName("AlgaePivot.processorScore");
+    }
+
+    public static DoubleSupplier getPosition() {
+        return (() -> algaePivot.getPositionPercentage());
     }
 
     public static Command coastMode() {

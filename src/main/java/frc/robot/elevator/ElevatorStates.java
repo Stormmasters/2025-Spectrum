@@ -5,6 +5,7 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
@@ -42,6 +43,9 @@ public class ElevatorStates {
         L3Algae.whileTrue(l3());
         L3Coral.whileTrue(l3());
         L4Coral.whileTrue(l4());
+        barge.whileTrue(barge());
+        handOffAlgae.whileTrue(handOff());
+        homeAll.whileTrue(home());
     }
 
     private static Command runElevator(DoubleSupplier speed) {
@@ -62,6 +66,14 @@ public class ElevatorStates {
                 .withName("Elevator.home");
     }
 
+    private static Command handOff() {
+        return elevator.moveToRotations(config::getL3)
+                .withName("Elevator.handOffUp")
+                .until(() -> ElbowStates.getPosition().getAsDouble() > 90.0)
+                .andThen(elevator.moveToRotations(config::getL2))
+                .withName("Elevator.handOffDown");
+    }
+
     private static Command l2() {
         return elevator.moveToRotations(config::getL2).withName("Elevator.l2");
     }
@@ -72,6 +84,10 @@ public class ElevatorStates {
 
     private static Command l4() {
         return elevator.moveToRotations(config::getL4).withName("Elevator.l4");
+    }
+
+    private static Command barge() {
+        return elevator.moveToRotations(config::getBarge).withName("Elevator.barge");
     }
 
     private static Command zero() {

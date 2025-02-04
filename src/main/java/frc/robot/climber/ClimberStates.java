@@ -4,6 +4,7 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.algaePivot.AlgaePivotStates;
 import frc.robot.climber.Climber.ClimberConfig;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
@@ -30,7 +31,12 @@ public class ClimberStates {
     }
 
     public static Command prepClimber() {
-        return climber.moveToPercentage(config::getPrepClimber).withName("Climber.prepClimber");
+        return climber.runHoldClimber()
+                .withName("Climber.waitingForIntake")
+                .until(() -> (AlgaePivotStates.getPosition().getAsDouble() > 20.0))
+                .andThen(
+                        climber.moveToPercentage(config::getPrepClimber)
+                                .withName("Climber.prepClimber"));
     }
 
     public static Command finishClimb() {
