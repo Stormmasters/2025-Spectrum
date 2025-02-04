@@ -57,7 +57,7 @@ public class Shoulder extends Mechanism {
 
         /* Sim properties */
         @Getter private double shoulderX = 0.8;
-        @Getter private double shoulderY = 0.8;
+        @Getter private double shoulderY = 1.1;
 
         @Getter @Setter private double simRatio = 1;
 

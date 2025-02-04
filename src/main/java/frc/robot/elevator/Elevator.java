@@ -47,9 +47,9 @@ public class Elevator extends Mechanism {
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.8;
         @Getter private double initialY = 0.35;
-        @Getter private double angle = 90; // 180.0 - 72.0;
-        @Getter private double staticLength = 55;
-        @Getter private double movingLength = 40;
+        @Getter private double angle = 90;
+        @Getter private double staticLength = 50;
+        @Getter private double movingLength = 50;
 
         public ElevatorConfig() {
             super("Elevator", 40, Rio.CANIVORE);
