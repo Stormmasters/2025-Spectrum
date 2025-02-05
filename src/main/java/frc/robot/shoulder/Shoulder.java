@@ -32,16 +32,15 @@ public class Shoulder extends Mechanism {
         @Getter private final double climbHome = 100 - 3;
         @Getter private final double handAlgae = 99;
         @Getter private final double home = 100 - 1;
-        @Getter private final double coralIntake = 44;
-        @Getter private final double floorIntake = 99;
-        @Getter private final double ninetyDegrees = 100 - 39;
-        @Getter private final double l1Coral = 63;
-        @Getter private final double l2Algae = 90;
-        @Getter private final double l3Algae = 90;
-        @Getter private final double l2Coral = 90;
-        @Getter private final double l3Coral = 90;
-        @Getter private final double l4Coral = 57;
-        @Getter private final double barge = 57;
+        @Getter private final double coralIntake = 91;
+        @Getter private final double floorIntake = -70;
+        @Getter private final double l1Coral = -80;
+        @Getter private final double l2Algae = -40;
+        @Getter private final double l3Algae = -40;
+        @Getter private final double l2Coral = -40;
+        @Getter private final double l3Coral = -40;
+        @Getter private final double l4Coral = -88.9;
+        @Getter private final double barge = -88.9;
         @Getter @Setter private double tuneShoulder = 0;
 
         /* Shoulder config settings */
@@ -59,7 +58,7 @@ public class Shoulder extends Mechanism {
 
         /* Sim properties */
         @Getter private double shoulderX = 0.8;
-        @Getter private double shoulderY = 0.8;
+        @Getter private double shoulderY = 1.1;
 
         @Getter @Setter private double simRatio = 1;
 
@@ -74,7 +73,7 @@ public class Shoulder extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(0, 11.57142857);
+            configMinMaxRotations(-7.714285714, 7.714285714);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
@@ -216,13 +215,13 @@ public class Shoulder extends Mechanism {
                                     config.shoulderY,
                                     config.simRatio,
                                     config.length,
-                                    -45,
-                                    270 - 45,
-                                    -45)
+                                    -270,
+                                    360 - 90,
+                                    -90)
                             .setMount(Robot.getElevator().getSim(), true),
                     mech,
                     shoulderMotorSim,
-                    "3" + config.getName()); // added 3 to the name to create it third
+                    "2" + config.getName()); // added 2 to the name to create it second
         }
     }
 }
