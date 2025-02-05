@@ -27,6 +27,7 @@ public class TwistStates {
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
         barge.whileTrue(log(barge()));
+        homeAll.whileTrue(log(home()));
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }
