@@ -38,6 +38,7 @@ public class Twist extends Mechanism {
         /* twist positions in percentage of max rotation || 0 is horizontal */
         // @Getter private final double score = 100 - 65;
         // @Getter private final double home = 100 - 1;
+        @Getter private final double home = 0;
         @Getter private final double coralIntake = 0;
         @Getter private final double floorIntake = 0;
         @Getter private final double l1Coral = 50;
@@ -63,8 +64,8 @@ public class Twist extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double twistX = 0.7;
-        @Getter private double twistY = 1.2;
+        @Getter private double twistX = 0.525;
+        @Getter private double twistY = 1.35;
         @Getter @Setter private double simRatio = 15.429; // TODO: Set this to actual twist ratio
         @Getter private double coralLength = 0.225;
         @Getter private double algaeLength = 0.125;
