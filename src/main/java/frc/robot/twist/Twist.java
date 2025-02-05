@@ -63,8 +63,8 @@ public class Twist extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double twistX = 0.7;
-        @Getter private double twistY = 1.2;
+        @Getter private double twistX = 0.525;
+        @Getter private double twistY = 1.35;
         @Getter @Setter private double simRatio = 15.429; // TODO: Set this to actual twist ratio
         @Getter private double coralLength = 0.225;
         @Getter private double algaeLength = 0.125;

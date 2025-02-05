@@ -31,6 +31,7 @@ public class Elbow extends Mechanism {
         @Getter private final double home = 0;
         @Getter private final double coralIntake = 35.5;
         @Getter private final double floorIntake = 0;
+        @Getter private final double corralFloorIntake = 87.8;
         @Getter private final double l1Coral = 87.8;
         @Getter private final double l2Algae = 20;
         @Getter private final double l3Algae = 20;
@@ -52,8 +53,8 @@ public class Elbow extends Mechanism {
         // Removed implementation of tree map
 
         /* Sim properties */
-        @Getter private double elbowX = 0.6 + 0.4; // 1.0;
-        @Getter private double elbowY = 0.6;
+        @Getter private double elbowX = 0.8; // 1.0;
+        @Getter private double elbowY = 0.8;
         @Getter @Setter private double simRatio = 1;
         @Getter private double length = 0.4;
         @Getter private double startingAngle = 180 - 90;
@@ -210,17 +211,13 @@ public class Elbow extends Mechanism {
                                     config.simRatio,
                                     config.length,
                                     -90,
-                                    // 180 - 45 +
-                                    // Units.rotationsToDegrees(config.getMinRotations()),
                                     180 + 90,
-                                    // 180 - 45 +
-                                    // Units.rotationsToDegrees(config.getMaxRotations()),
                                     config.getStartingAngle())
                             .setColor(new Color8Bit(Color.kAqua))
                             .setMount(Robot.getShoulder().getSim(), true),
                     mech,
                     elbowMotorSim,
-                    "2" + config.getName()); // added 2 to the name to create it second
+                    "3" + config.getName()); // added 3 to the name to create it third
         }
     }
 }
