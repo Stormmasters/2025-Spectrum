@@ -38,6 +38,7 @@ public class Twist extends Mechanism {
         /* twist positions in percentage of max rotation || 0 is horizontal */
         // @Getter private final double score = 100 - 65;
         // @Getter private final double home = 100 - 1;
+        @Getter private final double home = 0;
         @Getter private final double coralIntake = 0;
         @Getter private final double floorIntake = 0;
         @Getter private final double l1Coral = 50;

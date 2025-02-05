@@ -24,12 +24,12 @@ public class ShoulderStates {
         score.whileTrue(home());
         algaeFloorIntake.whileTrue(log(floorIntake()));
         L2Algae.whileTrue(log(l2Algae()));
-        L3Algae.whileTrue(log(l3Algae()));
+        L3Algae.whileTrue(tuneShoulder()); // (log(l3Algae()));
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
         barge.whileTrue(log(barge()));
-        handOffAlgae.whileTrue(log(home()));
+        handOffAlgae.whileTrue(log(handOffAlgae()));
         homeAll.whileTrue(home());
     }
 
@@ -43,6 +43,10 @@ public class ShoulderStates {
 
     public static Command climbHome() {
         return shoulder.moveToPercentage(config::getClimbHome).withName("Shoulder.climbHome");
+    }
+
+    public static Command handOffAlgae() {
+        return shoulder.moveToPercentage(config::getHandAlgae).withName("Elbow.handOffAlgae");
     }
 
     /* Scoring positions */

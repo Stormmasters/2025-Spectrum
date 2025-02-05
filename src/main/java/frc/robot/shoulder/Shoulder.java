@@ -30,6 +30,7 @@ public class Shoulder extends Mechanism {
         // TODO: Find shoulder positions
         @Getter private final double score = 100 - 65;
         @Getter private final double climbHome = 100 - 3;
+        @Getter private final double handAlgae = -21;
         @Getter private final double home = 100 - 1;
         @Getter private final double coralIntake = 91;
         @Getter private final double floorIntake = -70;
