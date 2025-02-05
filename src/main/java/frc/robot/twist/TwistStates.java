@@ -35,9 +35,9 @@ public class TwistStates {
         return twist.runPercentage(speed).withName("Twist.runTwist");
     }
 
-    // public static Command home() {
-    //     return twist.moveToPercentage(config::getHome).withName("Twist.home");
-    // }
+    public static Command home() {
+        return twist.moveToPercentage(config::getHome).withName("Twist.home");
+    }
 
     public static Command moveToPercentage(DoubleSupplier percent) {
         return twist.moveToPercentage(percent).withName("Twist.moveToPercentage");
