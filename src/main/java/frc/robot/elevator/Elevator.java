@@ -21,17 +21,17 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxRotations = 110.6304660319; // 29.8;
+        @Getter private double maxRotations = 50; // 29.8;
         @Getter private double minRotations = 0;
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
-        @Getter @Setter private double fullExtend = maxRotations * .999;
+        @Getter @Setter private double fullExtend = maxRotations;
         @Getter private double home = minRotations;
-        @Getter private final double l2 = 15.412;
-        @Getter private final double l3 = 24.4168;
-        @Getter private final double l4 = fullExtend;
-        @Getter private final double barge = fullExtend;
+        @Getter private final double l2 = 24.4168;
+        @Getter private final double l3 = 35;
+        @Getter private final double l4 = maxRotations;
+        @Getter private final double barge = maxRotations;
 
         @Getter private double tolerance = 0.95;
         @Getter private double elevatorUpHeight = 5;
@@ -44,14 +44,14 @@ public class Elevator extends Mechanism {
         @Getter private final double torqueCurrentLimit = 100;
 
         /* Sim properties */
-        @Getter private double kElevatorGearing = 3.62722; // 5;
+        @Getter private double kElevatorGearing = 2.9; // 5;
         @Getter private double kCarriageMass = 1;
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.8;
         @Getter private double initialY = 0.35;
-        @Getter private double angle = 90;
-        @Getter private double staticLength = 50;
-        @Getter private double movingLength = 50;
+        @Getter private double angle = 90; // 180.0 - 72.0;
+        @Getter private double staticLength = 55;
+        @Getter private double movingLength = 40;
 
         public ElevatorConfig() {
             super("Elevator", 40, Rio.CANIVORE);
@@ -210,8 +210,7 @@ public class Elevator extends Mechanism {
                                     config.kElevatorDrumRadiusMeters)
                             .setAngle(config.angle)
                             .setMovingLength(config.getMovingLength())
-                            .setStaticLength(config.getStaticLength())
-                            .setMaxHeight(30.5),
+                            .setStaticLength(config.getStaticLength()),
                     mech,
                     elevatorMotorSim,
                     "1" + config.getName()); // added 1 to the name to create it first

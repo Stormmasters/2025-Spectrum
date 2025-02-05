@@ -77,11 +77,6 @@ public class LinearConfig {
         return this;
     }
 
-    public LinearConfig setMaxHeight(double lengthInches) {
-        this.maxHeight = Units.inchesToMeters(lengthInches);
-        return this;
-    }
-
     public LinearConfig setMount(LinearSim sim) {
         if (sim != null) {
             mounted = true;
