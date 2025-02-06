@@ -187,11 +187,7 @@ public class Elbow extends Mechanism {
 
     public Command moveToPercentage(DoubleSupplier percent) {
         return runHoldElbow()
-                .until(
-                        () ->
-                                (ElevatorStates.getPosition().getAsDouble() > 1.0)
-                                        || ElbowStates.getPosition().getAsDouble()
-                                                < percent.getAsDouble())
+                .until(() -> (ElevatorStates.allowedPosition()))
                 .andThen(
                         run(() -> setMMPosition(() -> percentToRotations(percent)))
                                 .withName(getName() + ".runPosePercentage"));

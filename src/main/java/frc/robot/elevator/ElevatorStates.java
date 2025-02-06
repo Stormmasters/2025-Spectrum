@@ -64,6 +64,16 @@ public class ElevatorStates {
         return () -> (eToSratio * e + s) / 3;
     }
 
+    public static boolean allowedPosition() {
+        if ((getPosition().getAsDouble() * 100 / config.getMaxRotations())
+                        - getElbowShoulderPos().getAsDouble()
+                > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     private static Command holdPosition() {
         return elevator.holdPosition().withName("Elevator.holdPosition");
     }
