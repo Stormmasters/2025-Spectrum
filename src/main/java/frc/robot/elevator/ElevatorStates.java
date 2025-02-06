@@ -9,6 +9,7 @@ import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
+import frc.robot.shoulder.ShoulderStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
@@ -54,6 +55,13 @@ public class ElevatorStates {
 
     public static DoubleSupplier getPosition() {
         return () -> elevator.getPositionRotations();
+    }
+
+    public static DoubleSupplier getElbowShoulderPos() {
+        double eToSratio = 2.0; // get actual elbow to shoulder length ratio
+        double e = Math.abs(ElbowStates.getPosition().getAsDouble());
+        double s = Math.abs(ShoulderStates.getPosition().getAsDouble());
+        return () -> (eToSratio * e + s) / 3;
     }
 
     private static Command holdPosition() {

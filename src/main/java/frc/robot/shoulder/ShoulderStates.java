@@ -41,6 +41,10 @@ public class ShoulderStates {
         return shoulder.moveToPercentage(config::getHome).withName("Shoulder.home");
     }
 
+    public static DoubleSupplier getPosition() {
+        return () -> shoulder.getPositionPercentage();
+    }
+
     public static Command climbHome() {
         return shoulder.moveToPercentage(config::getClimbHome).withName("Shoulder.climbHome");
     }

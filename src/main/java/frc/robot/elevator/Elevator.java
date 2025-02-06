@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.RobotSim;
-import frc.robot.elbow.ElbowStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
@@ -176,7 +175,7 @@ public class Elevator extends Mechanism {
                 .withName("Elevator.waitForElbow")
                 .until(
                         () ->
-                                (ElbowStates.getPosition().getAsDouble() < 50.0)
+                                (ElevatorStates.getElbowShoulderPos().getAsDouble() < 50.0)
                                         || ElevatorStates.getPosition().getAsDouble()
                                                 < rotations.getAsDouble()
                                         || ElevatorStates.getPosition().getAsDouble()
