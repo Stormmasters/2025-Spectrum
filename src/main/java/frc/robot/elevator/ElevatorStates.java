@@ -56,7 +56,7 @@ public class ElevatorStates {
         return () -> elevator.getPositionRotations();
     }
 
-    public static Command holdPosition() {
+    private static Command holdPosition() {
         return elevator.holdPosition().withName("Elevator.holdPosition");
     }
 
