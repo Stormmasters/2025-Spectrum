@@ -60,7 +60,7 @@ public class ElevatorStates {
     public static DoubleSupplier getElbowShoulderPos() {
         double eToSratio = 2.0; // get actual elbow to shoulder length ratio
         double e = Math.abs(ElbowStates.getPosition().getAsDouble());
-        double s = Math.abs(ShoulderStates.getPosition().getAsDouble());
+        double s = 100 - Math.abs(ShoulderStates.getPosition().getAsDouble());
         return () -> (eToSratio * e + s) / 3;
     }
 
