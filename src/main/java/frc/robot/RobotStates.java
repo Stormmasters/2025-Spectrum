@@ -63,7 +63,7 @@ public class RobotStates {
     public static void setupStates() {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
-        
+
         operator.leftScore_Dpad.onChange(leftScore.setTrue());
         operator.rightScore_Dpad.onChange(rightScore.setTrue());
     }
