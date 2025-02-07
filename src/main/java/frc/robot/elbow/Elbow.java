@@ -70,12 +70,12 @@ public class Elbow extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-7.714285714, 7.714285714);
+            configMinMaxRotations(-51.4285, 51.4285);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive();
-            setSimRatio(15.429);
+            setSimRatio(102.857);
         }
 
         public ElbowConfig modifyMotorConfig(TalonFX motor) {
