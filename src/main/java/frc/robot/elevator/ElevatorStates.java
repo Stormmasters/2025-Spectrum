@@ -65,12 +65,12 @@ public class ElevatorStates {
     }
 
     public static boolean allowedPosition() {
-        if ((getPosition().getAsDouble() * 100 / config.getMaxRotations())
+        if ((getPosition().getAsDouble() * 100 / config.getL3())
                         - getElbowShoulderPos().getAsDouble()
                 > 0) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 
