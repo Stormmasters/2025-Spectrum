@@ -28,6 +28,7 @@ public class InClimb extends Mechanism {
         @Getter private final double floorIntake = 70;
         @Getter @Setter private double tuneInClimb = 0;
         @Getter private final double prepClimber = 50;
+        @Getter private final double finishClimb = 100;
         @Getter private final double coralIntake = 95;
         @Getter private final double processorScore = 65;
 

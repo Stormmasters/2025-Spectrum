@@ -23,6 +23,7 @@ public class InClimbStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         algaeFloorIntake.whileTrue(log(algaeFloorIntake()));
         climbPrep.whileTrue(log(climbPrep()));
+        climbFinish.whileTrue(log(climbFinish()));
         homeAll.onTrue(log(home()));
         coralFloorIntake.whileTrue(log(coralIntake()));
         processorScore.whileTrue(log(processorScore()));
@@ -44,6 +45,10 @@ public class InClimbStates {
 
     public static Command climbPrep() {
         return inClimb.moveToPercentage(config::getPrepClimber).withName("InClimb.prepClimber");
+    }
+
+    public static Command climbFinish() {
+        return inClimb.moveToPercentage(config::getFinishClimb).withName("InClimb.finishClimb");
     }
 
     public static Command algaeFloorIntake() {
