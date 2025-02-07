@@ -44,7 +44,6 @@ public class ElevatorStates {
         L3Coral.whileTrue(l3());
         L4Coral.whileTrue(l4());
         barge.whileTrue(barge());
-        handOffAlgae.whileTrue(handOff());
         homeAll.whileTrue(home());
     }
 

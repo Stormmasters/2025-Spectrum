@@ -40,6 +40,7 @@ public class Elbow extends Mechanism {
         @Getter private final double l4Coral = 31.1;
         @Getter private final double barge = 31.1;
         @Getter @Setter private double tuneElbow = 0;
+        @Getter @Setter private boolean leftScore = true;
 
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;

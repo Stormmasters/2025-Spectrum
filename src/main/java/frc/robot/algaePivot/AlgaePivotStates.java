@@ -25,10 +25,8 @@ public class AlgaePivotStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        algaeFloorIntake.whileTrue(log(algaeFloorIntake()));
         climbPrep.whileTrue(log(climbPrep()));
         homeAll.onTrue(log(home()));
-        coralFloorIntake.whileTrue(log(coralIntake()));
         processorScore.whileTrue(log(processorScore()));
     }
 

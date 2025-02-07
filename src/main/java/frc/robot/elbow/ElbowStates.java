@@ -21,14 +21,21 @@ public class ElbowStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         intaking.whileTrue(log(coralIntake()));
-        algaeFloorIntake.whileTrue(log(floorIntake()));
+        
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
-        L2Coral.whileTrue(log(l2Coral()));
-        L3Coral.whileTrue(log(l3Coral()));
-        L4Coral.whileTrue(log(l4Coral()));
+
+        L1Coral.and(leftScore).whileTrue(log(l1Coral()));
+        L2Coral.and(leftScore).whileTrue(log(l2Coral()));
+        L3Coral.and(leftScore).whileTrue(log(l3Coral()));
+        L4Coral.and(leftScore).whileTrue(log(l4Coral()));
+
+        L1Coral.and(rightScore).whileTrue(log(l1Coral()));
+        L2Coral.and(rightScore).whileTrue(log(l2Coral()));
+        L3Coral.and(rightScore).whileTrue(log(l3Coral()));
+        L4Coral.and(rightScore).whileTrue(log(l4Coral()));
+
         barge.whileTrue(log(barge()));
-        handOffAlgae.whileTrue(log(handOffAlgae()));
         homeAll.whileTrue(log(home()));
     }
 

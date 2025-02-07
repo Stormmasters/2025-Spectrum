@@ -26,7 +26,6 @@ public class CoralIntakeStates {
         intaking.whileTrue(log(intake()));
         ejecting.whileTrue(log(eject()));
         score.whileTrue(log(intake()));
-        handOffAlgae.whileTrue(log(handOffAlgae()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
