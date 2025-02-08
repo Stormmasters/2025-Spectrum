@@ -13,6 +13,7 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.LinearConfig;
 import frc.spectrumLib.sim.LinearSim;
+import java.util.function.DoubleSupplier;
 import lombok.*;
 
 public class Elevator extends Mechanism {
@@ -167,6 +168,19 @@ public class Elevator extends Mechanism {
                         () -> false, // isFinished
                         this) // requirement
                 .withName("Elevator.zeroElevatorRoutine");
+    }
+
+    public Command moveToRotations(DoubleSupplier rotations) {
+        return run(() -> stop())
+                .withName("Elevator.waitForElbow")
+                .until(
+                        () ->
+                                (ElevatorStates.getElbowShoulderPos().getAsDouble() < 50.0)
+                                        || ElevatorStates.getPosition().getAsDouble()
+                                                < rotations.getAsDouble()
+                                        || ElevatorStates.getPosition().getAsDouble()
+                                                > config.getL2())
+                .andThen(run(() -> setMMPosition(rotations)).withName("Elevator.moveToRotations"));
     }
 
     // --------------------------------------------------------------------------------

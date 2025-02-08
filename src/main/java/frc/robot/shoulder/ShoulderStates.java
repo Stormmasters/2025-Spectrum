@@ -20,10 +20,10 @@ public class ShoulderStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        intaking.whileTrue(log(coralIntake())); // using intake button to test
+        stationIntaking.whileTrue(log(coralIntake())); // using intake button to test
         score.whileTrue(home());
         L2Algae.whileTrue(log(l2Algae()));
-        L3Algae.whileTrue(tuneShoulder()); // (log(l3Algae()));
+        L3Algae.whileTrue(log(l3Algae()));
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
@@ -37,6 +37,10 @@ public class ShoulderStates {
 
     public static Command home() {
         return shoulder.moveToPercentage(config::getHome).withName("Shoulder.home");
+    }
+
+    public static DoubleSupplier getPosition() {
+        return () -> shoulder.getPositionPercentage();
     }
 
     public static Command climbHome() {

@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
+import frc.robot.elevator.ElevatorStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
+import java.util.function.DoubleSupplier;
 import lombok.*;
 
 public class Elbow extends Mechanism {
@@ -184,6 +186,14 @@ public class Elbow extends Mechanism {
             return getPositionRotations() > config.getMaxRotations();
         }
         return false;
+    }
+
+    public Command moveToPercentage(DoubleSupplier percent) {
+        return runHoldElbow()
+                .until(() -> (ElevatorStates.allowedPosition()))
+                .andThen(
+                        run(() -> setMMPosition(() -> percentToRotations(percent)))
+                                .withName(getName() + ".runPosePercentage"));
     }
 
     // --------------------------------------------------------------------------------
