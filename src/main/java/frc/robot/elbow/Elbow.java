@@ -2,7 +2,6 @@ package frc.robot.elbow;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -20,6 +19,7 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
+import frc.spectrumLib.util.SpectrumCANcoder;
 import java.util.function.DoubleSupplier;
 import lombok.*;
 
@@ -52,7 +52,10 @@ public class Elbow extends Mechanism {
         @Getter private final double velocityKv = 0.018;
         @Getter private final double velocityKs = 0;
 
-        // Removed implementation of tree map
+        /* Cancoder config settings */
+        @Getter private final double CANcoderGearRatio = 30 / 36;
+        @Getter private double CANcoderOffset = 0;
+        @Getter private boolean isCANcoderAttached = false;
 
         /* Sim properties */
         @Getter private double elbowX = 0.8; // 1.0;
@@ -89,13 +92,19 @@ public class Elbow extends Mechanism {
     }
 
     @Getter private ElbowConfig config;
-    private CANcoder m_CANcoder;
+    private SpectrumCANcoder canCoder;
     @Getter private ElbowSim sim;
     CANcoderSimState canCoderSim;
 
     public Elbow(ElbowConfig config) {
         super(config);
         this.config = config;
+
+        canCoder =
+                new SpectrumCANcoder(43, motor, config)
+                        .setGearRatio(config.getCANcoderGearRatio())
+                        .setOffset(config.getCANcoderOffset())
+                        .setAttached(true);
 
         simulationInit();
         telemetryInit();
@@ -142,7 +151,7 @@ public class Elbow extends Mechanism {
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
                         b -> {
-                            m_CANcoder.setPosition(0);
+                            canCoder.getCanCoder().setPosition(0);
                             toggleReverseSoftLimit(true); // end
                         },
                         () -> false, // isFinished

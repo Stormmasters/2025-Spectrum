@@ -606,7 +606,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         @Getter private String name;
         @Getter @Setter private boolean attached = true;
         @Getter private CanDeviceId id;
-        @Getter protected TalonFXConfiguration talonConfig;
+        @Getter @Setter protected TalonFXConfiguration talonConfig;
         @Getter private int numMotors = 1;
         @Getter private double voltageCompSaturation = 12.0; // 12V by default
         @Getter private double minRotations = 0;

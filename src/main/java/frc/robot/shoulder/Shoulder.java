@@ -2,11 +2,9 @@ package frc.robot.shoulder;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,6 +16,7 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
+import frc.spectrumLib.util.SpectrumCANcoder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -54,8 +53,10 @@ public class Shoulder extends Mechanism {
         @Getter private final double velocityKv = 0.018;
         @Getter private final double velocityKs = 0;
 
-
-        // Removed implementation of tree map
+        /* Cancoder config settings */
+        @Getter private final double CANcoderGearRatio = 30 / 36;
+        @Getter private double CANcoderOffset = 0;
+        @Getter private boolean isCANcoderAttached = false;
 
         /* Sim properties */
         @Getter private double shoulderX = 0.8;
@@ -93,13 +94,19 @@ public class Shoulder extends Mechanism {
     }
 
     private ShoulderConfig config;
-    private CANcoder m_CANcoder;
+    private SpectrumCANcoder canCoder;
     @Getter private ShoulderSim sim;
     CANcoderSimState canCoderSim;
 
     public Shoulder(ShoulderConfig config) {
         super(config);
         this.config = config;
+
+        canCoder =
+                new SpectrumCANcoder(42, motor, config)
+                        .setGearRatio(config.getCANcoderGearRatio())
+                        .setOffset(config.getCANcoderOffset())
+                        .setAttached(true);
 
         simulationInit();
         telemetryInit();
@@ -146,7 +153,7 @@ public class Shoulder extends Mechanism {
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
                         b -> {
-                            m_CANcoder.setPosition(0);
+                            canCoder.getCanCoder().setPosition(0);
                             toggleReverseSoftLimit(true); // end
                         },
                         () -> false, // isFinished
