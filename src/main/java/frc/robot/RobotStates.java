@@ -51,6 +51,10 @@ public class RobotStates {
 
     public static final Trigger homeAll = operator.homeState;
 
+    //reset triggers
+    public static final Trigger homeElevator_A = operator.homeElevator_A;
+    public static final Trigger homeInClimb_B = operator.homeInClimb_B;
+
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
     // If they should be set by multiple Triggers do that in SetupStates()
@@ -64,8 +68,12 @@ public class RobotStates {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
 
-        operator.leftScore_Dpad.onChange(leftScore.setTrue());
-        operator.rightScore_Dpad.onChange(rightScore.setTrue());
+        operator.leftScore_Dpad
+                .or(pilot.L3Algae_A)
+                .onTrue(leftScore.setTrue(), rightScore.setFalse());
+        operator.rightScore_Dpad
+                .or(pilot.L2Coral_B)
+                .onTrue(rightScore.setTrue(), leftScore.setFalse());
     }
 
     private RobotStates() {

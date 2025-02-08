@@ -45,6 +45,7 @@ public class ElevatorStates {
         L4Coral.whileTrue(l4());
         barge.whileTrue(barge());
         homeAll.whileTrue(home());
+        homeElevator_A.whileTrue(zero());
     }
 
     private static Command runElevator(DoubleSupplier speed) {

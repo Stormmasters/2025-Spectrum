@@ -25,15 +25,10 @@ public class ElbowStates {
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
 
-        L1Coral.and(leftScore).whileTrue(log(l1Coral()));
-        L2Coral.and(leftScore).whileTrue(log(l2Coral()));
-        L3Coral.and(leftScore).whileTrue(log(l3Coral()));
-        L4Coral.and(leftScore).whileTrue(log(l4Coral()));
-
-        L1Coral.and(rightScore).whileTrue(log(l1CoralR()));
-        L2Coral.and(rightScore).whileTrue(log(l2CoralR()));
-        L3Coral.and(rightScore).whileTrue(log(l3CoralR()));
-        L4Coral.and(rightScore).whileTrue(log(l4CoralR()));
+        L1Coral.whileTrue(log(l1Coral()));
+        L2Coral.whileTrue(log(l2Coral()));
+        L3Coral.whileTrue(log(l3Coral()));
+        L4Coral.whileTrue(log(l4Coral()));
 
         barge.whileTrue(log(barge()));
         homeAll.whileTrue(log(home()));
@@ -88,21 +83,6 @@ public class ElbowStates {
         return elbow.moveToPercentage(config::getL4Coral).withName("Elbow.l4Coral");
     }
 
-    public static Command l1CoralR() {
-        return elbow.moveToPercentage(switchSigns(config::getL1Coral)).withName("Twist.L1Coral");
-    }
-
-    public static Command l2CoralR() {
-        return elbow.moveToPercentage(switchSigns(config::getL2Coral)).withName("Elbow.l2Coral");
-    }
-
-    public static Command l3CoralR() {
-        return elbow.moveToPercentage(switchSigns(config::getL3Coral)).withName("Elbow.l3Coral");
-    }
-
-    public static Command l4CoralR() {
-        return elbow.moveToPercentage(switchSigns(config::getL4Coral)).withName("Elbow.l4Coral");
-    }
     // missing auton Elbow commands, add when auton is added
 
     public static Command floorIntake() {

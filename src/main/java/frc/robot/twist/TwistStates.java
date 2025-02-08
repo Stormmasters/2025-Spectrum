@@ -20,14 +20,27 @@ public class TwistStates {
     public static void setStates() {
         homeAll.whileTrue(log(home()));
         intaking.whileTrue(log(coralIntake()));
+
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
-        L2Coral.whileTrue(log(l2Coral()));
-        L3Coral.whileTrue(log(l3Coral()));
-        L4Coral.whileTrue(log(l4Coral()));
+
+        L1Coral.whileTrue(log(l1Coral()));
+
+        L2Coral.and(leftScore).whileTrue(log(l2Coral()));
+        L3Coral.and(leftScore).whileTrue(log(l3Coral()));
+        L4Coral.and(leftScore).whileTrue(log(l4Coral()));
+
+        L2Coral.and(rightScore).whileTrue(log(l2CoralR()));
+        L3Coral.and(rightScore).whileTrue(log(l3CoralR()));
+        L4Coral.and(rightScore).whileTrue(log(l4CoralR()));
+
         barge.whileTrue(log(barge()));
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+    }
+
+    public static DoubleSupplier switchSigns(DoubleSupplier supplier) {
+        return () -> -supplier.getAsDouble();
     }
 
     public static Command runTwist(DoubleSupplier speed) {
@@ -66,6 +79,18 @@ public class TwistStates {
 
     public static Command l4Coral() {
         return twist.moveToPercentage(config::getL4Coral).withName("Twist.l4Coral");
+    }
+
+    public static Command l2CoralR() {
+        return twist.moveToPercentage(switchSigns(config::getL2Coral)).withName("Twist.l2Coral");
+    }
+
+    public static Command l3CoralR() {
+        return twist.moveToPercentage(switchSigns(config::getL3Coral)).withName("Twist.l3Coral");
+    }
+
+    public static Command l4CoralR() {
+        return twist.moveToPercentage(switchSigns(config::getL4Coral)).withName("Twist.l4Coral");
     }
 
     public static Command floorIntake() {

@@ -29,6 +29,9 @@ public class Operator extends Gamepad {
     public final Trigger L3Algae_X = X.and(operatorAlgaeStage);
     public final Trigger barge_Y = Y.and(operatorAlgaeStage);
 
+    public final Trigger homeElevator_A = A.and(noFn, teleop);
+    public final Trigger homeInClimb_B = B.and(noFn, teleop);
+
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);
     public final Trigger coastOff_dA = disabled.and(A);
