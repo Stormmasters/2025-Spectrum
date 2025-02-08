@@ -29,11 +29,13 @@ public class RobotStates {
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger stationIntaking =
-            pilot.stationIntake_Y.or(visionIntaking, autonSourceIntake);
-    public static final Trigger ejecting = pilot.eject_fA;
+            pilot.stationIntake_LT.or(visionIntaking, autonSourceIntake);
+    public static final Trigger groundAlgae = pilot.groundAlgae_RT;
+    public static final Trigger groundCoral = pilot.groundCoral_LB_LT;
 
     // score Triggers
-    public static final Trigger score = pilot.score_RB.or(autonScore);
+    public static final Trigger actionPrepState = pilot.actionReady;
+    public static final Trigger scoreState = pilot.score.or(autonScore);
 
     // climb Triggers
     public static final Trigger climbPrep = pilot.climbPrep_RDP;
@@ -52,9 +54,9 @@ public class RobotStates {
 
     public static final Trigger homeAll = operator.homeState;
 
-    //reset triggers
-    public static final Trigger homeElevator_A = operator.homeElevator_A;
-    public static final Trigger homeInClimb_B = operator.homeInClimb_B;
+    // reset triggers
+    public static final Trigger homeElevator = operator.homeElevator_A;
+    public static final Trigger homeInClimb = operator.homeInClimb_B;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
@@ -69,12 +71,8 @@ public class RobotStates {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
 
-        operator.leftScore_Dpad
-                .or(pilot.L3Algae_A)
-                .onTrue(leftScore.setTrue(), rightScore.setFalse());
-        operator.rightScore_Dpad
-                .or(pilot.L2Coral_B)
-                .onTrue(rightScore.setTrue(), leftScore.setFalse());
+        operator.leftScore_Dpad.or(pilot.testA).onTrue(leftScore.setTrue(), rightScore.setFalse());
+        operator.rightScore_Dpad.or(pilot.testB).onTrue(rightScore.setTrue(), leftScore.setFalse());
     }
 
     private RobotStates() {

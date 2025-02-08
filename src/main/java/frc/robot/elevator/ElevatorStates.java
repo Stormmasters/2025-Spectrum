@@ -32,21 +32,34 @@ public class ElevatorStates {
     }
 
     public static void setStates() {
-        score.onFalse(home()); // Return home when we stop the scoring action
+        scoreState.onFalse(home()); // Return home when we stop the scoring action
 
         // Elevator Extends when the climber is at mid climb
         // Test Mode Buttons
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        score.whileTrue(home());
-        L2Algae.whileTrue(l2());
-        L2Coral.whileTrue(l2());
-        L3Algae.whileTrue(l3());
-        L3Coral.whileTrue(l3());
-        L4Coral.whileTrue(l4());
-        barge.whileTrue(barge());
+        scoreState.whileTrue(home());
+
+        L2Algae.whileTrue(l1());
+        L3Algae.whileTrue(l1());
+        barge.whileTrue(l1());
+
+        L1Coral.whileTrue(l1());
+        L2Coral.whileTrue(l1());
+        L3Coral.whileTrue(l1());
+        L4Coral.whileTrue(l1());
+
+        actionPrepState.and(L1Coral).whileTrue(l1());
+        actionPrepState.and(L2Coral).whileTrue(l2());
+        actionPrepState.and(L3Coral).whileTrue(l3());
+        actionPrepState.and(L4Coral).whileTrue(l4());
+
+        actionPrepState.and(L2Algae).whileTrue(l2());
+        actionPrepState.and(L3Algae).whileTrue(l3());
+        actionPrepState.and(barge).whileTrue(l4());
+
         homeAll.whileTrue(home());
-        homeElevator_A.whileTrue(zero());
+        homeElevator.whileTrue(zero());
     }
 
     private static Command runElevator(DoubleSupplier speed) {
@@ -65,7 +78,7 @@ public class ElevatorStates {
     }
 
     public static boolean allowedPosition() {
-        if ((getPosition().getAsDouble() * 100 / config.getL3())
+        if ((getPosition().getAsDouble() * 100 / config.getL2())
                         - getElbowShoulderPos().getAsDouble()
                 > 0) {
             return true;
@@ -94,6 +107,10 @@ public class ElevatorStates {
                 .until(() -> ElbowStates.getPosition().getAsDouble() > 90.0)
                 .andThen(elevator.moveToRotations(config::getL2))
                 .withName("Elevator.handOffDown");
+    }
+
+    private static Command l1() {
+        return elevator.moveToRotations(config::getL1).withName("Elevator.l1");
     }
 
     private static Command l2() {

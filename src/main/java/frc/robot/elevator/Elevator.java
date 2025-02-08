@@ -27,6 +27,7 @@ public class Elevator extends Mechanism {
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
         @Getter private double home = minRotations;
+        @Getter private final double l1 = 5.5;
         @Getter private final double l2 = 15.412;
         @Getter private final double l3 = 24.4168;
         @Getter private final double l4 = fullExtend;

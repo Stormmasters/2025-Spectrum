@@ -46,7 +46,7 @@ public class Twist extends Mechanism {
         @Getter private final double l3Algae = 50;
         @Getter private final double l2Coral = 50;
         @Getter private final double l3Coral = 50;
-        @Getter private final double l4Coral = 100;
+        @Getter private final double l4Coral = 50;
         @Getter private final double barge = 100;
         @Getter @Setter private double tuneTwist = 0;
 

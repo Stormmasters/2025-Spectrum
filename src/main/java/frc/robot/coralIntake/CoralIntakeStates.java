@@ -13,19 +13,13 @@ public class CoralIntakeStates {
     private static CoralIntakeConfig config = Robot.getConfig().coralIntake;
 
     public static void setupDefaultCommand() {
-        // intake.setDefaultCommand(
-        //         log(
-        //                 intake.runVelocity(() -> config.getSlowIntake())
-        //                         .ignoringDisable(false)
-        //                         .withName("Intake.default")));
         coralIntake.setDefaultCommand(
                 log(coralIntake.runStop().ignoringDisable(true).withName("intake.default")));
     }
 
     public static void setStates() {
         stationIntaking.whileTrue(log(intake()));
-        ejecting.whileTrue(log(eject()));
-        score.whileTrue(log(intake()));
+        scoreState.whileTrue(log(eject()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));

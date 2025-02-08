@@ -12,20 +12,16 @@ public class GroundIntakeStates {
     private static GroundIntakeConfig config = Robot.getConfig().groundIntake;
 
     public static void setupDefaultCommand() {
-        // intake.setDefaultCommand(
-        //         log(
-        //                 intake.runVelocity(() -> config.getSlowIntake())
-        //                         .ignoringDisable(false)
-        //                         .withName("Intake.default")));
         groundIntake.setDefaultCommand(
                 log(groundIntake.runStop().ignoringDisable(true).withName("GroundIntake.default")));
     }
 
     public static void setStates() {
-        ejecting.whileTrue(log(eject()));
-        score.whileTrue(log(intake()));
+        scoreState.whileTrue(log(eject()));
+        groundAlgae.whileTrue(log(intake()));
+        groundCoral.whileTrue(log(intake()));
 
-        coastMode.whileTrue(log(coastMode()));
+        coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }
 
