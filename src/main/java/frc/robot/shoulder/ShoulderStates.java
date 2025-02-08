@@ -20,14 +20,21 @@ public class ShoulderStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        stationIntaking.whileTrue(log(coralIntake())); // using intake button to test
+        stationIntaking.whileTrue(log(coralIntake()));
         scoreState.whileTrue(home());
+
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
+        barge.whileTrue(log(barge()));
+
+        L1Coral.whileTrue(log(l1Coral()));
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
-        barge.whileTrue(log(barge()));
+
+        algaeHandoff.whileTrue(log(handOffAlgae()));
+        coralHandoff.whileTrue(log(handOffAlgae()));
+
         homeAll.whileTrue(home());
     }
 

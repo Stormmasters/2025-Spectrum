@@ -40,6 +40,10 @@ public class ElevatorStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         scoreState.whileTrue(home());
 
+        algaeHandoff.whileTrue(handOff());
+        coralHandoff.whileTrue(handOff());
+
+        stationIntaking.whileTrue(log(stationIntake()));
         L2Algae.whileTrue(l1());
         L3Algae.whileTrue(l1());
         barge.whileTrue(l1());
@@ -107,6 +111,11 @@ public class ElevatorStates {
                 .until(() -> ElbowStates.getPosition().getAsDouble() > 90.0)
                 .andThen(elevator.moveToRotations(config::getL2))
                 .withName("Elevator.handOffDown");
+    }
+
+    private static Command stationIntake() {
+        return elevator.moveToRotations(config::getStationIntake)
+                .withName("Elevator.stationIntake");
     }
 
     private static Command l1() {

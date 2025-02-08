@@ -32,6 +32,9 @@ public class ElbowStates {
 
         barge.whileTrue(log(barge()));
         homeAll.whileTrue(log(home()));
+
+        algaeHandoff.whileTrue(log(handOffAlgae()));
+        coralHandoff.whileTrue(log(handOffAlgae()));
     }
 
     public static DoubleSupplier getPosition() {

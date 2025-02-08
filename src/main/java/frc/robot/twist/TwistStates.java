@@ -35,6 +35,10 @@ public class TwistStates {
 
         barge.whileTrue(log(barge()));
         homeAll.whileTrue(log(home()));
+
+        algaeHandoff.whileTrue(log(handOffAlgae()));
+        coralHandoff.whileTrue(log(handOffCoral()));
+
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }
@@ -115,6 +119,14 @@ public class TwistStates {
 
     public static Command barge() {
         return twist.moveToPercentage(config::getBarge).withName("Twist.barge");
+    }
+
+    public static Command handOffAlgae() {
+        return twist.moveToPercentage(config::getHandAlgae).withName("Twist.handOffAlgae");
+    }
+
+    public static Command handOffCoral() {
+        return twist.moveToPercentage(config::getHandCoral).withName("Twist.handOffCoral");
     }
 
     // Tune value command

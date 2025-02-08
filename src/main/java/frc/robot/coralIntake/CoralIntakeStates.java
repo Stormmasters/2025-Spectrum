@@ -20,6 +20,8 @@ public class CoralIntakeStates {
     public static void setStates() {
         stationIntaking.whileTrue(log(intake()));
         scoreState.whileTrue(log(eject()));
+        algaeHandoff.whileTrue(log(intake()));
+        coralHandoff.whileTrue(log(intake()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));

@@ -32,6 +32,9 @@ public class Operator extends Gamepad {
     public final Trigger homeElevator_A = A.and(noFn, teleop);
     public final Trigger homeInClimb_B = B.and(noFn, teleop);
 
+    public final Trigger algaeHandoff_X = X.and(noFn, teleop);
+    public final Trigger coralHandoff_Y = Y.and(noFn, teleop);
+
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);
     public final Trigger coastOff_dA = disabled.and(A);

@@ -52,6 +52,9 @@ public class RobotStates {
     public static final Trigger L3Coral = operator.L3Coral_X;
     public static final Trigger L4Coral = operator.L4Coral_Y.or(autonL4);
 
+    public static final Trigger algaeHandoff = operator.algaeHandoff_X;
+    public static final Trigger coralHandoff = operator.coralHandoff_Y;
+
     public static final Trigger homeAll = operator.homeState;
 
     // reset triggers
