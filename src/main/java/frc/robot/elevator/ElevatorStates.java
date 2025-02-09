@@ -59,7 +59,7 @@ public class ElevatorStates {
 
         actionPrepState.and(L2Algae).whileTrue(l2());
         actionPrepState.and(L3Algae).whileTrue(l3());
-        actionPrepState.and(barge).whileTrue(l4());
+        actionPrepState.and(barge).whileTrue(barge());
 
         homeAll.whileTrue(home());
         homeElevator.whileTrue(zero());

@@ -15,7 +15,7 @@ public class CoralIntakeStates {
 
     public static void setupDefaultCommand() {
         coralIntake.setDefaultCommand(
-                log(coralIntake.runStop().ignoringDisable(true).withName("intake.default")));
+                log(coralIntake.runVelocityTcFocRpm(() -> -500).withName("intake.default")));
     }
 
     public static void setStates() {
@@ -46,7 +46,7 @@ public class CoralIntakeStates {
                 .until(() -> ((ElevatorStates.getPosition().getAsDouble() - originalPosition) > 1))
                 .andThen(eject())
                 .withName("coralIntake.score")
-                .until(() -> (ElevatorStates.getPosition().getAsDouble() < 1))
+                .until(() -> (!coralIntake.hasIntakeCoral()))
                 .withName("coralIntake.scoreDone");
     }
 
