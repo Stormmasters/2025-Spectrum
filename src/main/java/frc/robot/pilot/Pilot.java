@@ -26,8 +26,8 @@ public class Pilot extends Gamepad {
     public final Trigger actionReady = rightBumper.and(teleop);
     public final Trigger score = actionReady.not();
 
-    public final Trigger testA = A.and(noFn, teleop);
-    public final Trigger testB = B.and(noFn, teleop);
+    public final Trigger pilotLeft = A.and(noFn, teleop);
+    public final Trigger pilotRight = B.and(noFn, teleop);
 
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);

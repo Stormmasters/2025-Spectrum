@@ -42,7 +42,7 @@ public class RobotStates {
     public static final Trigger climbFinish = pilot.climbRoutine_start;
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-    public static final Trigger processorScore = operator.lollipopProcessor_A;
+    public static final Trigger processorLollipopScore = operator.lollipopProcessor_A;
     public static final Trigger L2Algae = operator.L2Algae_B.or(autonLowAlgae);
     public static final Trigger L3Algae = operator.L3Algae_X.or(autonHighAlgae);
     public static final Trigger barge = operator.barge_Y;
@@ -74,8 +74,8 @@ public class RobotStates {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
 
-        operator.leftScore_Dpad.or(pilot.testA).onTrue(leftScore.setTrue(), rightScore.setFalse());
-        operator.rightScore_Dpad.or(pilot.testB).onTrue(rightScore.setTrue(), leftScore.setFalse());
+        operator.leftScore_Dpad.or(pilot.pilotLeft).onTrue(leftScore.setTrue(), rightScore.setFalse());
+        operator.rightScore_Dpad.or(pilot.pilotRight).onTrue(rightScore.setTrue(), leftScore.setFalse());
     }
 
     private RobotStates() {

@@ -26,7 +26,7 @@ public class InClimbStates {
         climbPrep.whileTrue(log(climbPrep()));
         climbFinish.whileTrue(log(climbFinish()));
         homeAll.onTrue(log(home()));
-        processorScore.whileTrue(log(processorScore()));
+        processorLollipopScore.whileTrue(log(processorLollipopScore()));
         homeInClimb.whileTrue(log(zero()));
     }
 
@@ -66,7 +66,7 @@ public class InClimbStates {
                 .withName("InClimb.coralFloorIntake");
     }
 
-    public static Command processorScore() {
+    public static Command processorLollipopScore() {
         return inClimb.moveToPercentage(config::getProcessorScore)
                 .withName("InClimb.processorScore");
     }
