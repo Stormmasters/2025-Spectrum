@@ -21,7 +21,6 @@ public class ShoulderStates {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
         stationIntaking.whileTrue(log(coralIntake()));
-        scoreState.whileTrue(home());
 
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));

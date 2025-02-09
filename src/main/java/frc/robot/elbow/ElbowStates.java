@@ -3,6 +3,7 @@ package frc.robot.elbow;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.Robot;
 import frc.robot.elbow.Elbow.ElbowConfig;
 import frc.spectrumLib.Telemetry;
@@ -21,6 +22,7 @@ public class ElbowStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         stationIntaking.whileTrue(log(coralIntake()));
+        scoreState.whileTrue(log(score()));
 
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
@@ -43,6 +45,14 @@ public class ElbowStates {
 
     public static DoubleSupplier switchSigns(DoubleSupplier supplier) {
         return () -> -supplier.getAsDouble();
+    }
+
+    public static Command score() {
+        return new ProxyCommand(
+                () -> {
+                    double originalPosition = ElbowStates.getPosition().getAsDouble() + 20.0;
+                    return elbow.moveToPercentage(() -> originalPosition).withName("Elbow.score");
+                });
     }
 
     public static Command runElbow(DoubleSupplier speed) {

@@ -17,7 +17,6 @@ public class GroundIntakeStates {
     }
 
     public static void setStates() {
-        scoreState.whileTrue(log(eject()));
         groundAlgae.whileTrue(log(intake()));
         groundCoral.whileTrue(log(intake()));
 

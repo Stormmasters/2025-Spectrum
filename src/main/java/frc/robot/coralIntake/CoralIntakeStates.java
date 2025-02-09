@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
 import frc.robot.elbow.ElbowStates;
+import frc.robot.elevator.ElevatorStates;
 import frc.spectrumLib.Telemetry;
 
 public class CoralIntakeStates {
@@ -19,21 +20,34 @@ public class CoralIntakeStates {
 
     public static void setStates() {
         stationIntaking.whileTrue(log(intake()));
-        scoreState.whileTrue(log(eject()));
-        algaeHandoff.whileTrue(log(intake()));
-        coralHandoff.whileTrue(log(intake()));
+        scoreState.whileTrue(log(score()));
+
+        algaeHandoff.whileTrue(log(handOff()));
+        coralHandoff.whileTrue(log(handOff()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }
 
-    private static Command handOffAlgae() {
+    private static Command handOff() {
         return coralIntake
                 .runStop()
-                .withName("coralIntake.handOffAlgaeWait")
+                .withName("coralIntake.handOffWait")
                 .until(() -> ElbowStates.getPosition().getAsDouble() > 95.0)
                 .andThen(intake())
-                .withName("coralIntake.handOffAlgae");
+                .withName("coralIntake.handOff");
+    }
+
+    private static Command score() {
+        double originalPosition = ElevatorStates.getPosition().getAsDouble();
+        return coralIntake
+                .runStop()
+                .withName("coralIntake.scoreWait")
+                .until(() -> ((ElevatorStates.getPosition().getAsDouble() - originalPosition) > 1))
+                .andThen(eject())
+                .withName("coralIntake.score")
+                .until(() -> (ElevatorStates.getPosition().getAsDouble() < 1))
+                .withName("coralIntake.scoreDone");
     }
 
     private static Command intake() {

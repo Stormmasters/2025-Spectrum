@@ -3,6 +3,7 @@ package frc.robot.elevator;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elbow.ElbowStates;
@@ -32,13 +33,11 @@ public class ElevatorStates {
     }
 
     public static void setStates() {
-        scoreState.onFalse(home()); // Return home when we stop the scoring action
-
         // Elevator Extends when the climber is at mid climb
         // Test Mode Buttons
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        scoreState.whileTrue(home());
+        scoreState.whileTrue(score());
 
         algaeHandoff.whileTrue(handOff());
         coralHandoff.whileTrue(handOff());
@@ -97,6 +96,15 @@ public class ElevatorStates {
 
     private static Command fullExtend() {
         return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
+    }
+
+    private static Command score() {
+        return new ProxyCommand(
+                () -> {
+                    double originalPosition = ElevatorStates.getPosition().getAsDouble() - 10;
+                    return elevator.moveToPercentage(() -> originalPosition)
+                            .withName("Elevator.score");
+                });
     }
 
     private static Command home() {
