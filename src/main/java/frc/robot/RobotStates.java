@@ -56,6 +56,8 @@ public class RobotStates {
     public static final Trigger L4Coral = pilot.L4Coral_fY.or(autonL4);
     public static final Trigger homeAll = pilot.home;
 
+    public static final Trigger backward = operator.backward;
+
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
     // If they should be set by multiple Triggers do that in SetupStates()

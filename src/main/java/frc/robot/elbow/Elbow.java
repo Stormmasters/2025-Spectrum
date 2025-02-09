@@ -26,6 +26,8 @@ import lombok.*;
 public class Elbow extends Mechanism {
 
     public static class ElbowConfig extends Config {
+        @Getter @Setter private double positionMultiplier = 1;
+
         /* Elbow positions in percentage of max rotation || 0 is horizontal */
 
         // TODO: Find elbow positions

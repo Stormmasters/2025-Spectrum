@@ -22,6 +22,7 @@ import lombok.*;
 public class Shoulder extends Mechanism {
 
     public static class ShoulderConfig extends Config {
+        @Getter @Setter private double positionMultiplier = 1;
 
         // Positions set as percentage of shoulder
         @Getter private final int initializedPosition = 20;
