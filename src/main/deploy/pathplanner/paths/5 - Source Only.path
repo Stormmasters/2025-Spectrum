@@ -3,35 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.78,
-        "y": 5.25
+        "x": 1.676123595505618,
+        "y": 7.369030898876405
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4834719554913764,
-        "y": 5.542157460678681
+        "x": 2.2636564723421335,
+        "y": 6.802364021501034
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.676123595505618,
-        "y": 7.369030898876405
+        "x": 3.68,
+        "y": 5.44
       },
       "prevControl": {
-        "x": 2.756680520772769,
-        "y": 6.217280548645804
+        "x": 3.3900617050908437,
+        "y": 5.72829108739602
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Clean Side Source"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "rightL4",
+      "waypointRelativePos": 0.5,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 6.0,
     "maxAcceleration": 6.0,
@@ -42,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.5
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "Clean Side Source Only 5High",
+  "folder": "Blue Left Source",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -53.5
   },
   "useDefaultConstraints": true
 }

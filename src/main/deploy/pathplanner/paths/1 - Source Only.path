@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.71,
-        "y": 5.2
+        "x": 7.12,
+        "y": 4.97
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.506896337623104,
-        "y": 5.054229967657642
+        "x": 5.968001697655083,
+        "y": 5.184352907939235
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Clean Side Start"
     },
     {
       "anchor": {
-        "x": 6.713,
-        "y": 3.893539325842697
+        "x": 5.315941011235955,
+        "y": 5.44
       },
       "prevControl": {
-        "x": 7.284650848072167,
-        "y": 4.468284989568138
-      },
-      "nextControl": {
-        "x": 6.354464996819769,
-        "y": 3.533063278152813
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.19,
-        "y": 2.85
-      },
-      "prevControl": {
-        "x": 5.583985754339202,
-        "y": 3.0157351542580595
+        "x": 5.563102625785428,
+        "y": 5.402434905919219
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "leftL4",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 6.0,
     "maxAcceleration": 6.0,
@@ -58,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Middle Algae Rush",
+  "folder": "Blue Left Source",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

@@ -53,7 +53,7 @@ public class RobotStates {
     public static final Trigger L1Coral = pilot.L1Coral_Y;
     public static final Trigger L2Coral = pilot.L2Coral_B;
     public static final Trigger L3Coral = pilot.L3Coral_X;
-    public static final Trigger L4Coral = pilot.L4Coral_fY.or(autonL4);
+    public static final Trigger L4Coral = pilot.L4Coral_fY;
     public static final Trigger homeAll = pilot.home;
 
     // Robot States

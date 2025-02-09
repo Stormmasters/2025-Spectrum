@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L4",
+      "name": "leftL4",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
@@ -52,7 +52,7 @@
     "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": " Clean Side Preload-Source 5High ",
+  "folder": "Blue Left Preload-Source ",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -53.5

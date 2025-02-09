@@ -3,17 +3,13 @@
   "robotLength": 0.93,
   "holonomicMode": true,
   "pathFolders": [
-    " Clean Side Preload-Source 5High ",
-    "Clean Side Source Only 5High",
-    "Middle Algae Rush",
-    "Possible Paths",
+    "Blue Left Preload-Source ",
+    "Blue Left Source",
     "Config Paths"
   ],
   "autoFolders": [
     "Blue Left",
     "Blue Right",
-    "Blue Middle",
-    "Possible Autos",
     "Config Autos"
   ],
   "defaultMaxVel": 6.0,
@@ -50,6 +46,8 @@
     "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.05,\"y\":0.35},\"end\":{\"x\":0.13,\"y\":0.05},\"strokeWidth\":0.03}}",
     "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.14,\"y\":-0.35},\"end\":{\"x\":0.15,\"y\":-0.04},\"strokeWidth\":0.01}}",
     "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.09,\"y\":-0.35},\"end\":{\"x\":0.15,\"y\":-0.04},\"strokeWidth\":0.01}}",
-    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.03,\"y\":-0.35},\"end\":{\"x\":0.15,\"y\":-0.04},\"strokeWidth\":0.01}}"
+    "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.03,\"y\":-0.35},\"end\":{\"x\":0.15,\"y\":-0.04},\"strokeWidth\":0.01}}",
+    "{\"name\":\"Arm Front\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.46,\"y\":0.0},\"end\":{\"x\":0.754,\"y\":0.0},\"strokeWidth\":0.075}}",
+    "{\"name\":\"Arm Back\",\"type\":\"line\",\"data\":{\"start\":{\"x\":-0.754,\"y\":0.0},\"end\":{\"x\":-0.46,\"y\":0.0},\"strokeWidth\":0.075}}"
   ]
 }

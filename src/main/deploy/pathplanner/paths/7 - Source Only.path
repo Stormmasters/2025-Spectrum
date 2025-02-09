@@ -3,35 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.2,
-        "y": 5.225
+        "x": 1.68,
+        "y": 7.37
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.499827524744137,
-        "y": 5.654814331099088
+        "x": 1.8228117386378468,
+        "y": 6.942019484903808
       },
       "isLocked": false,
-      "linkedName": "Reef IJ"
+      "linkedName": "Clean Side Source"
     },
     {
       "anchor": {
-        "x": 1.676123595505618,
-        "y": 7.369030898876405
+        "x": 2.826,
+        "y": 4.0
       },
       "prevControl": {
-        "x": 3.013883677963821,
-        "y": 6.437219237836566
+        "x": 2.7498138019046823,
+        "y": 4.238108511439178
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Reef AB"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "leftL4",
+      "waypointRelativePos": 0.5,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 6.0,
     "maxAcceleration": 6.0,
@@ -42,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.5
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Clean Side Source Only 5High",
+  "folder": "Blue Left Source",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -53.5
   },
   "useDefaultConstraints": true
 }
