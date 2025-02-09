@@ -24,10 +24,13 @@ public class Pilot extends Gamepad {
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
 
     public final Trigger actionReady = rightBumper.and(teleop);
-    public final Trigger score = actionReady.not();
+    public final Trigger score =
+            actionReady.not(); // TODO: Change to SpectrumState and have true when
+    // actionReady.onFalse() and false after a number of loop (1-5
+    // something)
 
-    public final Trigger pilotLeft = A.and(noFn, teleop);
-    public final Trigger pilotRight = B.and(noFn, teleop);
+    public final Trigger pilotLeft = A.and(noFn, teleop); // TODO: Remove after testing
+    public final Trigger pilotRight = B.and(noFn, teleop); // TODO: Remove after testing
 
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);

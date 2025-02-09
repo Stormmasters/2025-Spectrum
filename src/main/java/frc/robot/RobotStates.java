@@ -29,7 +29,9 @@ public class RobotStates {
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger stationIntaking =
-            pilot.stationIntake_LT.or(visionIntaking, autonSourceIntake);
+            pilot.stationIntake_LT.or(
+                    visionIntaking,
+                    autonSourceIntake); // TODO: add state for CoralAtSource stationExtendedIntake
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
     public static final Trigger groundCoral = pilot.groundCoral_LB_LT;
 
@@ -38,14 +40,15 @@ public class RobotStates {
     public static final Trigger scoreState = pilot.score.or(autonScore);
 
     // climb Triggers
-    public static final Trigger climbPrep = pilot.climbPrep_RDP;
-    public static final Trigger climbFinish = pilot.climbRoutine_start;
+    public static final Trigger climbPrep = pilot.climbPrep_RDP; // TODO: Operator
+    public static final Trigger climbFinish = pilot.climbRoutine_start; // TODO: Pilot
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
     public static final Trigger processorLollipopScore = operator.lollipopProcessor_A;
-    public static final Trigger L2Algae = operator.L2Algae_B.or(autonLowAlgae);
+    public static final Trigger L2Algae =
+            operator.L2Algae_B.or(autonLowAlgae); // TODO: Likely going to Pilot Intake commands
     public static final Trigger L3Algae = operator.L3Algae_X.or(autonHighAlgae);
-    public static final Trigger barge = operator.barge_Y;
+    public static final Trigger barge = operator.barge_Y; // This stays the same as coral scoring
 
     public static final Trigger L1Coral = operator.L1Coral_A;
     public static final Trigger L2Coral = operator.L2Coral_B;
@@ -74,8 +77,12 @@ public class RobotStates {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
 
-        operator.leftScore_Dpad.or(pilot.pilotLeft).onTrue(leftScore.setTrue(), rightScore.setFalse());
-        operator.rightScore_Dpad.or(pilot.pilotRight).onTrue(rightScore.setTrue(), leftScore.setFalse());
+        operator.leftScore_Dpad
+                .or(pilot.pilotLeft)
+                .onTrue(leftScore.setTrue(), rightScore.setFalse());
+        operator.rightScore_Dpad
+                .or(pilot.pilotRight)
+                .onTrue(rightScore.setTrue(), leftScore.setFalse());
     }
 
     private RobotStates() {
