@@ -35,10 +35,8 @@ public class RobotSim {
     }
 
     private void addReef() {
-        // Create root for the reef at the bottom
-        MechanismRoot2d reefBase = leftView.getRoot("Reef Base", 2, 0.35);
+        MechanismRoot2d reefBase = leftView.getRoot("Reef Base", 2, 0.55);
 
-        // Main vertical structure (the reef)
         MechanismLigament2d mainReef =
                 reefBase.append(
                         new MechanismLigament2d(
@@ -48,26 +46,22 @@ public class RobotSim {
                                 5,
                                 new Color8Bit(Color.kPurple)));
 
-        // First Branch (Lowest) - Create a new root at the right height
         MechanismRoot2d branch1Base = leftView.getRoot("Branch1 Base", 1.65, 1);
         branch1Base.append(
                 new MechanismLigament2d(
                         "Branch1", Units.inchesToMeters(15), -30, 3, new Color8Bit(Color.kPurple)));
 
-        // Second Branch (Middle)
         MechanismRoot2d branch2Base = leftView.getRoot("Branch2 Base", 1.65, 1.35);
         branch2Base.append(
                 new MechanismLigament2d(
                         "Branch2", Units.inchesToMeters(15), -30, 3, new Color8Bit(Color.kPurple)));
 
-        // Third Branch (Highest)
         MechanismRoot2d branch3Base =
                 leftView.getRoot("Branch3 Base", 1.65, 0.5 + Units.inchesToMeters(50));
         branch3Base.append(
                 new MechanismLigament2d(
                         "Branch3", Units.inchesToMeters(15), -30, 3, new Color8Bit(Color.kPurple)));
 
-        // Top Extension - Extends vertically from the highest branch
         branch3Base.append(
                 new MechanismLigament2d(
                         "Top Extension",
