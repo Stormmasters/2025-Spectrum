@@ -99,73 +99,85 @@ public class RobotStates {
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
 
         bottomLeftZone
-                .and(
-                        stationIntaking,
-                        () ->
-                                !swerve.frontClosestToAngle(
-                                        Field.CoralStation.leftCenterFace
-                                                .getRotation()
-                                                .getDegrees()))
-                .onTrue(backwardMode.setTrue());
+                .and(stationIntaking)
+                .onTrue(
+                        backwardMode
+                                .setTrue()
+                                .onlyIf(
+                                        () ->
+                                                !swerve.frontClosestToAngle(
+                                                        Field.CoralStation.leftCenterFace
+                                                                .getRotation()
+                                                                .getDegrees())));
         bottomLeftZone
-                .and(
-                        stationIntaking,
-                        () ->
-                                swerve.frontClosestToAngle(
-                                        Field.CoralStation.leftCenterFace
-                                                .getRotation()
-                                                .getDegrees()))
-                .onTrue(backwardMode.setFalse());
+                .and(stationIntaking)
+                .onTrue(
+                        backwardMode
+                                .setFalse()
+                                .onlyIf(
+                                        () ->
+                                                swerve.frontClosestToAngle(
+                                                        Field.CoralStation.leftCenterFace
+                                                                .getRotation()
+                                                                .getDegrees())));
 
         bottomRightZone
-                .and(
-                        stationIntaking,
-                        () ->
-                                !swerve.frontClosestToAngle(
-                                        Field.CoralStation.rightCenterFace
-                                                .getRotation()
-                                                .getDegrees()))
-                .onTrue(backwardMode.setTrue());
+                .and(stationIntaking)
+                .onTrue(
+                        backwardMode
+                                .setTrue()
+                                .onlyIf(
+                                        () ->
+                                                !swerve.frontClosestToAngle(
+                                                        Field.CoralStation.rightCenterFace
+                                                                .getRotation()
+                                                                .getDegrees())));
         bottomRightZone
-                .and(
-                        stationIntaking,
-                        () ->
-                                swerve.frontClosestToAngle(
-                                        Field.CoralStation.rightCenterFace
-                                                .getRotation()
-                                                .getDegrees()))
-                .onTrue(backwardMode.setFalse());
+                .and(stationIntaking)
+                .onTrue(
+                        backwardMode
+                                .setFalse()
+                                .onlyIf(
+                                        () ->
+                                                swerve.frontClosestToAngle(
+                                                        Field.CoralStation.rightCenterFace
+                                                                .getRotation()
+                                                                .getDegrees())));
 
-        bargeZone.and(barge, () -> !swerve.frontClosestToAngle(180)).onTrue(backwardMode.setTrue());
-        bargeZone.and(barge, () -> swerve.frontClosestToAngle(180)).onTrue(backwardMode.setFalse());
+        bargeZone
+                .and(barge)
+                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(180)));
+        bargeZone
+                .and(barge)
+                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(180)));
 
         topLeftZone
-                .and(reefPosition, () -> !swerve.frontClosestToAngle(60))
-                .onTrue(backwardMode.setTrue());
+                .and(reefPosition)
+                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(60)));
         topLeftZone
-                .and(reefPosition, () -> swerve.frontClosestToAngle(60))
-                .onTrue(backwardMode.setFalse());
+                .and(reefPosition)
+                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(60)));
 
         topRightZone
-                .and(reefPosition, () -> !swerve.frontClosestToAngle(-60))
-                .onTrue(backwardMode.setTrue());
+                .and(reefPosition)
+                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(-60)));
         topRightZone
-                .and(reefPosition, () -> swerve.frontClosestToAngle(-60))
-                .onTrue(backwardMode.setFalse());
+                .and(reefPosition)
+                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(-60)));
 
         bottomLeftZone
-                .and(reefPosition, () -> !swerve.frontClosestToAngle(120))
-                .onTrue(backwardMode.setTrue());
+                .and(reefPosition)
+                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(120)));
         bottomLeftZone
-                .and(reefPosition, () -> swerve.frontClosestToAngle(120))
-                .onTrue(backwardMode.setFalse());
+                .and(reefPosition)
+                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(120)));
 
         bottomRightZone
-                .and(reefPosition, () -> !swerve.frontClosestToAngle(-120))
-                .onTrue(backwardMode.setTrue());
+                .and(reefPosition)
+                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(-120)));
         bottomRightZone
-                .and(reefPosition, () -> swerve.frontClosestToAngle(-120))
-                .onTrue(backwardMode.setFalse());
+                .and(reefPosition)
+                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(-120)));
     }
 
     private RobotStates() {
