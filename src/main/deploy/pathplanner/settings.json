@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.93,
-  "robotLength": 0.93,
+  "robotWidth": 0.91,
+  "robotLength": 0.91,
   "holonomicMode": true,
   "pathFolders": [
     "Blue Left Preload-Source ",
@@ -17,10 +17,10 @@
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
-  "robotMass": 55.0,
+  "robotMass": 61.0,
   "robotMOI": 7.0,
   "robotTrackwidth": 0.604,
-  "driveWheelRadius": 0.0550418,
+  "driveWheelRadius": 0.055,
   "driveGearing": 7.364,
   "maxDriveSpeed": 6.0,
   "driveMotorType": "krakenX60FOC",
