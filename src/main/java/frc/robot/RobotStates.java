@@ -29,63 +29,33 @@ public class RobotStates {
     public static final Trigger sim = new Trigger(RobotBase::isSimulation);
 
     // zones
-    public static final Trigger leftCoralStationZone =
-            swerve.inXzoneAlliance(0, Field.getHalfLength() / 4)
-                    .and(
-                            swerve.inYzoneAlliance(
-                                    3 * Field.getFieldWidth() / 4, Field.getFieldWidth()));
-
-    public static final Trigger rightCoralStationZone =
-            swerve.inXzoneAlliance(0, Field.getHalfLength() / 4)
-                    .and(swerve.inYzoneAlliance(0, Field.getFieldWidth() / 4));
+    public static final Trigger topLeftZone =
+            swerve.inXzoneAlliance(Field.Reef.center.getX(), Field.getHalfLength())
+                    .and(swerve.inYzoneAlliance(Field.Reef.center.getY(), Field.getFieldWidth()));
+    public static final Trigger topRightZone =
+            swerve.inXzoneAlliance(Field.Reef.center.getX(), Field.getHalfLength())
+                    .and(swerve.inYzoneAlliance(0, Field.Reef.center.getY()));
+    public static final Trigger bottomLeftZone =
+            swerve.inXzoneAlliance(0, Field.Reef.center.getX())
+                    .and(swerve.inYzoneAlliance(Field.Reef.center.getY(), Field.getFieldWidth()));
+    public static final Trigger bottomRightZone =
+            swerve.inXzoneAlliance(0, Field.Reef.center.getX())
+                    .and(swerve.inYzoneAlliance(0, Field.Reef.center.getY()));
 
     public static final Trigger bargeZone =
             swerve.inXzoneAlliance(
-                            4 * Field.getHalfLength() / 5,
+                            3 * Field.getHalfLength() / 4,
                             Field.getHalfLength()
                                     - Units.inchesToMeters(24)
                                     - swerve.getConfig().getRobotLength() / 2)
-                    .and(swerve.inYzoneAlliance(Field.getHalfWidth(), Field.getFieldWidth()));
-
-    public static final Trigger topLeftReefZone =
-            swerve.inXzoneAlliance(
-                            Field.Reef.center.getX(),
-                            Field.Reef.center.getX() + Field.getHalfLength() / 4)
-                    .and(
-                            swerve.inYzoneAlliance(
-                                    Field.Reef.center.getY(),
-                                    Field.Reef.center.getY() + 2 * Field.getHalfWidth() / 3));
-    public static final Trigger topRightReefZone =
-            swerve.inXzoneAlliance(
-                            Field.Reef.center.getX(),
-                            Field.Reef.center.getX() + Field.getHalfLength() / 4)
-                    .and(
-                            swerve.inYzoneAlliance(
-                                    Field.Reef.center.getY() - 2 * Field.getHalfWidth() / 3,
-                                    Field.Reef.center.getY()));
-    public static final Trigger bottomLeftReefZone =
-            swerve.inXzoneAlliance(
-                            Field.Reef.center.getX() - Field.getHalfLength() / 4,
-                            Field.Reef.center.getX())
-                    .and(
-                            swerve.inYzoneAlliance(
-                                    Field.Reef.center.getY(),
-                                    Field.Reef.center.getY() + 2 * Field.getHalfWidth() / 3));
-    public static final Trigger bottomRightReefZone =
-            swerve.inXzoneAlliance(
-                            Field.Reef.center.getX() - Field.getHalfLength() / 4,
-                            Field.Reef.center.getX())
-                    .and(
-                            swerve.inYzoneAlliance(
-                                    Field.Reef.center.getY() - 2 * Field.getHalfWidth() / 3,
-                                    Field.Reef.center.getY()));
+                    .and(topLeftZone);
 
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger stationIntaking =
             pilot.stationIntake_Y
                     .or(visionIntaking, autonSourceIntake)
-                    .and(leftCoralStationZone.or(rightCoralStationZone));
+                    .and(bottomLeftZone.or(bottomRightZone));
     public static final Trigger ejecting = pilot.eject_fA;
 
     // score Triggers
@@ -106,7 +76,7 @@ public class RobotStates {
 
     public static final Trigger L2Algae = pilot.L2Algae_fB.or(autonLowAlgae);
     public static final Trigger L3Algae = pilot.L3Algae_A.or(autonHighAlgae);
-    public static final Trigger L1Coral = pilot.L1Coral_Y;
+    public static final Trigger L1Coral = pilot.L1Coral_B;
     public static final Trigger L2Coral = pilot.L2Coral_B;
     public static final Trigger L3Coral = pilot.L3Coral_X;
     public static final Trigger L4Coral = pilot.L4Coral_fY.or(autonL4);
@@ -118,6 +88,9 @@ public class RobotStates {
     public static final SpectrumState coastMode = new SpectrumState("coast");
     public static final Trigger coastOn = pilot.coastOn_dB;
 
+    public static final Trigger reefPosition =
+            L2Algae.or(L3Algae, L1Coral, L2Coral, L3Coral, L4Coral);
+
     public static final SpectrumState backwardMode = new SpectrumState("backward");
 
     // Setup any binding to set states
@@ -125,16 +98,18 @@ public class RobotStates {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
 
-        leftCoralStationZone
+        bottomLeftZone
                 .and(
+                        stationIntaking,
                         () ->
                                 !swerve.frontClosestToAngle(
                                         Field.CoralStation.leftCenterFace
                                                 .getRotation()
                                                 .getDegrees()))
                 .onTrue(backwardMode.setTrue());
-        leftCoralStationZone
+        bottomLeftZone
                 .and(
+                        stationIntaking,
                         () ->
                                 swerve.frontClosestToAngle(
                                         Field.CoralStation.leftCenterFace
@@ -142,16 +117,18 @@ public class RobotStates {
                                                 .getDegrees()))
                 .onTrue(backwardMode.setFalse());
 
-        rightCoralStationZone
+        bottomRightZone
                 .and(
+                        stationIntaking,
                         () ->
                                 !swerve.frontClosestToAngle(
                                         Field.CoralStation.rightCenterFace
                                                 .getRotation()
                                                 .getDegrees()))
                 .onTrue(backwardMode.setTrue());
-        rightCoralStationZone
+        bottomRightZone
                 .and(
+                        stationIntaking,
                         () ->
                                 swerve.frontClosestToAngle(
                                         Field.CoralStation.rightCenterFace
@@ -159,27 +136,35 @@ public class RobotStates {
                                                 .getDegrees()))
                 .onTrue(backwardMode.setFalse());
 
-        bargeZone.and(() -> !swerve.frontClosestToAngle(180)).onTrue(backwardMode.setTrue());
-        bargeZone.and(() -> swerve.frontClosestToAngle(180)).onTrue(backwardMode.setFalse());
+        bargeZone.and(barge, () -> !swerve.frontClosestToAngle(180)).onTrue(backwardMode.setTrue());
+        bargeZone.and(barge, () -> swerve.frontClosestToAngle(180)).onTrue(backwardMode.setFalse());
 
-        topLeftReefZone.and(() -> !swerve.frontClosestToAngle(60)).onTrue(backwardMode.setTrue());
-        topLeftReefZone.and(() -> swerve.frontClosestToAngle(60)).onTrue(backwardMode.setFalse());
-
-        topRightReefZone.and(() -> !swerve.frontClosestToAngle(-60)).onTrue(backwardMode.setTrue());
-        topRightReefZone.and(() -> swerve.frontClosestToAngle(-60)).onTrue(backwardMode.setFalse());
-
-        bottomLeftReefZone
-                .and(() -> !swerve.frontClosestToAngle(120))
+        topLeftZone
+                .and(reefPosition, () -> !swerve.frontClosestToAngle(60))
                 .onTrue(backwardMode.setTrue());
-        bottomLeftReefZone
-                .and(() -> swerve.frontClosestToAngle(120))
+        topLeftZone
+                .and(reefPosition, () -> swerve.frontClosestToAngle(60))
                 .onTrue(backwardMode.setFalse());
 
-        bottomRightReefZone
-                .and(() -> !swerve.frontClosestToAngle(-120))
+        topRightZone
+                .and(reefPosition, () -> !swerve.frontClosestToAngle(-60))
                 .onTrue(backwardMode.setTrue());
-        bottomRightReefZone
-                .and(() -> swerve.frontClosestToAngle(-120))
+        topRightZone
+                .and(reefPosition, () -> swerve.frontClosestToAngle(-60))
+                .onTrue(backwardMode.setFalse());
+
+        bottomLeftZone
+                .and(reefPosition, () -> !swerve.frontClosestToAngle(120))
+                .onTrue(backwardMode.setTrue());
+        bottomLeftZone
+                .and(reefPosition, () -> swerve.frontClosestToAngle(120))
+                .onTrue(backwardMode.setFalse());
+
+        bottomRightZone
+                .and(reefPosition, () -> !swerve.frontClosestToAngle(-120))
+                .onTrue(backwardMode.setTrue());
+        bottomRightZone
+                .and(reefPosition, () -> swerve.frontClosestToAngle(-120))
                 .onTrue(backwardMode.setFalse());
     }
 

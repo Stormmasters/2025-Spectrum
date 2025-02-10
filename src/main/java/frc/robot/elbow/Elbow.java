@@ -28,7 +28,7 @@ public class Elbow extends Mechanism {
     public static class ElbowConfig extends Config {
         @Getter @Setter private double positionMultiplier = 1;
 
-        /* Elbow positions in percentage of max rotation || 0 is horizontal */
+        /* Elbow positions in percentage of max rotation || 0 is vertical up || positions should be towards the front of the robot */
 
         // TODO: Find elbow positions
         @Getter private final double handAlgae = 99;

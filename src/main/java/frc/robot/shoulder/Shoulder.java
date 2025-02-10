@@ -27,7 +27,7 @@ public class Shoulder extends Mechanism {
         // Positions set as percentage of shoulder
         @Getter private final int initializedPosition = 20;
 
-        /* Shoulder positions in percentage of max rotation || 0 is horizontal */
+        /* Shoulder positions in percentage of max rotation || 0 is vertical down || positions should be towards front of robot */
         // TODO: Find shoulder positions
         @Getter private final double score = 100 - 65;
         @Getter private final double climbHome = 100 - 3;
