@@ -2,6 +2,7 @@ package frc.robot;
 
 import static frc.robot.auton.Auton.*;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
@@ -38,6 +39,14 @@ public class RobotStates {
             swerve.inXzoneAlliance(0, Field.getHalfLength() / 4)
                     .and(swerve.inYzoneAlliance(0, Field.getFieldWidth() / 4));
 
+    public static final Trigger bargeZone =
+            swerve.inXzoneAlliance(
+                            4 * Field.getHalfLength() / 5,
+                            Field.getHalfLength()
+                                    - Units.inchesToMeters(24)
+                                    - swerve.getConfig().getRobotLength() / 2)
+                    .and(swerve.inYzoneAlliance(Field.getHalfWidth(), Field.getFieldWidth()));
+
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger stationIntaking =
@@ -59,7 +68,7 @@ public class RobotStates {
     public static final Trigger handOffAlgae = operator.handOffAlgae_Y;
     // potentially everything in position, then elevator goes down while spinning coralIntake
     public static final Trigger handOffCoral = operator.handOffCoral_fY;
-    public static final Trigger barge = operator.barge_A;
+    public static final Trigger barge = operator.barge_A.and(bargeZone);
     public static final Trigger processorScore = operator.floorScore_A;
 
     public static final Trigger L2Algae = pilot.L2Algae_fB.or(autonLowAlgae);
@@ -83,11 +92,42 @@ public class RobotStates {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
 
-        leftCoralStationZone.and(() -> !swerve.frontClosestToAngle(-40)).onTrue(backwardMode.setTrue());
-        leftCoralStationZone.and(() -> swerve.frontClosestToAngle(-40)).onTrue(backwardMode.setFalse());
+        leftCoralStationZone
+                .and(
+                        () ->
+                                !swerve.frontClosestToAngle(
+                                        Field.CoralStation.leftCenterFace
+                                                .getRotation()
+                                                .getDegrees()))
+                .onTrue(backwardMode.setTrue());
+        leftCoralStationZone
+                .and(
+                        () ->
+                                swerve.frontClosestToAngle(
+                                        Field.CoralStation.leftCenterFace
+                                                .getRotation()
+                                                .getDegrees()))
+                .onTrue(backwardMode.setFalse());
 
-        rightCoralStationZone.and(() -> !swerve.frontClosestToAngle(40)).onTrue(backwardMode.setTrue());
-        rightCoralStationZone.and(() -> swerve.frontClosestToAngle(40)).onTrue(backwardMode.setFalse());
+        rightCoralStationZone
+                .and(
+                        () ->
+                                !swerve.frontClosestToAngle(
+                                        Field.CoralStation.rightCenterFace
+                                                .getRotation()
+                                                .getDegrees()))
+                .onTrue(backwardMode.setTrue());
+        rightCoralStationZone
+                .and(
+                        () ->
+                                swerve.frontClosestToAngle(
+                                        Field.CoralStation.rightCenterFace
+                                                .getRotation()
+                                                .getDegrees()))
+                .onTrue(backwardMode.setFalse());
+
+        bargeZone.and(() -> !swerve.frontClosestToAngle(180)).onTrue(backwardMode.setTrue());
+        bargeZone.and(() -> swerve.frontClosestToAngle(180)).onTrue(backwardMode.setFalse());
     }
 
     private RobotStates() {

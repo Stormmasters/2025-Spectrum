@@ -46,7 +46,7 @@ import lombok.Getter;
  */
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         implements SpectrumSubsystem, NTSendable {
-    private SwerveConfig config;
+    @Getter private SwerveConfig config;
     private Notifier simNotifier = null;
     private double lastSimTime;
     private RotationController rotationController;
@@ -309,11 +309,25 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         } else {
             flippedHeading = heading + 180;
         }
-        if (Math.abs(heading - angleDegrees) < Math.abs(flippedHeading - angleDegrees)) {
+        double frontDifference = getMinDegreesDifference(heading, angleDegrees);
+        double flippedDifference = getMinDegreesDifference(flippedHeading, angleDegrees);
+
+        if (frontDifference < flippedDifference) {
             return true;
         }
 
         return false;
+    }
+
+    protected double getMinDegreesDifference(
+            double currentAngleDegrees, double targetAngleDegrees) {
+        double difference = Math.abs(currentAngleDegrees - targetAngleDegrees);
+
+        if ((360 - difference < difference) && (360 - difference >= 0)) {
+            difference = 360 - difference;
+        }
+
+        return difference;
     }
 
     // --------------------------------------------------------------------------------
