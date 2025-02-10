@@ -47,6 +47,39 @@ public class RobotStates {
                                     - swerve.getConfig().getRobotLength() / 2)
                     .and(swerve.inYzoneAlliance(Field.getHalfWidth(), Field.getFieldWidth()));
 
+    public static final Trigger topLeftReefZone =
+            swerve.inXzoneAlliance(
+                            Field.Reef.center.getX(),
+                            Field.Reef.center.getX() + Field.getHalfLength() / 4)
+                    .and(
+                            swerve.inYzoneAlliance(
+                                    Field.Reef.center.getY(),
+                                    Field.Reef.center.getY() + 2 * Field.getHalfWidth() / 3));
+    public static final Trigger topRightReefZone =
+            swerve.inXzoneAlliance(
+                            Field.Reef.center.getX(),
+                            Field.Reef.center.getX() + Field.getHalfLength() / 4)
+                    .and(
+                            swerve.inYzoneAlliance(
+                                    Field.Reef.center.getY() - 2 * Field.getHalfWidth() / 3,
+                                    Field.Reef.center.getY()));
+    public static final Trigger bottomLeftReefZone =
+            swerve.inXzoneAlliance(
+                            Field.Reef.center.getX() - Field.getHalfLength() / 4,
+                            Field.Reef.center.getX())
+                    .and(
+                            swerve.inYzoneAlliance(
+                                    Field.Reef.center.getY(),
+                                    Field.Reef.center.getY() + 2 * Field.getHalfWidth() / 3));
+    public static final Trigger bottomRightReefZone =
+            swerve.inXzoneAlliance(
+                            Field.Reef.center.getX() - Field.getHalfLength() / 4,
+                            Field.Reef.center.getX())
+                    .and(
+                            swerve.inYzoneAlliance(
+                                    Field.Reef.center.getY() - 2 * Field.getHalfWidth() / 3,
+                                    Field.Reef.center.getY()));
+
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger stationIntaking =
@@ -128,6 +161,26 @@ public class RobotStates {
 
         bargeZone.and(() -> !swerve.frontClosestToAngle(180)).onTrue(backwardMode.setTrue());
         bargeZone.and(() -> swerve.frontClosestToAngle(180)).onTrue(backwardMode.setFalse());
+
+        topLeftReefZone.and(() -> !swerve.frontClosestToAngle(60)).onTrue(backwardMode.setTrue());
+        topLeftReefZone.and(() -> swerve.frontClosestToAngle(60)).onTrue(backwardMode.setFalse());
+
+        topRightReefZone.and(() -> !swerve.frontClosestToAngle(-60)).onTrue(backwardMode.setTrue());
+        topRightReefZone.and(() -> swerve.frontClosestToAngle(-60)).onTrue(backwardMode.setFalse());
+
+        bottomLeftReefZone
+                .and(() -> !swerve.frontClosestToAngle(120))
+                .onTrue(backwardMode.setTrue());
+        bottomLeftReefZone
+                .and(() -> swerve.frontClosestToAngle(120))
+                .onTrue(backwardMode.setFalse());
+
+        bottomRightReefZone
+                .and(() -> !swerve.frontClosestToAngle(-120))
+                .onTrue(backwardMode.setTrue());
+        bottomRightReefZone
+                .and(() -> swerve.frontClosestToAngle(-120))
+                .onTrue(backwardMode.setFalse());
     }
 
     private RobotStates() {
