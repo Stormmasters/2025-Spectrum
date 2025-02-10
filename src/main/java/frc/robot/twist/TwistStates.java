@@ -19,6 +19,7 @@ public class TwistStates {
 
     public static void setStates() {
         stationIntaking.whileTrue(log(coralIntake()));
+        stationExtendedIntake.whileTrue(log(coralIntake()));
 
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));

@@ -29,26 +29,25 @@ public class RobotStates {
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger stationIntaking =
-            pilot.stationIntake_LT.or(
-                    visionIntaking,
-                    autonSourceIntake); // TODO: add state for CoralAtSource stationExtendedIntake
+            pilot.stationIntake_LT.or(visionIntaking, autonSourceIntake);
+    public static final Trigger stationExtendedIntake = pilot.stationExtendedIntake_LT;
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
-    public static final Trigger groundCoral = pilot.groundCoral_LB_LT;
+    public static final Trigger groundCoral = pilot.groundCoral_LB_RT;
 
     // score Triggers
     public static final Trigger actionPrepState = pilot.actionReady;
-    public static final Trigger scoreState = pilot.score.or(autonScore);
 
     // climb Triggers
-    public static final Trigger climbPrep = pilot.climbPrep_RDP; // TODO: Operator
-    public static final Trigger climbFinish = pilot.climbRoutine_start; // TODO: Pilot
+    public static final Trigger climbPrep = operator.climbPrep_start;
+    public static final Trigger climbFinish = pilot.climbRoutine_start;
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-    public static final Trigger processorLollipopScore = operator.lollipopProcessor_A;
-    public static final Trigger L2Algae =
-            operator.L2Algae_B.or(autonLowAlgae); // TODO: Likely going to Pilot Intake commands
+    public static final Trigger processorLollipopScore = pilot.lollipopProcessor_A;
+    public static final Trigger L2Algae = operator.L2Algae_B.or(autonLowAlgae); // TODO: Likely going to Pilot Intake commands
     public static final Trigger L3Algae = operator.L3Algae_X.or(autonHighAlgae);
-    public static final Trigger barge = operator.barge_Y; // This stays the same as coral scoring
+    public static final Trigger algaeRetract = pilot.algaeRetract_B; //TODO: make this sole algae command once vision done
+
+    public static final Trigger barge = operator.barge_Y;
 
     public static final Trigger L1Coral = operator.L1Coral_A;
     public static final Trigger L2Coral = operator.L2Coral_B;
@@ -70,6 +69,8 @@ public class RobotStates {
     public static final SpectrumState coastMode = new SpectrumState("coast");
     public static final SpectrumState leftScore = new SpectrumState("leftScore");
     public static final SpectrumState rightScore = new SpectrumState("rightScore");
+    public static final SpectrumState scoreState = new SpectrumState("scoreState");
+
     public static final Trigger coastOn = pilot.coastOn_dB;
 
     // Setup any binding to set states
@@ -77,12 +78,11 @@ public class RobotStates {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
 
-        operator.leftScore_Dpad
-                .or(pilot.pilotLeft)
-                .onTrue(leftScore.setTrue(), rightScore.setFalse());
-        operator.rightScore_Dpad
-                .or(pilot.pilotRight)
-                .onTrue(rightScore.setTrue(), leftScore.setFalse());
+        operator.leftScore_Dpad.onTrue(leftScore.setTrue(), rightScore.setFalse());
+        operator.rightScore_Dpad.onTrue(rightScore.setTrue(), leftScore.setFalse());
+
+        actionPrepState.onFalse(scoreState.setTrue());
+        actionPrepState.onTrue(scoreState.setFalse());
     }
 
     private RobotStates() {

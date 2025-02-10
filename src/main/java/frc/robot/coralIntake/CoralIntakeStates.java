@@ -20,7 +20,10 @@ public class CoralIntakeStates {
 
     public static void setStates() {
         stationIntaking.whileTrue(log(intake()));
+        stationExtendedIntake.whileTrue(log(intake()));
         scoreState.whileTrue(log(score()));
+
+        processorLollipopScore.whileTrue(log(intake()));
 
         algaeHandoff.whileTrue(log(handOff()));
         coralHandoff.whileTrue(log(handOff()));

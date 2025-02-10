@@ -21,6 +21,7 @@ public class ShoulderStates {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
         stationIntaking.whileTrue(log(coralIntake()));
+        stationExtendedIntake.whileTrue(log(coralExtendedIntake()));
 
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
@@ -95,6 +96,11 @@ public class ShoulderStates {
 
     public static Command coralIntake() {
         return shoulder.moveToPercentage(config::getCoralIntake).withName("Shoulder.coralIntake");
+    }
+
+    public static Command coralExtendedIntake() {
+        return shoulder.moveToPercentage(config::getCoralExtendedIntake)
+                .withName("Shoulder.coralExtendedIntake");
     }
 
     public static Command coastMode() {

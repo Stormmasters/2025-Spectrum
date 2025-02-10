@@ -16,21 +16,17 @@ public class Pilot extends Gamepad {
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
 
-    public final Trigger stationIntake_LT = X.and(noFn, teleop);
-    public final Trigger groundAlgae_RT = Y.and(noFn, teleop);
-    public final Trigger groundCoral_LB_LT = A.and(fn, teleop);
+    public final Trigger stationIntake_LT = A.and(noFn, teleop);
+    public final Trigger stationExtendedIntake_LT = A.and(fn, teleop);
+    public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop);
+    public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop);
 
-    public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
+    public final Trigger lollipopProcessor_A = A.and(noFn, teleop);
+    public final Trigger algaeRetract_B = B.and(noFn, teleop);
+
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
 
     public final Trigger actionReady = rightBumper.and(teleop);
-    public final Trigger score =
-            actionReady.not(); // TODO: Change to SpectrumState and have true when
-    // actionReady.onFalse() and false after a number of loop (1-5
-    // something)
-
-    public final Trigger pilotLeft = A.and(noFn, teleop); // TODO: Remove after testing
-    public final Trigger pilotRight = B.and(noFn, teleop); // TODO: Remove after testing
 
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);

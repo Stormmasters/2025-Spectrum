@@ -42,7 +42,8 @@ public class ElevatorStates {
         algaeHandoff.whileTrue(handOff());
         coralHandoff.whileTrue(handOff());
 
-        stationIntaking.whileTrue(log(stationIntake()));
+        stationIntaking.whileTrue(stationIntake());
+        stationExtendedIntake.whileTrue(stationExtendedIntake());
         L2Algae.whileTrue(l1());
         L3Algae.whileTrue(l1());
         barge.whileTrue(l1());
@@ -124,6 +125,11 @@ public class ElevatorStates {
     private static Command stationIntake() {
         return elevator.moveToRotations(config::getStationIntake)
                 .withName("Elevator.stationIntake");
+    }
+
+    private static Command stationExtendedIntake() {
+        return elevator.moveToRotations(config::getStationExtendedIntake)
+                .withName("Elevator.stationExtendedIntake");
     }
 
     private static Command l1() {

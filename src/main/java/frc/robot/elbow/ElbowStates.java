@@ -3,7 +3,6 @@ package frc.robot.elbow;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import frc.robot.Robot;
 import frc.robot.elbow.Elbow.ElbowConfig;
 import frc.spectrumLib.Telemetry;
@@ -22,7 +21,11 @@ public class ElbowStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         stationIntaking.whileTrue(log(coralIntake()));
-        scoreState.whileTrue(log(score()));
+        stationExtendedIntake.whileTrue(log(coralIntake()));
+
+        scoreState.and(L2Coral).onTrue(log(score2()));
+        scoreState.and(L3Coral).onTrue(log(score3()));
+        scoreState.and(L4Coral).onTrue(log(score4()));
 
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
@@ -47,12 +50,19 @@ public class ElbowStates {
         return () -> -supplier.getAsDouble();
     }
 
-    public static Command score() {
-        return new ProxyCommand(
-                () -> {
-                    double originalPosition = ElbowStates.getPosition().getAsDouble() + 20.0;
-                    return elbow.moveToPercentage(() -> originalPosition).withName("Elbow.score");
-                });
+    public static Command score2() {
+        double newPos = 15 + config.getL2Coral();
+        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score2");
+    }
+
+    public static Command score3() {
+        double newPos = 15 + config.getL3Coral();
+        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score3");
+    }
+
+    public static Command score4() {
+        double newPos = 20 + config.getL4Coral();
+        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score4");
     }
 
     public static Command runElbow(DoubleSupplier speed) {

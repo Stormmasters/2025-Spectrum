@@ -15,6 +15,8 @@ public class Operator extends Gamepad {
     public final Trigger leftScore_Dpad = leftDpad.and(noFn, teleop);
     public final Trigger rightScore_Dpad = rightDpad.and(noFn, teleop);
 
+    public final Trigger climbPrep_start = start.and(noFn, teleop);
+
     public final Trigger operatorCoralStage = leftBumper.and(teleop);
     public final Trigger operatorAlgaeStage = rightBumper.and(teleop);
     public final Trigger homeState = operatorCoralStage.not().and(operatorAlgaeStage.not());
@@ -24,7 +26,6 @@ public class Operator extends Gamepad {
     public final Trigger L3Coral_X = X.and(operatorCoralStage);
     public final Trigger L4Coral_Y = Y.and(operatorCoralStage);
 
-    public final Trigger lollipopProcessor_A = A.and(operatorAlgaeStage);
     public final Trigger L2Algae_B = B.and(operatorAlgaeStage);
     public final Trigger L3Algae_X = X.and(operatorAlgaeStage);
     public final Trigger barge_Y = Y.and(operatorAlgaeStage);

@@ -33,6 +33,7 @@ public class Elevator extends Mechanism {
         @Getter private final double l4 = fullExtend;
         @Getter private final double barge = fullExtend;
         @Getter private final double stationIntake = 10.5;
+        @Getter private double stationExtendedIntake = 14.5;
 
         @Getter private double tolerance = 0.95;
         @Getter private double elevatorUpHeight = 5;
