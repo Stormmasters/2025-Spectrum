@@ -4,6 +4,7 @@ import static frc.robot.auton.Auton.*;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.reefscape.Field;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.swerve.Swerve;
@@ -26,10 +27,23 @@ public class RobotStates {
     public static final Trigger fm = new Trigger(() -> Rio.id == Rio.FM_2024);
     public static final Trigger sim = new Trigger(RobotBase::isSimulation);
 
+    // zones
+    public static final Trigger leftCoralStationZone =
+            swerve.inXzoneAlliance(0, Field.getHalfLength() / 4)
+                    .and(
+                            swerve.inYzoneAlliance(
+                                    3 * Field.getFieldWidth() / 4, Field.getFieldWidth()));
+
+    public static final Trigger rightCoralStationZone =
+            swerve.inXzoneAlliance(0, Field.getHalfLength() / 4)
+                    .and(swerve.inYzoneAlliance(0, Field.getFieldWidth() / 4));
+
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger stationIntaking =
-            pilot.stationIntake_Y.or(visionIntaking, autonSourceIntake);
+            pilot.stationIntake_Y
+                    .or(visionIntaking, autonSourceIntake)
+                    .and(leftCoralStationZone.or(rightCoralStationZone));
     public static final Trigger ejecting = pilot.eject_fA;
 
     // score Triggers
@@ -56,18 +70,24 @@ public class RobotStates {
     public static final Trigger L4Coral = pilot.L4Coral_fY.or(autonL4);
     public static final Trigger homeAll = pilot.home;
 
-    public static final Trigger backward = operator.backward;
-
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
     // If they should be set by multiple Triggers do that in SetupStates()
     public static final SpectrumState coastMode = new SpectrumState("coast");
     public static final Trigger coastOn = pilot.coastOn_dB;
 
+    public static final SpectrumState backwardMode = new SpectrumState("backward");
+
     // Setup any binding to set states
     public static void setupStates() {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
+
+        leftCoralStationZone.and(() -> !swerve.frontClosestToAngle(-40)).onTrue(backwardMode.setTrue());
+        leftCoralStationZone.and(() -> swerve.frontClosestToAngle(-40)).onTrue(backwardMode.setFalse());
+
+        rightCoralStationZone.and(() -> !swerve.frontClosestToAngle(40)).onTrue(backwardMode.setTrue());
+        rightCoralStationZone.and(() -> swerve.frontClosestToAngle(40)).onTrue(backwardMode.setFalse());
     }
 
     private RobotStates() {

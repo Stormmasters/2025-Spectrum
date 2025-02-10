@@ -301,6 +301,21 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
                 });
     }
 
+    public boolean frontClosestToAngle(double angleDegrees) {
+        double heading = getRotation().getDegrees();
+        double flippedHeading;
+        if (heading > 0) {
+            flippedHeading = heading - 180;
+        } else {
+            flippedHeading = heading + 180;
+        }
+        if (Math.abs(heading - angleDegrees) < Math.abs(flippedHeading - angleDegrees)) {
+            return true;
+        }
+
+        return false;
+    }
+
     // --------------------------------------------------------------------------------
     // Rotation Controller
     // --------------------------------------------------------------------------------

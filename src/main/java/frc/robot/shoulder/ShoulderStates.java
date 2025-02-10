@@ -23,20 +23,20 @@ public class ShoulderStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         score.whileTrue(home());
         stationIntaking.whileTrue(log(coralIntake()));
-        stationIntaking.and(backward).whileTrue(log(flip(coralIntake())));
+        stationIntaking.and(backwardMode).whileTrue(log(flip(coralIntake())));
         algaeFloorIntake.whileTrue(log(floorIntake()));
         L2Algae.whileTrue(log(l2Algae()));
-        L2Algae.and(backward).whileTrue(log(flip(l2Algae())));
+        L2Algae.and(backwardMode).whileTrue(log(flip(l2Algae())));
         L3Algae.whileTrue(log(l3Algae()));
-        L3Algae.and(backward).whileTrue(log(flip(l3Algae())));
+        L3Algae.and(backwardMode).whileTrue(log(flip(l3Algae())));
         L2Coral.whileTrue(log(l2Coral()));
-        L2Coral.and(backward).whileTrue(log(flip(l2Coral())));
+        L2Coral.and(backwardMode).whileTrue(log(flip(l2Coral())));
         L3Coral.whileTrue(log(l3Coral()));
-        L3Coral.and(backward).whileTrue(log(flip(l3Coral())));
+        L3Coral.and(backwardMode).whileTrue(log(flip(l3Coral())));
         L4Coral.whileTrue(log(l4Coral()));
-        L4Coral.and(backward).whileTrue(log(flip(l4Coral())));
+        L4Coral.and(backwardMode).whileTrue(log(flip(l4Coral())));
         barge.whileTrue(log(barge()));
-        barge.and(backward).whileTrue(log(flip(barge())));
+        barge.and(backwardMode).whileTrue(log(flip(barge())));
         handOffAlgae.whileTrue(log(handOffAlgae()));
         homeAll.whileTrue(home());
     }

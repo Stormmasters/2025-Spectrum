@@ -12,8 +12,7 @@ public class Operator extends Gamepad {
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
 
-    public final Trigger barge_A = A.and(noFn, disabled);
-    public final Trigger backward = A.and(noFn, teleop);
+    public final Trigger barge_A = A.and(noFn, teleop);
     public final Trigger floorScore_A = A.and(fn, teleop);
 
     public final Trigger climbPrep_B = B.and(noFn, teleop);
