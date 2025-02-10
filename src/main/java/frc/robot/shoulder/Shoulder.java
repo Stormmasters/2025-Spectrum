@@ -17,12 +17,13 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
+import java.util.function.DoubleSupplier;
 import lombok.*;
 
 public class Shoulder extends Mechanism {
 
     public static class ShoulderConfig extends Config {
-        @Getter @Setter private double positionMultiplier = 1;
+        @Getter @Setter private boolean reversed = false;
 
         // Positions set as percentage of shoulder
         @Getter private final int initializedPosition = 20;
@@ -187,6 +188,14 @@ public class Shoulder extends Mechanism {
             return getPositionRotations() > config.getMaxRotations();
         }
         return false;
+    }
+
+    public double checkReversed(DoubleSupplier position) {
+        if (!config.isReversed()) {
+            return position.getAsDouble();
+        }
+
+        return position.getAsDouble() * -1;
     }
 
     // --------------------------------------------------------------------------------
