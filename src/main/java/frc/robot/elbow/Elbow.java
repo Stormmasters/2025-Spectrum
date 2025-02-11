@@ -31,18 +31,26 @@ public class Elbow extends Mechanism {
         // TODO: Find elbow positions
         @Getter private final double handAlgae = 99;
         @Getter private final double home = 0;
-        @Getter private final double coralIntake = 35.5;
+
+        @Getter private final double algaeLollipop = 56.7;
+        @Getter private final double coralLollipop = 58.3;
+        @Getter private final double stationIntake = 14.4;
+        @Getter private final double stationExtendedIntake = 24.4;
         @Getter private final double floorIntake = 0;
-        @Getter private final double corralFloorIntake = 87.8;
-        @Getter private final double l2Algae = 20;
-        @Getter private final double l3Algae = 20;
+        @Getter private final double clawGroundAlgaeIntake = 58.3;
+        @Getter private final double clawGroundCoralIntake = 58.3;
+        @Getter private final double handOff = 100;
 
-        @Getter private final double l1Coral = 87.8;
-        @Getter private final double l2Coral = 20;
-        @Getter private final double l3Coral = 20;
-        @Getter private final double l4Coral = 31.1;
+        @Getter private final double l2Algae = 33.3;
+        @Getter private final double l3Algae = 33.3;
 
-        @Getter private final double barge = 31.1;
+        @Getter private final double l1Coral = 36.1;
+        @Getter private final double l2Coral = 30.6;
+        @Getter private final double l3Coral = 30.6;
+        @Getter private final double l4Coral = 25;
+
+        @Getter private final double barge = 7.2;
+
         @Getter @Setter private double tuneElbow = 0;
         @Getter @Setter private boolean leftScore = true;
 

@@ -38,17 +38,20 @@ public class Twist extends Mechanism {
         /* twist positions in percentage of max rotation || 0 is horizontal */
 
         @Getter private final double home = 0;
-        @Getter private final double coralIntake = 0;
-        @Getter private final double floorIntake = 0;
-        @Getter private final double l1Coral = 50;
-        @Getter private final double l2Algae = 50;
-        @Getter private final double l3Algae = 50;
+        @Getter private final double algaeLollipop = 100;
+        @Getter private final double coralLollipop = 50;
+        @Getter private final double stationIntake = 0;
+        @Getter private final double clawGroundAlgaeIntake = 100;
+        @Getter private final double clawGroundCoralIntake = 0;
+        @Getter private final double l1Coral = 0;
+        @Getter private final double l2Algae = 0;
+        @Getter private final double l3Algae = 0;
         @Getter private final double l2Coral = 50;
         @Getter private final double l3Coral = 50;
         @Getter private final double l4Coral = 50;
         @Getter private final double barge = 100;
-        @Getter private final double handAlgae = 50;
-        @Getter private final double handCoral = 0;
+        @Getter private final double handAlgae = -100; // TODO: doublecheck
+        @Getter private final double handCoral = -50;
         @Getter @Setter private double tuneTwist = 0;
 
         /* Twist config settings */

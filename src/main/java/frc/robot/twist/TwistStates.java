@@ -99,11 +99,11 @@ public class TwistStates {
     }
 
     public static Command floorIntake() {
-        return twist.moveToPercentage(config::getFloorIntake).withName("Twist.floorIntake");
+        return twist.moveToPercentage(config::getClawGroundAlgaeIntake).withName("Twist.floorIntake");
     }
 
     public static Command coralIntake() {
-        return twist.moveToPercentage(config::getCoralIntake).withName("Twist.coralIntake");
+        return twist.moveToPercentage(config::getStationIntake).withName("Twist.coralIntake");
     }
 
     public static Command coastMode() {

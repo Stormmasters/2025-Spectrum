@@ -33,16 +33,24 @@ public class Shoulder extends Mechanism {
         @Getter private final double climbHome = 100 - 3;
         @Getter private final double handAlgae = -21;
         @Getter private final double home = 0;
-        @Getter private final double coralIntake = 91;
-        @Getter private final double coralExtendedIntake = -60;
-        @Getter private final double floorIntake = -70;
-        @Getter private final double l1Coral = -80;
-        @Getter private final double l2Algae = -40;
-        @Getter private final double l3Algae = -40;
-        @Getter private final double l2Coral = -40;
-        @Getter private final double l3Coral = -40;
-        @Getter private final double l4Coral = -88.9;
-        @Getter private final double barge = -88.9;
+
+        @Getter private final double algaeLollipop = 0;
+        @Getter private final double coralLollipop = -13.3;
+        @Getter private final double stationIntake = 4.4;
+        @Getter private final double stationExtendedIntake = 4.4;
+        @Getter private final double clawGroundAlgaeIntake = -8.9;
+        @Getter private final double clawGroundCoralIntake = -8.9;
+        @Getter private final double handOff = 100;
+
+        @Getter private final double l2Algae = -5.6;
+        @Getter private final double l3Algae = -5.6;
+
+        @Getter private final double l1Coral = -1.1;
+        @Getter private final double l2Coral = -19.4;
+        @Getter private final double l3Coral = -19.4;
+        @Getter private final double l4Coral = -75;
+
+        @Getter private final double barge = -94.4;
         @Getter @Setter private double tuneShoulder = 0;
 
         /* Shoulder config settings */
