@@ -287,14 +287,14 @@ public class Limelight {
         if (!isAttached()) {
             return;
         }
-        LimelightHelpers.SetRobotOrientation(config.name, degrees, 0, 0, 0, 0, 0);
+        LimelightHelpers.setRobotOrientation(config.name, degrees, 0, 0, 0, 0, 0);
     }
 
     public void setRobotOrientation(double degrees, double angularRate) {
         if (!isAttached()) {
             return;
         }
-        LimelightHelpers.SetRobotOrientation(config.name, degrees, angularRate, 0, 0, 0, 0);
+        LimelightHelpers.setRobotOrientation(config.name, degrees, angularRate, 0, 0, 0, 0);
     }
 
     /**
