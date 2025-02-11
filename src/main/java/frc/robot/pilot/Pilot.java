@@ -25,7 +25,7 @@ public class Pilot extends Gamepad {
     public final Trigger home = X.and(fn, teleop); // not enough buttons
     public final Trigger L2Algae_fB = B.and(fn, teleop);
     public final Trigger L3Algae_A = A.and(noFn, teleop);
-    public final Trigger L1Coral_Y = Y.and(noFn, teleop);
+    public final Trigger L1Coral_B = B.and(noFn, teleop);
     public final Trigger L2Coral_B = B.and(noFn, teleop);
     public final Trigger L3Coral_X = X.and(noFn, teleop);
     public final Trigger L4Coral_fY = Y.and(fn, teleop);

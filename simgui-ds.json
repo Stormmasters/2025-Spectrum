@@ -18,13 +18,11 @@
           "keyRate": 0.0
         },
         {
-          "decKey": 71,
-          "incKey": 81,
-          "keyRate": 0.0010000000474974513
+          "decKey": 81,
+          "incKey": 69
         },
         {
-          "decKey": 82,
-          "incKey": 69
+          "decKey": 82
         }
       ],
       "axisCount": 6,

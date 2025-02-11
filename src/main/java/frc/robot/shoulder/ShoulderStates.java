@@ -3,6 +3,7 @@ package frc.robot.shoulder;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.spectrumLib.Telemetry;
@@ -20,15 +21,22 @@ public class ShoulderStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        stationIntaking.whileTrue(log(coralIntake())); // using intake button to test
         score.whileTrue(home());
+        stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
+        stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
         algaeFloorIntake.whileTrue(log(floorIntake()));
-        L2Algae.whileTrue(log(l2Algae()));
-        L3Algae.whileTrue(log(l3Algae()));
-        L2Coral.whileTrue(log(l2Coral()));
-        L3Coral.whileTrue(log(l3Coral()));
-        L4Coral.whileTrue(log(l4Coral()));
-        barge.whileTrue(log(barge()));
+        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
+        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
+        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
+        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
+        L2Coral.and(backwardMode.not()).whileTrue(log(l2Coral()));
+        L2Coral.and(backwardMode).whileTrue(log(reverse(l2Coral())));
+        L3Coral.and(backwardMode.not()).whileTrue(log(l3Coral()));
+        L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
+        L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
+        L4Coral.and(backwardMode).whileTrue(log(reverse(l4Coral())));
+        barge.and(backwardMode.not()).whileTrue(log(barge()));
+        barge.and(backwardMode).whileTrue(log(reverse(barge())));
         handOffAlgae.whileTrue(log(handOffAlgae()));
         homeAll.whileTrue(home());
     }
@@ -56,31 +64,38 @@ public class ShoulderStates {
     /* Scoring positions */
 
     public static Command l2Algae() {
-        return shoulder.moveToPercentage(config::getL2Algae).withName("Shoulder.l2Algae");
+        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL2Algae))
+                .withName("Shoulder.l2Algae");
     }
 
     public static Command l3Algae() {
-        return shoulder.moveToPercentage(config::getL3Algae).withName("Shoulder.l3Algae");
+        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL3Algae))
+                .withName("Shoulder.l3Algae");
     }
 
     public static Command l1Coral() {
-        return shoulder.moveToPercentage(config::getL1Coral).withName("Twist.L1Coral");
+        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL1Coral))
+                .withName("Twist.L1Coral");
     }
 
     public static Command l2Coral() {
-        return shoulder.moveToPercentage(config::getL2Coral).withName("Shoulder.l2Coral");
+        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL2Coral))
+                .withName("Shoulder.l2Coral");
     }
 
     public static Command l3Coral() {
-        return shoulder.moveToPercentage(config::getL3Coral).withName("Shoulder.l3Coral");
+        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL3Coral))
+                .withName("Shoulder.l3Coral");
     }
 
     public static Command l4Coral() {
-        return shoulder.moveToPercentage(config::getL4Coral).withName("Shoulder.l4Coral");
+        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL4Coral))
+                .withName("Shoulder.l4Coral");
     }
 
     public static Command barge() {
-        return shoulder.moveToPercentage(config::getBarge).withName("Shoulder.barge");
+        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getBarge))
+                .withName("Shoulder.barge");
     }
 
     // missing auton Shoulder commands, add when auton is added
@@ -90,7 +105,8 @@ public class ShoulderStates {
     }
 
     public static Command coralIntake() {
-        return shoulder.moveToPercentage(config::getCoralIntake).withName("Shoulder.coralIntake");
+        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getCoralIntake))
+                .withName("Shoulder.coralIntake");
     }
 
     public static Command coastMode() {
@@ -115,5 +131,11 @@ public class ShoulderStates {
     // Log Command
     protected static Command log(Command cmd) {
         return Telemetry.log(cmd);
+    }
+
+    // Check robot side command
+    protected static Command reverse(Command cmd) {
+        return cmd.deadlineFor(
+                Commands.startEnd(() -> config.setReversed(true), () -> config.setReversed(false)));
     }
 }

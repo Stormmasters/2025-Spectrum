@@ -26,11 +26,13 @@ import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.Mount;
 import frc.spectrumLib.sim.Mount.MountType;
 import frc.spectrumLib.sim.Mountable;
+import java.util.function.DoubleSupplier;
 import lombok.*;
 
 public class Twist extends Mechanism {
 
     public static class TwistConfig extends Config {
+        @Getter @Setter private boolean reversed = false;
 
         // Positions set as percentage of Twist
         @Getter private final int initializedPosition = 20;
@@ -41,6 +43,8 @@ public class Twist extends Mechanism {
         @Getter private final double home = 0;
         @Getter private final double coralIntake = 0;
         @Getter private final double floorIntake = 0;
+        @Getter private final double leftCoral = 50;
+        @Getter private final double rightCoral = -50;
         @Getter private final double l1Coral = 50;
         @Getter private final double l2Algae = 50;
         @Getter private final double l3Algae = 50;
@@ -191,6 +195,17 @@ public class Twist extends Mechanism {
             return getPositionRotations() > config.getMaxRotations();
         }
         return false;
+    }
+
+    public double checkReversed(DoubleSupplier position) {
+        if (!config.isReversed()) {
+            return position.getAsDouble();
+        }
+
+        if (position.getAsDouble() < 0) {
+            return position.getAsDouble() + 100;
+        }
+        return position.getAsDouble() - 100;
     }
 
     // --------------------------------------------------------------------------------
