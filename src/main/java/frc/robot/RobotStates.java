@@ -29,43 +29,60 @@ public class RobotStates {
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
     public static final Trigger stationIntaking =
-            pilot.stationIntake_Y.or(visionIntaking, autonSourceIntake);
-    public static final Trigger ejecting = pilot.eject_fA;
+            pilot.stationIntake_LT.or(visionIntaking, autonSourceIntake);
+    public static final Trigger stationExtendedIntake = pilot.stationExtendedIntake_LT;
+    public static final Trigger groundAlgae = pilot.groundAlgae_RT;
+    public static final Trigger groundCoral = pilot.groundCoral_LB_RT;
 
     // score Triggers
-    public static final Trigger score = pilot.score_RB.or(autonScore);
+    public static final Trigger actionPrepState = pilot.actionReady;
 
     // climb Triggers
-    public static final Trigger climbPrep = pilot.climbPrep_RDP.or(operator.climbPrep_B);
-    public static final Trigger climbFinish = pilot.climbRoutine_start.or(operator.climbFinish_B);
+    public static final Trigger climbPrep = operator.climbPrep_start;
+    public static final Trigger climbFinish = pilot.climbRoutine_start;
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-    public static final Trigger algaeFloorIntake = operator.algaeFloor_X.or(autonGroundIntake);
-    public static final Trigger coralFloorIntake = operator.coralFloor_fX;
-    public static final Trigger handOffAlgae = operator.handOffAlgae_Y;
-    // potentially everything in position, then elevator goes down while spinning coralIntake
-    public static final Trigger handOffCoral = operator.handOffCoral_fY;
-    public static final Trigger barge = operator.barge_A;
-    public static final Trigger processorScore = operator.floorScore_A;
+    public static final Trigger processorLollipopScore = pilot.lollipopProcessor_A;
+    public static final Trigger L2Algae = operator.L2Algae_B.or(autonLowAlgae); // TODO: Likely going to Pilot Intake commands
+    public static final Trigger L3Algae = operator.L3Algae_X.or(autonHighAlgae);
+    public static final Trigger algaeRetract = pilot.algaeRetract_B; //TODO: make this sole algae command once vision done
 
-    public static final Trigger L2Algae = pilot.L2Algae_fB.or(autonLowAlgae);
-    public static final Trigger L3Algae = pilot.L3Algae_A.or(autonHighAlgae);
-    public static final Trigger L1Coral = pilot.L1Coral_Y;
-    public static final Trigger L2Coral = pilot.L2Coral_B;
-    public static final Trigger L3Coral = pilot.L3Coral_X;
-    public static final Trigger L4Coral = pilot.L4Coral_fY.or(autonL4);
-    public static final Trigger homeAll = pilot.home;
+    public static final Trigger barge = operator.barge_Y;
+
+    public static final Trigger L1Coral = operator.L1Coral_A;
+    public static final Trigger L2Coral = operator.L2Coral_B;
+    public static final Trigger L3Coral = operator.L3Coral_X;
+    public static final Trigger L4Coral = operator.L4Coral_Y.or(autonL4);
+
+    public static final Trigger algaeHandoff = operator.algaeHandoff_X;
+    public static final Trigger coralHandoff = operator.coralHandoff_Y;
+
+    public static final Trigger homeAll = operator.homeState;
+
+    // reset triggers
+    public static final Trigger homeElevator = operator.homeElevator_A;
+    public static final Trigger homeInClimb = operator.homeInClimb_B;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
     // If they should be set by multiple Triggers do that in SetupStates()
     public static final SpectrumState coastMode = new SpectrumState("coast");
+    public static final SpectrumState leftScore = new SpectrumState("leftScore");
+    public static final SpectrumState rightScore = new SpectrumState("rightScore");
+    public static final SpectrumState scoreState = new SpectrumState("scoreState");
+
     public static final Trigger coastOn = pilot.coastOn_dB;
 
     // Setup any binding to set states
     public static void setupStates() {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
+
+        operator.leftScore_Dpad.onTrue(leftScore.setTrue(), rightScore.setFalse());
+        operator.rightScore_Dpad.onTrue(rightScore.setTrue(), leftScore.setFalse());
+
+        actionPrepState.onFalse(scoreState.setTrue());
+        actionPrepState.onTrue(scoreState.setFalse());
     }
 
     private RobotStates() {

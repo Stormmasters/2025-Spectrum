@@ -6,23 +6,35 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
 
 public class Operator extends Gamepad {
-    // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
+    // Triggers, these would be robot states such as intake, visionAim, etc.
     // If triggers need any of the config values set them in the constructor
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
 
-    public final Trigger barge_A = A.and(noFn, teleop);
-    public final Trigger floorScore_A = A.and(fn, teleop);
+    public final Trigger leftScore_Dpad = leftDpad.and(noFn, teleop);
+    public final Trigger rightScore_Dpad = rightDpad.and(noFn, teleop);
 
-    public final Trigger climbPrep_B = B.and(noFn, teleop);
-    public final Trigger climbFinish_B = B.and(fn, teleop);
+    public final Trigger climbPrep_start = start.and(noFn, teleop);
 
-    public final Trigger algaeFloor_X = X.and(noFn, teleop);
-    public final Trigger coralFloor_fX = X.and(fn, teleop);
+    public final Trigger operatorCoralStage = leftBumper.and(teleop);
+    public final Trigger operatorAlgaeStage = rightBumper.and(teleop);
+    public final Trigger homeState = operatorCoralStage.not().and(operatorAlgaeStage.not());
 
-    public final Trigger handOffAlgae_Y = Y.and(noFn, teleop);
-    public final Trigger handOffCoral_fY = Y.and(fn, teleop);
+    public final Trigger L1Coral_A = A.and(operatorCoralStage);
+    public final Trigger L2Coral_B = B.and(operatorCoralStage);
+    public final Trigger L3Coral_X = X.and(operatorCoralStage);
+    public final Trigger L4Coral_Y = Y.and(operatorCoralStage);
+
+    public final Trigger L2Algae_B = B.and(operatorAlgaeStage);
+    public final Trigger L3Algae_X = X.and(operatorAlgaeStage);
+    public final Trigger barge_Y = Y.and(operatorAlgaeStage);
+
+    public final Trigger homeElevator_A = A.and(noFn, teleop);
+    public final Trigger homeInClimb_B = B.and(noFn, teleop);
+
+    public final Trigger algaeHandoff_X = X.and(noFn, teleop);
+    public final Trigger coralHandoff_Y = Y.and(noFn, teleop);
 
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);

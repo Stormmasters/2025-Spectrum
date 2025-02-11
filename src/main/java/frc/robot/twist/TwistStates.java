@@ -19,17 +19,33 @@ public class TwistStates {
 
     public static void setStates() {
         stationIntaking.whileTrue(log(coralIntake()));
-        // algaeFloor.whileTrue(tuneTwist());
-        algaeFloorIntake.whileTrue(log(floorIntake()));
+        stationExtendedIntake.whileTrue(log(coralIntake()));
+
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
-        L2Coral.whileTrue(log(l2Coral()));
-        L3Coral.whileTrue(log(l3Coral()));
-        L4Coral.whileTrue(log(l4Coral()));
+
+        L1Coral.whileTrue(log(l1Coral()));
+
+        L2Coral.and(leftScore).whileTrue(log(l2Coral()));
+        L3Coral.and(leftScore).whileTrue(log(l3Coral()));
+        L4Coral.and(leftScore).whileTrue(log(l4Coral()));
+
+        L2Coral.and(rightScore).whileTrue(log(l2CoralR()));
+        L3Coral.and(rightScore).whileTrue(log(l3CoralR()));
+        L4Coral.and(rightScore).whileTrue(log(l4CoralR()));
+
         barge.whileTrue(log(barge()));
         homeAll.whileTrue(log(home()));
+
+        algaeHandoff.whileTrue(log(handOffAlgae()));
+        coralHandoff.whileTrue(log(handOffCoral()));
+
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+    }
+
+    public static DoubleSupplier switchSigns(DoubleSupplier supplier) {
+        return () -> -supplier.getAsDouble();
     }
 
     public static Command runTwist(DoubleSupplier speed) {
@@ -70,6 +86,18 @@ public class TwistStates {
         return twist.moveToPercentage(config::getL4Coral).withName("Twist.l4Coral");
     }
 
+    public static Command l2CoralR() {
+        return twist.moveToPercentage(switchSigns(config::getL2Coral)).withName("Twist.l2Coral");
+    }
+
+    public static Command l3CoralR() {
+        return twist.moveToPercentage(switchSigns(config::getL3Coral)).withName("Twist.l3Coral");
+    }
+
+    public static Command l4CoralR() {
+        return twist.moveToPercentage(switchSigns(config::getL4Coral)).withName("Twist.l4Coral");
+    }
+
     public static Command floorIntake() {
         return twist.moveToPercentage(config::getFloorIntake).withName("Twist.floorIntake");
     }
@@ -92,6 +120,14 @@ public class TwistStates {
 
     public static Command barge() {
         return twist.moveToPercentage(config::getBarge).withName("Twist.barge");
+    }
+
+    public static Command handOffAlgae() {
+        return twist.moveToPercentage(config::getHandAlgae).withName("Twist.handOffAlgae");
+    }
+
+    public static Command handOffCoral() {
+        return twist.moveToPercentage(config::getHandCoral).withName("Twist.handOffCoral");
     }
 
     // Tune value command

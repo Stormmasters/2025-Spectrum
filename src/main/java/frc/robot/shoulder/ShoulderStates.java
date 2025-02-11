@@ -20,16 +20,21 @@ public class ShoulderStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        stationIntaking.whileTrue(log(coralIntake())); // using intake button to test
-        score.whileTrue(home());
-        algaeFloorIntake.whileTrue(log(floorIntake()));
+        stationIntaking.whileTrue(log(coralIntake()));
+        stationExtendedIntake.whileTrue(log(coralExtendedIntake()));
+
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
+        barge.whileTrue(log(barge()));
+
+        L1Coral.whileTrue(log(l1Coral()));
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
-        barge.whileTrue(log(barge()));
-        handOffAlgae.whileTrue(log(handOffAlgae()));
+
+        algaeHandoff.whileTrue(log(handOffAlgae()));
+        coralHandoff.whileTrue(log(handOffAlgae()));
+
         homeAll.whileTrue(home());
     }
 
@@ -91,6 +96,11 @@ public class ShoulderStates {
 
     public static Command coralIntake() {
         return shoulder.moveToPercentage(config::getCoralIntake).withName("Shoulder.coralIntake");
+    }
+
+    public static Command coralExtendedIntake() {
+        return shoulder.moveToPercentage(config::getCoralExtendedIntake)
+                .withName("Shoulder.coralExtendedIntake");
     }
 
     public static Command coastMode() {

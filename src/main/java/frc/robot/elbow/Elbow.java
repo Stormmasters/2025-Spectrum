@@ -34,14 +34,17 @@ public class Elbow extends Mechanism {
         @Getter private final double coralIntake = 35.5;
         @Getter private final double floorIntake = 0;
         @Getter private final double corralFloorIntake = 87.8;
-        @Getter private final double l1Coral = 87.8;
         @Getter private final double l2Algae = 20;
         @Getter private final double l3Algae = 20;
+
+        @Getter private final double l1Coral = 87.8;
         @Getter private final double l2Coral = 20;
         @Getter private final double l3Coral = 20;
         @Getter private final double l4Coral = 31.1;
+
         @Getter private final double barge = 31.1;
         @Getter @Setter private double tuneElbow = 0;
+        @Getter @Setter private boolean leftScore = true;
 
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -196,7 +199,7 @@ public class Elbow extends Mechanism {
 
     public Command moveToPercentage(DoubleSupplier percent) {
         return runHoldElbow()
-                .until(() -> (ElevatorStates.allowedPosition()))
+                .until(() -> ((ElevatorStates.allowedPosition()) || percent.getAsDouble() < 50))
                 .andThen(
                         run(() -> setMMPosition(() -> percentToRotations(percent)))
                                 .withName(getName() + ".runPosePercentage"));

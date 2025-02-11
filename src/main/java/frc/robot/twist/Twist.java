@@ -36,8 +36,7 @@ public class Twist extends Mechanism {
         @Getter private final int initializedPosition = 20;
 
         /* twist positions in percentage of max rotation || 0 is horizontal */
-        // @Getter private final double score = 100 - 65;
-        // @Getter private final double home = 100 - 1;
+
         @Getter private final double home = 0;
         @Getter private final double coralIntake = 0;
         @Getter private final double floorIntake = 0;
@@ -46,8 +45,10 @@ public class Twist extends Mechanism {
         @Getter private final double l3Algae = 50;
         @Getter private final double l2Coral = 50;
         @Getter private final double l3Coral = 50;
-        @Getter private final double l4Coral = 100;
+        @Getter private final double l4Coral = 50;
         @Getter private final double barge = 100;
+        @Getter private final double handAlgae = 50;
+        @Getter private final double handCoral = 0;
         @Getter @Setter private double tuneTwist = 0;
 
         /* Twist config settings */

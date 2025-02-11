@@ -16,19 +16,17 @@ public class Pilot extends Gamepad {
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
 
-    // TODO: Finalize Buttons
-    public final Trigger stationIntake_Y = Y.and(noFn, teleop);
-    public final Trigger eject_fA = A.and(fn, teleop);
-    public final Trigger score_RB = rightBumper.and(noFn, teleop);
-    public final Trigger climbPrep_RDP = rightDpad.and(noFn, teleop);
+    public final Trigger stationIntake_LT = A.and(noFn, teleop);
+    public final Trigger stationExtendedIntake_LT = A.and(fn, teleop);
+    public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop);
+    public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop);
+
+    public final Trigger lollipopProcessor_A = A.and(noFn, teleop);
+    public final Trigger algaeRetract_B = B.and(noFn, teleop);
+
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
-    public final Trigger home = X.and(fn, teleop); // not enough buttons
-    public final Trigger L2Algae_fB = B.and(fn, teleop);
-    public final Trigger L3Algae_A = A.and(noFn, teleop);
-    public final Trigger L1Coral_Y = Y.and(noFn, teleop);
-    public final Trigger L2Coral_B = B.and(noFn, teleop);
-    public final Trigger L3Coral_X = X.and(noFn, teleop);
-    public final Trigger L4Coral_fY = Y.and(fn, teleop);
+
+    public final Trigger actionReady = rightBumper.and(teleop);
 
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);

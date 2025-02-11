@@ -21,19 +21,48 @@ public class ElbowStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         stationIntaking.whileTrue(log(coralIntake()));
-        algaeFloorIntake.whileTrue(log(floorIntake()));
+        stationExtendedIntake.whileTrue(log(coralIntake()));
+
+        scoreState.and(L2Coral).onTrue(log(score2()));
+        scoreState.and(L3Coral).onTrue(log(score3()));
+        scoreState.and(L4Coral).onTrue(log(score4()));
+
         L2Algae.whileTrue(log(l2Algae()));
         L3Algae.whileTrue(log(l3Algae()));
+
+        L1Coral.whileTrue(log(l1Coral()));
         L2Coral.whileTrue(log(l2Coral()));
         L3Coral.whileTrue(log(l3Coral()));
         L4Coral.whileTrue(log(l4Coral()));
+
         barge.whileTrue(log(barge()));
-        handOffAlgae.whileTrue(log(handOffAlgae()));
         homeAll.whileTrue(log(home()));
+
+        algaeHandoff.whileTrue(log(handOffAlgae()));
+        coralHandoff.whileTrue(log(handOffAlgae()));
     }
 
     public static DoubleSupplier getPosition() {
         return () -> elbow.getPositionPercentage();
+    }
+
+    public static DoubleSupplier switchSigns(DoubleSupplier supplier) {
+        return () -> -supplier.getAsDouble();
+    }
+
+    public static Command score2() {
+        double newPos = 15 + config.getL2Coral();
+        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score2");
+    }
+
+    public static Command score3() {
+        double newPos = 15 + config.getL3Coral();
+        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score3");
+    }
+
+    public static Command score4() {
+        double newPos = 20 + config.getL4Coral();
+        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score4");
     }
 
     public static Command runElbow(DoubleSupplier speed) {
@@ -57,6 +86,10 @@ public class ElbowStates {
         return elbow.moveToPercentage(config::getL3Algae).withName("Elbow.l3Algae");
     }
 
+    public static Command barge() {
+        return elbow.moveToPercentage(config::getBarge).withName("Elbow.barge");
+    }
+
     public static Command l1Coral() {
         return elbow.moveToPercentage(config::getL1Coral).withName("Twist.L1Coral");
     }
@@ -73,9 +106,6 @@ public class ElbowStates {
         return elbow.moveToPercentage(config::getL4Coral).withName("Elbow.l4Coral");
     }
 
-    public static Command barge() {
-        return elbow.moveToPercentage(config::getBarge).withName("Elbow.barge");
-    }
     // missing auton Elbow commands, add when auton is added
 
     public static Command floorIntake() {
