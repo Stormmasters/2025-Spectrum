@@ -102,6 +102,8 @@ public class RobotStates {
     public static final Trigger reefPosition =
             L2Algae.or(L3Algae, L1Coral, L2Coral, L3Coral, L4Coral);
 
+    public static final Trigger coralReefPosition = L1Coral.or(L2Coral, L3Coral, L4Coral);
+
     public static final SpectrumState backwardMode = new SpectrumState("backward");
 
     // Setup any binding to set states

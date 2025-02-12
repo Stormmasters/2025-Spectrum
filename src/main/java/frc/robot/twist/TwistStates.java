@@ -20,25 +20,20 @@ public class TwistStates {
     public static void setStates() {
         stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
         stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-        stationExtendedIntake.whileTrue(log(coralIntake()));
+        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
+        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
 
-        // L2Algae.whileTrue(log(l2Algae()));
-        // L3Algae.whileTrue(log(l3Algae()));
+        L2Algae.whileTrue(log(l2Algae()));
+        L3Algae.whileTrue(log(l3Algae()));
 
-        L1Coral.whileTrue(log(l1Coral()));
-
-        // L2Coral.and(leftScore).whileTrue(log(l2Coral()));
-        // L3Coral.and(leftScore).whileTrue(log(l3Coral()));
-        // L4Coral.and(leftScore).whileTrue(log(l4Coral()));
-
-        L2Coral.and(rightScore).whileTrue(log(l2CoralR()));
-        L3Coral.and(rightScore).whileTrue(log(l3CoralR()));
-        L4Coral.and(rightScore).whileTrue(log(l4CoralR()));
-
-        reefPosition.and(backwardMode.not()).whileTrue(log(leftCoral()));
-        reefPosition.and(backwardMode).whileTrue(log(reverse(leftCoral())));
+        coralReefPosition.and(backwardMode.not()).and(leftScore).whileTrue(log(leftCoral()));
+        coralReefPosition.and(backwardMode).and(leftScore).whileTrue(log(reverse(leftCoral())));
+        coralReefPosition.and(backwardMode.not()).and(rightScore).whileTrue(log(rightCoral()));
+        coralReefPosition.and(backwardMode).and(rightScore).whileTrue(log(reverse(rightCoral())));
+        
         barge.and(backwardMode.not()).whileTrue(log(barge()));
         barge.and(backwardMode).whileTrue(log(reverse(barge())));
+
         homeAll.whileTrue(log(home()));
 
         algaeHandoff.whileTrue(log(handOffAlgae()));
@@ -72,34 +67,6 @@ public class TwistStates {
 
     public static Command l3Algae() {
         return twist.moveToPercentage(config::getL3Algae).withName("Twist.l3Algae");
-    }
-
-    public static Command l1Coral() {
-        return twist.moveToPercentage(config::getL1Coral).withName("Twist.l1Coral");
-    }
-
-    public static Command l2Coral() {
-        return twist.moveToPercentage(config::getL2Coral).withName("Twist.l2Coral");
-    }
-
-    public static Command l3Coral() {
-        return twist.moveToPercentage(config::getL3Coral).withName("Twist.l3Coral");
-    }
-
-    public static Command l4Coral() {
-        return twist.moveToPercentage(config::getL4Coral).withName("Twist.l4Coral");
-    }
-
-    public static Command l2CoralR() {
-        return twist.moveToPercentage(switchSigns(config::getL2Coral)).withName("Twist.l2Coral");
-    }
-
-    public static Command l3CoralR() {
-        return twist.moveToPercentage(switchSigns(config::getL3Coral)).withName("Twist.l3Coral");
-    }
-
-    public static Command l4CoralR() {
-        return twist.moveToPercentage(switchSigns(config::getL4Coral)).withName("Twist.l4Coral");
     }
 
     public static Command leftCoral() {

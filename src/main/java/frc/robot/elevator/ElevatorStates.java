@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.Elevator.ElevatorConfig;
-import frc.robot.operator.Operator;
-import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.TuneValue;
@@ -18,8 +16,6 @@ import java.util.function.DoubleSupplier;
 public class ElevatorStates {
     private static Elevator elevator = Robot.getElevator();
     private static ElevatorConfig config = Robot.getConfig().elevator;
-    private static Pilot pilot = Robot.getPilot();
-    private static Operator operator = Robot.getOperator();
 
     /* Check Elevator States */
     public static final Trigger isUp =
