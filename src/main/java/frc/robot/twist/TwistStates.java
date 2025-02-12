@@ -18,23 +18,27 @@ public class TwistStates {
     }
 
     public static void setStates() {
-        stationIntaking.whileTrue(log(coralIntake()));
+        stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
+        stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
         stationExtendedIntake.whileTrue(log(coralIntake()));
 
-        L2Algae.whileTrue(log(l2Algae()));
-        L3Algae.whileTrue(log(l3Algae()));
+        // L2Algae.whileTrue(log(l2Algae()));
+        // L3Algae.whileTrue(log(l3Algae()));
 
         L1Coral.whileTrue(log(l1Coral()));
 
-        L2Coral.and(leftScore).whileTrue(log(l2Coral()));
-        L3Coral.and(leftScore).whileTrue(log(l3Coral()));
-        L4Coral.and(leftScore).whileTrue(log(l4Coral()));
+        // L2Coral.and(leftScore).whileTrue(log(l2Coral()));
+        // L3Coral.and(leftScore).whileTrue(log(l3Coral()));
+        // L4Coral.and(leftScore).whileTrue(log(l4Coral()));
 
         L2Coral.and(rightScore).whileTrue(log(l2CoralR()));
         L3Coral.and(rightScore).whileTrue(log(l3CoralR()));
         L4Coral.and(rightScore).whileTrue(log(l4CoralR()));
 
-        barge.whileTrue(log(barge()));
+        reefPosition.and(backwardMode.not()).whileTrue(log(leftCoral()));
+        reefPosition.and(backwardMode).whileTrue(log(reverse(leftCoral())));
+        barge.and(backwardMode.not()).whileTrue(log(barge()));
+        barge.and(backwardMode).whileTrue(log(reverse(barge())));
         homeAll.whileTrue(log(home()));
 
         algaeHandoff.whileTrue(log(handOffAlgae()));
@@ -98,12 +102,23 @@ public class TwistStates {
         return twist.moveToPercentage(switchSigns(config::getL4Coral)).withName("Twist.l4Coral");
     }
 
+    public static Command leftCoral() {
+        return twist.moveToPercentage(() -> twist.checkReversed(config::getLeftCoral))
+                .withName("Twist.leftCoral");
+    }
+
+    public static Command rightCoral() {
+        return twist.moveToPercentage(() -> twist.checkReversed(config::getRightCoral))
+                .withName("Twist.rightCoral");
+    }
+
     public static Command floorIntake() {
         return twist.moveToPercentage(config::getFloorIntake).withName("Twist.floorIntake");
     }
 
     public static Command coralIntake() {
-        return twist.moveToPercentage(config::getCoralIntake).withName("Twist.coralIntake");
+        return twist.moveToPercentage(() -> twist.checkReversed(config::getCoralIntake))
+                .withName("Twist.coralIntake");
     }
 
     public static Command coastMode() {
@@ -119,7 +134,8 @@ public class TwistStates {
     }
 
     public static Command barge() {
-        return twist.moveToPercentage(config::getBarge).withName("Twist.barge");
+        return twist.moveToPercentage(() -> twist.checkReversed(config::getBarge))
+                .withName("Twist.barge");
     }
 
     public static Command handOffAlgae() {
@@ -138,5 +154,11 @@ public class TwistStates {
     // Log Command
     protected static Command log(Command cmd) {
         return Telemetry.log(cmd);
+    }
+
+    // Negate position command
+    protected static Command reverse(Command cmd) {
+        return cmd.deadlineFor(
+                Commands.startEnd(() -> config.setReversed(true), () -> config.setReversed(false)));
     }
 }

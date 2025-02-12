@@ -11,7 +11,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
@@ -107,65 +106,65 @@ public class Field {
                             Rotation2d.fromDegrees(-120));
 
             // Initialize branch positions
-            for (int face = 0; face < 6; face++) {
-                Map<ReefHeight, Pose3d> fillRight = new HashMap<>();
-                Map<ReefHeight, Pose3d> fillLeft = new HashMap<>();
-                for (var level : ReefHeight.values()) {
-                    Pose2d poseDirection =
-                            new Pose2d(center, Rotation2d.fromDegrees(180 - (60 * face)));
-                    double adjustX = Units.inchesToMeters(30.738);
-                    double adjustY = Units.inchesToMeters(6.469);
+            //     for (int face = 0; face < 6; face++) {
+            //         Map<ReefHeight, Pose3d> fillRight = new HashMap<>();
+            //         Map<ReefHeight, Pose3d> fillLeft = new HashMap<>();
+            //         for (var level : ReefHeight.values()) {
+            //             Pose2d poseDirection =
+            //                     new Pose2d(center, Rotation2d.fromDegrees(180 - (60 * face)));
+            //             double adjustX = Units.inchesToMeters(30.738);
+            //             double adjustY = Units.inchesToMeters(6.469);
 
-                    fillRight.put(
-                            level,
-                            new Pose3d(
-                                    new Translation3d(
-                                            poseDirection
-                                                    .transformBy(
-                                                            new Transform2d(
-                                                                    adjustX,
-                                                                    adjustY,
-                                                                    new Rotation2d()))
-                                                    .getX(),
-                                            poseDirection
-                                                    .transformBy(
-                                                            new Transform2d(
-                                                                    adjustX,
-                                                                    adjustY,
-                                                                    new Rotation2d()))
-                                                    .getY(),
-                                            level.height),
-                                    new Rotation3d(
-                                            0,
-                                            Units.degreesToRadians(level.pitch),
-                                            poseDirection.getRotation().getRadians())));
-                    fillLeft.put(
-                            level,
-                            new Pose3d(
-                                    new Translation3d(
-                                            poseDirection
-                                                    .transformBy(
-                                                            new Transform2d(
-                                                                    adjustX,
-                                                                    -adjustY,
-                                                                    new Rotation2d()))
-                                                    .getX(),
-                                            poseDirection
-                                                    .transformBy(
-                                                            new Transform2d(
-                                                                    adjustX,
-                                                                    -adjustY,
-                                                                    new Rotation2d()))
-                                                    .getY(),
-                                            level.height),
-                                    new Rotation3d(
-                                            0,
-                                            Units.degreesToRadians(level.pitch),
-                                            poseDirection.getRotation().getRadians())));
-                }
-                branchPositions.add((face * 2) + 1, fillRight);
-                branchPositions.add((face * 2) + 2, fillLeft);
-            }
+            //             fillRight.put(
+            //                     level,
+            //                     new Pose3d(
+            //                             new Translation3d(
+            //                                     poseDirection
+            //                                             .transformBy(
+            //                                                     new Transform2d(
+            //                                                             adjustX,
+            //                                                             adjustY,
+            //                                                             new Rotation2d()))
+            //                                             .getX(),
+            //                                     poseDirection
+            //                                             .transformBy(
+            //                                                     new Transform2d(
+            //                                                             adjustX,
+            //                                                             adjustY,
+            //                                                             new Rotation2d()))
+            //                                             .getY(),
+            //                                     level.height),
+            //                             new Rotation3d(
+            //                                     0,
+            //                                     Units.degreesToRadians(level.pitch),
+            //                                     poseDirection.getRotation().getRadians())));
+            //             fillLeft.put(
+            //                     level,
+            //                     new Pose3d(
+            //                             new Translation3d(
+            //                                     poseDirection
+            //                                             .transformBy(
+            //                                                     new Transform2d(
+            //                                                             adjustX,
+            //                                                             -adjustY,
+            //                                                             new Rotation2d()))
+            //                                             .getX(),
+            //                                     poseDirection
+            //                                             .transformBy(
+            //                                                     new Transform2d(
+            //                                                             adjustX,
+            //                                                             -adjustY,
+            //                                                             new Rotation2d()))
+            //                                             .getY(),
+            //                                     level.height),
+            //                             new Rotation3d(
+            //                                     0,
+            //                                     Units.degreesToRadians(level.pitch),
+            //                                     poseDirection.getRotation().getRadians())));
+            //         }
+            //         branchPositions.add((face * 2) + 1, fillRight);
+            //         branchPositions.add((face * 2) + 2, fillLeft);
+            //     }
         }
     }
 
