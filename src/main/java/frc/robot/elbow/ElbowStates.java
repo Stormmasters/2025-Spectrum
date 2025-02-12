@@ -21,6 +21,7 @@ public class ElbowStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+
         stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
         stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
         stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));

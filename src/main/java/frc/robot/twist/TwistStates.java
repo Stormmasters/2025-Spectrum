@@ -23,14 +23,16 @@ public class TwistStates {
         stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
         stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
 
-        L2Algae.whileTrue(log(l2Algae()));
-        L3Algae.whileTrue(log(l3Algae()));
+        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
+        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
+        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
+        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
 
         coralReefPosition.and(backwardMode.not()).and(leftScore).whileTrue(log(leftCoral()));
         coralReefPosition.and(backwardMode).and(leftScore).whileTrue(log(reverse(leftCoral())));
         coralReefPosition.and(backwardMode.not()).and(rightScore).whileTrue(log(rightCoral()));
         coralReefPosition.and(backwardMode).and(rightScore).whileTrue(log(reverse(rightCoral())));
-        
+
         barge.and(backwardMode.not()).whileTrue(log(barge()));
         barge.and(backwardMode).whileTrue(log(reverse(barge())));
 
