@@ -12,20 +12,20 @@
         "y": 6.942019484903808
       },
       "isLocked": false,
-      "linkedName": "Clean Side Source"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.826,
-        "y": 4.0
+        "x": 2.85,
+        "y": 4.02
       },
       "prevControl": {
-        "x": 2.7498138019046823,
-        "y": 4.238108511439178
+        "x": 2.7738138019046823,
+        "y": 4.258108511439177
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Reef AB"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],

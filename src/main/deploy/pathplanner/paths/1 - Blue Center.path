@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.15,
-        "y": 5.44
+        "x": 7.14,
+        "y": 4.19
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.940379213483145,
-        "y": 5.306741573033707
+        "x": 6.890001332848371,
+        "y": 4.189183653009338
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.2,
-        "y": 5.225
+        "x": 5.85,
+        "y": 4.19
       },
       "prevControl": {
-        "x": 6.0929652462925254,
-        "y": 5.376442178314724
+        "x": 6.318013151172625,
+        "y": 4.192265528085966
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,31 +31,24 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "leftL4",
-      "waypointRelativePos": 0.006656225528582794,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 6.0,
-    "maxAcceleration": 6.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 59.99999999999999
+    "velocity": 0,
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Blue Left Preload-Source ",
+  "folder": "Photon",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": 90.0
+    "velocity": 0,
+    "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

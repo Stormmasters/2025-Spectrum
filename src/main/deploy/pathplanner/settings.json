@@ -5,12 +5,16 @@
   "pathFolders": [
     "Blue Left Preload-Source ",
     "Blue Left Source",
-    "Config Paths"
+    "Config Paths",
+    "Blue Center Algae Rush",
+    "Photon"
   ],
   "autoFolders": [
     "Blue Left Origin",
-    "Blue Right",
-    "Config Autos"
+    "Blue Right Origin",
+    "Config Autos",
+    "Blue Center Origin",
+    "Photon"
   ],
   "defaultMaxVel": 6.0,
   "defaultMaxAccel": 6.0,
