@@ -34,7 +34,7 @@ public class Elevator extends Mechanism {
         @Getter private final double stationIntake = 7.2545;
         @Getter private final double stationExtendedIntake = 32.645;
         @Getter private final double handOff = 29.0178;
-        
+
         @Getter private final double l2Algae = 29.0178;
         @Getter private final double l3Algae = 87.0535;
 

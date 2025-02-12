@@ -89,11 +89,13 @@ public class ShoulderStates {
     }
 
     public static Command floorIntake() {
-        return shoulder.moveToPercentage(config::getClawGroundAlgaeIntake).withName("Shoulder.floorIntake");
+        return shoulder.moveToPercentage(config::getClawGroundAlgaeIntake)
+                .withName("Shoulder.floorIntake");
     }
 
     public static Command stationIntake() {
-        return shoulder.moveToPercentage(config::getStationIntake).withName("Shoulder.stationIntake");
+        return shoulder.moveToPercentage(config::getStationIntake)
+                .withName("Shoulder.stationIntake");
     }
 
     public static Command stationExtendedIntake() {

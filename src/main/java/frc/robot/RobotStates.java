@@ -43,9 +43,11 @@ public class RobotStates {
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
     public static final Trigger processorLollipopScore = pilot.lollipopProcessor_A;
-    public static final Trigger L2Algae = operator.L2Algae_B.or(autonLowAlgae); // TODO: Likely going to Pilot Intake commands
+    public static final Trigger L2Algae =
+            operator.L2Algae_B.or(autonLowAlgae); // TODO: Likely going to Pilot Intake commands
     public static final Trigger L3Algae = operator.L3Algae_X.or(autonHighAlgae);
-    public static final Trigger algaeRetract = pilot.algaeRetract_B; //TODO: make this sole algae command once vision done
+    public static final Trigger algaeRetract =
+            pilot.algaeRetract_B; // TODO: make this sole algae command once vision done
 
     public static final Trigger barge = operator.barge_Y;
 

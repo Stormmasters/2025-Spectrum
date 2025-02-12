@@ -115,10 +115,9 @@ public class ElevatorStates {
     }
 
     private static Command handOff() {
-        return elevator.moveToRotations(config::getHandOff)
-                .withName("Elevator.handOff");
+        return elevator.moveToRotations(config::getHandOff).withName("Elevator.handOff");
     }
-    
+
     private static Command l2Algae() {
         return elevator.moveToRotations(config::getL2Algae).withName("Elevator.l2Algae");
     }

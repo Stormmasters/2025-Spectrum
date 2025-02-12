@@ -33,7 +33,11 @@ public class SpectrumCANcoder {
         this.CANcoderID = CANcoderID;
 
         if (isAttached()) {
-            modifyMotorConfig(motor, config); // Modify configuration to use remote CANcoder fused
+            modifyMotorConfig(
+                    motor,
+                    config); // Modify configuration to use remote CANcoder fused //TODO: Move below
+            // cancoder config and check config worked before adjusting motor
+            // @cycIes
             canCoder = new CANcoder(CANcoderID, Rio.CANIVORE);
             CANcoderConfiguration cancoderConfigs = new CANcoderConfiguration();
             cancoderConfigs.MagnetSensor.MagnetOffset = offset;
@@ -86,7 +90,7 @@ public class SpectrumCANcoder {
     public void checkCANcoderResponse(StatusCode response) {
         if (!response.isOK()) {
             Telemetry.print(
-                    "Pivot CANcoder ID "
+                    "Pivot CANcoder ID " // TODO: remove pivot @cycIes
                             + CANcoderID
                             + " failed config with error "
                             + response.toString());
