@@ -49,6 +49,7 @@ public class InClimbStates {
     }
 
     public static Command climbPrep() {
+        inClimb.setDefaultCommand(inClimb.runHoldInClimb());
         return inClimb.moveToPercentage(config::getPrepClimber).withName("InClimb.prepClimber");
     }
 

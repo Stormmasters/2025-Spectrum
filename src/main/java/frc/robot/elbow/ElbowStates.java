@@ -60,10 +60,6 @@ public class ElbowStates {
         return () -> elbow.getPositionPercentage();
     }
 
-    public static DoubleSupplier switchSigns(DoubleSupplier supplier) {
-        return () -> -supplier.getAsDouble();
-    }
-
     public static Command score2() {
         double newPos = 15 + config.getL2Coral();
         return elbow.moveToPercentage(() -> newPos).withName("Elbow.score2");
@@ -103,7 +99,7 @@ public class ElbowStates {
     }
 
     public static Command barge() {
-        return elbow.moveToPercentage(config::getBarge).withName("Elbow.barge");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getBarge)).withName("Elbow.barge");
     }
 
     public static Command l1Coral() {

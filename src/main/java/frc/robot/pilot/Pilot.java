@@ -16,8 +16,8 @@ public class Pilot extends Gamepad {
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
 
-    public final Trigger stationIntake_LT = A.and(noFn, teleop);
-    public final Trigger stationExtendedIntake_LT = A.and(fn, teleop);
+    public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
+    public final Trigger stationExtendedIntake_LB_LT= leftTrigger.and(fn, teleop);
     public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop);
     public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop);
 

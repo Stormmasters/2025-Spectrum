@@ -56,7 +56,7 @@ public class RobotStates {
             pilot.stationIntake_LT
                     .or(visionIntaking, autonSourceIntake)
                     .and(bottomLeftZone.or(bottomRightZone));
-    public static final Trigger stationExtendedIntake = pilot.stationExtendedIntake_LT;
+    public static final Trigger stationExtendedIntake = pilot.stationExtendedIntake_LB_LT;
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
     public static final Trigger groundCoral = pilot.groundCoral_LB_RT;
 
