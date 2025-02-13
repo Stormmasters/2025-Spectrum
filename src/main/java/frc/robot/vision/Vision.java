@@ -36,7 +36,6 @@ public class Vision extends SubsystemBase {
         // Increase these numbers to trust global measurements from vision less. (uses a matrix)
 
         /* Vision Command Configs */
-       
     }
 
     /* Limelights */

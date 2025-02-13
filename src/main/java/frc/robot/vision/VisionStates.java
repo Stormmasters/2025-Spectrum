@@ -2,12 +2,14 @@ package frc.robot.vision;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.vision.Vision.VisionConfig.AlignToNote;
-import frc.robot.vision.Vision.VisionConfig.DriveToNote;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
 
 
 public class VisionStates {
-    //TODO: needs aligntovision and drivetovisiontarget
+    //TODO: needs aligntovision and drivetovisiontarget methods
+    
     private static Vision vision = Robot.vision;
 
     public static Command blinkLimelights() {
