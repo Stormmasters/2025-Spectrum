@@ -33,7 +33,7 @@ public class ElevatorStates {
         // Test Mode Buttons
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        scoreState.whileTrue(score());
+        scoreState.onTrue(score());
 
         algaeHandoff.whileTrue(handOff());
         coralHandoff.whileTrue(handOff());

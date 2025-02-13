@@ -22,8 +22,8 @@ public class CoralIntakeStates {
         stationIntaking.whileTrue(log(coralIntake()));
         stationExtendedIntake.whileTrue(log(coralIntake()));
 
-        scoreState.and(barge.not()).whileTrue(log(coralScore()));
-        scoreState.and(barge).whileTrue(log(barge()));
+        scoreState.and(barge.not()).onTrue(log(coralScore()));
+        scoreState.and(barge).onTrue(log(barge()));
 
         processorLollipopScore.whileTrue(log(coralIntake()));
 
