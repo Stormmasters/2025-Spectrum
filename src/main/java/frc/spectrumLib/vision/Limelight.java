@@ -80,6 +80,12 @@ public class Limelight {
         setLimelightPipeline(pipeline);
     }
 
+    public Limelight(String name, int pipeline, LimelightConfig config) {
+        this(name);
+        this.config = config;
+        setLimelightPipeline(pipeline);
+    }
+
     public String getName() {
         return config.getName();
     }

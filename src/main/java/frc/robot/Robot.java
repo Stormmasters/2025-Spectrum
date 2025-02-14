@@ -36,6 +36,8 @@ import frc.robot.swerve.SwerveConfig;
 import frc.robot.twist.Twist;
 import frc.robot.twist.Twist.TwistConfig;
 import frc.robot.vision.VisionSystem;
+import frc.robot.vision.VisionStates;
+import frc.robot.vision.Vision;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumRobot;
 import frc.spectrumLib.Telemetry;
@@ -81,6 +83,7 @@ public class Robot extends SpectrumRobot {
     @Getter private static Operator operator;
     @Getter private static Pilot pilot;
     @Getter private static VisionSystem visionSystem;
+    @Getter private static Vision vision;
     @Getter private static Auton auton;
     @Getter private static InClimb inClimb;
     @Getter private static Elbow elbow;
@@ -136,6 +139,7 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
+            vision = new Vision("Vision");
 
             // Setup Default Commands for all subsystems
             setupDefaultCommands();

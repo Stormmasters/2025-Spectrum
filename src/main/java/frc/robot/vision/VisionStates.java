@@ -10,7 +10,15 @@ import org.photonvision.simulation.VisionSystemSim;
 public class VisionStates {
     //TODO: needs aligntovision and drivetovisiontarget methods
     
-    private static Vision vision = Robot.vision;
+    private static Vision vision = Robot.getVision();
+
+    public static void setupDefaultCommand() {
+        vision.setDefaultCommand(blinkLimelights());
+    }
+
+    public static void setStates() {
+        
+    }
 
     public static Command blinkLimelights() {
         return vision.blinkLimelights().withName("VisionStates.blinkLimelights");
