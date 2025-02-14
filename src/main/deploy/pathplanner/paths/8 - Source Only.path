@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.432254865153699,
-        "y": 4.929682475459316
+        "x": 2.5963483146067414,
+        "y": 4.912359550561797
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.68,
-        "y": 7.37
+        "x": 1.24,
+        "y": 7.05
       },
       "prevControl": {
-        "x": 2.3101753119006565,
-        "y": 6.040044037826723
+        "x": 2.628553370786517,
+        "y": 6.195505617977528
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Coral Station"
     }
   ],
   "rotationTargets": [],

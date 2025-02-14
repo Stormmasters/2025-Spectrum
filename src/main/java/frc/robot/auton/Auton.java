@@ -50,10 +50,15 @@ public class Auton {
         pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption(
-                "Left - Source", SpectrumAuton("Clean Side - Source", false));
-        pathChooser.addOption(
-                "Right - Source", SpectrumAuton("Clean Side - Source", true));
+        pathChooser.addOption("Left - Source", SpectrumAuton("Blue Left - Source", false));
+        pathChooser.addOption("Right - Source", SpectrumAuton("Blue Left - Source", true));
+
+        pathChooser.addOption("Left - Preplace", SpectrumAuton("Blue Left - Preplace", false));
+        pathChooser.addOption("Right - Preplace", SpectrumAuton("Blue Left - Preplace", true));
+
+        pathChooser.addOption("Center - Algae", SpectrumAuton("Blue Center Algae Rush", false));
+
+        pathChooser.addOption("Center - Photon", SpectrumAuton("Photon Blue Center", false));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
