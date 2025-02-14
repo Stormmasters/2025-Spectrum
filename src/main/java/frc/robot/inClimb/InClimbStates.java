@@ -31,7 +31,7 @@ public class InClimbStates {
         homeAll.onTrue(log(home()));
         processorLollipopScore.whileTrue(log(processorLollipopScore()));
         processorLollipopScore.onFalse(log(home()));
-        
+
         homeInClimb.whileTrue(log(zero()));
     }
 

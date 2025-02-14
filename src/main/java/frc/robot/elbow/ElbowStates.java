@@ -62,17 +62,20 @@ public class ElbowStates {
 
     public static Command score2() {
         double newPos = 15 + config.getL2Coral();
-        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score2");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+                .withName("Elbow.score2");
     }
 
     public static Command score3() {
         double newPos = 15 + config.getL3Coral();
-        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score3");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+                .withName("Elbow.score3");
     }
 
     public static Command score4() {
         double newPos = 20 + config.getL4Coral();
-        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score4");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+                .withName("Elbow.score4");
     }
 
     public static Command runElbow(DoubleSupplier speed) {
@@ -99,7 +102,8 @@ public class ElbowStates {
     }
 
     public static Command barge() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getBarge)).withName("Elbow.barge");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getBarge))
+                .withName("Elbow.barge");
     }
 
     public static Command l1Coral() {

@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
 import frc.robot.elbow.ElbowStates;
-import frc.robot.elevator.ElevatorStates;
 import frc.spectrumLib.Telemetry;
 
 public class CoralIntakeStates {
@@ -27,14 +26,16 @@ public class CoralIntakeStates {
 
         processorLollipopScore.whileTrue(log(coralIntake()));
 
-        algaeHandoff.whileTrue(log(algaeHandOff()));
-        coralHandoff.whileTrue(log(coralHandOff()));
+        algaeHandoff.onTrue(log(algaeHandOff()));
+        coralHandoff.onTrue(log(coralHandOff()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
     }
 
     private static Command coralHandOff() {
+        coralIntake.setDefaultCommand(
+                coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default"));
         return coralIntake
                 .runStop()
                 .withName("coralIntake.coralHandOffWait")
@@ -44,6 +45,8 @@ public class CoralIntakeStates {
     }
 
     private static Command algaeHandOff() {
+        coralIntake.setDefaultCommand(
+                coralIntake.runVelocityTcFocRpm(() -> 500).withName("coralIntake.default"));
         return coralIntake
                 .runStop()
                 .withName("coralIntake.algaeHandOffWait")
@@ -60,13 +63,16 @@ public class CoralIntakeStates {
     }
 
     private static Command barge() {
-        return coralIntake.runVelocityTcFocRpm(config::getBarge).withName("coralIntake.barge")
-        .until(() -> (!coralIntake.hasIntakeAlgae()))
+        return coralIntake
+                .runVelocityTcFocRpm(config::getBarge)
+                .withName("coralIntake.barge")
+                .until(() -> (!coralIntake.hasIntakeAlgae()))
                 .withName("coralIntake.bargeScoreDone");
     }
 
     private static Command coralIntake() {
-        coralIntake.setDefaultCommand(coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default"));
+        coralIntake.setDefaultCommand(
+                coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default"));
         return coralIntake.runVelocityTcFocRpm(config::getIntake).withName("coralIntake.intake");
     }
 
@@ -75,16 +81,23 @@ public class CoralIntakeStates {
     }
 
     private static Command algaeIntake() {
-        coralIntake.setDefaultCommand(coralIntake.runVelocityTcFocRpm(() -> 500).withName("coralIntake.default"));
-        return coralIntake.runVelocityTcFocRpm(config::getEject).withName("coralIntake.algaeIntake");
+        coralIntake.setDefaultCommand(
+                coralIntake.runVelocityTcFocRpm(() -> 500).withName("coralIntake.default"));
+        return coralIntake
+                .runVelocityTcFocRpm(config::getEject)
+                .withName("coralIntake.algaeIntake");
     }
 
     private static Command algaeEject() {
-        return coralIntake.runVelocityTcFocRpm(config::getIntake).withName("coralIntake.algaeEject");
+        return coralIntake
+                .runVelocityTcFocRpm(config::getIntake)
+                .withName("coralIntake.algaeEject");
     }
 
     private static Command slowEject() {
-        return coralIntake.runVelocityTcFocRpm(config::getSlowEject).withName("coralIntake.slowEject");
+        return coralIntake
+                .runVelocityTcFocRpm(config::getSlowEject)
+                .withName("coralIntake.slowEject");
     }
 
     private static Command coastMode() {

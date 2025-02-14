@@ -95,8 +95,7 @@ public class CoralIntake extends Mechanism {
     // Custom Commands
     // --------------------------------------------------------------------------------
 
-
-    //TODO: check if these actually need to be two separate methods
+    // TODO: check if these actually need to be two separate methods
 
     public boolean hasIntakeCoral() {
         double motorOutput = Robot.getCoralIntake().getVelocityRPM();
