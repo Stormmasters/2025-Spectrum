@@ -20,20 +20,33 @@ public class TwistStates {
     public static void setStates() {
         stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
         stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-        // algaeFloor.whileTrue(tuneTwist());
-        algaeFloorIntake.whileTrue(log(floorIntake()));
-        // L2Algae.whileTrue(log(l2Algae()));
-        // L3Algae.whileTrue(log(l3Algae()));
-        // L2Coral.whileTrue(log(l2Coral()));
-        // L3Coral.whileTrue(log(l3Coral()));
-        // L4Coral.whileTrue(log(l4Coral()));
-        reefPosition.and(backwardMode.not()).whileTrue(log(leftCoral()));
-        reefPosition.and(backwardMode).whileTrue(log(reverse(leftCoral())));
+        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
+        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
+
+        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
+        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
+        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
+        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
+
+        coralReefPosition.and(backwardMode.not()).and(leftScore).whileTrue(log(leftCoral()));
+        coralReefPosition.and(backwardMode).and(leftScore).whileTrue(log(reverse(leftCoral())));
+        coralReefPosition.and(backwardMode.not()).and(rightScore).whileTrue(log(rightCoral()));
+        coralReefPosition.and(backwardMode).and(rightScore).whileTrue(log(reverse(rightCoral())));
+
         barge.and(backwardMode.not()).whileTrue(log(barge()));
         barge.and(backwardMode).whileTrue(log(reverse(barge())));
+
         homeAll.whileTrue(log(home()));
+
+        algaeHandoff.whileTrue(log(handOffAlgae()));
+        coralHandoff.whileTrue(log(handOffCoral()));
+
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+    }
+
+    public static DoubleSupplier switchSigns(DoubleSupplier supplier) {
+        return () -> -supplier.getAsDouble();
     }
 
     public static Command runTwist(DoubleSupplier speed) {
@@ -56,22 +69,6 @@ public class TwistStates {
 
     public static Command l3Algae() {
         return twist.moveToPercentage(config::getL3Algae).withName("Twist.l3Algae");
-    }
-
-    public static Command l1Coral() {
-        return twist.moveToPercentage(config::getL1Coral).withName("Twist.l1Coral");
-    }
-
-    public static Command l2Coral() {
-        return twist.moveToPercentage(config::getL2Coral).withName("Twist.l2Coral");
-    }
-
-    public static Command l3Coral() {
-        return twist.moveToPercentage(config::getL3Coral).withName("Twist.l3Coral");
-    }
-
-    public static Command l4Coral() {
-        return twist.moveToPercentage(config::getL4Coral).withName("Twist.l4Coral");
     }
 
     public static Command leftCoral() {
@@ -108,6 +105,14 @@ public class TwistStates {
     public static Command barge() {
         return twist.moveToPercentage(() -> twist.checkReversed(config::getBarge))
                 .withName("Twist.barge");
+    }
+
+    public static Command handOffAlgae() {
+        return twist.moveToPercentage(config::getHandAlgae).withName("Twist.handOffAlgae");
+    }
+
+    public static Command handOffCoral() {
+        return twist.moveToPercentage(config::getHandCoral).withName("Twist.handOffCoral");
     }
 
     // Tune value command

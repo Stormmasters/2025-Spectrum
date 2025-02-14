@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
@@ -25,11 +26,11 @@ public class InClimb extends Mechanism {
         /* InClimb positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = 0;
         @Getter private final double intake = 35.5;
-        @Getter private final double floorIntake = 70;
+        @Getter private final double algaeFloorIntake = 70;
         @Getter @Setter private double tuneInClimb = 0;
         @Getter private final double prepClimber = 100;
         @Getter private final double finishClimb = 50;
-        @Getter private final double coralIntake = 95;
+        @Getter private final double coralFloorIntake = 95;
         @Getter private final double processorScore = 65;
 
         /* InClimb config settings */
@@ -155,6 +156,19 @@ public class InClimb extends Mechanism {
                 stop();
             }
         };
+    }
+
+    public Command zeroInClimbRoutine() {
+        return new FunctionalCommand(
+                        () -> toggleReverseSoftLimit(false), // init
+                        () -> setPercentOutput(config::getZeroSpeed), // execute
+                        b -> {
+                            tareMotor();
+                            toggleReverseSoftLimit(true); // end
+                        },
+                        () -> false, // isFinished
+                        this) // requirement
+                .withName("Elevator.zeroElevatorRoutine");
     }
 
     // --------------------------------------------------------------------------------
