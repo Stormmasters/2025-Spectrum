@@ -1,4 +1,4 @@
-package frc.spectrumLib.util;
+package frc.spectrumLib;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -8,8 +8,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import frc.spectrumLib.Rio;
-import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism.Config;
 import lombok.Getter;
 
@@ -33,18 +31,16 @@ public class SpectrumCANcoder {
         this.CANcoderID = CANcoderID;
 
         if (isAttached()) {
-            modifyMotorConfig(
-                    motor,
-                    config); // Modify configuration to use remote CANcoder fused //TODO: Move below
-            // cancoder config and check config worked before adjusting motor
-            // @cycIes
             canCoder = new CANcoder(CANcoderID, Rio.CANIVORE);
-            CANcoderConfiguration cancoderConfigs = new CANcoderConfiguration();
-            cancoderConfigs.MagnetSensor.MagnetOffset = offset;
-            cancoderConfigs.MagnetSensor.SensorDirection =
+            CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
+            canCoderConfigs.MagnetSensor.MagnetOffset = offset;
+            canCoderConfigs.MagnetSensor.SensorDirection =
                     SensorDirectionValue.CounterClockwise_Positive;
-            cancoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
-            checkCANcoderResponse(canCoder.getConfigurator().apply(cancoderConfigs));
+            canCoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
+            if (canCoderResponseOK(canCoder.getConfigurator().apply(canCoderConfigs))) {
+                // Modify configuration to use remote CANcoder fused
+                modifyMotorConfig(motor, config);
+            }
         }
     }
 
@@ -87,13 +83,15 @@ public class SpectrumCANcoder {
         return this;
     }
 
-    public void checkCANcoderResponse(StatusCode response) {
+    public boolean canCoderResponseOK(StatusCode response) {
         if (!response.isOK()) {
             Telemetry.print(
-                    "Pivot CANcoder ID " // TODO: remove pivot @cycIes
+                    "CANcoder ID "
                             + CANcoderID
                             + " failed config with error "
                             + response.toString());
+            return false;
         }
+        return true;
     }
 }

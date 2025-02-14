@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
+import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
-import frc.spectrumLib.util.SpectrumCANcoder;
 import lombok.Getter;
 import lombok.Setter;
 

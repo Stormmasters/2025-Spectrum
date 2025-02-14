@@ -15,11 +15,11 @@ import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.elevator.ElevatorStates;
 import frc.spectrumLib.Rio;
+import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
-import frc.spectrumLib.util.SpectrumCANcoder;
 import java.util.function.DoubleSupplier;
 import lombok.*;
 
