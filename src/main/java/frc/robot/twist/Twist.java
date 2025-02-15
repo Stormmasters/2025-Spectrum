@@ -46,7 +46,7 @@ public class Twist extends Mechanism {
         @Getter private final double l1Coral = 0;
         @Getter private final double l2Algae = 0;
         @Getter private final double l3Algae = 0;
-        @Getter private final double l2Coral = 50;
+        @Getter private final double l2Coral = 100;
         @Getter private final double l3Coral = 50;
         @Getter private final double l4Coral = 50;
         @Getter private final double barge = 100;
@@ -74,8 +74,14 @@ public class Twist extends Mechanism {
         @Getter private double twistX = 0.525;
         @Getter private double twistY = 1.35;
         @Getter @Setter private double simRatio = 15.429; // TODO: Set this to actual twist ratio
-        @Getter private double coralLength = 0.225;
-        @Getter private double algaeLength = 0.125;
+        @Getter private double coralLength = 0.255;
+        @Getter private double algaeLength = 0.205;
+        @Getter private double coralLineWeight = 15.0;
+        @Getter private double algaeLineWeight = 4.0;
+        @Getter private double coralBaseAngle = -60;
+        @Getter private double algaeBaseAngle = 50;
+        @Getter private Color8Bit coralColor = new Color8Bit(Color.kBlue);
+        @Getter private Color8Bit algaeColor = new Color8Bit(Color.kAqua);
 
         public TwistConfig() {
             super("Twist", 44, Rio.RIO_CANBUS); // Rio.CANIVORE);
@@ -233,10 +239,6 @@ public class Twist extends Mechanism {
         MechanismLigament2d leftProng;
         MechanismLigament2d rightBase;
         MechanismLigament2d rightProng;
-        Color8Bit coralColor = new Color8Bit(Color.kBlue);
-        Color8Bit algaeColor = new Color8Bit(Color.kAqua);
-        double coralLineWeight = 12.0;
-        double algaeLineWeight = 4.0;
         Mount mount;
         double initMountX;
         double initMountY;
@@ -262,25 +264,33 @@ public class Twist extends Mechanism {
                             new MechanismLigament2d(
                                     "3LeftTwistBase",
                                     config.getCoralLength(),
-                                    -90.0,
-                                    4.0,
-                                    coralColor));
+                                    config.getCoralBaseAngle(),
+                                    config.getCoralLineWeight() / 2,
+                                    config.getCoralColor()));
             rightBase =
                     root.append(
                             new MechanismLigament2d(
                                     "2RightTwistBase",
                                     config.getAlgaeLength(),
-                                    90.0,
-                                    4.0,
-                                    algaeColor));
+                                    config.getAlgaeBaseAngle(),
+                                    config.getAlgaeLineWeight(),
+                                    config.getAlgaeColor()));
             leftProng =
                     leftBase.append(
                             new MechanismLigament2d(
-                                    "3LeftTwistProng", 0.2, 90, coralLineWeight, coralColor));
+                                    "3LeftTwistProng",
+                                    0.075,
+                                    -config.getCoralBaseAngle(),
+                                    config.getCoralLineWeight(),
+                                    config.getCoralColor()));
             rightProng =
                     rightBase.append(
                             new MechanismLigament2d(
-                                    "2RightTwistProng", 0.2, -90, algaeLineWeight, algaeColor));
+                                    "2RightTwistProng",
+                                    0.075,
+                                    -config.getAlgaeBaseAngle(),
+                                    config.getAlgaeLineWeight(),
+                                    config.getAlgaeColor()));
 
             mount = Robot.getElbow().getSim();
             initMountX = Robot.getElbow().getConfig().getElbowX();
@@ -322,37 +332,86 @@ public class Twist extends Mechanism {
                             mount.getDisplacementX(),
                             mount.getDisplacementY(),
                             mount.getAngle()));
-            rightBase.setAngle(90 + Math.toDegrees(mount.getAngle()));
-            leftBase.setAngle(-90 + Math.toDegrees(mount.getAngle()));
 
             /* changes which side is closest to the viewer; the left prong is always closest to the viewer */
             if (getPositionPercentage() > 0) {
-                leftBase.setColor(coralColor);
-                leftProng.setColor(coralColor);
-                rightBase.setColor(algaeColor);
-                rightProng.setColor(algaeColor);
-                leftProng.setLineWeight(coralLineWeight);
-                rightProng.setLineWeight(algaeLineWeight);
+                leftBase.setColor(config.getCoralColor());
+                leftProng.setColor(config.getCoralColor());
+                rightBase.setColor(config.getAlgaeColor());
+                rightProng.setColor(config.getAlgaeColor());
+                leftBase.setLineWeight(2 * config.getCoralLineWeight() / 3);
+                leftProng.setLineWeight(config.getCoralLineWeight());
+                rightBase.setLineWeight(config.getAlgaeLineWeight());
+                rightProng.setLineWeight(config.getAlgaeLineWeight());
+                leftBase.setAngle(
+                        calculateBaseAngle(config.getCoralBaseAngle(), getPositionPercentage())
+                                + Math.toDegrees(mount.getAngle()));
+                leftProng.setAngle(
+                        calculateBaseAngle(-config.getCoralBaseAngle(), getPositionPercentage()));
+                rightBase.setAngle(
+                        calculateBaseAngle(config.getAlgaeBaseAngle(), getPositionPercentage())
+                                + Math.toDegrees(mount.getAngle()));
+                rightProng.setAngle(
+                        calculateBaseAngle(-config.getAlgaeBaseAngle(), getPositionPercentage()));
                 leftBase.setLength(
-                        calculateBaseLength(config.getCoralLength(), getPositionPercentage()));
+                        calculateBaseLength(
+                                config.getCoralLength(),
+                                config.getCoralBaseAngle(),
+                                calculateBaseAngle(
+                                        config.getCoralBaseAngle(), getPositionPercentage()),
+                                getPositionPercentage()));
                 rightBase.setLength(
-                        calculateBaseLength(config.getAlgaeLength(), getPositionPercentage()));
+                        calculateBaseLength(
+                                config.getAlgaeLength(),
+                                config.getAlgaeBaseAngle(),
+                                calculateBaseAngle(
+                                        config.getAlgaeBaseAngle(), getPositionPercentage()),
+                                getPositionPercentage()));
             } else {
-                leftBase.setColor(algaeColor);
-                leftProng.setColor(algaeColor);
-                rightBase.setColor(coralColor);
-                rightProng.setColor(coralColor);
-                leftProng.setLineWeight(algaeLineWeight);
-                rightProng.setLineWeight(coralLineWeight);
+                leftBase.setColor(config.getAlgaeColor());
+                leftProng.setColor(config.getAlgaeColor());
+                rightBase.setColor(config.getCoralColor());
+                rightProng.setColor(config.getCoralColor());
+                leftBase.setLineWeight(config.getAlgaeLineWeight());
+                leftProng.setLineWeight(config.getAlgaeLineWeight());
+                rightBase.setLineWeight(2 * config.getCoralLineWeight() / 3);
+                rightProng.setLineWeight(config.getCoralLineWeight());
+                leftBase.setAngle(
+                        calculateBaseAngle(config.getAlgaeBaseAngle(), getPositionPercentage())
+                                + Math.toDegrees(mount.getAngle()));
+                leftProng.setAngle(
+                        calculateBaseAngle(-config.getAlgaeBaseAngle(), getPositionPercentage()));
+                rightBase.setAngle(
+                        calculateBaseAngle(config.getCoralBaseAngle(), getPositionPercentage())
+                                + Math.toDegrees(mount.getAngle()));
+                rightProng.setAngle(
+                        calculateBaseAngle(-config.getCoralBaseAngle(), getPositionPercentage()));
                 leftBase.setLength(
-                        -1 * calculateBaseLength(config.getAlgaeLength(), getPositionPercentage()));
+                        calculateBaseLength(
+                                config.getAlgaeLength(),
+                                config.getAlgaeBaseAngle(),
+                                calculateBaseAngle(
+                                        config.getAlgaeBaseAngle(), getPositionPercentage()),
+                                getPositionPercentage()));
                 rightBase.setLength(
-                        -1 * calculateBaseLength(config.getCoralLength(), getPositionPercentage()));
+                        calculateBaseLength(
+                                config.getCoralLength(),
+                                config.getCoralBaseAngle(),
+                                calculateBaseAngle(
+                                        config.getCoralBaseAngle(), getPositionPercentage()),
+                                getPositionPercentage()));
             }
         }
 
-        private double calculateBaseLength(double startingLength, double posePercent) {
-            return startingLength * ((Math.abs(posePercent) - 50) / 50);
+        private double calculateBaseAngle(double startingAngle, double posePercent) {
+            return startingAngle * ((Math.abs(posePercent) - 50) / 50);
+        }
+
+        private double calculateBaseLength(
+                double startingLength, double startingAngle, double angle, double posePercent) {
+            double startingVerticalLeg =
+                    Math.cos(Units.degreesToRadians(startingAngle)) * startingLength;
+            return startingVerticalLeg / Math.cos(Units.degreesToRadians(angle));
         }
     }
 }
