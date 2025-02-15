@@ -20,7 +20,9 @@ public class CoralIntake extends Mechanism {
         @Getter private double maxSpeed = 5000;
         @Getter private double intake = -5000;
         @Getter private double eject = 2000;
+        @Getter private double slowEject = 100;
         @Getter private double slowIntake = -1000;
+        @Getter private double barge = -100;
 
         /* Percentage Intake Output */
         @Getter private double slowIntakePercentage = 0.06;
@@ -92,6 +94,18 @@ public class CoralIntake extends Mechanism {
     // --------------------------------------------------------------------------------
     // Custom Commands
     // --------------------------------------------------------------------------------
+
+    // TODO: check if these actually need to be two separate methods
+
+    public boolean hasIntakeCoral() {
+        double motorOutput = Robot.getCoralIntake().getVelocityRPM();
+        return (Math.abs(motorOutput) < 10);
+    }
+
+    public boolean hasIntakeAlgae() {
+        double motorOutput = Robot.getCoralIntake().getVelocityRPM();
+        return (Math.abs(motorOutput) < 10);
+    }
 
     // --------------------------------------------------------------------------------
     // Simulation

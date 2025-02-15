@@ -4,7 +4,6 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.elbow.ElbowStates;
 import frc.robot.inClimb.InClimb.InClimbConfig;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
@@ -21,12 +20,19 @@ public class InClimbStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        algaeFloorIntake.whileTrue(log(algaeFloorIntake()));
+
+        groundAlgae.whileTrue(log(algaeFloorIntake()));
+        groundAlgae.onFalse(log(home()));
+        groundCoral.whileTrue(log(coralFloorIntake()));
+        groundCoral.onFalse(log(home()));
+
         climbPrep.whileTrue(log(climbPrep()));
         climbFinish.whileTrue(log(climbFinish()));
         homeAll.onTrue(log(home()));
-        coralFloorIntake.whileTrue(log(coralIntake()));
-        processorScore.whileTrue(log(processorScore()));
+        processorLollipopScore.whileTrue(log(processorLollipopScore()));
+        processorLollipopScore.onFalse(log(home()));
+
+        homeInClimb.whileTrue(log(zero()));
     }
 
     public static Command runInClimb(DoubleSupplier speed) {
@@ -34,6 +40,10 @@ public class InClimbStates {
     }
 
     // missing auton InClimb commands, add when auton is added
+
+    public static Command zero() {
+        return inClimb.zeroInClimbRoutine().withName("InClimb.zero");
+    }
 
     public static Command intake() {
         return inClimb.moveToPercentage(config::getIntake).withName("InClimb.intake");
@@ -52,19 +62,16 @@ public class InClimbStates {
     }
 
     public static Command algaeFloorIntake() {
-        return inClimb.runHoldInClimb()
-                .withName("InClimb.waitingForElbow")
-                .until(() -> (ElbowStates.getPosition().getAsDouble() < 10.0))
-                .andThen(
-                        inClimb.moveToPercentage(config::getFloorIntake)
-                                .withName("InClimb.floorIntake"));
+        return inClimb.moveToPercentage(config::getAlgaeFloorIntake)
+                .withName("InClimb.algaeFloorIntake");
     }
 
-    public static Command coralIntake() {
-        return inClimb.moveToPercentage(config::getCoralIntake).withName("InClimb.coralIntake");
+    public static Command coralFloorIntake() {
+        return inClimb.moveToPercentage(config::getCoralFloorIntake)
+                .withName("InClimb.coralFloorIntake");
     }
 
-    public static Command processorScore() {
+    public static Command processorLollipopScore() {
         return inClimb.moveToPercentage(config::getProcessorScore)
                 .withName("InClimb.processorScore");
     }

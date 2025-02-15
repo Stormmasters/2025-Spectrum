@@ -21,10 +21,21 @@ public class ShoulderStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        score.whileTrue(home());
+
         stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
         stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-        algaeFloorIntake.whileTrue(log(floorIntake()));
+        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralExtendedIntake()));
+        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralExtendedIntake())));
+
+        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
+        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
+        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
+        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
+        barge.and(backwardMode.not()).whileTrue(log(barge()));
+        barge.and(backwardMode).whileTrue(log(reverse(barge())));
+
+        L1Coral.and(backwardMode.not()).whileTrue(log(l1Coral()));
+        L1Coral.and(backwardMode).whileTrue(log(reverse(l1Coral())));
         L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
         L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
         L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
@@ -35,9 +46,10 @@ public class ShoulderStates {
         L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
         L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
         L4Coral.and(backwardMode).whileTrue(log(reverse(l4Coral())));
-        barge.and(backwardMode.not()).whileTrue(log(barge()));
-        barge.and(backwardMode).whileTrue(log(reverse(barge())));
-        handOffAlgae.whileTrue(log(handOffAlgae()));
+
+        algaeHandoff.whileTrue(log(handOffAlgae()));
+        coralHandoff.whileTrue(log(handOffAlgae()));
+
         homeAll.whileTrue(home());
     }
 
@@ -107,6 +119,12 @@ public class ShoulderStates {
     public static Command coralIntake() {
         return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getCoralIntake))
                 .withName("Shoulder.coralIntake");
+    }
+
+    public static Command coralExtendedIntake() {
+        return shoulder.moveToPercentage(
+                        () -> shoulder.checkReversed(config::getCoralExtendedIntake))
+                .withName("Shoulder.coralExtendedIntake");
     }
 
     public static Command coastMode() {

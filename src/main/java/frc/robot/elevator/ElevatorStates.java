@@ -3,12 +3,11 @@ package frc.robot.elevator;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.Elevator.ElevatorConfig;
-import frc.robot.operator.Operator;
-import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.TuneValue;
@@ -17,8 +16,6 @@ import java.util.function.DoubleSupplier;
 public class ElevatorStates {
     private static Elevator elevator = Robot.getElevator();
     private static ElevatorConfig config = Robot.getConfig().elevator;
-    private static Pilot pilot = Robot.getPilot();
-    private static Operator operator = Robot.getOperator();
 
     /* Check Elevator States */
     public static final Trigger isUp =
@@ -32,21 +29,37 @@ public class ElevatorStates {
     }
 
     public static void setStates() {
-        score.onFalse(home()); // Return home when we stop the scoring action
-
         // Elevator Extends when the climber is at mid climb
         // Test Mode Buttons
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        score.whileTrue(home());
-        L2Algae.whileTrue(l2());
-        L2Coral.whileTrue(l2());
-        L3Algae.whileTrue(l3());
-        L3Coral.whileTrue(l3());
-        L4Coral.whileTrue(l4());
-        barge.whileTrue(barge());
-        handOffAlgae.whileTrue(handOff());
+        scoreState.onTrue(score());
+
+        algaeHandoff.whileTrue(handOff());
+        coralHandoff.whileTrue(handOff());
+
+        stationIntaking.whileTrue(stationIntake());
+        stationExtendedIntake.whileTrue(stationExtendedIntake());
+        L2Algae.whileTrue(l1());
+        L3Algae.whileTrue(l1());
+        barge.whileTrue(l1());
+
+        L1Coral.whileTrue(l1());
+        L2Coral.whileTrue(l1());
+        L3Coral.whileTrue(l1());
+        L4Coral.whileTrue(l1());
+
+        actionPrepState.and(L1Coral).whileTrue(l1());
+        actionPrepState.and(L2Coral).whileTrue(l2());
+        actionPrepState.and(L3Coral).whileTrue(l3());
+        actionPrepState.and(L4Coral).whileTrue(l4());
+
+        actionPrepState.and(L2Algae).whileTrue(l2());
+        actionPrepState.and(L3Algae).whileTrue(l3());
+        actionPrepState.and(barge).whileTrue(barge());
+
         homeAll.whileTrue(home());
+        homeElevator.whileTrue(zero());
     }
 
     private static Command runElevator(DoubleSupplier speed) {
@@ -65,8 +78,7 @@ public class ElevatorStates {
     }
 
     public static boolean allowedPosition() {
-        if ((getPosition().getAsDouble() * 100 / config.getL3())
-                        + 30
+        if ((getPosition().getAsDouble() * 100 / config.getL2())
                         - getElbowShoulderPos().getAsDouble()
                 > 0) {
             return true;
@@ -83,6 +95,15 @@ public class ElevatorStates {
         return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
     }
 
+    private static Command score() {
+        return new ProxyCommand(
+                () -> {
+                    double originalPosition = ElevatorStates.getPosition().getAsDouble() - 10;
+                    return elevator.moveToPercentage(() -> originalPosition)
+                            .withName("Elevator.score");
+                });
+    }
+
     private static Command home() {
         return elevator.moveToRotations(config::getHome)
                 .alongWith(elevator.checkMaxCurrent(() -> 100))
@@ -95,6 +116,20 @@ public class ElevatorStates {
                 .until(() -> ElbowStates.getPosition().getAsDouble() > 90.0)
                 .andThen(elevator.moveToRotations(config::getL2))
                 .withName("Elevator.handOffDown");
+    }
+
+    private static Command stationIntake() {
+        return elevator.moveToRotations(config::getStationIntake)
+                .withName("Elevator.stationIntake");
+    }
+
+    private static Command stationExtendedIntake() {
+        return elevator.moveToRotations(config::getStationExtendedIntake)
+                .withName("Elevator.stationExtendedIntake");
+    }
+
+    private static Command l1() {
+        return elevator.moveToRotations(config::getL1).withName("Elevator.l1");
     }
 
     private static Command l2() {

@@ -33,8 +33,9 @@ public class Shoulder extends Mechanism {
         @Getter private final double score = 100 - 65;
         @Getter private final double climbHome = 100 - 3;
         @Getter private final double handAlgae = -21;
-        @Getter private final double home = 100 - 1;
+        @Getter private final double home = 0;
         @Getter private final double coralIntake = 91;
+        @Getter private final double coralExtendedIntake = -60;
         @Getter private final double floorIntake = -70;
         @Getter private final double l1Coral = -80;
         @Getter private final double l2Algae = -40;

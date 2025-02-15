@@ -21,27 +21,61 @@ public class ElbowStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+
         stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
         stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-        algaeFloorIntake.whileTrue(log(floorIntake()));
+        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
+        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
+
+        scoreState.and(L2Coral).and(backwardMode.not()).onTrue(log(score2()));
+        scoreState.and(L2Coral).and(backwardMode).onTrue(log(reverse(score2())));
+        scoreState.and(L3Coral).and(backwardMode.not()).onTrue(log(score3()));
+        scoreState.and(L3Coral).and(backwardMode).onTrue(log(reverse(score3())));
+        scoreState.and(L4Coral).and(backwardMode.not()).onTrue(log(score4()));
+        scoreState.and(L4Coral).and(backwardMode).onTrue(log(reverse(score4())));
+
         L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
         L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
         L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
         L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
+
+        L1Coral.and(backwardMode.not()).whileTrue(log(l1Coral()));
+        L1Coral.and(backwardMode).whileTrue(log(reverse(l1Coral())));
         L2Coral.and(backwardMode.not()).whileTrue(log(l2Coral()));
         L2Coral.and(backwardMode).whileTrue(log(reverse(l2Coral())));
         L3Coral.and(backwardMode.not()).whileTrue(log(l3Coral()));
         L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
         L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
         L4Coral.and(backwardMode).whileTrue(log(reverse(l4Coral())));
+
         barge.and(backwardMode.not()).whileTrue(log(barge()));
         barge.and(backwardMode).whileTrue(log(reverse(barge())));
-        handOffAlgae.whileTrue(log(handOffAlgae()));
         homeAll.whileTrue(log(home()));
+
+        algaeHandoff.whileTrue(log(handOffAlgae()));
+        coralHandoff.whileTrue(log(handOffAlgae()));
     }
 
     public static DoubleSupplier getPosition() {
         return () -> elbow.getPositionPercentage();
+    }
+
+    public static Command score2() {
+        double newPos = 15 + config.getL2Coral();
+        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+                .withName("Elbow.score2");
+    }
+
+    public static Command score3() {
+        double newPos = 15 + config.getL3Coral();
+        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+                .withName("Elbow.score3");
+    }
+
+    public static Command score4() {
+        double newPos = 20 + config.getL4Coral();
+        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+                .withName("Elbow.score4");
     }
 
     public static Command runElbow(DoubleSupplier speed) {
@@ -67,6 +101,11 @@ public class ElbowStates {
                 .withName("Elbow.l3Algae");
     }
 
+    public static Command barge() {
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getBarge))
+                .withName("Elbow.barge");
+    }
+
     public static Command l1Coral() {
         return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL1Coral))
                 .withName("Twist.L1Coral");
@@ -87,10 +126,6 @@ public class ElbowStates {
                 .withName("Elbow.l4Coral");
     }
 
-    public static Command barge() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getBarge))
-                .withName("Elbow.barge");
-    }
     // missing auton Elbow commands, add when auton is added
 
     public static Command floorIntake() {
