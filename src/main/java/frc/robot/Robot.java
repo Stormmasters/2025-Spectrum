@@ -35,9 +35,8 @@ import frc.robot.swerve.Swerve;
 import frc.robot.swerve.SwerveConfig;
 import frc.robot.twist.Twist;
 import frc.robot.twist.Twist.TwistConfig;
-import frc.robot.vision.VisionSystem;
-import frc.robot.vision.VisionStates;
 import frc.robot.vision.Vision;
+import frc.robot.vision.VisionSystem;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumRobot;
 import frc.spectrumLib.Telemetry;
@@ -75,7 +74,7 @@ public class Robot extends SpectrumRobot {
         public TwistConfig twist = new TwistConfig();
     }
 
-    @Getter public static Swerve swerve;
+    @Getter private static Swerve swerve;
     @Getter private static Elevator elevator;
     @Getter private static GroundIntake groundIntake;
     @Getter private static CoralIntake coralIntake;
