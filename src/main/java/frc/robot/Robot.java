@@ -75,7 +75,7 @@ public class Robot extends SpectrumRobot {
         public TwistConfig twist = new TwistConfig();
     }
 
-    @Getter private static Swerve swerve;
+    @Getter public static Swerve swerve;
     @Getter private static Elevator elevator;
     @Getter private static GroundIntake groundIntake;
     @Getter private static CoralIntake coralIntake;
@@ -139,7 +139,7 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
-            vision = new Vision("Vision");
+            vision = new Vision(swerve::getRobotPose);
 
             // Setup Default Commands for all subsystems
             setupDefaultCommands();

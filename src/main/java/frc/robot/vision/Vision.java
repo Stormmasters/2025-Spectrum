@@ -25,10 +25,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import org.photonvision.PhotonCamera;
 import lombok.Getter;
-import org.littletownrobotics.junction.AutoLogOutput;
+import frc.reefscape.Field;
+import dev.doglog.DogLog;
 
 
-// TODO: Autologoutput may need to be replaced
+
+// TODO: Auto log output may need to be replaced
 
 public class Vision extends SubsystemBase {
     /**
@@ -78,8 +80,10 @@ public class Vision extends SubsystemBase {
 
     @Getter boolean isAiming = false;
 
-    public Vision(String name) {
-        setName(name);
+    @Getter private Pose2d pose;
+    public Vision(Pose2d pose) {
+        setName("vision");
+        this.pose = pose;
 
         // logging
         df.setMaximumFractionDigits(2);
@@ -89,8 +93,8 @@ public class Vision extends SubsystemBase {
             limelight.setLEDMode(false);
         }
 
-        //previously removed detectLL for now
-        detectLL.setLEDMode(true);
+        // removed detectLL(detect Limelight) for now
+      
     }
 
     @Override
@@ -99,15 +103,27 @@ public class Vision extends SubsystemBase {
        
     }
 
-    //TODO:addFilteredVisionInput
+    //TODO:addFilteredVisionInput method
 
-    //TODO: Reset Pose to Vision Method
-    public void resetPoseToVision() {
-        Limelight ll = getBestLimelight();
-        resetPoseToVision(
-                ll.targetInView(), ll.getRawPose3d(), ll.getMegaPose2d(), ll.getRawPoseTimestamp());
+  
+    public Limelight getBestLimelight() {
+        Limelight bestLimelight = leftLL;
+        double bestScore = 0;
+        for (Limelight limelight : allLimelights) {
+            double score = 0;
+            // prefer LL with most tags, when equal tag count, prefer LL closer to tags
+            score += limelight.getTagCountInView();
+            score += limelight.getTargetSize();
+
+            if (score > bestScore) {
+                bestScore = score;
+                bestLimelight = limelight;
+            }
+        }
+        return bestLimelight;
     }
 
+    
     public void resetPoseToVision() {
         Limelight ll = getBestLimelight();
         resetPoseToVision(
@@ -119,32 +135,27 @@ public class Vision extends SubsystemBase {
      *
      * @return if the pose was accepted and integrated
      */
+
+     //TODO: Need adding Telemetry prints to each check
     public boolean resetPoseToVision(
             boolean targetInView, Pose3d botpose3D, Pose2d megaPose, double poseTimestamp) {
         boolean reject = false;
         if (targetInView) {
+            //replace botpose with this.pose
             Pose2d botpose = botpose3D.toPose2d();
-            Pose2d robotPose = Robot.swerve.getPose();
+            this.pose = Robot.swerve.getRobotPose();
             if (Field.poseOutOfField(botpose3D)
                     || Math.abs(botpose3D.getZ()) > 0.25
                     || (Math.abs(botpose3D.getRotation().getX()) > 5
-                            || Math.abs(botpose3D.getRotation().getY()) > 5)) {
-                RobotTelemetry.print(
-                        "ResetPoseToVision: FAIL || DID NOT RESET POSE TO VISION BECAUSE BAD POSE");
+                            || Math.abs(botpose3D.getRotation().getY()) > 5)) { //when has bad pose
                 reject = true;
             }
-            if (Field.poseOutOfField(botpose3D)) {
-                RobotTelemetry.print(
-                        "ResetPoseToVision: FAIL || DID NOT RESET POSE TO VISION BECAUSE OUT OF FIELD");
+            if (Field.poseOutOfField(botpose3D)) { //pose out of field
                 reject = true;
-            } else if (Math.abs(botpose3D.getZ()) > 0.25) {
-                RobotTelemetry.print(
-                        "ResetPoseToVision: FAIL || DID NOT RESET POSE TO VISION BECAUSE IN AIR");
+            } else if (Math.abs(botpose3D.getZ()) > 0.25) { //when in air
                 reject = true;
             } else if ((Math.abs(botpose3D.getRotation().getX()) > 5
-                    || Math.abs(botpose3D.getRotation().getY()) > 5)) {
-                RobotTelemetry.print(
-                        "ResetPoseToVision: FAIL || DID NOT RESET POSE TO VISION BECAUSE TILTED");
+                    || Math.abs(botpose3D.getRotation().getY()) > 5)) { //when tilted
                 reject = true;
             }
 
@@ -158,13 +169,7 @@ public class Vision extends SubsystemBase {
             VisionConfig.VISION_STD_DEV_Y = 0.001;
             VisionConfig.VISION_STD_DEV_THETA = 0.001;
 
-            RobotTelemetry.print(
-                    "ResetPoseToVision: Old Pose X: "
-                            + RobotTelemetry.truncatedDouble(robotPose.getX())
-                            + " Y: "
-                            + RobotTelemetry.truncatedDouble(robotPose.getY())
-                            + " Theta: "
-                            + RobotTelemetry.truncatedDouble(robotPose.getRotation().getDegrees()));
+            //RobotTelemetry would've posted the old the old x, y, and theta values
             Robot.swerve.setVisionMeasurementStdDevs(
                     VecBuilder.fill(
                             VisionConfig.VISION_STD_DEV_X,
@@ -173,15 +178,7 @@ public class Vision extends SubsystemBase {
 
             Pose2d integratedPose = new Pose2d(megaPose.getTranslation(), botpose.getRotation());
             Robot.swerve.addVisionMeasurement(integratedPose, poseTimestamp);
-            robotPose = Robot.swerve.getPose(); // get updated pose
-            RobotTelemetry.print(
-                    "ResetPoseToVision: New Pose X: "
-                            + RobotTelemetry.truncatedDouble(robotPose.getX())
-                            + " Y: "
-                            + RobotTelemetry.truncatedDouble(robotPose.getY())
-                            + " Theta: "
-                            + RobotTelemetry.truncatedDouble(robotPose.getRotation().getDegrees()));
-            RobotTelemetry.print("ResetPoseToVision: SUCCESS");
+            this.pose = Robot.swerve.getRobotPose(); // get updated pose of x, y, and theta values and then print "success"
             return true;
         }
         return false; // target not in view
@@ -251,7 +248,7 @@ public class Vision extends SubsystemBase {
     /** Logging */
     public static class LimelightLogger {
         private final Limelight limelight;
-        private String name;
+            private String name;
 
         public LimelightLogger(String name, Limelight limelight) {
             this.limelight = limelight;

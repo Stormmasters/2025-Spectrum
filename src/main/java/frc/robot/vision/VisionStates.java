@@ -5,6 +5,7 @@ import frc.robot.Robot;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import frc.spectrumLib.Telemetry;
 
 
 public class VisionStates {
@@ -13,7 +14,7 @@ public class VisionStates {
     private static Vision vision = Robot.getVision();
 
     public static void setupDefaultCommand() {
-        vision.setDefaultCommand(blinkLimelights());
+        vision.setDefaultCommand(log(vision.blinkLimelights()));
     }
 
     public static void setStates() {
