@@ -27,12 +27,10 @@ import org.photonvision.PhotonCamera;
 import lombok.Getter;
 import frc.reefscape.Field;
 import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
-import frc.spectrumLib.Telemetry;
 
 
 
-// TODO: Auto log output may need to be replaced 
+// TODO: Auto log output may need to be replaced
 
 public class Vision extends SubsystemBase {
     /**
@@ -46,11 +44,7 @@ public class Vision extends SubsystemBase {
             .withTranslation(0, 0, 0.5)
             .withRotation(0, Math.toRadians(-15), 0); 
             //TODO: Limelight config needs to be updated to actual position on robot
-        
-        public static final String RIGHT_LL = "limelight-right";
-        public static final LimelightConfig RIGHT_Config = new LimelightConfig(RIGHT_LL)
-            .withTranslation(0, 0, 0.5)
-            .withRotation(0, Math.toRadians(15), 0);
+
         /* Pipeline configs */
         public static final int leftTagPipeline = 0; 
 
@@ -254,68 +248,60 @@ public class Vision extends SubsystemBase {
     /** Logging */
     public static class LimelightLogger {
         private final Limelight limelight;
-        private String name;
+            private String name;
 
         public LimelightLogger(String name, Limelight limelight) {
             this.limelight = limelight;
             this.name = name;
         }
 
-        
+        @AutoLogOutput(key = "Vision/{name}/ConnectionStatus")
         public boolean getCameraConnection() {
             return limelight.isCameraConnected();
         }
 
-        
+        @AutoLogOutput(key = "Vision/{name}/Integrating")
         public boolean getIntegratingStatus() {
-            Telemetry.print("Vision " + name + " LogStatus " + VisionConfig.LEFT_Config.isIntegrating());
-            return VisionConfig.LEFT_Config.isIntegrating();
+            return limelight.isIntegrating;
         }
 
-       
+        @AutoLogOutput(key = "Vision/{name}/LogStatus")
         public String getLogStatus() {
-            Telemetry.print("Vision " + name + " LogStatus " + limelight.getLogStatus());
-            return limelight.getLogStatus();
+            return limelight.logStatus;
         }
 
-        
+        @AutoLogOutput(key = "Vision/{name}/TagStatus")
         public String getTagStatus() {
-            Telemetry.print("Vision " + name + " TagStatus " + limelight.getTagStatus());
-            return limelight.getTagStatus();
+            return limelight.tagStatus;
         }
 
-        
+        @AutoLogOutput(key = "Vision/{name}/Pose")
         public Pose2d getPose() {
-            Telemetry.print(name + " Pose " + limelight.getRawPose3d().toPose2d());
             return limelight.getRawPose3d().toPose2d();
         }
 
-    
+        @AutoLogOutput(key = "Vision/{name}/MegaPose")
         public Pose2d getMegaPose() {
-            Telemetry.print(name + " MegaPose " + limelight.getMegaPose2d());
             return limelight.getMegaPose2d();
         }
 
-   
+        @AutoLogOutput(key = "Vision/{name}/PoseX")
         public double getPoseX() {
-            Telemetry.print(name + " PoseX " + limelight.getRawPose3d().toPose2d().getX());
             return getPose().getX();
         }
 
-     
+        @AutoLogOutput(key = "Vision/{name}/PoseY")
         public double getPoseY() {
-            Telemetry.print(name + " PoseY " + limelight.getRawPose3d().toPose2d().getY());
             return getPose().getY();
         }
 
+        @AutoLogOutput(key = "Vision/{name}/TagCount")
         public double getTagCount() {
-            Telemetry.print(name + " TagCount " + limelight.getTagCountInView());
             return limelight.getTagCountInView();
         }
 
-       
+        @AutoLogOutput(key = "Vision/{name}/TargetSize")
         public double getTargetSize() {
-            Telemetry.print(name + " TargetSize " + limelight.getTargetSize());
             return limelight.getTargetSize();
         }
     }

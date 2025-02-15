@@ -14,7 +14,7 @@ public class VisionStates {
     private static Vision vision = Robot.getVision();
 
     public static void setupDefaultCommand() {
-        vision.setDefaultCommand(vision.blinkLimelights());
+        vision.setDefaultCommand(log(vision.blinkLimelights()));
     }
 
     public static void setStates() {
@@ -35,13 +35,13 @@ public class VisionStates {
     }
 
     /** Set robot pose to vision pose looking at 5 of the last available poses in auto */
-    // public static Command autonResetPoseToVision() {
-    //     return vision.runOnce(vision::autonResetPoseToVision)
-    //             .withName("VisionCommands.autonResetPoseToVision");
-    // }
+    public static Command autonResetPoseToVision() {
+        return vision.runOnce(vision::autonResetPoseToVision)
+                .withName("VisionCommands.autonResetPoseToVision");
+    }
 
-    // /** Set robot pose to vision pose regardless of validity. Does not reset rotation. */
-    // public static Command forcePoseToVision() {
-    //     return vision.run(vision::forcePoseToVision).withName("VisionCommands.forcePoseToVision");
-    // }
+    /** Set robot pose to vision pose regardless of validity. Does not reset rotation. */
+    public static Command forcePoseToVision() {
+        return vision.run(vision::forcePoseToVision).withName("VisionCommands.forcePoseToVision");
+    }
 }
