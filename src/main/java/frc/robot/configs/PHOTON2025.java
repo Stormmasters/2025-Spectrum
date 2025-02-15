@@ -8,8 +8,10 @@ public class PHOTON2025 extends Config {
         // TODO: config swerve encoder offsets
 
         // Attached Mechanisms
-        pilot.setAttached(true); // TODO: dettach and change to photonPilot
-        operator.setAttached(true); // TODO: dettach and change to photonOperator
+        pilot.setAttached(false);
+        photonPilot.setAttached(true);
+        operator.setAttached(false);
+        photonOperator.setAttached(true);
         groundIntake.setAttached(true);
         coralIntake.setAttached(true);
         inClimb.setAttached(true);

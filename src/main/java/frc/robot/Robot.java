@@ -28,6 +28,10 @@ import frc.robot.leds.LedFull;
 import frc.robot.leds.LedFull.LedFullConfig;
 import frc.robot.operator.Operator;
 import frc.robot.operator.Operator.OperatorConfig;
+import frc.robot.operator.PhotonOperator;
+import frc.robot.operator.PhotonOperator.PhotonOperatorConfig;
+import frc.robot.pilot.PhotonPilot;
+import frc.robot.pilot.PhotonPilot.PhotonPilotConfig;
 import frc.robot.pilot.Pilot;
 import frc.robot.pilot.Pilot.PilotConfig;
 import frc.robot.shoulder.Shoulder;
@@ -67,7 +71,9 @@ public class Robot extends SpectrumRobot {
         public ElevatorConfig elevator = new ElevatorConfig();
         public LedFullConfig leds = new LedFullConfig();
         public PilotConfig pilot = new PilotConfig();
+        public PhotonPilotConfig photonPilot = new PhotonPilotConfig();
         public OperatorConfig operator = new OperatorConfig();
+        public PhotonOperatorConfig photonOperator = new PhotonOperatorConfig();
         public InClimbConfig inClimb = new InClimbConfig();
         public ElbowConfig elbow = new ElbowConfig();
         public ShoulderConfig shoulder = new ShoulderConfig();
@@ -80,7 +86,9 @@ public class Robot extends SpectrumRobot {
     @Getter private static CoralIntake coralIntake;
     @Getter private static LedFull leds;
     @Getter private static Operator operator;
+    @Getter private static PhotonOperator photonOperator;
     @Getter private static Pilot pilot;
+    @Getter private static PhotonPilot photonPilot;
     @Getter private static VisionSystem visionSystem;
     @Getter private static Auton auton;
     @Getter private static InClimb inClimb;
@@ -121,7 +129,9 @@ public class Robot extends SpectrumRobot {
 
             leds = new LedFull(config.leds);
             operator = new Operator(config.operator);
+            photonOperator = new PhotonOperator(config.photonOperator);
             pilot = new Pilot(config.pilot);
+            photonPilot = new PhotonPilot(config.photonPilot);
             swerve = new Swerve(config.swerve);
             Timer.delay(canInitDelay);
             elevator = new Elevator(config.elevator);
