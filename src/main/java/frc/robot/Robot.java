@@ -34,6 +34,8 @@ import frc.robot.pilot.PhotonPilot;
 import frc.robot.pilot.PhotonPilot.PhotonPilotConfig;
 import frc.robot.pilot.Pilot;
 import frc.robot.pilot.Pilot.PilotConfig;
+import frc.robot.shoulder.PhotonShoulder;
+import frc.robot.shoulder.PhotonShoulder.PhotonShoulderConfig;
 import frc.robot.shoulder.Shoulder;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.robot.swerve.Swerve;
@@ -76,6 +78,7 @@ public class Robot extends SpectrumRobot {
         public PhotonOperatorConfig photonOperator = new PhotonOperatorConfig();
         public InClimbConfig inClimb = new InClimbConfig();
         public ElbowConfig elbow = new ElbowConfig();
+        public PhotonShoulderConfig photonShoulder = new PhotonShoulderConfig();
         public ShoulderConfig shoulder = new ShoulderConfig();
         public TwistConfig twist = new TwistConfig();
     }
@@ -89,6 +92,7 @@ public class Robot extends SpectrumRobot {
     @Getter private static PhotonOperator photonOperator;
     @Getter private static Pilot pilot;
     @Getter private static PhotonPilot photonPilot;
+    @Getter private static PhotonShoulder photonShoulder;
     @Getter private static VisionSystem visionSystem;
     @Getter private static Auton auton;
     @Getter private static InClimb inClimb;
@@ -132,6 +136,7 @@ public class Robot extends SpectrumRobot {
             photonOperator = new PhotonOperator(config.photonOperator);
             pilot = new Pilot(config.pilot);
             photonPilot = new PhotonPilot(config.photonPilot);
+            photonShoulder = new PhotonShoulder(config.photonShoulder);
             swerve = new Swerve(config.swerve);
             Timer.delay(canInitDelay);
             elevator = new Elevator(config.elevator);
