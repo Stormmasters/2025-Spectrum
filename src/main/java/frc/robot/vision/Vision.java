@@ -136,14 +136,14 @@ public class Vision extends SubsystemBase {
      * @return if the pose was accepted and integrated
      */
 
-    // TODO: Need adding Telemetry prints to each check
     public boolean resetPoseToVision(
             boolean targetInView, Pose3d botpose3D, Pose2d megaPose, double poseTimestamp) {
         boolean reject = false;
         if (targetInView) {
             // replace botpose with this.pose
             Pose2d botpose = botpose3D.toPose2d();
-            this.pose = Robot.swerve.getRobotPose();
+            Pose2d pose = this.pose.getPose2d();
+            pose = Robot.swerve.getRobotPose();
             if (Field.poseOutOfField(botpose3D)
                     || Math.abs(botpose3D.getZ()) > 0.25
                     || (Math.abs(botpose3D.getRotation().getX()) > 5
@@ -174,7 +174,7 @@ public class Vision extends SubsystemBase {
             VisionConfig.VISION_STD_DEV_THETA = 0.001;
 
             // RobotTelemetry would've posted the old the old x, y, and theta values
-            Telemetry.print("Vision X: " + df.format(this.pose.getX()) + " Y: " + df.format(this.pose.getY()) + " Theta: " + df.format(this.pose.getRotation().getDegrees()));
+            Telemetry.print("Vision X: " + df.format(this.pose.getPose2d().getX()) + " Y: " + df.format(this.pose.getPose2d().getY()) + " Theta: " + df.format(this.pose.getPose2d().getRotation().getDegrees()));
 
             Robot.swerve.setVisionMeasurementStdDevs(
                     VecBuilder.fill(
@@ -184,11 +184,11 @@ public class Vision extends SubsystemBase {
 
             Pose2d integratedPose = new Pose2d(megaPose.getTranslation(), botpose.getRotation());
             Robot.swerve.addVisionMeasurement(integratedPose, poseTimestamp);
-            this.pose =
+            pose =
                     Robot.swerve
                             .getRobotPose(); 
             // get updated pose of x, y, and theta values and then
-            Telemetry.print("Vision X: " + df.format(this.pose.getX()) + " Y: " + df.format(this.pose.getY()) + " Theta: " + df.format(this.pose.getRotation().getDegrees()));
+            Telemetry.print("Vision X: " + df.format(this.pose.getPose2d().getX()) + " Y: " + df.format(this.pose.getPose2d().getY()) + " Theta: " + df.format(this.pose.getPose2d().getRotation().getDegrees()));
             // print "success"
             return true;
         }
@@ -196,8 +196,6 @@ public class Vision extends SubsystemBase {
     }
 
     // TODO:Auton Reset pose to Vision
-
-    // TODO: getBestLimeLight() based on score
 
     // TODO: targetInView using color pipeline
 
@@ -270,7 +268,7 @@ public class Vision extends SubsystemBase {
         
         public boolean getIntegratingStatus() { //Vision/Integrating 
             Telemetry.print("Vision " + name + " IntegratingStatus: " + getIntegratingStatus());
-            return ;
+            return getIntegratingStatus();
         }
 
         public String getLogStatus() { 

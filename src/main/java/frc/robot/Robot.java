@@ -74,7 +74,7 @@ public class Robot extends SpectrumRobot {
         public TwistConfig twist = new TwistConfig();
     }
 
-    @Getter private static Swerve swerve;
+    @Getter public static Swerve swerve;
     @Getter private static Elevator elevator;
     @Getter private static GroundIntake groundIntake;
     @Getter private static CoralIntake coralIntake;

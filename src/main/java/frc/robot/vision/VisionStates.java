@@ -10,7 +10,7 @@ public class VisionStates {
     private static Vision vision = Robot.getVision();
 
     public static void setupDefaultCommand() {
-        vision.setDefaultCommand(log(vision.blinkLimelights().withName("Vision.default")));
+        vision.setDefaultCommand(vision.blinkLimelights().withName("Vision.default"));
     }
 
     public static void setStates() {
