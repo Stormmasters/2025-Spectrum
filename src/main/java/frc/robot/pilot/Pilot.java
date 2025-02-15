@@ -2,6 +2,7 @@ package frc.robot.pilot;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
 import frc.spectrumLib.util.Util;
@@ -75,10 +76,8 @@ public class Pilot extends Gamepad {
 
     private PilotConfig config;
 
-    @Getter @Setter
-    private boolean isSlowMode = false; // TODO: change slow and turbo to SpectrumStates
-
-    @Getter @Setter private boolean isTurboMode = false;
+    private @Getter @Setter SpectrumState slowMode = new SpectrumState("SlowMode");
+    @Getter @Setter SpectrumState turboMode = new SpectrumState("TurboMode");
 
     /** Create a new Pilot with the default name and port. */
     public Pilot(PilotConfig config) {
@@ -114,7 +113,7 @@ public class Pilot extends Gamepad {
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveFwdPositive() {
         double fwdPositive = leftStickCurve.calculate(-1 * getLeftY());
-        if (isSlowMode) {
+        if (slowMode.getAsBoolean()) {
             fwdPositive *= Math.abs(config.getSlowModeScalor());
         }
         return fwdPositive;
@@ -124,7 +123,7 @@ public class Pilot extends Gamepad {
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveLeftPositive() {
         double leftPositive = -1 * leftStickCurve.calculate(getLeftX());
-        if (isSlowMode) {
+        if (slowMode.getAsBoolean()) {
             leftPositive *= Math.abs(config.getSlowModeScalor());
         }
         return leftPositive;
@@ -134,9 +133,9 @@ public class Pilot extends Gamepad {
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveCCWPositive() {
         double ccwPositive = rightStickCurve.calculate(getRightX());
-        if (isSlowMode) {
+        if (slowMode.getAsBoolean()) {
             ccwPositive *= Math.abs(config.getSlowModeScalor());
-        } else if (isTurboMode) {
+        } else if (turboMode.getAsBoolean()) {
             ccwPositive *= Math.abs(config.getTurboModeScalor());
         } else {
             ccwPositive *= Math.abs(config.getDefaultTurnScalor());
