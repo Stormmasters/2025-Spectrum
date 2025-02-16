@@ -72,7 +72,7 @@ public class Telemetry extends DogLog implements Subsystem {
                 .ignoringDisable(true)
                 .withName(cmd.getName());
     }
-    
+
     /** Print a statement if they are enabled */
     public static void print(String output, PrintPriority priority) {
         String out = "TIME: " + String.format("%.3f", Timer.getFPGATimestamp()) + " || " + output;

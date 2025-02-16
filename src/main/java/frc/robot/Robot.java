@@ -138,7 +138,7 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
-            vision = new Vision(swerve::getRobotPose);
+            vision = new Vision();
 
             // Setup Default Commands for all subsystems
             setupDefaultCommands();

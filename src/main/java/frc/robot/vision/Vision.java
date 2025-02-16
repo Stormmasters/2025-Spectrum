@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.reefscape.Field;
 import frc.robot.Robot;
-import frc.robot.vision.VisionSystem.Pose2dSupplier;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.Trio;
 import frc.spectrumLib.vision.Limelight;
@@ -19,13 +18,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import lombok.Getter;
 
-
-
 public class Vision extends SubsystemBase {
-    /**
-     * Configs must be initialized and added as limelights to {@link Vision} {@code allLimelights} &
-     * {@code poseLimelights}
-     */
+
     public static final class VisionConfig {
         /* Limelight Configuration */
         public static final String LEFT_LL = "limelight-left";
@@ -34,20 +28,22 @@ public class Vision extends SubsystemBase {
                         .withTranslation(0, 0, 0.5)
                         .withRotation(0, Math.toRadians(-15), 0);
 
-        public static final String Right_LL = "limelight-right";
-        public static final LimelightConfig Right_Config = 
-                new LimelightConfig(Right_LL)
-                        .withTranslation(0, 0, 0.5)
+        public static final String RIGHT_LL = "limelight-right";
+        public static final LimelightConfig Right_Config =
+                new LimelightConfig(RIGHT_LL)
+                        .withTranslation(0, 0.5, 0.5)
                         .withRotation(0, Math.toRadians(15), 0);
+
         // TODO: Limelight config needs to be updated to actual position on robot
 
         /* Pipeline configs */
         public static final int leftTagPipeline = 0;
+        public static final int rightTagPipeline = 1;
 
         /* Pose Estimation Constants */
 
         // Increase these numbers to trust global measurements from vision less. (uses a matrix)
-        // 
+        //
         public static final double VISION_REJECT_Distance = 1.8;
 
         public static double VISION_STD_DEV_X = 0.5;
@@ -60,16 +56,22 @@ public class Vision extends SubsystemBase {
         /* Vision Command Configs */
         // TODO: alignToTag vision etc.
 
-        
-    } 
+    }
 
-    /* Limelights */
+    /** Limelights */
     public final Limelight leftLL =
             new Limelight(
                     VisionConfig.LEFT_LL, VisionConfig.leftTagPipeline, VisionConfig.LEFT_Config);
+
     public final LimelightLogger leftLLogger = new LimelightLogger("left", leftLL);
 
-    public final Limelight[] allLimelights = {leftLL};
+    public final Limelight rightLL =
+            new Limelight(
+                    VisionConfig.RIGHT_LL,
+                    VisionConfig.rightTagPipeline,
+                    VisionConfig.Right_Config);
+
+    public final Limelight[] allLimelights = {leftLL, rightLL};
 
     private final DecimalFormat df = new DecimalFormat();
 
@@ -78,11 +80,8 @@ public class Vision extends SubsystemBase {
 
     @Getter boolean isAiming = false;
 
-    @Getter private Pose2dSupplier pose;
-
-    public Vision(Pose2dSupplier pose) {
+    public Vision() {
         setName("vision");
-        this.pose = pose;
 
         // logging
         df.setMaximumFractionDigits(2);
@@ -91,8 +90,6 @@ public class Vision extends SubsystemBase {
         for (Limelight limelight : allLimelights) {
             limelight.setLEDMode(false);
         }
-
-
     }
 
     @Override
@@ -109,7 +106,6 @@ public class Vision extends SubsystemBase {
         resetPoseToVision(
                 ll.targetInView(), ll.getRawPose3d(), ll.getMegaPose2d(), ll.getRawPoseTimestamp());
     }
-
 
     public Limelight getBestLimelight() {
         Limelight bestLimelight = leftLL;
@@ -128,13 +124,11 @@ public class Vision extends SubsystemBase {
         return bestLimelight;
     }
 
-
     /**
      * Set robot pose to vision pose only if LL has good tag reading
      *
      * @return if the pose was accepted and integrated
      */
-
     public boolean resetPoseToVision(
             boolean targetInView, Pose3d botpose3D, Pose2d megaPose, double poseTimestamp) {
         boolean reject = false;
@@ -145,7 +139,8 @@ public class Vision extends SubsystemBase {
             if (Field.poseOutOfField(botpose3D)
                     || Math.abs(botpose3D.getZ()) > 0.25
                     || (Math.abs(botpose3D.getRotation().getX()) > 5
-                            || Math.abs(botpose3D.getRotation().getY()) > 5)) { // when has bad pose
+                            || Math.abs(botpose3D.getRotation().getY()) > 5)) { // when has bad
+                Telemetry.print("Pose bad" + reject);
                 reject = true;
             }
             if (Field.poseOutOfField(botpose3D)) { // pose out of field
@@ -171,34 +166,39 @@ public class Vision extends SubsystemBase {
             VisionConfig.VISION_STD_DEV_Y = 0.001;
             VisionConfig.VISION_STD_DEV_THETA = 0.001;
 
-            //Posts Current X,Y, and Angle (Theta) values
-            Telemetry.print("Vision X: " + df.format(pose.getX()) + 
-            " Y: " + df.format(pose.getY()) + 
-            " Theta: " + df.format(pose.getRotation().getDegrees()));
+            // Posts Current X,Y, and Angle (Theta) values
+            Telemetry.print(
+                    "Vision X: "
+                            + pose.getX()
+                            + " Y: "
+                            + pose.getY()
+                            + " Theta: "
+                            + pose.getRotation().getDegrees());
 
-            Robot.getSwerve().setVisionMeasurementStdDevs(
-                    VecBuilder.fill(
-                            VisionConfig.VISION_STD_DEV_X,
-                            VisionConfig.VISION_STD_DEV_Y,
-                            VisionConfig.VISION_STD_DEV_THETA));
+            Robot.getSwerve()
+                    .setVisionMeasurementStdDevs(
+                            VecBuilder.fill(
+                                    VisionConfig.VISION_STD_DEV_X,
+                                    VisionConfig.VISION_STD_DEV_Y,
+                                    VisionConfig.VISION_STD_DEV_THETA));
 
             Pose2d integratedPose = new Pose2d(megaPose.getTranslation(), botpose.getRotation());
             Robot.getSwerve().addVisionMeasurement(integratedPose, poseTimestamp);
-            pose =
-                    Robot.getSwerve()
-                            .getRobotPose(); 
-            // Gets updated pose of x, y, and theta values 
+            pose = Robot.getSwerve().getRobotPose();
+            // Gets updated pose of x, y, and theta values
             Telemetry.print(
-                "Vision X: " + df.format(pose.getX()) + 
-                " Y: " + df.format(pose.getY()) +
-                 " Theta: " + df.format(pose.getRotation().getDegrees()));
-            
+                    "Vision X: "
+                            + pose.getX()
+                            + " Y: "
+                            + pose.getY()
+                            + " Theta: "
+                            + pose.getRotation().getDegrees());
+
             // print "success"
             return true;
         }
         return false; // target not in view
     }
-
 
     /**
      * If at least one LL has an accurate pose
@@ -244,14 +244,11 @@ public class Vision extends SubsystemBase {
                         () -> {
                             leftLL.setLEDMode(false);
                         })
-                .withName("Vision.blinkLimelights");
+                .withName("Vision.solidLimelight");
     }
 
-    
-
-
     /** Logging */
-    public static class LimelightLogger{
+    public static class LimelightLogger {
         private final Limelight limelight;
         private String name;
 
@@ -260,20 +257,18 @@ public class Vision extends SubsystemBase {
             this.name = name;
         }
 
-       
         public boolean getCameraConnection() {
             Telemetry.print(
                     "Vision " + name + " ConnectionStatus: " + limelight.isCameraConnected());
             return limelight.isCameraConnected();
         }
 
-        
-        public boolean getIntegratingStatus() { //Vision/Integrating 
-            Telemetry.print("Vision " + name + " IntegratingStatus: " + getIntegratingStatus());
-            return getIntegratingStatus();
+        public boolean getIntegratingStatus() { // Vision/Integrating
+            Telemetry.print("Vision " + name + " IntegratingStatus: " + limelight.isIntegrating());
+            return limelight.isIntegrating();
         }
 
-        public String getLogStatus() { 
+        public String getLogStatus() {
             Telemetry.print("Vision " + name + " LogStatus: " + limelight.getLogStatus());
             return limelight.getLogStatus();
         }
