@@ -35,29 +35,29 @@ public class RobotSim {
     }
 
     private void addReef() {
-        MechanismRoot2d reefBase = leftView.getRoot("Reef Base", 2, 0.55);
+        MechanismRoot2d reefBase = leftView.getRoot("Reef Base", 2, 0.35);
 
         MechanismLigament2d mainReef =
                 reefBase.append(
                         new MechanismLigament2d(
                                 "Main Reef",
-                                Units.inchesToMeters(50),
+                                Units.inchesToMeters(50) + 0.2,
                                 90,
                                 5,
                                 new Color8Bit(Color.kPurple)));
 
-        MechanismRoot2d branch1Base = leftView.getRoot("Branch1 Base", 1.65, 1);
+        MechanismRoot2d branch1Base = leftView.getRoot("Branch1 Base", 1.65, 1.2);
         branch1Base.append(
                 new MechanismLigament2d(
                         "Branch1", Units.inchesToMeters(15), -30, 3, new Color8Bit(Color.kPurple)));
 
-        MechanismRoot2d branch2Base = leftView.getRoot("Branch2 Base", 1.65, 1.35);
+        MechanismRoot2d branch2Base = leftView.getRoot("Branch2 Base", 1.65, 1.55);
         branch2Base.append(
                 new MechanismLigament2d(
                         "Branch2", Units.inchesToMeters(15), -30, 3, new Color8Bit(Color.kPurple)));
 
         MechanismRoot2d branch3Base =
-                leftView.getRoot("Branch3 Base", 1.65, 0.5 + Units.inchesToMeters(50));
+                leftView.getRoot("Branch3 Base", 1.65, 0.7 + Units.inchesToMeters(50));
         branch3Base.append(
                 new MechanismLigament2d(
                         "Branch3", Units.inchesToMeters(15), -30, 3, new Color8Bit(Color.kPurple)));
