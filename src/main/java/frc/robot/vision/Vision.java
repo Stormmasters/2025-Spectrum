@@ -140,19 +140,19 @@ public class Vision extends SubsystemBase {
                     || Math.abs(botpose3D.getZ()) > 0.25
                     || (Math.abs(botpose3D.getRotation().getX()) > 5
                             || Math.abs(botpose3D.getRotation().getY()) > 5)) { // when has bad
-                Telemetry.print("Pose bad" + reject);
+                Telemetry.log("Pose bad", reject);
                 reject = true;
             }
             if (Field.poseOutOfField(botpose3D)) { // pose out of field
-                Telemetry.print("Pose out of field: " + reject);
+                Telemetry.log("Pose out of field", reject);
                 reject = true;
             } else if (Math.abs(botpose3D.getZ()) > 0.25) { // when in air
-                Telemetry.print("Pose in air: " + reject);
+                Telemetry.log("Pose in air" , reject);
                 reject = true;
             } else if ((Math.abs(botpose3D.getRotation().getX()) > 5
                     || Math.abs(botpose3D.getRotation().getY()) > 5)) { // when tilted
 
-                Telemetry.print("Pose tilted: " + reject);
+                Telemetry.log("Pose tilted", reject);
                 reject = true;
             }
 
@@ -167,13 +167,11 @@ public class Vision extends SubsystemBase {
             VisionConfig.VISION_STD_DEV_THETA = 0.001;
 
             // Posts Current X,Y, and Angle (Theta) values
-            Telemetry.print(
-                    "Vision X: "
-                            + pose.getX()
-                            + " Y: "
-                            + pose.getY()
-                            + " Theta: "
-                            + pose.getRotation().getDegrees());
+            double[] visionPose = {botpose.getX(), botpose.getY(), botpose.getRotation().getDegrees()};
+            Telemetry.log("Vision Pose", visionPose);
+            // Telemetry.log("Vision X: ", botpose.getX());
+            // Telemetry.log("Vision Y: ", botpose.getY());
+            // Telemetry.log("Vision Theta: ", botpose.getRotation().getDegrees());
 
             Robot.getSwerve()
                     .setVisionMeasurementStdDevs(
@@ -186,13 +184,8 @@ public class Vision extends SubsystemBase {
             Robot.getSwerve().addVisionMeasurement(integratedPose, poseTimestamp);
             pose = Robot.getSwerve().getRobotPose();
             // Gets updated pose of x, y, and theta values
-            Telemetry.print(
-                    "Vision X: "
-                            + pose.getX()
-                            + " Y: "
-                            + pose.getY()
-                            + " Theta: "
-                            + pose.getRotation().getDegrees());
+            visionPose = new double[] {pose.getX(), pose.getY(), pose.getRotation().getDegrees()};
+            Telemetry.log("Vision Pose", visionPose);
 
             // print "success"
             return true;
@@ -258,53 +251,62 @@ public class Vision extends SubsystemBase {
         }
 
         public boolean getCameraConnection() {
-            Telemetry.print(
-                    "Vision " + name + " ConnectionStatus: " + limelight.isCameraConnected());
+            Telemetry.log(
+                "Vision " + name + " ConnectionStatus", limelight.isCameraConnected());
             return limelight.isCameraConnected();
         }
 
         public boolean getIntegratingStatus() { // Vision/Integrating
-            Telemetry.print("Vision " + name + " IntegratingStatus: " + limelight.isIntegrating());
+            Telemetry.log(
+                "Vision " + name + " IntegratingStatus", limelight.isIntegrating());
             return limelight.isIntegrating();
         }
 
         public String getLogStatus() {
-            Telemetry.print("Vision " + name + " LogStatus: " + limelight.getLogStatus());
+            Telemetry.log(
+                "Vision " + name + " LogStatus", limelight.getLogStatus());
             return limelight.getLogStatus();
         }
 
         public String getTagStatus() {
-            Telemetry.print("Vision " + name + " TagStatus: " + limelight.getTagStatus());
+            Telemetry.log(
+                "Vision " + name + " TagStatus", limelight.getTagStatus());
             return limelight.getLogStatus();
         }
 
         public Pose2d getPose() {
-            Telemetry.print("Vision " + name + " Pose: " + limelight.getRawPose3d().toPose2d());
+            Telemetry.log(
+                "Vision " + name + " Pose", limelight.getRawPose3d().toPose2d());
             return limelight.getRawPose3d().toPose2d();
         }
 
         public Pose2d getMegaPose() {
-            Telemetry.print("Vision " + name + " MegaPose: " + limelight.getMegaPose2d());
+            Telemetry.log(
+                "Vision " + name + " MegaPose", limelight.getMegaPose2d());
             return limelight.getMegaPose2d();
         }
 
         public double getPoseX() {
-            Telemetry.print("Vision " + name + " PoseX: " + getPose().getX());
+            Telemetry.log(
+                "Vision " + name + " PoseX", getPose().getX());
             return getPose().getX();
         }
 
         public double getPoseY() {
-            Telemetry.print("Vision " + name + " PoseY: " + getPose().getY());
+            Telemetry.log(
+                "Vision " + name + " PoseY", getPose().getY());
             return getPose().getY();
         }
 
         public double getTagCount() {
-            Telemetry.print("Vision " + name + " TagCount: " + limelight.getTagCountInView());
+            Telemetry.log(
+                "Vision " + name + " TagCount", limelight.getTagCountInView());
             return limelight.getTagCountInView();
         }
 
         public double getTargetSize() {
-            Telemetry.print("Vision " + name + " TargetSize: " + limelight.getTargetSize());
+            Telemetry.log(
+                "Vision " + name + " TargetSize", limelight.getTargetSize());
             return limelight.getTargetSize();
         }
     }
