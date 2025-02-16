@@ -143,8 +143,7 @@ public class Vision extends SubsystemBase {
         if (targetInView) {
             // replace botpose with this.pose
             Pose2d botpose = botpose3D.toPose2d();
-            Pose2d pose = this.pose.getPose2d();
-            pose = Robot.swerve.getRobotPose();
+            Pose2d pose = Robot.getSwerve().getRobotPose();
             if (Field.poseOutOfField(botpose3D)
                     || Math.abs(botpose3D.getZ()) > 0.25
                     || (Math.abs(botpose3D.getRotation().getX()) > 5
@@ -175,21 +174,26 @@ public class Vision extends SubsystemBase {
             VisionConfig.VISION_STD_DEV_THETA = 0.001;
 
             //Posts Current X,Y, and Angle (Theta) values
-            Telemetry.print("Vision X: " + df.format(this.pose.getPose2d().getX()) + " Y: " + df.format(this.pose.getPose2d().getY()) + " Theta: " + df.format(this.pose.getPose2d().getRotation().getDegrees()));
+            Telemetry.print("Vision X: " + df.format(pose.getX()) + 
+            " Y: " + df.format(pose.getY()) + 
+            " Theta: " + df.format(pose.getRotation().getDegrees()));
 
-            Robot.swerve.setVisionMeasurementStdDevs(
+            Robot.getSwerve().setVisionMeasurementStdDevs(
                     VecBuilder.fill(
                             VisionConfig.VISION_STD_DEV_X,
                             VisionConfig.VISION_STD_DEV_Y,
                             VisionConfig.VISION_STD_DEV_THETA));
 
             Pose2d integratedPose = new Pose2d(megaPose.getTranslation(), botpose.getRotation());
-            Robot.swerve.addVisionMeasurement(integratedPose, poseTimestamp);
+            Robot.getSwerve().addVisionMeasurement(integratedPose, poseTimestamp);
             pose =
-                    Robot.swerve
+                    Robot.getSwerve()
                             .getRobotPose(); 
             // Gets updated pose of x, y, and theta values 
-            Telemetry.print("Vision X: " + df.format(this.pose.getPose2d().getX()) + " Y: " + df.format(this.pose.getPose2d().getY()) + " Theta: " + df.format(this.pose.getPose2d().getRotation().getDegrees()));
+            Telemetry.print(
+                "Vision X: " + df.format(pose.getX()) + 
+                " Y: " + df.format(pose.getY()) +
+                 " Theta: " + df.format(pose.getRotation().getDegrees()));
             
             // print "success"
             return true;
