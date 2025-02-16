@@ -18,10 +18,8 @@ import frc.spectrumLib.vision.Limelight.LimelightConfig;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import lombok.Getter;
-import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
 
-// TODO: Auto log output may need to be replaced
+
 
 public class Vision extends SubsystemBase {
     /**
