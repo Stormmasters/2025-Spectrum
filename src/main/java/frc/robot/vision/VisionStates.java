@@ -5,7 +5,7 @@ import frc.robot.Robot;
 import frc.spectrumLib.Telemetry;
 
 public class VisionStates {
-    // TODO: needs aligntovision and drivetovisiontarget methods
+    // TODO: needs aligntovision, alignwithpose, and drivetovisiontarget methods
 
     private static Vision vision = Robot.getVision();
 

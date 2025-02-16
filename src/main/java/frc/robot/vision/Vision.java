@@ -46,10 +46,12 @@ public class Vision extends SubsystemBase {
         /* Pipeline configs */
         public static final int leftTagPipeline = 0;
 
-        /* Pose Estimation Constants (2024) */
+        /* Pose Estimation Constants */
 
         // Increase these numbers to trust global measurements from vision less. (uses a matrix)
-        // (2024)
+        // 
+        public static final double VISION_REJECT_Distance = 1.8;
+
         public static double VISION_STD_DEV_X = 0.5;
         public static double VISION_STD_DEV_Y = 0.5;
         public static double VISION_STD_DEV_THETA = 99999999;
@@ -57,12 +59,11 @@ public class Vision extends SubsystemBase {
         public static final Matrix<N3, N1> visionStdMatrix =
                 VecBuilder.fill(VISION_STD_DEV_X, VISION_STD_DEV_Y, VISION_STD_DEV_THETA);
 
-        /* Vision Command Configs (2024)*/
-        // TODO: alignToTag vision &  using pose to align itself
+        /* Vision Command Configs */
+        // TODO: alignToTag vision etc.
 
-        /*Pose Estimation Constants (2024) */
-        public static final double VISION_REJECT_Distance = 1.8;
-    } // Excludes Detect LL
+        
+    } 
 
     /* Limelights */
     public final Limelight leftLL =
@@ -73,9 +74,6 @@ public class Vision extends SubsystemBase {
     public final Limelight[] allLimelights = {leftLL};
 
     private final DecimalFormat df = new DecimalFormat();
-
-    // @AutoLogOutput(key = "Vision/a_Integrating")
-    
 
     public ArrayList<Trio<Pose3d, Pose2d, Double>> autonPoses =
             new ArrayList<Trio<Pose3d, Pose2d, Double>>();
@@ -96,7 +94,6 @@ public class Vision extends SubsystemBase {
             limelight.setLEDMode(false);
         }
 
-        // removed detectLL(detect Limelight) for now
 
     }
 
@@ -104,6 +101,10 @@ public class Vision extends SubsystemBase {
     public void periodic() {}
 
     // TODO:addFilteredVisionInput method
+
+    // TODO:Auton Reset pose to Vision method
+
+    // TODO: targetInView using color pipeline method
 
     public void resetPoseToVision() {
         Limelight ll = getBestLimelight();
@@ -173,7 +174,7 @@ public class Vision extends SubsystemBase {
             VisionConfig.VISION_STD_DEV_Y = 0.001;
             VisionConfig.VISION_STD_DEV_THETA = 0.001;
 
-            // RobotTelemetry would've posted the old the old x, y, and theta values
+            //Posts Current X,Y, and Angle (Theta) values
             Telemetry.print("Vision X: " + df.format(this.pose.getPose2d().getX()) + " Y: " + df.format(this.pose.getPose2d().getY()) + " Theta: " + df.format(this.pose.getPose2d().getRotation().getDegrees()));
 
             Robot.swerve.setVisionMeasurementStdDevs(
@@ -187,17 +188,15 @@ public class Vision extends SubsystemBase {
             pose =
                     Robot.swerve
                             .getRobotPose(); 
-            // get updated pose of x, y, and theta values and then
+            // Gets updated pose of x, y, and theta values 
             Telemetry.print("Vision X: " + df.format(this.pose.getPose2d().getX()) + " Y: " + df.format(this.pose.getPose2d().getY()) + " Theta: " + df.format(this.pose.getPose2d().getRotation().getDegrees()));
+            
             // print "success"
             return true;
         }
         return false; // target not in view
     }
 
-    // TODO:Auton Reset pose to Vision
-
-    // TODO: targetInView using color pipeline
 
     /**
      * If at least one LL has an accurate pose
@@ -246,7 +245,8 @@ public class Vision extends SubsystemBase {
                 .withName("Vision.blinkLimelights");
     }
 
-    // all limelights using the same pipeline
+    
+
 
     /** Logging */
     public static class LimelightLogger{
