@@ -14,19 +14,24 @@ public class InClimbStates {
 
     public static void setupDefaultCommand() {
         inClimb.setDefaultCommand(
-                log(InClimbStates.home().ignoringDisable(true).withName("InClimb.default")));
+                log(inClimb.runHoldInClimb().ignoringDisable(true).withName("InClimb.default")));
     }
 
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+
         groundAlgae.whileTrue(log(algaeFloorIntake()));
+        groundAlgae.onFalse(log(home()));
         groundCoral.whileTrue(log(coralFloorIntake()));
+        groundCoral.onFalse(log(home()));
 
         climbPrep.whileTrue(log(climbPrep()));
         climbFinish.whileTrue(log(climbFinish()));
         homeAll.onTrue(log(home()));
         processorLollipopScore.whileTrue(log(processorLollipopScore()));
+        processorLollipopScore.onFalse(log(home()));
+
         homeInClimb.whileTrue(log(zero()));
     }
 

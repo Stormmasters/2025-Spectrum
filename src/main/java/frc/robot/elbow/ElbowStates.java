@@ -3,6 +3,7 @@ package frc.robot.elbow;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.robot.elbow.Elbow.ElbowConfig;
 import frc.spectrumLib.Telemetry;
@@ -20,22 +21,35 @@ public class ElbowStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        stationIntaking.whileTrue(log(coralIntake()));
-        stationExtendedIntake.whileTrue(log(coralIntake()));
 
-        scoreState.and(L2Coral).onTrue(log(score2()));
-        scoreState.and(L3Coral).onTrue(log(score3()));
-        scoreState.and(L4Coral).onTrue(log(score4()));
+        stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
+        stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
+        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
+        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
 
-        L2Algae.whileTrue(log(l2Algae()));
-        L3Algae.whileTrue(log(l3Algae()));
+        scoreState.and(L2Coral).and(backwardMode.not()).onTrue(log(score2()));
+        scoreState.and(L2Coral).and(backwardMode).onTrue(log(reverse(score2())));
+        scoreState.and(L3Coral).and(backwardMode.not()).onTrue(log(score3()));
+        scoreState.and(L3Coral).and(backwardMode).onTrue(log(reverse(score3())));
+        scoreState.and(L4Coral).and(backwardMode.not()).onTrue(log(score4()));
+        scoreState.and(L4Coral).and(backwardMode).onTrue(log(reverse(score4())));
 
-        L1Coral.whileTrue(log(l1Coral()));
-        L2Coral.whileTrue(log(l2Coral()));
-        L3Coral.whileTrue(log(l3Coral()));
-        L4Coral.whileTrue(log(l4Coral()));
+        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
+        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
+        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
+        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
 
-        barge.whileTrue(log(barge()));
+        L1Coral.and(backwardMode.not()).whileTrue(log(l1Coral()));
+        L1Coral.and(backwardMode).whileTrue(log(reverse(l1Coral())));
+        L2Coral.and(backwardMode.not()).whileTrue(log(l2Coral()));
+        L2Coral.and(backwardMode).whileTrue(log(reverse(l2Coral())));
+        L3Coral.and(backwardMode.not()).whileTrue(log(l3Coral()));
+        L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
+        L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
+        L4Coral.and(backwardMode).whileTrue(log(reverse(l4Coral())));
+
+        barge.and(backwardMode.not()).whileTrue(log(barge()));
+        barge.and(backwardMode).whileTrue(log(reverse(barge())));
         homeAll.whileTrue(log(home()));
 
         algaeHandoff.whileTrue(log(handOffAlgae()));
@@ -46,23 +60,22 @@ public class ElbowStates {
         return () -> elbow.getPositionPercentage();
     }
 
-    public static DoubleSupplier switchSigns(DoubleSupplier supplier) {
-        return () -> -supplier.getAsDouble();
-    }
-
     public static Command score2() {
         double newPos = 15 + config.getL2Coral();
-        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score2");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+                .withName("Elbow.score2");
     }
 
     public static Command score3() {
         double newPos = 15 + config.getL3Coral();
-        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score3");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+                .withName("Elbow.score3");
     }
 
     public static Command score4() {
         double newPos = 20 + config.getL4Coral();
-        return elbow.moveToPercentage(() -> newPos).withName("Elbow.score4");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+                .withName("Elbow.score4");
     }
 
     public static Command runElbow(DoubleSupplier speed) {
@@ -79,31 +92,38 @@ public class ElbowStates {
 
     /* Scoring positions */
     public static Command l2Algae() {
-        return elbow.moveToPercentage(config::getL2Algae).withName("Elbow.l2Algae");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL2Algae))
+                .withName("Elbow.l2Algae");
     }
 
     public static Command l3Algae() {
-        return elbow.moveToPercentage(config::getL3Algae).withName("Elbow.l3Algae");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL3Algae))
+                .withName("Elbow.l3Algae");
     }
 
     public static Command barge() {
-        return elbow.moveToPercentage(config::getBarge).withName("Elbow.barge");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getBarge))
+                .withName("Elbow.barge");
     }
 
     public static Command l1Coral() {
-        return elbow.moveToPercentage(config::getL1Coral).withName("Twist.L1Coral");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL1Coral))
+                .withName("Twist.L1Coral");
     }
 
     public static Command l2Coral() {
-        return elbow.moveToPercentage(config::getL2Coral).withName("Elbow.l2Coral");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL2Coral))
+                .withName("Elbow.l2Coral");
     }
 
     public static Command l3Coral() {
-        return elbow.moveToPercentage(config::getL3Coral).withName("Elbow.l3Coral");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL3Coral))
+                .withName("Elbow.l3Coral");
     }
 
     public static Command l4Coral() {
-        return elbow.moveToPercentage(config::getL4Coral).withName("Elbow.l4Coral");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL4Coral))
+                .withName("Elbow.l4Coral");
     }
 
     // missing auton Elbow commands, add when auton is added
@@ -113,7 +133,8 @@ public class ElbowStates {
     }
 
     public static Command coralIntake() {
-        return elbow.moveToPercentage(config::getCoralIntake).withName("Elbow.CoralIntake");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getCoralIntake))
+                .withName("Elbow.CoralIntake");
     }
 
     public static Command coastMode() {
@@ -138,5 +159,11 @@ public class ElbowStates {
     // Log Command
     protected static Command log(Command cmd) {
         return Telemetry.log(cmd);
+    }
+
+    // Negate position command
+    protected static Command reverse(Command cmd) {
+        return cmd.deadlineFor(
+                Commands.startEnd(() -> config.setReversed(true), () -> config.setReversed(false)));
     }
 }

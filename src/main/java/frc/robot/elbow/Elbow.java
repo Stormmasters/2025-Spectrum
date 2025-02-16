@@ -26,7 +26,9 @@ import lombok.*;
 public class Elbow extends Mechanism {
 
     public static class ElbowConfig extends Config {
-        /* Elbow positions in percentage of max rotation || 0 is horizontal */
+        @Getter @Setter private boolean reversed = false;
+
+        /* Elbow positions in percentage of max rotation || 0 is vertical up || positions should be towards the front of the robot */
 
         // TODO: Find elbow positions
         @Getter private final double handAlgae = 99;
@@ -194,6 +196,14 @@ public class Elbow extends Mechanism {
                 .andThen(
                         run(() -> setMMPosition(() -> percentToRotations(percent)))
                                 .withName(getName() + ".runPosePercentage"));
+    }
+
+    public double checkReversed(DoubleSupplier position) {
+        if (!config.isReversed()) {
+            return position.getAsDouble();
+        }
+
+        return position.getAsDouble() * -1;
     }
 
     // --------------------------------------------------------------------------------
