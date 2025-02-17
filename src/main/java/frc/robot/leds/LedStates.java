@@ -23,7 +23,7 @@ public class LedStates {
         testModePattern(Util.testMode.and(Util.dsAttached));
 
         // Elevator Led Commands
-        elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
+        elevatorUpLED(ElevatorStates.isLeftUp.and(Util.teleop), 6);
     }
 
     /** Default LED commands for each mode */
