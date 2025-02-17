@@ -223,7 +223,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         return run(() -> this.setControl(requestSupplier.get())).ignoringDisable(true);
     }
 
-    private ChassisSpeeds getCurrentRobotChassisSpeeds() {
+    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return getKinematics().toChassisSpeeds(getState().ModuleStates);
     }
 

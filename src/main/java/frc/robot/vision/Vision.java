@@ -4,8 +4,10 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.reefscape.Field;
@@ -14,9 +16,11 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.Trio;
 import frc.spectrumLib.vision.Limelight;
 import frc.spectrumLib.vision.Limelight.LimelightConfig;
+import frc.spectrumLib.vision.LimelightHelpers.RawFiducial;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Vision extends SubsystemBase {
 
@@ -75,6 +79,8 @@ public class Vision extends SubsystemBase {
 
     private final DecimalFormat df = new DecimalFormat();
 
+    @Getter @Setter boolean isIntegrating = false;
+
     public ArrayList<Trio<Pose3d, Pose2d, Double>> autonPoses =
             new ArrayList<Trio<Pose3d, Pose2d, Double>>();
 
@@ -93,9 +99,177 @@ public class Vision extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        double yaw = Robot.getSwerve().getRobotPose().getRotation().getDegrees();
+        for (Limelight limelight : allLimelights) {
+            limelight.setRobotOrientation(yaw);
 
-    // TODO:addFilteredVisionInput method
+            if (DriverStation.isAutonomousEnabled() && limelight.targetInView()) {
+                Pose3d botpose3D = limelight.getRawPose3d();
+                Pose2d megaPose2d = limelight.getMegaPose2d();
+                double timeStamp = limelight.getRawPoseTimestamp();
+                Pose2d integratablePose =
+                        new Pose2d(megaPose2d.getTranslation(), botpose3D.toPose2d().getRotation());
+                autonPoses.add(Trio.of(botpose3D, integratablePose, timeStamp));
+            } 
+        }
+        try {
+            isIntegrating = false;
+            // Will NOT run in auto
+            if (DriverStation.isTeleopEnabled()) {
+                // if the front camera sees tag and we are aiming, only use that camera
+                // if (isAiming && speakerLL.targetInView()) {
+                //     for (Limelight limelight : allLimelights) {
+                //         if (limelight.CAMERA_NAME == speakerLL.CAMERA_NAME) {
+                //             addFilteredVisionInput(limelight);
+                //         } else {
+                //             limelight.sendInvalidStatus("speaker only rejection");
+                //         }
+                //         isIntegrating |= limelight.isIntegrating;
+                //     }
+                // } else {
+
+                //choose LL with best view of tags and integrate from only that camera
+                Limelight bestLimelight = getBestLimelight();
+                for (Limelight limelight : allLimelights) {
+                    if (limelight.getCameraName() == bestLimelight.getCameraName()) {
+                        addFilteredVisionInput(bestLimelight);
+                    } else {
+                        limelight.sendInvalidStatus("not best rejection");
+                    } 
+                    isIntegrating |= limelight.getIsIntegrating(); 
+                }
+            }
+
+        } catch (Exception e) {
+            Telemetry.print("Vision pose not present but tried to access it");
+        }
+    }
+
+    
+
+    private void addFilteredVisionInput(Limelight ll) {
+        double xyStds = 1000;
+        double degStds = 1000;
+
+        // integrate vision
+        if (ll.targetInView()) {
+            boolean multiTags = ll.multipleTagsInView();
+            double timeStamp = ll.getRawPoseTimestamp();
+            double targetSize = ll.getTargetSize();
+            Pose3d botpose3D = ll.getRawPose3d();
+            Pose2d botpose = botpose3D.toPose2d();
+            Pose2d megaPose2d = ll.getMegaPose2d();
+            RawFiducial[] tags = ll.getRawFiducial();
+            double highestAmbiguity = 2;
+            ChassisSpeeds robotSpeed = Robot.getSwerve().getCurrentRobotChassisSpeeds();
+
+            // distance from current pose to vision estimated pose
+            double poseDifference =
+                    Robot.getSwerve().getRobotPose().getTranslation().getDistance(botpose.getTranslation());
+
+            /* rejections */
+            // reject pose if individual tag ambiguity is too high
+            ll.setTagStatus("");
+            for (RawFiducial tag : tags) {
+                // search for highest ambiguity tag for later checks
+                if (highestAmbiguity == 2) {
+                    highestAmbiguity = tag.ambiguity;
+                } else if (tag.ambiguity > highestAmbiguity) {
+                    highestAmbiguity = tag.ambiguity;
+                }
+                // log ambiguities
+                ll.setTagStatus("Tag " + tag.id + ": " + tag.ambiguity);
+                // ambiguity rejection check
+                if (tag.ambiguity > 0.9) {
+                    ll.sendInvalidStatus("ambiguity rejection");
+                    return;
+                }
+            }
+            if (Field.poseOutOfField(botpose3D)) {
+                // reject if pose is out of the field
+                ll.sendInvalidStatus("bound rejection");
+                return;
+            } else if (Math.abs(robotSpeed.omegaRadiansPerSecond) >= 1.6) {
+                // reject if we are rotating more than 0.5 rad/s
+                ll.sendInvalidStatus("rotation rejection");
+                return;
+            } else if (Math.abs(botpose3D.getZ()) > 0.25) {
+                // reject if pose is .25 meters in the air
+                ll.sendInvalidStatus("height rejection");
+                return;
+            } else if (Math.abs(botpose3D.getRotation().getX()) > 5
+                    || Math.abs(botpose3D.getRotation().getY()) > 5) {
+                // reject if pose is 5 degrees titled in roll or pitch
+                ll.sendInvalidStatus("roll/pitch rejection");
+                return;
+            } else if (targetSize <= 0.025) {
+                ll.sendInvalidStatus("size rejection");
+                return;
+            }
+            /* integrations */
+            // if almost stationary and extremely close to tag
+            else if (robotSpeed.vxMetersPerSecond + robotSpeed.vyMetersPerSecond <= 0.2
+                    && targetSize > 0.4) {
+                ll.sendValidStatus("Stationary close integration");
+                xyStds = 0.1;
+                degStds = 0.1;
+            } else if (multiTags && targetSize > 0.05) {
+                ll.sendValidStatus("Multi integration");
+                xyStds = 0.25;
+                degStds = 8;
+                if (targetSize > 0.09) {
+                    ll.sendValidStatus("Strong Multi integration");
+                    xyStds = 0.1;
+                    degStds = 0.1;
+                }
+            } else if (targetSize > 0.8 && poseDifference < 0.5) {
+                ll.sendValidStatus("Close integration");
+                xyStds = 0.5;
+                degStds = 16;
+            } else if (targetSize > 0.1 && poseDifference < 0.3) {
+                ll.sendValidStatus("Proximity integration");
+                xyStds = 2.0;
+                degStds = 999999;
+            } else if (highestAmbiguity < 0.25 && targetSize >= 0.03) {
+                ll.sendValidStatus("Stable integration");
+                xyStds = 0.5;
+                degStds = 999999;
+            } else {
+                ll.sendInvalidStatus(
+                        "catch rejection: "
+                                + df.format(poseDifference)
+                                + " poseDiff");
+                return;
+            }
+
+            // strict with degree std and ambiguity and rotation because this is megatag1
+            if (highestAmbiguity > 0.5) {
+                degStds = 15;
+            }
+
+            if (robotSpeed.omegaRadiansPerSecond >= 0.5) {
+                degStds = 15;
+            }
+
+            // track STDs
+            VisionConfig.VISION_STD_DEV_X = xyStds;
+            VisionConfig.VISION_STD_DEV_Y = xyStds;
+            VisionConfig.VISION_STD_DEV_THETA = degStds;
+
+            Robot.getSwerve().setVisionMeasurementStdDevs(
+                    VecBuilder.fill(
+                            VisionConfig.VISION_STD_DEV_X,
+                            VisionConfig.VISION_STD_DEV_Y,
+                            VisionConfig.VISION_STD_DEV_THETA));
+
+            Pose2d integratedPose = new Pose2d(megaPose2d.getTranslation(), botpose.getRotation());
+            Robot.getSwerve().addVisionMeasurement(integratedPose, timeStamp);
+        } else {
+            ll.setTagStatus("no tags");
+            ll.sendInvalidStatus("no tag found rejection");
+        }
+    }
 
     // TODO:Auton Reset pose to Vision method
 

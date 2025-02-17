@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class VisionStates {
-    // TODO: needs aligntovision, alignwithpose, and drivetovisiontarget methods
+    // TODO: needs alignwithpose, and drivetovisiontarget methods
     // TODO: add logging for VisionStates
 
     private static Vision vision = Robot.getVision();
