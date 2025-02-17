@@ -5,13 +5,22 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Robot;
-import frc.robot.swerve.commands.SwerveCommands;
+import frc.robot.swerve.SwerveStates;
 import frc.robot.vision.Vision.CommandConfig;
 import frc.robot.vision.Vision.VisionConfig;
 import frc.spectrumLib.vision.Limelight;
 import java.util.function.DoubleSupplier;
 
-public class AlignToVision extends PIDCommand {
+
+/**Notes:
+ * PIDCommand is a command that uses a PIDController to control a subsystem. It is a subclass of CommandBase and implements the Command interface.
+ * and will be removed
+ * 
+ * PIDController is a class that implements a PID controller. It is part of the WPILib library and is used to control a system using PID control.
+ * and will be the class used moving forward
+ * 
+ */
+public class AlignToVisionTarget extends PIDController {
     private static CommandConfig config;
     private static Limelight limelight;
     Command driveCommand;
@@ -30,17 +39,17 @@ public class AlignToVision extends PIDCommand {
      * @param offset offset left or right of the target in the X-plane
      */
     public AlignToVisionTarget(
+        //original PIDCommand super( PIDController, measurement, setpoint, output, swerve)
             CommandConfig commandConfig, DoubleSupplier fwdPositiveSupplier, double offset) {
-        super(
                 // The controller that the command will use
-                new PIDController(commandConfig.kp, 0, 0),
+                super(commandConfig.kp, 0, 0);
                 // This should return the measurement
                 () -> commandConfig.limelight.getHorizontalOffset(),
                 // This should return the setpoint (can also be a constant)
                 () -> offset,
                 // This uses the output
                 output -> setOutput(output),
-                Robot.swerve);
+                Robot.getSwerve());
         config = commandConfig;
         limelight = commandConfig.limelight;
         this.getController().setTolerance(commandConfig.tolerance);
@@ -93,7 +102,7 @@ public class AlignToVision extends PIDCommand {
     public void initialize() {
         super.initialize();
         out = 0;
-        Robot.swerve.resetRotationController();
+        Robot.getSwerve().resetRotationController();
         driveCommand.initialize();
         limelight.setLimelightPipeline(config.pipelineIndex);
     }

@@ -137,7 +137,7 @@ public class Vision extends SubsystemBase {
                     } else {
                         limelight.sendInvalidStatus("not best rejection");
                     } 
-                    isIntegrating |= limelight.getIsIntegrating(); 
+                    isIntegrating |= limelight.isIntegrating(); 
                 }
             }
 
