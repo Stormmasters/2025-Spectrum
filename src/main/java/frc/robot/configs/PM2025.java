@@ -1,3 +1,7 @@
+package frc.robot.configs;
+
+import frc.robot.Robot.Config;
+
 public class PM2025 extends Config {
 
     public PM2025() {
