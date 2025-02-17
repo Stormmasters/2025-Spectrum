@@ -69,7 +69,7 @@ public class Elevator extends Mechanism {
             configReverseSoftLimit(minRotations, true);
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive();
-            setFollowerConfigs(new FollowerConfig("ElevatorRight", 41, Rio.CANIVORE,true));
+            setFollowerConfigs(new FollowerConfig("ElevatorRight", 41, Rio.CANIVORE, true));
         }
 
         /** Use these method to set the config for the mechanism on each robot */

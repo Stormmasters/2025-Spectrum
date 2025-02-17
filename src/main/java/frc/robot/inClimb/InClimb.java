@@ -70,7 +70,7 @@ public class InClimb extends Mechanism {
             configNeutralBrakeMode(true);
             configClockwise_Positive();
             setSimRatio(14);
-            setFollowerConfigs(new FollowerConfig("InClimbBottom", 51, Rio.CANIVORE,true));
+            setFollowerConfigs(new FollowerConfig("InClimbBottom", 51, Rio.RIO_CANBUS, true));
         }
 
         public InClimbConfig modifyMotorConfig(TalonFX motor) {
