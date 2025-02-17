@@ -22,7 +22,7 @@ public enum Rio {
     PM_2025("032B4BB3", true), // 032B4BB3
     FM_2024("032B1F69", true),
     FM_20235("0329AD07", true),
-    AM_2025("00000000", true), // 032B4BB3
+    AM_2025("00000000", true),
     SIM("", true), // e.g. test default or simulation
     UNKNOWN(null, true);
 
