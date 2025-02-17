@@ -9,7 +9,10 @@ import frc.robot.swerve.SwerveStates;
 import frc.robot.vision.Vision.CommandConfig;
 import frc.robot.vision.Vision.VisionConfig;
 import frc.spectrumLib.vision.Limelight;
+import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
+import lombok.Setter;
+import lombok.Getter;
 
 
 /**Notes:
@@ -20,7 +23,9 @@ import java.util.function.DoubleSupplier;
  * and will be the class used moving forward
  * 
  */
-public class AlignToVisionTarget extends PIDController {
+
+ //PIDCommand used a framework for this class
+public class AlignToVisionTarget {
     private static CommandConfig config;
     private static Limelight limelight;
     Command driveCommand;
@@ -28,6 +33,18 @@ public class AlignToVisionTarget extends PIDController {
     private static double out = 0;
     private double heading = Integer.MIN_VALUE;
     private double horizontalSetpoint;
+
+    
+    protected final PIDController controller; 
+
+    /** Measurement getter. */ //changed from DoubleSupplier to double
+    protected double measurement;
+
+  /** Setpoint getter. */ //changed from DoubleSupplier to double
+    protected double setpoint;
+
+  /** PID controller output consumer. */
+    protected DoubleConsumer output;
 
     /**
      * Creates a new AlignToTarget command that aligns to a vision target (apriltag, retroreflective
@@ -42,14 +59,14 @@ public class AlignToVisionTarget extends PIDController {
         //original PIDCommand super( PIDController, measurement, setpoint, output, swerve)
             CommandConfig commandConfig, DoubleSupplier fwdPositiveSupplier, double offset) {
                 // The controller that the command will use
-                super(commandConfig.kp, 0, 0);
+                controller = new PIDController(commandConfig.kp, 0, 0);
                 // This should return the measurement
-                () -> commandConfig.limelight.getHorizontalOffset(),
+                measurement = commandConfig.limelight.getHorizontalOffset();
                 // This should return the setpoint (can also be a constant)
-                () -> offset,
+                setpoint = offset;
                 // This uses the output
                 output -> setOutput(output),
-                Robot.getSwerve());
+                Robot.getSwerve();
         config = commandConfig;
         limelight = commandConfig.limelight;
         this.getController().setTolerance(commandConfig.tolerance);

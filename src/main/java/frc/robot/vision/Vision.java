@@ -1,9 +1,11 @@
 package frc.robot.vision;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -273,7 +275,6 @@ public class Vision extends SubsystemBase {
 
     // TODO:Auton Reset pose to Vision method
 
-    // TODO: targetInView using color pipeline method
 
     public void resetPoseToVision() {
         Limelight ll = getBestLimelight();
@@ -386,35 +387,14 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    /** Set all Limelights to blink */
-    public Command blinkLimelights() {
-        return startEnd(
-                        () -> {
-                            for (Limelight limelight : allLimelights) {
-                                limelight.blinkLEDs();
-                            }
-                        },
-                        () -> {
-                            for (Limelight limelight : allLimelights) {
-                                limelight.setLEDMode(false);
-                            }
-                        })
-                .withName("Vision.blinkLimelights");
-    }
+   
 
-    /** Only blinks left limelight */
-    public Command solidLimelight() {
-        return startEnd(
-                        () -> {
-                            leftLL.setLEDMode(true);
-                        },
-                        () -> {
-                            leftLL.setLEDMode(false);
-                        })
-                .withName("Vision.solidLimelight");
-    }
 
     /** Logging */
+    /**
+     * Tracks position with Limelight using current logger (DogLog) to
+     * record data
+     */
     public static class LimelightLogger {
         private final Limelight limelight;
         private String name;
@@ -485,6 +465,10 @@ public class Vision extends SubsystemBase {
         }
     }
 
+    /**
+     * CommandConfig used to create a PIDController
+     * and for vision commands using other subsystems (i.e. swerve)
+     */
     public static class CommandConfig {
         public double kp;
         public double tolerance;
@@ -535,4 +519,168 @@ public class Vision extends SubsystemBase {
 
         public CommandConfig() {}
     }
+    // ------------------------------------------------------------------------------
+    // Config
+    // ------------------------------------------------------------------------------
+
+    //TODO: Changes between 2024 usage of Speaker to 2025 usage of Coral
+    /** 
+     * build a method that calculates the closest distance to coral face
+     * requires a method tocalculate distance from speaker position
+     * Build getDistancetoCoralTag
+     */
+    
+     /**
+     * REQUIRES ACCURATE POSE ESTIMATION. Uses trigonometric functions to calculate the angle
+     * between the robot heading and the angle required to face coral faces.
+     *
+     * @return angle between robot heading and speaker in degrees
+     */
+    // public double getThetaToSpeaker() {
+    //     // Translation2d speaker =
+    //     //         Field.flipXifRed(Field.Speaker.centerSpeakerOpening).toTranslation2d();
+    //     Translation2d speaker =
+    //             Field.flipXifRed(Field.Speaker.centerSpeakerPose)
+    //                     .getTranslation(); // getAdjustedSpeakerPos();
+    //     Translation2d robotXY = Robot.swerve.getPose().getTranslation();
+    //     double angleBetweenRobotAndSpeaker =
+    //             MathUtil.angleModulus(speaker.minus(robotXY).getAngle().getRadians());
+
+    //     return angleBetweenRobotAndSpeaker;
+    // }
+
+    // public double getAdjustedThetaToSpeaker() {
+    //     Translation2d speaker = getAdjustedSpeakerPos();
+    //     Translation2d robotXY = Robot.swerve.getPose().getTranslation();
+    //     double angleBetweenRobotAndSpeaker =
+    //             MathUtil.angleModulus(speaker.minus(robotXY).getAngle().getRadians());
+
+    //     return angleBetweenRobotAndSpeaker;
+    // }
+
+    // /** Returns the distance from the speaker in meters, adjusted for the robot's movement. */
+    // @AutoLogOutput(key = "Vision/SpeakerDistance")
+    // public double getSpeakerDistance() {
+    //     double poseDistance =
+    //             Robot.swerve.getPose().getTranslation().getDistance(getAdjustedSpeakerPos());
+    //     double tagDistance = getDistanceToCenterSpeakerTagFromRobot();
+    //     if (tagDistance != -1) {
+    //         return poseDistance; // tagDistance;
+    //     }
+    //     return poseDistance;
+    // }
+
+    // @AutoLogOutput(key = "Vision/SpeakerYDistance")
+    // public double getSpeakerYDelta() {
+    //     return Robot.swerve.getPose().getTranslation().getY() - getAdjustedSpeakerPos().getY();
+    // }
+
+    // public Translation2d getAdjustedSpeakerPos() {
+    //     return getAdjustedTargetPos(
+    //             new Translation2d(0, Field.Speaker.centerSpeakerOpening.toTranslation2d().getY()));
+    // }
+
+
+    // // Returns distance to the center of the speaker tag from the robot or -1 if not found
+    // public double getDistanceToCenterSpeakerTagFromRobot() {
+    //     RawFiducial[] tags = frontLL.getRawFiducial();
+    //     int speakerTagID = 7; // Blue Speaker Tag
+    //     if (Field.isRed()) {
+    //         speakerTagID = 4; // Red Speaker Tag
+    //     }
+
+    //     for (RawFiducial tag : tags) {
+    //         if (tag.id == speakerTagID) {
+    //             return tag.distToRobot;
+    //         }
+    //     }
+
+    //     return -1;
+    // }
+
+    /**
+     * Gets a field-relative position for the shot to the speaker the robot should take, adjusted
+     * for the robot's movement.
+     *
+     * @return A {@link Translation2d} representing a field relative position in meters.
+     */
+    public Translation2d getAdjustedTargetPos(Translation2d targetPose) {
+        double NORM_FUDGE = 0.075;
+        double tunableNoteVelocity = 1;
+        double tunableNormFudge = 0;
+        double tunableStrafeFudge = 1;
+        double tunableSpeakerYFudge = 0.0;
+        double tunableSpeakerXFudge = 0.0;
+
+        Translation2d robotPos = Robot.swerve.getPose().getTranslation();
+        targetPose = Field.flipXifRed(targetPose);
+        double xDifference = Math.abs(robotPos.getX() - targetPose.getX());
+        double spinYFudge =
+                (xDifference < 5.8)
+                        ? 0.05
+                        : 0.8; // change spin fudge for score distances vs. feed distances
+
+        ChassisSpeeds robotVel = Robot.swerve.getVelocity(true); // TODO: change
+
+        double distance = robotPos.getDistance(targetPose);
+        double normFactor =
+                Math.hypot(robotVel.vxMetersPerSecond, robotVel.vyMetersPerSecond) < NORM_FUDGE
+                        ? 0.0
+                        : Math.abs(
+                                MathUtil.angleModulus(
+                                                robotPos.minus(targetPose).getAngle().getRadians()
+                                                        - Math.atan2(
+                                                                robotVel.vyMetersPerSecond,
+                                                                robotVel.vxMetersPerSecond))
+                                        / Math.PI);
+
+        double x =
+                targetPose.getX() + (Field.isBlue() ? tunableSpeakerXFudge : -tunableSpeakerXFudge);
+        // - (robotVel.vxMetersPerSecond * (distance / tunableNoteVelocity));
+        //      * (1.0 - (tunableNormFudge * normFactor)));
+        double y =
+                targetPose.getY()
+                        + (Field.isBlue() ? -spinYFudge : spinYFudge)
+                        + tunableSpeakerYFudge;
+        // - (robotVel.vyMetersPerSecond * (distance / tunableNoteVelocity));
+        //       * tunableStrafeFudge);
+
+        return new Translation2d(x, y);
+    }
+
+    // ------------------------------------------------------------------------------
+    // Commands
+    // ------------------------------------------------------------------------------
+
+    //method (Command) alignToVisionTarget ( config, DoubleSupplier, offset) 
+
+     /** Set all Limelights to blink */
+     public Command blinkLimelights() {
+        return startEnd(
+                        () -> {
+                            for (Limelight limelight : allLimelights) {
+                                limelight.blinkLEDs();
+                            }
+                        },
+                        () -> {
+                            for (Limelight limelight : allLimelights) {
+                                limelight.setLEDMode(false);
+                            }
+                        })
+                .withName("Vision.blinkLimelights");
+    }
+
+    /** Only blinks left limelight */
+    public Command solidLimelight() {
+        return startEnd(
+                        () -> {
+                            leftLL.setLEDMode(true);
+                        },
+                        () -> {
+                            leftLL.setLEDMode(false);
+                        })
+                .withName("Vision.solidLimelight");
+    }
+
+
 }
