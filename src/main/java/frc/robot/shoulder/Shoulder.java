@@ -229,7 +229,7 @@ public class Shoulder extends Mechanism {
                                     -270,
                                     360 - 90,
                                     -90)
-                            .setMount(Robot.getElevatorLeft().getSim(), true),
+                            .setMount(Robot.getElevator().getSim(), true),
                     mech,
                     shoulderMotorSim,
                     "2" + config.getName()); // added 2 to the name to create it second

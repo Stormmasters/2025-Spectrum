@@ -17,6 +17,6 @@ public class FM20235 extends Config {
         shoulder.setAttached(true);
         elbow.setAttached(true);
 
-        elevatorLeft.setAttached(false);
+        elevator.setAttached(false);
     }
 }

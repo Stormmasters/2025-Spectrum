@@ -17,10 +17,8 @@ import frc.robot.coralIntake.CoralIntake;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
 import frc.robot.elbow.Elbow;
 import frc.robot.elbow.Elbow.ElbowConfig;
-import frc.robot.elevator.ElevatorLeft;
-import frc.robot.elevator.ElevatorLeft.ElevatorLeftConfig;
-import frc.robot.elevator.ElevatorRight;
-import frc.robot.elevator.ElevatorRight.ElevatorRightConfig;
+import frc.robot.elevator.Elevator;
+import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.groundIntake.GroundIntake;
 import frc.robot.groundIntake.GroundIntake.GroundIntakeConfig;
 import frc.robot.inClimb.InClimb;
@@ -66,8 +64,7 @@ public class Robot extends SpectrumRobot {
         public SwerveConfig swerve = new SwerveConfig();
         public GroundIntakeConfig groundIntake = new GroundIntakeConfig();
         public CoralIntakeConfig coralIntake = new CoralIntakeConfig();
-        public ElevatorLeftConfig elevatorLeft = new ElevatorLeftConfig();
-        public ElevatorRightConfig elevatorRight = new ElevatorRightConfig();
+        public ElevatorConfig elevator = new ElevatorConfig();
         public LedFullConfig leds = new LedFullConfig();
         public PilotConfig pilot = new PilotConfig();
         public OperatorConfig operator = new OperatorConfig();
@@ -78,8 +75,7 @@ public class Robot extends SpectrumRobot {
     }
 
     @Getter private static Swerve swerve;
-    @Getter private static ElevatorLeft elevatorLeft;
-    @Getter private static ElevatorRight elevatorRight;
+    @Getter private static Elevator elevator;
     @Getter private static GroundIntake groundIntake;
     @Getter private static CoralIntake coralIntake;
     @Getter private static LedFull leds;
@@ -126,8 +122,7 @@ public class Robot extends SpectrumRobot {
             pilot = new Pilot(config.pilot);
             swerve = new Swerve(config.swerve);
             Timer.delay(canInitDelay);
-            elevatorLeft = new ElevatorLeft(config.elevatorLeft);
-            elevatorRight = new ElevatorRight(config.elevatorRight);
+            elevator = new Elevator(config.elevator);
             Timer.delay(canInitDelay);
             inClimb = new InClimb(config.inClimb);
             Timer.delay(canInitDelay);

@@ -7,36 +7,25 @@ import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elbow.ElbowStates;
-import frc.robot.elevator.ElevatorLeft.ElevatorLeftConfig;
-import frc.robot.elevator.ElevatorRight.ElevatorRightConfig;
+import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.robot.shoulder.ShoulderStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.TuneValue;
 import java.util.function.DoubleSupplier;
 
 public class ElevatorStates {
-    private static ElevatorLeft elevatorLeft = Robot.getElevatorLeft();
-    private static ElevatorRight elevatorRight = Robot.getElevatorRight();
-    private static ElevatorLeftConfig configLeft = Robot.getConfig().elevatorLeft;
-    private static ElevatorRightConfig configRight = Robot.getConfig().elevatorRight;
+    private static Elevator elevator = Robot.getElevator();
+    private static ElevatorConfig config = Robot.getConfig().elevator;
 
     /* Check Elevator States */
-    public static final Trigger isLeftUp =
-            elevatorLeft.atPercentage(
-                    configLeft::getElevatorLeftUpHeight, configLeft::getTolerance);
-    public static final Trigger isLeftHome =
-            elevatorLeft.atPercentage(configLeft::getHome, configLeft::getTolerance);
-    public static final Trigger isRightUp =
-            elevatorRight.atPercentage(
-                    configRight::getElevatorRightUpHeight, configRight::getTolerance);
-    public static final Trigger isRightHome =
-            elevatorRight.atPercentage(configRight::getHome, configRight::getTolerance);
+    public static final Trigger isUp =
+            elevator.atPercentage(config::getElevatorUpHeight, config::getTolerance);
+    public static final Trigger isHome =
+            elevator.atPercentage(config::getHome, config::getTolerance);
 
     public static void setupDefaultCommand() {
-        elevatorLeft.setDefaultCommand(
-                holdLeftPosition().ignoringDisable(true).withName("ElevatorLeft.default"));
-        elevatorRight.setDefaultCommand(
-                holdRightPosition().ignoringDisable(true).withName("ElevatorRight.default"));
+        elevator.setDefaultCommand(
+                holdPosition().ignoringDisable(true).withName("Elevator.default"));
     }
 
     public static void setStates() {
@@ -74,15 +63,11 @@ public class ElevatorStates {
     }
 
     private static Command runElevator(DoubleSupplier speed) {
-        return elevatorLeft
-                .runPercentage(speed)
-                .withName("Elevator.runElevator")
-                .alongWith(elevatorRight.runPercentage(speed));
+        return elevator.runPercentage(speed).withName("Elevator.runElevator");
     }
 
     public static DoubleSupplier getPosition() {
-        return () ->
-                (elevatorLeft.getPositionRotations() + elevatorRight.getPositionRotations()) / 2;
+        return () -> elevator.getPositionRotations();
     }
 
     public static DoubleSupplier getElbowShoulderPos() {
@@ -93,7 +78,7 @@ public class ElevatorStates {
     }
 
     public static boolean allowedPosition() {
-        if ((getPosition().getAsDouble() * 100 / configLeft.getL2())
+        if ((getPosition().getAsDouble() * 100 / config.getL2())
                         - getElbowShoulderPos().getAsDouble()
                 > 0) {
             return true;
@@ -102,132 +87,83 @@ public class ElevatorStates {
         }
     }
 
-    private static Command holdLeftPosition() {
-        return elevatorLeft.holdPosition().withName("Elevator.holdPosition");
-    }
-
-    private static Command holdRightPosition() {
-        return elevatorRight.holdPosition().withName("Elevator.holdPosition");
+    private static Command holdPosition() {
+        return elevator.holdPosition().withName("Elevator.holdPosition");
     }
 
     private static Command fullExtend() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getFullExtend)
-                .withName("Elevator.fullExtend")
-                .alongWith(elevatorRight.moveToRotations(configRight::getFullExtend));
+        return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
     }
 
     private static Command score() {
         return new ProxyCommand(
                 () -> {
                     double originalPosition = ElevatorStates.getPosition().getAsDouble() - 10;
-                    return elevatorLeft
-                            .moveToPercentage(() -> originalPosition)
-                            .alongWith(elevatorRight.moveToPercentage(() -> originalPosition))
+                    return elevator.moveToPercentage(() -> originalPosition)
                             .withName("Elevator.score");
                 });
     }
 
     private static Command home() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getHome)
-                .alongWith(elevatorLeft.checkMaxCurrent(() -> 100))
-                .withName("Elevator.home")
-                .alongWith(elevatorRight.moveToRotations(configRight::getHome))
-                .alongWith(elevatorRight.checkMaxCurrent(() -> 100));
+        return elevator.moveToRotations(config::getHome)
+                .alongWith(elevator.checkMaxCurrent(() -> 100))
+                .withName("Elevator.home");
     }
 
     private static Command handOff() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getL3)
-                .alongWith(elevatorRight.moveToRotations(configRight::getL3))
+        return elevator.moveToRotations(config::getL3)
                 .withName("Elevator.handOffUp")
                 .until(() -> ElbowStates.getPosition().getAsDouble() > 90.0)
-                .andThen(
-                        elevatorLeft
-                                .moveToRotations(configLeft::getL2)
-                                .alongWith(elevatorRight.moveToRotations(configRight::getL2)))
+                .andThen(elevator.moveToRotations(config::getL2))
                 .withName("Elevator.handOffDown");
     }
 
     private static Command stationIntake() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getStationIntake)
-                .withName("Elevator.stationIntake")
-                .alongWith(elevatorRight.moveToRotations(configRight::getStationIntake));
+        return elevator.moveToRotations(config::getStationIntake)
+                .withName("Elevator.stationIntake");
     }
 
     private static Command stationExtendedIntake() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getStationExtendedIntake)
-                .withName("Elevator.stationExtendedIntake")
-                .alongWith(elevatorRight.moveToRotations(configRight::getStationExtendedIntake));
+        return elevator.moveToRotations(config::getStationExtendedIntake)
+                .withName("Elevator.stationExtendedIntake");
     }
 
     private static Command l1() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getL1)
-                .withName("Elevator.l1")
-                .alongWith(elevatorRight.moveToRotations(configRight::getL1));
+        return elevator.moveToRotations(config::getL1).withName("Elevator.l1");
     }
 
     private static Command l2() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getL2)
-                .withName("Elevator.l2")
-                .alongWith(elevatorRight.moveToRotations(configRight::getL2));
+        return elevator.moveToRotations(config::getL2).withName("Elevator.l2");
     }
 
     private static Command l3() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getL3)
-                .withName("Elevator.l3")
-                .alongWith(elevatorRight.moveToRotations(configRight::getL3));
+        return elevator.moveToRotations(config::getL3).withName("Elevator.l3");
     }
 
     private static Command l4() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getL4)
-                .withName("Elevator.l4")
-                .alongWith(elevatorRight.moveToRotations(configRight::getL4));
+        return elevator.moveToRotations(config::getL4).withName("Elevator.l4");
     }
 
     private static Command barge() {
-        return elevatorLeft
-                .moveToRotations(configLeft::getBarge)
-                .withName("Elevator.barge")
-                .alongWith(elevatorRight.moveToRotations(configRight::getBarge));
+        return elevator.moveToRotations(config::getBarge).withName("Elevator.barge");
     }
 
     private static Command zero() {
-        return elevatorLeft
-                .zeroElevatorLeftRoutine()
-                .withName("Zero Elevator")
-                .alongWith(elevatorRight.zeroElevatorRightRoutine());
+        return elevator.zeroElevatorRoutine().withName("Zero Elevator");
     }
 
     private static Command coastMode() {
-        return elevatorLeft
-                .coastMode()
-                .withName("Elevator.CoastMode")
-                .alongWith(elevatorRight.coastMode());
+        return elevator.coastMode().withName("Elevator.CoastMode");
     }
 
     private static Command ensureBrakeMode() {
-        return elevatorLeft
-                .ensureBrakeMode()
-                .withName("Elevator.BrakeMode")
-                .alongWith(elevatorRight.ensureBrakeMode());
+        return elevator.ensureBrakeMode().withName("Elevator.BrakeMode");
     }
 
     // Example of a TuneValue that is used to tune a single value in the code
     private static Command tuneElevator() {
-        return elevatorLeft
-                .moveToRotations(new TuneValue("Tune Elevator", 0).getSupplier())
-                .withName("Elevator.Tune")
-                .alongWith(
-                        elevatorRight.moveToRotations(
-                                new TuneValue("Tune Elevator", 0).getSupplier()));
+        return elevator.moveToRotations(new TuneValue("Tune Elevator", 0).getSupplier())
+                .withName("Elevator.Tune");
     }
 
     // Log Command

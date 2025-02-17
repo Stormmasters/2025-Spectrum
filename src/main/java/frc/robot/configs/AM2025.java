@@ -19,7 +19,6 @@ public class AM2025 extends Config {
         shoulder.setAttached(true);
         elbow.setAttached(true);
         twist.setAttached(true);
-        elevatorLeft.setAttached(true);
-        elevatorRight.setAttached(true);
+        elevator.setAttached(true);
     }
 }
