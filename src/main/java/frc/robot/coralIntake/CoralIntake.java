@@ -28,8 +28,8 @@ public class CoralIntake extends Mechanism {
         @Getter private double slowIntakePercentage = 0.06;
 
         /* Intake config values */
-        @Getter private double currentLimit = 40;
-        @Getter private double torqueCurrentLimit = 120;
+        @Getter private double currentLimit = 15;
+        @Getter private double torqueCurrentLimit = 100;
         @Getter private double velocityKp = 12; // 0.156152;
         @Getter private double velocityKv = 0.2; // 0.12;
         @Getter private double velocityKs = 14;

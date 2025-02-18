@@ -3,7 +3,6 @@ package frc.robot.elevator;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elbow.ElbowStates;
@@ -19,9 +18,9 @@ public class ElevatorStates {
 
     /* Check Elevator States */
     public static final Trigger isUp =
-            elevator.atPercentage(config::getElevatorUpHeight, config::getTolerance);
+            elevator.atPercentage(config::getElevatorIsUpHeight, config::getTriggerTolerance);
     public static final Trigger isHome =
-            elevator.atPercentage(config::getHome, config::getTolerance);
+            elevator.atPercentage(config::getHome, config::getTriggerTolerance);
 
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(
@@ -50,7 +49,9 @@ public class ElevatorStates {
         L4Coral.whileTrue(l1());
 
         actionPrepState.and(L1Coral).whileTrue(l1());
-        actionPrepState.and(L2Coral).whileTrue(l2Coral());
+        actionPrepState
+                .and(L2Coral.not())
+                .whileTrue(l2Coral()); // TODO: Remove not used for twisting
         actionPrepState.and(L3Coral).whileTrue(l3Coral());
         actionPrepState.and(L4Coral).whileTrue(l4());
 
@@ -97,8 +98,7 @@ public class ElevatorStates {
 
     private static Command score() {
         double originalPosition = ElevatorStates.getPosition().getAsDouble() - 5;
-        return elevator.moveToPercentage(() -> originalPosition)
-                .withName("Elevator.score");
+        return elevator.moveToPercentage(() -> originalPosition).withName("Elevator.score");
     }
 
     private static Command home() {

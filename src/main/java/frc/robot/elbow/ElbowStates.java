@@ -132,7 +132,8 @@ public class ElbowStates {
     }
 
     public static Command stationIntake() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getStationIntake)).withName("Elbow.StationIntake");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getStationIntake))
+                .withName("Elbow.StationIntake");
     }
 
     public static Command stationExtendedIntake() {

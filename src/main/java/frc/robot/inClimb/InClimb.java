@@ -34,7 +34,7 @@ public class InClimb extends Mechanism {
         /* InClimb config settings */
         @Getter private final double zeroSpeed = -0.1;
 
-        @Getter private final double currentLimit = 10;
+        @Getter private final double currentLimit = 20;
         @Getter private final double torqueCurrentLimit = 100;
         @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
         @Getter private final double velocityKv = 0.018;

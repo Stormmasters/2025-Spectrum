@@ -20,43 +20,74 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxRotations = 66.3772987219;
-        @Getter private double minRotations = 0;
+        @Getter private double maxRotations = 10; // TODO: Reset to 21.1;
+        @Getter private double minRotations = 5; // TODO: Reset to 0;
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
         @Getter private double home = minRotations;
-        @Getter private final double algaeLollipop = 43.5267; // TODO: update, max changed from 110.6304660319
-        @Getter private final double coralLollipop = 0; // TODO: update, max changed from 110.6304660319
-        @Getter private final double clawGroundAlgaeIntake = 0; // TODO: update, max changed from 110.6304660319
-        @Getter private final double clawGroundCoralIntake = 0; // TODO: update, as max changed from 110.6304660319
-        @Getter private final double stationIntake = 7.2545; // TODO: update, as max changed from 110.6304660319
-        @Getter private final double stationExtendedIntake = 32.645; // TODO: update, as max changed from 110.6304660319
-        @Getter private final double handOff = 29.0178; // TODO: update, as max changed from 110.6304660319
 
-        @Getter private final double l2Algae = 29.0178; // TODO: update, as max changed from 110.6304660319
-        @Getter private final double l3Algae = 87.0535; // TODO: update, as max changed from 110.6304660319
+        @Getter
+        private final double algaeLollipop =
+                43.5267; // TODO: update, max changed from 110.6304660319
+
+        @Getter
+        private final double coralLollipop = 0; // TODO: update, max changed from 110.6304660319
+
+        @Getter
+        private final double clawGroundAlgaeIntake =
+                0; // TODO: update, max changed from 110.6304660319
+
+        @Getter
+        private final double clawGroundCoralIntake =
+                0; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double stationIntake =
+                7.2545; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double stationExtendedIntake =
+                32.645; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double handOff = 29.0178; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double l2Algae = 29.0178; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double l3Algae = 87.0535; // TODO: update, as max changed from 110.6304660319
 
         @Getter private final double l1 = 0;
-        @Getter private final double l2Coral = 21.7634; // TODO: update, as max changed from 110.6304660319
-        @Getter private final double l3Coral = 79.799; // TODO: update, as max changed from 110.6304660319
-        @Getter private final double l4 = 101.5624; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double l2Coral = 21.7634; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double l3Coral = 79.799; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double l4 = 101.5624; // TODO: update, as max changed from 110.6304660319
 
         @Getter private final double barge = fullExtend;
 
-        @Getter private double tolerance = 0.95;
-        @Getter private double elevatorUpHeight = 5;
+        @Getter private double triggerTolerance = 0.95;
+        @Getter private double elevatorIsUpHeight = 5;
 
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
-        @Getter private final double positionKp = 0.86; // 20 FOC // 10 Regular
-        @Getter private final double positionKv = 0.13; // .12 FOC // .15 regular
-        @Getter private double currentLimit = 20;
-        @Getter private final double torqueCurrentLimit = 100;
+        @Getter private final double positionKp = 0; // TODO: Old value = 0.86;
+        @Getter private final double positionKa = 0.05;
+        @Getter private final double positionKv = 3.39;
+        @Getter private double positionKs = 0.005;
+        @Getter @Setter private double positionKg = 0.485;
+        @Getter private double currentLimit = 40;
+        @Getter private double torqueCurrentLimit = 120;
 
         /* Sim properties */
-        @Getter private double kElevatorGearing = 3.62722; // 5;
+        @Getter private double kElevatorGearing = 3.62722;
         @Getter private double kCarriageMass = 1;
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.8;
@@ -69,7 +100,7 @@ public class Elevator extends Mechanism {
             super("ElevatorFront", 40, Rio.CANIVORE);
             configMinMaxRotations(minRotations, maxRotations);
             configPIDGains(0, positionKp, 0, 0);
-            configFeedForwardGains(0, positionKv, 0, 0);
+            configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(700, 900, 0); // 40, 120 FOC // 120, 195 Regular
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
@@ -102,7 +133,9 @@ public class Elevator extends Mechanism {
     }
 
     @Override
-    public void periodic() {}
+    public void periodic() {
+        config.configFeedForwardGains(0, 0, 0, config.getPositionKg());
+    }
 
     public void setupStates() {
         ElevatorStates.setStates();
@@ -124,6 +157,7 @@ public class Elevator extends Mechanism {
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
             builder.addDoubleProperty("#FullExtend", config::getFullExtend, config::setFullExtend);
+            builder.addDoubleProperty("#kG", config::getPositionKg, config::setPositionKg);
         }
     }
 
