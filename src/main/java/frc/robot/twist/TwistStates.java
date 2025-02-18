@@ -87,7 +87,7 @@ public class TwistStates {
     }
 
     public static Command coralIntake() {
-        return twist.moveToPercentage(() -> twist.checkReversed(config::getCoralIntake))
+        return twist.moveToPercentage(() -> twist.checkReversed(config::getStationIntake))
                 .withName("Twist.coralIntake");
     }
 

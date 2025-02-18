@@ -21,8 +21,10 @@ public class ShoulderStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        stationIntaking.whileTrue(log(stationIntake()));
-        stationExtendedIntake.whileTrue(log(stationExtendedIntake()));
+        stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
+        stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
+        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
+        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
 
         L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
         L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));

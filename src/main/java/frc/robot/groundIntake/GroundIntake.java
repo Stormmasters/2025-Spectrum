@@ -41,7 +41,7 @@ public class GroundIntake extends Mechanism {
             super("GroundIntake", 57, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configGearRatio(12.0 / 30.0);
+            configGearRatio(1);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(120, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);

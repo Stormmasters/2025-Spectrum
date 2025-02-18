@@ -13,8 +13,7 @@ public class CoralIntakeStates {
     private static CoralIntakeConfig config = Robot.getConfig().coralIntake;
 
     public static void setupDefaultCommand() {
-        coralIntake.setDefaultCommand(coralIntake.runStop());
-        // log(coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default")));
+        coralIntake.setDefaultCommand(coralIntake.runStop().withName("coralIntake.default"));
     }
 
     public static void setStates() {

@@ -21,8 +21,10 @@ public class ElbowStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        stationIntaking.whileTrue(log(stationIntake()));
-        stationExtendedIntake.whileTrue(log(stationIntake()));
+        stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
+        stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
+        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
+        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
 
         scoreState.and(L2Coral).and(backwardMode.not()).onTrue(log(score2()));
         scoreState.and(L2Coral).and(backwardMode).onTrue(log(reverse(score2())));
@@ -130,11 +132,11 @@ public class ElbowStates {
     }
 
     public static Command stationIntake() {
-        return elbow.moveToPercentage(config::getStationIntake).withName("Elbow.StationIntake");
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getStationIntake)).withName("Elbow.StationIntake");
     }
 
     public static Command stationExtendedIntake() {
-        return elbow.moveToPercentage(config::getStationExtendedIntake)
+        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getStationExtendedIntake))
                 .withName("Shoulder.stationExtendedIntake");
     }
 

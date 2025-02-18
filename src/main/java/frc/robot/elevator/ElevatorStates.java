@@ -96,12 +96,9 @@ public class ElevatorStates {
     }
 
     private static Command score() {
-        return new ProxyCommand(
-                () -> {
-                    double originalPosition = ElevatorStates.getPosition().getAsDouble() - 10;
-                    return elevator.moveToPercentage(() -> originalPosition)
-                            .withName("Elevator.score");
-                });
+        double originalPosition = ElevatorStates.getPosition().getAsDouble() - 5;
+        return elevator.moveToPercentage(() -> originalPosition)
+                .withName("Elevator.score");
     }
 
     private static Command home() {

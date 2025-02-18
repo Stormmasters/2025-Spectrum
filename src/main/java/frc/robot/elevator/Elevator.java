@@ -20,28 +20,28 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxRotations = 110.6304660319; // 29.8;
+        @Getter private double maxRotations = 66.3772987219;
         @Getter private double minRotations = 0;
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
         @Getter private double home = minRotations;
-        @Getter private final double algaeLollipop = 43.5267;
-        @Getter private final double coralLollipop = 0;
-        @Getter private final double clawGroundAlgaeIntake = 0;
-        @Getter private final double clawGroundCoralIntake = 0;
-        @Getter private final double stationIntake = 7.2545;
-        @Getter private final double stationExtendedIntake = 32.645;
-        @Getter private final double handOff = 29.0178;
+        @Getter private final double algaeLollipop = 43.5267; // TODO: update, max changed from 110.6304660319
+        @Getter private final double coralLollipop = 0; // TODO: update, max changed from 110.6304660319
+        @Getter private final double clawGroundAlgaeIntake = 0; // TODO: update, max changed from 110.6304660319
+        @Getter private final double clawGroundCoralIntake = 0; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double stationIntake = 7.2545; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double stationExtendedIntake = 32.645; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double handOff = 29.0178; // TODO: update, as max changed from 110.6304660319
 
-        @Getter private final double l2Algae = 29.0178;
-        @Getter private final double l3Algae = 87.0535;
+        @Getter private final double l2Algae = 29.0178; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double l3Algae = 87.0535; // TODO: update, as max changed from 110.6304660319
 
         @Getter private final double l1 = 0;
-        @Getter private final double l2Coral = 21.7634;
-        @Getter private final double l3Coral = 79.799;
-        @Getter private final double l4 = 101.5624;
+        @Getter private final double l2Coral = 21.7634; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double l3Coral = 79.799; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double l4 = 101.5624; // TODO: update, as max changed from 110.6304660319
 
         @Getter private final double barge = fullExtend;
 

@@ -70,14 +70,14 @@ public class Twist extends Mechanism {
         // Need to add auto launching positions when auton is added
 
         /* Cancoder config settings */
-        @Getter private final double CANcoderGearRatio = 30 / 36; // TODO: find CANcoder gear ratio
+        @Getter private final double CANcoderGearRatio = 1; // TODO: find CANcoder gear ratio
         @Getter private double CANcoderOffset = 0;
         @Getter private boolean isCANcoderAttached = false;
 
         /* Sim properties */
         @Getter private double twistX = 0.525;
         @Getter private double twistY = 1.35;
-        @Getter @Setter private double simRatio = 15.429; // TODO: Set this to actual twist ratio
+        @Getter @Setter private double simRatio = 22.4;
         @Getter private double coralLength = 0.255;
         @Getter private double algaeLength = 0.205;
         @Getter private double coralLineWeight = 15.0;
@@ -92,11 +92,11 @@ public class Twist extends Mechanism {
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);
-            configGearRatio(1);
+            configGearRatio(22.4);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-22.267090, 	22.267090); // TODO: find minmax rotations
+            configMinMaxRotations(-22.267090, 	22.267090); // Calculated to be 22.4
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
