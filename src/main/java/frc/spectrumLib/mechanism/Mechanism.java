@@ -205,6 +205,25 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         return (rotations.getAsDouble() / config.maxRotations) * 100;
     }
 
+    /**
+     * Degrees to Rotations
+     *
+     * @return rotations
+     */
+    public double degreesToRotations(DoubleSupplier degrees) {
+        return config.getGearRatio() * (degrees.getAsDouble() / 360);
+    }
+
+    /**
+     * Rotations to Degrees
+     *
+     * @param rotations
+     * @return degrees
+     */
+    public double rotationsToDegrees(DoubleSupplier rotations) {
+        return 360 * (rotations.getAsDouble() / config.getGearRatio());
+    }
+
     public double getPositionRotations() {
         return cachedRotations.getAsDouble();
     }
@@ -293,6 +312,16 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     public Command moveToPercentage(DoubleSupplier percent) {
         return run(() -> setMMPosition(() -> percentToRotations(percent)))
                 .withName(getName() + ".runPosePercentage");
+    }
+
+    /**
+     * Move to the specified position.
+     *
+     * @param degrees position in degrees
+     */
+    public Command moveToDegrees(DoubleSupplier degrees) {
+        return run(() -> setMMPosition(() -> degreesToRotations(degrees)))
+                .withName(getName() + ".runPoseDegrees");
     }
 
     /**
