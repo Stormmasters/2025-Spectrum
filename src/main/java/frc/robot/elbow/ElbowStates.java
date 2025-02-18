@@ -61,19 +61,19 @@ public class ElbowStates {
 
     public static Command score2() {
         double newPos = 15 + config.getL2Coral();
-        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(() -> newPos))
                 .withName("Elbow.score2");
     }
 
     public static Command score3() {
         double newPos = 15 + config.getL3Coral();
-        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(() -> newPos))
                 .withName("Elbow.score3");
     }
 
     public static Command score4() {
         double newPos = 20 + config.getL4Coral();
-        return elbow.moveToPercentage(() -> elbow.checkReversed(() -> newPos))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(() -> newPos))
                 .withName("Elbow.score4");
     }
 
@@ -82,62 +82,62 @@ public class ElbowStates {
     }
 
     public static Command home() {
-        return elbow.moveToPercentage(config::getHome).withName("Elbow.home");
+        return elbow.moveToDegrees(config::getHome).withName("Elbow.home");
     }
 
     public static Command handOffAlgae() {
-        return elbow.moveToPercentage(config::getHandAlgae).withName("Elbow.handOffAlgae");
+        return elbow.moveToDegrees(config::getHandAlgae).withName("Elbow.handOffAlgae");
     }
 
     /* Scoring positions */
     public static Command l2Algae() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL2Algae))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(config::getL2Algae))
                 .withName("Elbow.l2Algae");
     }
 
     public static Command l3Algae() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL3Algae))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(config::getL3Algae))
                 .withName("Elbow.l3Algae");
     }
 
     public static Command barge() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getBarge))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(config::getBarge))
                 .withName("Elbow.barge");
     }
 
     public static Command l1Coral() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL1Coral))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(config::getL1Coral))
                 .withName("Twist.L1Coral");
     }
 
     public static Command l2Coral() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL2Coral))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(config::getL2Coral))
                 .withName("Elbow.l2Coral");
     }
 
     public static Command l3Coral() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL3Coral))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(config::getL3Coral))
                 .withName("Elbow.l3Coral");
     }
 
     public static Command l4Coral() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getL4Coral))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(config::getL4Coral))
                 .withName("Elbow.l4Coral");
     }
 
     // missing auton Elbow commands, add when auton is added
 
     public static Command floorIntake() {
-        return elbow.moveToPercentage(config::getFloorIntake).withName("Elbow.FloorIntake");
+        return elbow.moveToDegrees(config::getFloorIntake).withName("Elbow.FloorIntake");
     }
 
     public static Command stationIntake() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getStationIntake))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(config::getStationIntake))
                 .withName("Elbow.StationIntake");
     }
 
     public static Command stationExtendedIntake() {
-        return elbow.moveToPercentage(() -> elbow.checkReversed(config::getStationExtendedIntake))
+        return elbow.moveToDegrees(() -> elbow.checkReversed(config::getStationExtendedIntake))
                 .withName("Shoulder.stationExtendedIntake");
     }
 
@@ -155,9 +155,9 @@ public class ElbowStates {
 
     // Tune value command
     public static Command tuneElbow() {
-        // return elbow.moveToPercentage(new TuneValue("Tune Elbow", 0).getSupplier())
+        // return elbow.moveToDegrees(new TuneValue("Tune Elbow", 0).getSupplier())
         //         .withName("Elbow.Tune");
-        return elbow.moveToPercentage(config::getTuneElbow);
+        return elbow.moveToDegrees(config::getTuneElbow);
     }
 
     // Log Command

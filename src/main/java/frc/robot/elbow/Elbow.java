@@ -56,6 +56,8 @@ public class Elbow extends Mechanism {
         @Getter @Setter private double tuneElbow = 0;
         @Getter @Setter private boolean leftScore = true;
 
+        @Getter private final double offsetConstant = -90;
+
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
 
@@ -221,6 +223,15 @@ public class Elbow extends Mechanism {
         }
 
         return position.getAsDouble() * -1;
+    }
+
+    @Override
+    public Command moveToDegrees(DoubleSupplier degrees) {
+        return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
+    }
+
+    public DoubleSupplier offsetPosition(DoubleSupplier position) {
+        return () -> (position.getAsDouble() + config.getOffsetConstant());
     }
 
     // --------------------------------------------------------------------------------

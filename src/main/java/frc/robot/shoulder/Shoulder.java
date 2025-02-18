@@ -54,6 +54,8 @@ public class Shoulder extends Mechanism {
         @Getter private final double barge = -94.4;
         @Getter @Setter private double tuneShoulder = 0;
 
+        @Getter private final double offsetConstant = -90;
+
         /* Shoulder config settings */
         @Getter private final double zeroSpeed = -0.1;
 
@@ -212,6 +214,15 @@ public class Shoulder extends Mechanism {
         }
 
         return position.getAsDouble() * -1;
+    }
+
+    @Override
+    public Command moveToDegrees(DoubleSupplier degrees) {
+        return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
+    }
+
+    public DoubleSupplier offsetPosition(DoubleSupplier position) {
+        return () -> (position.getAsDouble() + config.getOffsetConstant());
     }
 
     // --------------------------------------------------------------------------------

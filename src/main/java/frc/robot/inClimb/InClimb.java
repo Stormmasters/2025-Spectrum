@@ -16,20 +16,23 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
 import frc.spectrumLib.sim.ArmSim;
+import java.util.function.DoubleSupplier;
 import lombok.*;
 
 public class InClimb extends Mechanism {
 
     public static class InClimbConfig extends Config {
-        /* InClimb positions in percentage of max rotation || 0 is horizontal */
-        @Getter private final double home = 0;
+        /* InClimb positions in degrees || 0 is vertical down */
+        @Getter private final double home = 180;
         @Getter private final double intake = 35.5;
         @Getter private final double algaeFloorIntake = 70;
         @Getter @Setter private double tuneInClimb = 0;
-        @Getter private final double prepClimber = 100;
-        @Getter private final double finishClimb = 50;
+        @Getter private final double prepClimber = 180;
+        @Getter private final double finishClimb = 90;
         @Getter private final double coralFloorIntake = 95;
         @Getter private final double processorScore = 65;
+
+        @Getter private final double offsetConstant = -90;
 
         /* InClimb config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -62,7 +65,7 @@ public class InClimb extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(0, 7.714285714); // TODO: find minmax rotations
+            configMinMaxRotations(0, 7.714285714); // TODO: find minmax rotations and offset
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
@@ -166,6 +169,15 @@ public class InClimb extends Mechanism {
                         () -> false, // isFinished
                         this) // requirement
                 .withName("Elevator.zeroElevatorRoutine");
+    }
+
+    @Override
+    public Command moveToDegrees(DoubleSupplier degrees) {
+        return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
+    }
+
+    public DoubleSupplier offsetPosition(DoubleSupplier position) {
+        return () -> (position.getAsDouble() + config.getOffsetConstant());
     }
 
     // --------------------------------------------------------------------------------
