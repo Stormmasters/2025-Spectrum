@@ -21,11 +21,8 @@ public class ShoulderStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-
-        stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
-        stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralExtendedIntake()));
-        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralExtendedIntake())));
+        stationIntaking.whileTrue(log(stationIntake()));
+        stationExtendedIntake.whileTrue(log(stationExtendedIntake()));
 
         L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
         L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
@@ -110,20 +107,19 @@ public class ShoulderStates {
                 .withName("Shoulder.barge");
     }
 
-    // missing auton Shoulder commands, add when auton is added
-
     public static Command floorIntake() {
-        return shoulder.moveToPercentage(config::getFloorIntake).withName("Shoulder.floorIntake");
+        return shoulder.moveToPercentage(config::getClawGroundAlgaeIntake)
+                .withName("Shoulder.floorIntake");
     }
 
-    public static Command coralIntake() {
-        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getCoralIntake))
+    public static Command stationIntake() {
+        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getStationIntake))
                 .withName("Shoulder.coralIntake");
     }
 
-    public static Command coralExtendedIntake() {
+    public static Command stationExtendedIntake() {
         return shoulder.moveToPercentage(
-                        () -> shoulder.checkReversed(config::getCoralExtendedIntake))
+                        () -> shoulder.checkReversed(config::getStationExtendedIntake))
                 .withName("Shoulder.coralExtendedIntake");
     }
 

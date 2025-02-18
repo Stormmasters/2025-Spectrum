@@ -2,7 +2,6 @@ package frc.robot.shoulder;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -13,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
+import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
@@ -34,16 +34,24 @@ public class Shoulder extends Mechanism {
         @Getter private final double climbHome = 100 - 3;
         @Getter private final double handAlgae = -21;
         @Getter private final double home = 0;
-        @Getter private final double coralIntake = 91;
-        @Getter private final double coralExtendedIntake = -60;
-        @Getter private final double floorIntake = -70;
-        @Getter private final double l1Coral = -80;
-        @Getter private final double l2Algae = -40;
-        @Getter private final double l3Algae = -40;
-        @Getter private final double l2Coral = -40;
-        @Getter private final double l3Coral = -40;
-        @Getter private final double l4Coral = -88.9;
-        @Getter private final double barge = -88.9;
+
+        @Getter private final double algaeLollipop = 0;
+        @Getter private final double coralLollipop = -13.3;
+        @Getter private final double stationIntake = 4.4;
+        @Getter private final double stationExtendedIntake = 4.4;
+        @Getter private final double clawGroundAlgaeIntake = -8.9;
+        @Getter private final double clawGroundCoralIntake = -8.9;
+        @Getter private final double handOff = 100;
+
+        @Getter private final double l2Algae = -5.6;
+        @Getter private final double l3Algae = -5.6;
+
+        @Getter private final double l1Coral = -1.1;
+        @Getter private final double l2Coral = -19.4;
+        @Getter private final double l3Coral = -19.4;
+        @Getter private final double l4Coral = -75;
+
+        @Getter private final double barge = -94.4;
         @Getter @Setter private double tuneShoulder = 0;
 
         /* Shoulder config settings */
@@ -55,9 +63,10 @@ public class Shoulder extends Mechanism {
         @Getter private final double velocityKv = 0.018;
         @Getter private final double velocityKs = 0;
 
-        // Need to add auto launching positions when auton is added
-
-        // Removed implementation of tree map
+        /* Cancoder config settings */
+        @Getter private final double CANcoderGearRatio = 30 / 36;
+        @Getter private double CANcoderOffset = 0;
+        @Getter private boolean isCANcoderAttached = false;
 
         /* Sim properties */
         @Getter private double shoulderX = 0.8;
@@ -72,16 +81,16 @@ public class Shoulder extends Mechanism {
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
-            configGearRatio(1); // 50.43);
+            configGearRatio(1);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-50.055176, 50.055176);
+            configMinMaxRotations(-50.055176, 50.055176); // calculated to be 51.4285
             configReverseSoftLimit(-40, true);
             configForwardSoftLimit(40, true);
             configNeutralBrakeMode(true);
             configClockwise_Positive();
-            setSimRatio(15.429);
+            setSimRatio(102.857);
         }
 
         public ShoulderConfig modifyMotorConfig(TalonFX motor) {
@@ -95,13 +104,19 @@ public class Shoulder extends Mechanism {
     }
 
     private ShoulderConfig config;
-    private CANcoder m_CANcoder;
+    private SpectrumCANcoder canCoder;
     @Getter private ShoulderSim sim;
     CANcoderSimState canCoderSim;
 
     public Shoulder(ShoulderConfig config) {
         super(config);
         this.config = config;
+
+        canCoder =
+                new SpectrumCANcoder(42, motor, config)
+                        .setGearRatio(config.getCANcoderGearRatio())
+                        .setOffset(config.getCANcoderOffset())
+                        .setAttached(true);
 
         simulationInit();
         telemetryInit();
@@ -148,7 +163,7 @@ public class Shoulder extends Mechanism {
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
                         b -> {
-                            m_CANcoder.setPosition(0);
+                            canCoder.getCanCoder().setPosition(0);
                             toggleReverseSoftLimit(true); // end
                         },
                         () -> false, // isFinished

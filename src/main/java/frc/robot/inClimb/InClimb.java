@@ -2,9 +2,7 @@ package frc.robot.inClimb;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -84,9 +82,7 @@ public class InClimb extends Mechanism {
     }
 
     private InClimbConfig config;
-    private CANcoder m_CANcoder;
     @Getter private InClimbSim sim;
-    CANcoderSimState canCoderSim;
 
     public InClimb(InClimbConfig config) {
         super(config);
@@ -178,8 +174,6 @@ public class InClimb extends Mechanism {
     private void simulationInit() {
         if (isAttached()) {
             sim = new InClimbSim(motor.getSimState(), RobotSim.frontView);
-
-            // m_CANcoder.setPosition(0);
         }
     }
 
@@ -187,7 +181,6 @@ public class InClimb extends Mechanism {
     public void simulationPeriodic() {
         if (isAttached()) {
             sim.simulationPeriodic();
-            // m_CANcoder.getSimState().setRawPosition(sim.getAngleRads() / 0.202);
         }
     }
 
@@ -200,11 +193,7 @@ public class InClimb extends Mechanism {
                                     config.simRatio,
                                     config.length,
                                     -30,
-                                    // 180 - 45 +
-                                    // Units.rotationsToDegrees(config.getMinRotations()),
                                     180,
-                                    // 180 - 45 +
-                                    // Units.rotationsToDegrees(config.getMaxRotations()),
                                     180)
                             .setColor(new Color8Bit(Color.kBrown)),
                     mech,

@@ -87,7 +87,7 @@ public class SwerveConfig {
                                     .withStatorCurrentLimit(Amps.of(60))
                                     .withStatorCurrentLimitEnable(true));
 
-    @Getter private CANcoderConfiguration cancoderInitialConfigs = new CANcoderConfiguration();
+    @Getter private CANcoderConfiguration canCoderInitialConfigs = new CANcoderConfiguration();
     // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
     @Getter private Pigeon2Configuration pigeonConfigs = new Pigeon2Configuration();
 

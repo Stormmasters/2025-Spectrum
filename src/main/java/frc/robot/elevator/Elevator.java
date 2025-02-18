@@ -27,13 +27,23 @@ public class Elevator extends Mechanism {
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
         @Getter private double home = minRotations;
-        @Getter private final double l1 = 10;
-        @Getter private final double l2 = 15.412;
-        @Getter private final double l3 = 24.4168;
-        @Getter private final double l4 = fullExtend;
+        @Getter private final double algaeLollipop = 43.5267;
+        @Getter private final double coralLollipop = 0;
+        @Getter private final double clawGroundAlgaeIntake = 0;
+        @Getter private final double clawGroundCoralIntake = 0;
+        @Getter private final double stationIntake = 7.2545;
+        @Getter private final double stationExtendedIntake = 32.645;
+        @Getter private final double handOff = 29.0178;
+
+        @Getter private final double l2Algae = 29.0178;
+        @Getter private final double l3Algae = 87.0535;
+
+        @Getter private final double l1 = 0;
+        @Getter private final double l2Coral = 21.7634;
+        @Getter private final double l3Coral = 79.799;
+        @Getter private final double l4 = 101.5624;
+
         @Getter private final double barge = fullExtend;
-        @Getter private final double stationIntake = 10.5;
-        @Getter private double stationExtendedIntake = 14.5;
 
         @Getter private double tolerance = 0.95;
         @Getter private double elevatorUpHeight = 5;
@@ -183,7 +193,7 @@ public class Elevator extends Mechanism {
                                         || ElevatorStates.getPosition().getAsDouble()
                                                 < rotations.getAsDouble()
                                         || ElevatorStates.getPosition().getAsDouble()
-                                                > config.getL2())
+                                                > config.getL2Coral())
                 .andThen(run(() -> setMMPosition(rotations)).withName("Elevator.moveToRotations"));
     }
 

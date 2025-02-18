@@ -2,7 +2,6 @@ package frc.robot.elbow;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -16,6 +15,7 @@ import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.elevator.ElevatorStates;
 import frc.spectrumLib.Rio;
+import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
@@ -33,18 +33,26 @@ public class Elbow extends Mechanism {
         // TODO: Find elbow positions
         @Getter private final double handAlgae = 99;
         @Getter private final double home = 0;
-        @Getter private final double coralIntake = 35.5;
+
+        @Getter private final double algaeLollipop = 56.7;
+        @Getter private final double coralLollipop = 58.3;
+        @Getter private final double stationIntake = 14.4;
+        @Getter private final double stationExtendedIntake = 24.4;
         @Getter private final double floorIntake = 0;
-        @Getter private final double corralFloorIntake = 87.8;
-        @Getter private final double l2Algae = 20;
-        @Getter private final double l3Algae = 20;
+        @Getter private final double clawGroundAlgaeIntake = 58.3;
+        @Getter private final double clawGroundCoralIntake = 58.3;
+        @Getter private final double handOff = 100;
 
-        @Getter private final double l1Coral = 87.8;
-        @Getter private final double l2Coral = 20;
-        @Getter private final double l3Coral = 20;
-        @Getter private final double l4Coral = 31.1;
+        @Getter private final double l2Algae = 33.3;
+        @Getter private final double l3Algae = 33.3;
 
-        @Getter private final double barge = 31.1;
+        @Getter private final double l1Coral = 36.1;
+        @Getter private final double l2Coral = 30.6;
+        @Getter private final double l3Coral = 30.6;
+        @Getter private final double l4Coral = 25;
+
+        @Getter private final double barge = 7.2;
+
         @Getter @Setter private double tuneElbow = 0;
         @Getter @Setter private boolean leftScore = true;
 
@@ -57,7 +65,10 @@ public class Elbow extends Mechanism {
         @Getter private final double velocityKv = 0.018;
         @Getter private final double velocityKs = 0;
 
-        // Removed implementation of tree map
+        /* Cancoder config settings */
+        @Getter private final double CANcoderGearRatio = 30 / 36;
+        @Getter private double CANcoderOffset = 0;
+        @Getter private boolean isCANcoderAttached = false;
 
         /* Sim properties */
         @Getter private double elbowX = 0.8; // 1.0;
@@ -75,12 +86,12 @@ public class Elbow extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-25.201172*2, 25.201172*2);
+            configMinMaxRotations(-25.201172*2, 25.201172*2); // calculated to be 51.4285
             configReverseSoftLimit(-25.201172, true);
             configForwardSoftLimit(25.201172, true);
             configNeutralBrakeMode(true);
             configClockwise_Positive();
-            setSimRatio(15.429);
+            setSimRatio(102.857);
         }
 
         public ElbowConfig modifyMotorConfig(TalonFX motor) {
@@ -94,13 +105,19 @@ public class Elbow extends Mechanism {
     }
 
     @Getter private ElbowConfig config;
-    private CANcoder m_CANcoder;
+    private SpectrumCANcoder canCoder;
     @Getter private ElbowSim sim;
     CANcoderSimState canCoderSim;
 
     public Elbow(ElbowConfig config) {
         super(config);
         this.config = config;
+
+        canCoder =
+                new SpectrumCANcoder(43, motor, config)
+                        .setGearRatio(config.getCANcoderGearRatio())
+                        .setOffset(config.getCANcoderOffset())
+                        .setAttached(true);
 
         simulationInit();
         telemetryInit();
@@ -147,7 +164,7 @@ public class Elbow extends Mechanism {
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
                         b -> {
-                            m_CANcoder.setPosition(0);
+                            canCoder.getCanCoder().setPosition(0);
                             toggleReverseSoftLimit(true); // end
                         },
                         () -> false, // isFinished
