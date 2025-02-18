@@ -75,6 +75,7 @@ public class Elevator extends Mechanism {
 
         @Getter private double triggerTolerance = 0.95;
         @Getter private double elevatorIsUpHeight = 5;
+        @Getter private double initPosition = 0;
 
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
@@ -126,6 +127,8 @@ public class Elevator extends Mechanism {
     public Elevator(ElevatorConfig config) {
         super(config);
         this.config = config;
+
+        motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
 
         simulationInit();
         telemetryInit();

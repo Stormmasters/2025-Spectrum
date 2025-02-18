@@ -54,7 +54,7 @@ public class TwistStates {
     }
 
     public static Command home() {
-        return twist.moveToPercentage(config::getHome).withName("Twist.home");
+        return twist.moveToDegrees(config::getHome).withName("Twist.home");
     }
 
     public static Command moveToPercentage(DoubleSupplier percent) {
@@ -64,30 +64,29 @@ public class TwistStates {
     /* Scoring positions */
 
     public static Command l2Algae() {
-        return twist.moveToPercentage(config::getL2Algae).withName("Twist.l2Algae");
+        return twist.moveToDegrees(config::getL2Algae).withName("Twist.l2Algae");
     }
 
     public static Command l3Algae() {
-        return twist.moveToPercentage(config::getL3Algae).withName("Twist.l3Algae");
+        return twist.moveToDegrees(config::getL3Algae).withName("Twist.l3Algae");
     }
 
     public static Command leftCoral() {
-        return twist.moveToPercentage(() -> twist.checkReversed(config::getLeftCoral))
+        return twist.moveToDegrees(() -> twist.checkReversed(config::getLeftCoral))
                 .withName("Twist.leftCoral");
     }
 
     public static Command rightCoral() {
-        return twist.moveToPercentage(() -> twist.checkReversed(config::getRightCoral))
+        return twist.moveToDegrees(() -> twist.checkReversed(config::getRightCoral))
                 .withName("Twist.rightCoral");
     }
 
     public static Command floorIntake() {
-        return twist.moveToPercentage(config::getClawGroundAlgaeIntake)
-                .withName("Twist.floorIntake");
+        return twist.moveToDegrees(config::getClawGroundAlgaeIntake).withName("Twist.floorIntake");
     }
 
     public static Command coralIntake() {
-        return twist.moveToPercentage(() -> twist.checkReversed(config::getStationIntake))
+        return twist.moveToDegrees(() -> twist.checkReversed(config::getStationIntake))
                 .withName("Twist.coralIntake");
     }
 
@@ -104,21 +103,21 @@ public class TwistStates {
     }
 
     public static Command barge() {
-        return twist.moveToPercentage(() -> twist.checkReversed(config::getBarge))
+        return twist.moveToDegrees(() -> twist.checkReversed(config::getBarge))
                 .withName("Twist.barge");
     }
 
     public static Command handOffAlgae() {
-        return twist.moveToPercentage(config::getHandAlgae).withName("Twist.handOffAlgae");
+        return twist.moveToDegrees(config::getHandAlgae).withName("Twist.handOffAlgae");
     }
 
     public static Command handOffCoral() {
-        return twist.moveToPercentage(config::getHandCoral).withName("Twist.handOffCoral");
+        return twist.moveToDegrees(config::getHandCoral).withName("Twist.handOffCoral");
     }
 
     // Tune value command
     public static Command tuneTwist() {
-        return twist.moveToPercentage(config::getTuneTwist).withName("Twist.tune");
+        return twist.moveToDegrees(config::getTuneTwist).withName("Twist.tune");
     }
 
     // Log Command

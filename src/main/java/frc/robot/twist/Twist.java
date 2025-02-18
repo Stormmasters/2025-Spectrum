@@ -40,23 +40,25 @@ public class Twist extends Mechanism {
         /* twist positions in percentage of max rotation || 0 is horizontal */
 
         @Getter private final double home = 0;
-        @Getter private final double algaeLollipop = 100;
-        @Getter private final double coralLollipop = 50;
+        @Getter private final double algaeLollipop = 180;
+        @Getter private final double coralLollipop = 90;
         @Getter private final double stationIntake = 0;
-        @Getter private final double clawGroundAlgaeIntake = 100;
+        @Getter private final double clawGroundAlgaeIntake = 180;
         @Getter private final double clawGroundCoralIntake = 0;
-        @Getter private final double leftCoral = 50;
-        @Getter private final double rightCoral = -50;
+        @Getter private final double leftCoral = 90;
+        @Getter private final double rightCoral = -90;
         @Getter private final double l1Coral = 0;
         @Getter private final double l2Algae = 0;
         @Getter private final double l3Algae = 0;
-        @Getter private final double l2Coral = 100;
-        @Getter private final double l3Coral = 50;
-        @Getter private final double l4Coral = 50;
-        @Getter private final double barge = 100;
-        @Getter private final double handAlgae = -100; // TODO: doublecheck
-        @Getter private final double handCoral = -50;
+        @Getter private final double l2Coral = 180;
+        @Getter private final double l3Coral = 90;
+        @Getter private final double l4Coral = 90;
+        @Getter private final double barge = 180;
+        @Getter private final double handAlgae = -180; // TODO: doublecheck
+        @Getter private final double handCoral = -90;
         @Getter @Setter private double tuneTwist = 0;
+
+        @Getter private final double initPosition = 0;
 
         /* Twist config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -127,6 +129,14 @@ public class Twist extends Mechanism {
                         .setGearRatio(config.getCANcoderGearRatio())
                         .setOffset(config.getCANcoderOffset())
                         .setAttached(true);
+
+        if (canCoder.isAttached()) {
+            motor.setPosition(
+                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                            * config.getGearRatio());
+        } else {
+            motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
+        }
 
         simulationInit();
         telemetryInit();
@@ -225,6 +235,11 @@ public class Twist extends Mechanism {
             return position.getAsDouble() + 100;
         }
         return position.getAsDouble() - 100;
+    }
+
+    @Override
+    public Command moveToDegrees(DoubleSupplier degrees) {
+        return super.moveToDegrees(degrees).withName(getName() + ".runPoseDegrees");
     }
 
     // --------------------------------------------------------------------------------

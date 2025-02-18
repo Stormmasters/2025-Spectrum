@@ -32,6 +32,7 @@ public class InClimb extends Mechanism {
         @Getter private final double coralFloorIntake = 95;
         @Getter private final double processorScore = 65;
 
+        @Getter private final double initPosition = 180;
         @Getter private final double offsetConstant = -90;
 
         /* InClimb config settings */
@@ -90,6 +91,7 @@ public class InClimb extends Mechanism {
     public InClimb(InClimbConfig config) {
         super(config);
         this.config = config;
+        motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
 
         simulationInit();
         telemetryInit();
@@ -176,8 +178,8 @@ public class InClimb extends Mechanism {
         return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
     }
 
-    public DoubleSupplier offsetPosition(DoubleSupplier position) {
-        return () -> (position.getAsDouble() + config.getOffsetConstant());
+    public DoubleSupplier offsetPosition(DoubleSupplier degrees) {
+        return () -> (degrees.getAsDouble() + config.getOffsetConstant());
     }
 
     // --------------------------------------------------------------------------------
