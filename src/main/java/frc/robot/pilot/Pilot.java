@@ -147,8 +147,7 @@ public class Pilot extends Gamepad {
         return -1 * ccwPositive; // invert the value
     }
 
-    // ELEVATOR METHODS
-    public double getElevatorManualAxis() {
-        return getLeftY();
+    public double getInClimbManualAxis() { // TODO: Remove after Testing
+        return getRightTriggerAxis() - getLeftTriggerAxis();
     }
 }

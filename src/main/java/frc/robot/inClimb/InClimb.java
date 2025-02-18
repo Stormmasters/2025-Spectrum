@@ -21,6 +21,10 @@ import lombok.*;
 public class InClimb extends Mechanism {
 
     public static class InClimbConfig extends Config {
+
+        @Getter private final double maxRotations = 7.714285714; // TODO: find max rotations
+        @Getter private final double minRotations = 0;
+
         /* InClimb positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = 0;
         @Getter private final double intake = 35.5;
@@ -58,7 +62,7 @@ public class InClimb extends Mechanism {
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
-            configGearRatio(1);
+            configGearRatio(99.5555555555);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
@@ -87,7 +91,7 @@ public class InClimb extends Mechanism {
     public InClimb(InClimbConfig config) {
         super(config);
         this.config = config;
-
+        motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything
         simulationInit();
         telemetryInit();
         Telemetry.print(getName() + " Subsystem Initialized");

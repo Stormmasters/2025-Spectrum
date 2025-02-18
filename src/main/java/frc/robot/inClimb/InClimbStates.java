@@ -13,8 +13,10 @@ public class InClimbStates {
     private static InClimbConfig config = Robot.getConfig().inClimb;
 
     public static void setupDefaultCommand() {
+        // inClimb.setDefaultCommand(
+        //         log(inClimb.runHoldInClimb().ignoringDisable(true).withName("InClimb.default")));
         inClimb.setDefaultCommand(
-                log(inClimb.runHoldInClimb().ignoringDisable(true).withName("InClimb.default")));
+                inClimb.runPercentage(() -> Robot.getPilot().getInClimbManualAxis()));
     }
 
     public static void setStates() {

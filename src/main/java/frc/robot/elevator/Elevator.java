@@ -81,7 +81,7 @@ public class Elevator extends Mechanism {
         @Getter private final double positionKp = 0; // TODO: Old value = 0.86;
         @Getter private final double positionKa = 0.05;
         @Getter private final double positionKv = 3.39;
-        @Getter private double positionKs = 0.005;
+        @Getter private final double positionKs = 0.005;
         @Getter @Setter private double positionKg = 0.485;
         @Getter private double currentLimit = 40;
         @Getter private double torqueCurrentLimit = 120;
@@ -133,9 +133,7 @@ public class Elevator extends Mechanism {
     }
 
     @Override
-    public void periodic() {
-        config.configFeedForwardGains(0, 0, 0, config.getPositionKg());
-    }
+    public void periodic() {}
 
     public void setupStates() {
         ElevatorStates.setStates();
@@ -157,7 +155,6 @@ public class Elevator extends Mechanism {
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
             builder.addDoubleProperty("#FullExtend", config::getFullExtend, config::setFullExtend);
-            builder.addDoubleProperty("#kG", config::getPositionKg, config::setPositionKg);
         }
     }
 
