@@ -67,7 +67,7 @@ public class Elbow extends Mechanism {
         @Getter private double startingAngle = 180 - 90;
 
         public ElbowConfig() {
-            super("Elbow", 43, Rio.RIO_CANBUS); // Rio.CANIVORE);
+            super("Elbow", 43, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
@@ -75,11 +75,11 @@ public class Elbow extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-7.714285714, 7.714285714);
-            configReverseSoftLimit(getMinRotations(), true);
-            configForwardSoftLimit(getMaxRotations(), true);
+            configMinMaxRotations(-25.201172*2, 25.201172*2);
+            configReverseSoftLimit(-25.201172, true);
+            configForwardSoftLimit(25.201172, true);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive();
+            configClockwise_Positive();
             setSimRatio(15.429);
         }
 

@@ -18,8 +18,8 @@ public class CoralIntake extends Mechanism {
 
         /* Revolutions per min Intake Output */
         @Getter private double maxSpeed = 5000;
-        @Getter private double intake = -5000;
-        @Getter private double eject = 2000;
+        @Getter private double intake = 5000;
+        @Getter private double eject = -2000;
         @Getter private double slowEject = 100;
         @Getter private double slowIntake = -1000;
         @Getter private double barge = -100;
@@ -40,7 +40,7 @@ public class CoralIntake extends Mechanism {
         @Getter private double wheelDiameter = 5.0;
 
         public CoralIntakeConfig() {
-            super("CoralIntake", 5, Rio.RIO_CANBUS);
+            super("CoralIntake", 5, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(12.0 / 30.0);
@@ -49,7 +49,7 @@ public class CoralIntake extends Mechanism {
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configNeutralBrakeMode(true);
-            configClockwise_Positive(); // might be different on actual robot
+            configCounterClockwise_Positive(); // might be different on actual robot
             configMotionMagic(51, 205, 0);
         }
     }

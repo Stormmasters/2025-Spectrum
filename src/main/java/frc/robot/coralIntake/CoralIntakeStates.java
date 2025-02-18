@@ -13,13 +13,14 @@ public class CoralIntakeStates {
     private static CoralIntakeConfig config = Robot.getConfig().coralIntake;
 
     public static void setupDefaultCommand() {
-        coralIntake.setDefaultCommand(
-                log(coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default")));
+        coralIntake.setDefaultCommand(coralIntake.runStop());
+        // log(coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default")));
     }
 
     public static void setStates() {
-        stationIntaking.whileTrue(log(coralIntake()));
-        stationExtendedIntake.whileTrue(log(coralIntake()));
+
+        stationIntaking.whileTrue(coralIntake()); // log(coralIntake()));
+        stationExtendedIntake.whileTrue(coralEject()); // log(coralIntake()));
 
         scoreState.and(barge.not()).onTrue(log(coralScore()));
         scoreState.and(barge).onTrue(log(barge()));
@@ -34,8 +35,6 @@ public class CoralIntakeStates {
     }
 
     private static Command coralHandOff() {
-        coralIntake.setDefaultCommand(
-                coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default"));
         return coralIntake
                 .runStop()
                 .withName("coralIntake.coralHandOffWait")
@@ -45,8 +44,6 @@ public class CoralIntakeStates {
     }
 
     private static Command algaeHandOff() {
-        coralIntake.setDefaultCommand(
-                coralIntake.runVelocityTcFocRpm(() -> 500).withName("coralIntake.default"));
         return coralIntake
                 .runStop()
                 .withName("coralIntake.algaeHandOffWait")
@@ -71,8 +68,6 @@ public class CoralIntakeStates {
     }
 
     private static Command coralIntake() {
-        coralIntake.setDefaultCommand(
-                coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default"));
         return coralIntake.runVelocityTcFocRpm(config::getIntake).withName("coralIntake.intake");
     }
 
@@ -81,8 +76,6 @@ public class CoralIntakeStates {
     }
 
     private static Command algaeIntake() {
-        coralIntake.setDefaultCommand(
-                coralIntake.runVelocityTcFocRpm(() -> 500).withName("coralIntake.default"));
         return coralIntake
                 .runVelocityTcFocRpm(config::getEject)
                 .withName("coralIntake.algaeIntake");
