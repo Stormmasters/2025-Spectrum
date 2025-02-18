@@ -69,7 +69,7 @@ public class InClimb extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(0, 7.714285714); // TODO: find minmax rotations and offset
+            configMinMaxRotations(getMinRotations(), getMaxRotations());
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
