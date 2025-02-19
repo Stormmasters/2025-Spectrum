@@ -3,6 +3,8 @@ package frc.robot.vision;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
+import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -519,15 +521,24 @@ public class Vision extends SubsystemBase {
 
         public CommandConfig() {}
     }
+
     // ------------------------------------------------------------------------------
     // Config
     // ------------------------------------------------------------------------------
 
+
+
+
+    // ------------------------------------------------------------------------------
+    // Vision Commands
+    // ------------------------------------------------------------------------------
+
     //TODO: Changes between 2024 usage of Speaker to 2025 usage of Coral
     /** 
-     * build a method that calculates the closest distance to coral face
-     * requires a method tocalculate distance from speaker position
-     * Build getDistancetoCoralTag
+     * closestReefFace
+     * getThetaToReefFace
+     * getDistancetoReefFace
+     * 
      */
     
      /**
@@ -548,6 +559,22 @@ public class Vision extends SubsystemBase {
 
     //     return angleBetweenRobotAndSpeaker;
     // }
+
+    public double getThetaToReefFace () {
+        Translation2d reefFace;
+        //runs closestReefFace to get the closest reef face id
+        private double closestReefFace = closestReefFace();
+        
+    }
+
+    public double closestReefFace () {
+
+    }
+
+    public Translation2d getAdjustedReefPos() {
+        return getAdjustedTargetPos(
+                new Translation2d(0, Field.Speaker.centerSpeakerOpening.toTranslation2d().getY()));
+    }
 
     // public double getAdjustedThetaToSpeaker() {
     //     Translation2d speaker = getAdjustedSpeakerPos();
@@ -575,10 +602,6 @@ public class Vision extends SubsystemBase {
     //     return Robot.swerve.getPose().getTranslation().getY() - getAdjustedSpeakerPos().getY();
     // }
 
-    // public Translation2d getAdjustedSpeakerPos() {
-    //     return getAdjustedTargetPos(
-    //             new Translation2d(0, Field.Speaker.centerSpeakerOpening.toTranslation2d().getY()));
-    // }
 
 
     // // Returns distance to the center of the speaker tag from the robot or -1 if not found
@@ -604,55 +627,101 @@ public class Vision extends SubsystemBase {
      *
      * @return A {@link Translation2d} representing a field relative position in meters.
      */
-    public Translation2d getAdjustedTargetPos(Translation2d targetPose) {
-        double NORM_FUDGE = 0.075;
-        double tunableNoteVelocity = 1;
-        double tunableNormFudge = 0;
-        double tunableStrafeFudge = 1;
-        double tunableSpeakerYFudge = 0.0;
-        double tunableSpeakerXFudge = 0.0;
+    // public Translation2d getAdjustedTargetPos(Translation2d targetPose) {
+    //     double NORM_FUDGE = 0.075;
+    //     double tunableNoteVelocity = 1;
+    //     double tunableNormFudge = 0;
+    //     double tunableStrafeFudge = 1;
+    //     double tunableSpeakerYFudge = 0.0;
+    //     double tunableSpeakerXFudge = 0.0;
 
-        Translation2d robotPos = Robot.swerve.getPose().getTranslation();
-        targetPose = Field.flipXifRed(targetPose);
-        double xDifference = Math.abs(robotPos.getX() - targetPose.getX());
-        double spinYFudge =
-                (xDifference < 5.8)
-                        ? 0.05
-                        : 0.8; // change spin fudge for score distances vs. feed distances
+    //     Translation2d robotPos = Robot.getSwerve().getRobotPose().getTranslation();
+    //     targetPose = Field.flipXifRed(targetPose);
+    //     double xDifference = Math.abs(robotPos.getX() - targetPose.getX());
+    //     double spinYFudge =
+    //             (xDifference < 5.8)
+    //                     ? 0.05
+    //                     : 0.8; // change spin fudge for score distances vs. feed distances
 
-        ChassisSpeeds robotVel = Robot.swerve.getVelocity(true); // TODO: change
+    //     ChassisSpeeds robotVel = Robot.getSwerve().getCurrentRobotChassisSpeeds(); // TODO: change
 
-        double distance = robotPos.getDistance(targetPose);
-        double normFactor =
-                Math.hypot(robotVel.vxMetersPerSecond, robotVel.vyMetersPerSecond) < NORM_FUDGE
-                        ? 0.0
-                        : Math.abs(
-                                MathUtil.angleModulus(
-                                                robotPos.minus(targetPose).getAngle().getRadians()
-                                                        - Math.atan2(
-                                                                robotVel.vyMetersPerSecond,
-                                                                robotVel.vxMetersPerSecond))
-                                        / Math.PI);
+    //     double distance = robotPos.getDistance(targetPose);
+    //     double normFactor =
+    //             Math.hypot(robotVel.vxMetersPerSecond, robotVel.vyMetersPerSecond) < NORM_FUDGE
+    //                     ? 0.0
+    //                     : Math.abs(
+    //                             MathUtil.angleModulus(
+    //                                             robotPos.minus(targetPose).getAngle().getRadians()
+    //                                                     - Math.atan2(
+    //                                                             robotVel.vyMetersPerSecond,
+    //                                                             robotVel.vxMetersPerSecond))
+    //                                     / Math.PI);
 
-        double x =
-                targetPose.getX() + (Field.isBlue() ? tunableSpeakerXFudge : -tunableSpeakerXFudge);
-        // - (robotVel.vxMetersPerSecond * (distance / tunableNoteVelocity));
-        //      * (1.0 - (tunableNormFudge * normFactor)));
-        double y =
-                targetPose.getY()
-                        + (Field.isBlue() ? -spinYFudge : spinYFudge)
-                        + tunableSpeakerYFudge;
-        // - (robotVel.vyMetersPerSecond * (distance / tunableNoteVelocity));
-        //       * tunableStrafeFudge);
+    //     double x =
+    //             targetPose.getX() + (Field.isBlue() ? tunableSpeakerXFudge : -tunableSpeakerXFudge);
+    //     // - (robotVel.vxMetersPerSecond * (distance / tunableNoteVelocity));
+    //     //      * (1.0 - (tunableNormFudge * normFactor)));
+    //     double y =
+    //             targetPose.getY()
+    //                     + (Field.isBlue() ? -spinYFudge : spinYFudge)
+    //                     + tunableSpeakerYFudge;
+    //     // - (robotVel.vyMetersPerSecond * (distance / tunableNoteVelocity));
+    //     //       * tunableStrafeFudge);
 
-        return new Translation2d(x, y);
-    }
+    //     return new Translation2d(x, y);
+    // }
+
 
     // ------------------------------------------------------------------------------
-    // Commands
+    // VisionStates Commands
     // ------------------------------------------------------------------------------
 
     //method (Command) alignToVisionTarget ( config, DoubleSupplier, offset) 
+    // custom commandconfig to send into alignToVisionTarget
+    //TODO Build alignToVisionTarget method
+    /**
+     * Aligns the robot to the vision target using the given config, forward positive supplier,
+     * and offset either left or right of the vision target
+     * @param config
+     * @param fwdPositiveSupplier
+     * @param offset
+     * @return
+     */
+
+     public Command alignToVisionTarget(CommandConfig config, DoubleSupplier fwdPositiveSupplier, DoubleSupplier offset) {
+        return new Command() {
+            private final PIDController controller = new PIDController(config.kp, 0, 0);
+            private DoubleSupplier measurement = config.limelight.getHorizontalOffset();
+            private DoubleSupplier output;
+            private DoubleSupplier setpoint = offset;
+            
+
+
+            @Override
+            public void initialize() {
+                controller.setTolerance(config.tolerance);
+                controller.enableContinuousInput(-180, 180);
+                controller.setSetpoint(measurement.getAsDouble() + offset.getAsDouble());
+            }
+
+            @Override
+            public void execute() {
+                output = MathUtil.clamp(controller.calculate(measurement.getAsDouble()), -config.maxOutput, config.maxOutput);
+                config.alignCommand.setOutput(output);
+            }
+
+            @Override
+            public boolean isFinished() {
+                return controller.atSetpoint();
+            }
+
+            @Override
+            public void end(boolean interrupted) {
+                config.alignCommand.setOutput(0);
+            }
+        };
+    }
+
 
      /** Set all Limelights to blink */
      public Command blinkLimelights() {
