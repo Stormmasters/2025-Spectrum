@@ -22,8 +22,12 @@ import lombok.*;
 public class InClimb extends Mechanism {
 
     public static class InClimbConfig extends Config {
-        /* InClimb positions in degrees || 0 is vertical down */
-        @Getter private final double home = 180;
+
+        @Getter private final double maxRotations = .3; // TODO: find max rotations
+        @Getter private final double minRotations = -0.1;
+
+        /* InClimb positions in percentage of max rotation || 0 is horizontal */
+        @Getter private final double home = 0;
         @Getter private final double intake = 35.5;
         @Getter private final double algaeFloorIntake = 70;
         @Getter @Setter private double tuneInClimb = 0;
@@ -62,11 +66,11 @@ public class InClimb extends Mechanism {
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
-            configGearRatio(1);
+            configGearRatio(99.5555555555);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(0, 7.714285714); // TODO: find minmax rotations and offset
+            configMinMaxRotations(getMinRotations(), getMaxRotations());
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
@@ -91,7 +95,7 @@ public class InClimb extends Mechanism {
     public InClimb(InClimbConfig config) {
         super(config);
         this.config = config;
-        motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+        motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything        motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
 
         simulationInit();
         telemetryInit();
