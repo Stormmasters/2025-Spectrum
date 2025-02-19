@@ -4,6 +4,7 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elbow.Elbow.ElbowConfig;
 import frc.spectrumLib.Telemetry;
@@ -12,6 +13,8 @@ import java.util.function.DoubleSupplier;
 public class ElbowStates {
     private static Elbow elbow = Robot.getElbow();
     private static ElbowConfig config = Robot.getConfig().elbow;
+
+    public static final Trigger isHome = elbow.atPercentage(config::getHome, config::getTolerance);
 
     public static void setupDefaultCommand() {
         elbow.setDefaultCommand(

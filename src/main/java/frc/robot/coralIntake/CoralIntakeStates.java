@@ -3,6 +3,7 @@ package frc.robot.coralIntake;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
 import frc.robot.elbow.ElbowStates;
@@ -11,6 +12,9 @@ import frc.spectrumLib.Telemetry;
 public class CoralIntakeStates {
     private static CoralIntake coralIntake = Robot.getCoralIntake();
     private static CoralIntakeConfig config = Robot.getConfig().coralIntake;
+
+    public static Trigger hasCoral = new Trigger(coralIntake::hasIntakeCoral);
+    public static Trigger hasAlgae = new Trigger(coralIntake::hasIntakeAlgae);
 
     public static void setupDefaultCommand() {
         coralIntake.setDefaultCommand(coralIntake.runStop().withName("coralIntake.default"));
@@ -25,6 +29,9 @@ public class CoralIntakeStates {
         scoreState.and(barge).onTrue(log(barge()));
 
         processorLollipopScore.whileTrue(log(coralIntake()));
+
+        hasCoral.whileTrue(log(coralIntake()));
+        hasAlgae.whileTrue(log(algaeIntake()));
 
         algaeHandoff.onTrue(log(algaeHandOff()));
         coralHandoff.onTrue(log(coralHandOff()));

@@ -56,6 +56,8 @@ public class Elbow extends Mechanism {
         @Getter @Setter private double tuneElbow = 0;
         @Getter @Setter private boolean leftScore = true;
 
+        @Getter private final double tolerance = 0.95;
+
         @Getter private final double offsetConstant = -90;
         @Getter private final double initPosition = 180;
 

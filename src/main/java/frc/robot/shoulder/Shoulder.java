@@ -54,6 +54,8 @@ public class Shoulder extends Mechanism {
         @Getter private final double barge = -94.4;
         @Getter @Setter private double tuneShoulder = 0;
 
+        @Getter private final double tolerance = 0.95;
+
         @Getter private final double offsetConstant = -90;
         @Getter private final double initPosition = 0;
 
