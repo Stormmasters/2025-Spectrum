@@ -535,6 +535,55 @@ public class Vision extends SubsystemBase {
     // Vision Commands
     // ------------------------------------------------------------------------------
 
+
+    //method (Command) alignToVisionTarget ( config, DoubleSupplier, offset) 
+    // custom commandconfig to send into alignToVisionTarget
+    //TODO Build alignToVisionTarget 
+    /**
+     * Aligns the robot to the vision target using the given config, forward positive supplier,
+     * and offset either left or right of the vision target
+     * @param config
+     * @param fwdPositiveSupplier
+     * @param offset
+     * @return
+     */
+
+     public void alignToVisionTarget(CommandConfig config, DoubleSupplier fwdPositiveSupplier, double offset) {
+
+        final PIDController controller = new PIDController(config.kp, 0, 0);
+        //config for the drive command run for the robot
+        Command driveCommand = 
+                                SwerveStates.fpvDrive( 
+                                    fwdPositiveSupplier, 
+                                    () -> config.verticalSetpoint, 
+                                    () -> config.verticalMaxView);
+        double measurement = config.limelight.getHorizontalOffset();
+        double output = 0;
+        double setpoint = offset;
+        double error = config.error;
+        double horizontalSetpoint = setpoint;
+        double heading = Integer.MIN_VALUE;
+        Limelight limelight = config.limelight;
+
+        //initializing command
+        driveCommand.initialize();
+        limelight.setLimelightPipeline(config.pipelineIndex);
+
+        
+        if (Math.abs(output) > 1) {
+            output = 1 * Math.signum(output);
+        } else {
+            output = output * config.maxOutput;
+        }
+        //executes the following command
+        execute();
+    }
+
+
+
+
+
+
     //TODO: Changes between 2024 usage of Speaker to 2025 usage of Coral
     /** 
      * closestReefFace
@@ -673,59 +722,22 @@ public class Vision extends SubsystemBase {
     //     return new Translation2d(x, y);
     // }
 
-    public static void setOutput(double output) {
-        
-    } 
+    //Executes the alignToVisionTarget command
+    private void execute() {
+        if (controller.atSetpoint() || !limelight.targetInView()) {
+            output = 0;
+        } else {
+            driveCommand.execute();
+        }
+    }  
+    
 
     // ------------------------------------------------------------------------------
     // VisionStates Commands
     // ------------------------------------------------------------------------------
 
-    //method (Command) alignToVisionTarget ( config, DoubleSupplier, offset) 
-    // custom commandconfig to send into alignToVisionTarget
-    //TODO Build alignToVisionTarget method
-    /**
-     * Aligns the robot to the vision target using the given config, forward positive supplier,
-     * and offset either left or right of the vision target
-     * @param config
-     * @param fwdPositiveSupplier
-     * @param offset
-     * @return
-     */
 
-     public void alignToVisionTarget(CommandConfig config, DoubleSupplier fwdPositiveSupplier, double offset) {
-
-            final PIDController controller = new PIDController(config.kp, 0, 0);
-            Command driveCommand = 
-                                    SwerveStates.fpvDrive( 
-                                        fwdPositiveSupplier, 
-                                        () -> config.verticalSetpoint, 
-                                        () -> config.verticalMaxView);
-            double measurement = config.limelight.getHorizontalOffset();
-            double output = 0;
-            double setpoint = offset;
-            double error = config.error;
-            double horizontalSetpoint = setpoint;
-            double heading = Integer.MIN_VALUE;
-            Limelight limelight = config.limelight;
-
-
-            
-            if (Math.abs(output) > 1) {
-                output = 1 * Math.signum(output);
-            } else {
-                output = output * config.maxOutput;
-            }
-
-
-
-            if (controller.atSetpoint() || !limelight.targetInView()) {
-                output = 0;
-            } else {
-                driveCommand.execute();
-            }            
-    }
-
+    //TODO: Build alignToReefFace 
 
      /** Set all Limelights to blink */
      public Command blinkLimelights() {
