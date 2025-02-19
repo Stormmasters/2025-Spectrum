@@ -39,6 +39,7 @@ public class Telemetry extends DogLog implements Subsystem {
     public Telemetry() {
         super();
         register();
+        // DogLog.setEnabled(false);
     }
 
     @Override
@@ -51,10 +52,10 @@ public class Telemetry extends DogLog implements Subsystem {
         Telemetry.setOptions(
                 new DogLogOptions()
                         .withNtPublish(ntPublish)
-                        .withCaptureDs(true)
+                        .withCaptureDs(false)
                         .withCaptureNt(captureNt)
-                        .withCaptureConsole(true)
-                        .withLogExtras(true));
+                        .withCaptureConsole(false)
+                        .withLogExtras(false));
         Telemetry.setPdh(new PowerDistribution());
         /* Display the currently running commands on SmartDashboard*/
         SmartDashboard.putData(CommandScheduler.getInstance());

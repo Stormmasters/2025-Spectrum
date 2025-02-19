@@ -87,7 +87,7 @@ public class SwerveConfig {
                                     .withStatorCurrentLimit(Amps.of(60))
                                     .withStatorCurrentLimitEnable(true));
 
-    @Getter private CANcoderConfiguration cancoderInitialConfigs = new CANcoderConfiguration();
+    @Getter private CANcoderConfiguration canCoderInitialConfigs = new CANcoderConfiguration();
     // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
     @Getter private Pigeon2Configuration pigeonConfigs = new Pigeon2Configuration();
 
@@ -165,15 +165,27 @@ public class SwerveConfig {
     @Getter private Distance backRightXPos = Inches.of(-wheelBaseInches / 2);
     @Getter private Distance backRightYPos = Inches.of(-trackWidthInches / 2);
 
-    @Getter private SwerveModuleConstants frontLeft;
-    @Getter private SwerveModuleConstants frontRight;
-    @Getter private SwerveModuleConstants backLeft;
-    @Getter private SwerveModuleConstants backRight;
+    @Getter
+    private SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+            frontLeft;
+
+    @Getter
+    private SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+            frontRight;
+
+    @Getter
+    private SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+            backLeft;
+
+    @Getter
+    private SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+            backRight;
 
     // Used in commands
     @Getter @Setter private double targetHeading = 0;
 
-    public SwerveModuleConstants[] getModules() {
+    public SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
+            [] getModules() {
         return new SwerveModuleConstants[] {frontLeft, frontRight, backLeft, backRight};
     }
 

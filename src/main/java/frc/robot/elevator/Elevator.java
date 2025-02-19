@@ -20,33 +20,75 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxRotations = 110.6304660319; // 29.8;
-        @Getter private double minRotations = 0;
+        @Getter private double maxRotations = 10; // TODO: Reset to 21.1;
+        @Getter private double minRotations = 5; // TODO: Reset to 0;
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
         @Getter private double home = minRotations;
-        @Getter private final double l1 = 10;
-        @Getter private final double l2 = 15.412;
-        @Getter private final double l3 = 24.4168;
-        @Getter private final double l4 = fullExtend;
-        @Getter private final double barge = fullExtend;
-        @Getter private final double stationIntake = 10.5;
-        @Getter private double stationExtendedIntake = 14.5;
 
-        @Getter private double tolerance = 0.95;
-        @Getter private double elevatorUpHeight = 5;
+        @Getter
+        private final double algaeLollipop =
+                43.5267; // TODO: update, max changed from 110.6304660319
+
+        @Getter
+        private final double coralLollipop = 0; // TODO: update, max changed from 110.6304660319
+
+        @Getter
+        private final double clawGroundAlgaeIntake =
+                0; // TODO: update, max changed from 110.6304660319
+
+        @Getter
+        private final double clawGroundCoralIntake =
+                0; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double stationIntake =
+                7.2545; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double stationExtendedIntake =
+                32.645; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double handOff = 29.0178; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double l2Algae = 29.0178; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double l3Algae = 87.0535; // TODO: update, as max changed from 110.6304660319
+
+        @Getter private final double l1 = 0;
+
+        @Getter
+        private final double l2Coral = 21.7634; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double l3Coral = 79.799; // TODO: update, as max changed from 110.6304660319
+
+        @Getter
+        private final double l4 = 101.5624; // TODO: update, as max changed from 110.6304660319
+
+        @Getter private final double barge = fullExtend;
+
+        @Getter private double triggerTolerance = 0.95;
+        @Getter private double elevatorIsUpHeight = 5;
+        @Getter private double initPosition = 0;
 
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
-        @Getter private final double positionKp = 0.86; // 20 FOC // 10 Regular
-        @Getter private final double positionKv = 0.13; // .12 FOC // .15 regular
-        @Getter private double currentLimit = 20;
-        @Getter private final double torqueCurrentLimit = 100;
+        @Getter private final double positionKp = 0; // TODO: Old value = 0.86;
+        @Getter private final double positionKa = 0.05;
+        @Getter private final double positionKv = 3.39;
+        @Getter private final double positionKs = 0.005;
+        @Getter @Setter private double positionKg = 0.485;
+        @Getter private double currentLimit = 40;
+        @Getter private double torqueCurrentLimit = 120;
 
         /* Sim properties */
-        @Getter private double kElevatorGearing = 3.62722; // 5;
+        @Getter private double kElevatorGearing = 3.62722;
         @Getter private double kCarriageMass = 1;
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.8;
@@ -56,10 +98,10 @@ public class Elevator extends Mechanism {
         @Getter private double movingLength = 50;
 
         public ElevatorConfig() {
-            super("Elevator", 40, Rio.CANIVORE);
+            super("ElevatorFront", 40, Rio.CANIVORE);
             configMinMaxRotations(minRotations, maxRotations);
             configPIDGains(0, positionKp, 0, 0);
-            configFeedForwardGains(0, positionKv, 0, 0);
+            configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(700, 900, 0); // 40, 120 FOC // 120, 195 Regular
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
@@ -69,6 +111,7 @@ public class Elevator extends Mechanism {
             configReverseSoftLimit(minRotations, true);
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive();
+            setFollowerConfigs(new FollowerConfig("ElevatorRear", 41, Rio.CANIVORE, true));
         }
 
         /** Use these method to set the config for the mechanism on each robot */
@@ -84,6 +127,8 @@ public class Elevator extends Mechanism {
     public Elevator(ElevatorConfig config) {
         super(config);
         this.config = config;
+
+        motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
 
         simulationInit();
         telemetryInit();
@@ -182,7 +227,7 @@ public class Elevator extends Mechanism {
                                         || ElevatorStates.getPosition().getAsDouble()
                                                 < rotations.getAsDouble()
                                         || ElevatorStates.getPosition().getAsDouble()
-                                                > config.getL2())
+                                                > config.getL2Coral())
                 .andThen(run(() -> setMMPosition(rotations)).withName("Elevator.moveToRotations"));
     }
 

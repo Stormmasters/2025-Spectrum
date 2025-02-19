@@ -17,13 +17,13 @@ public class CoralIntakeStates {
     public static Trigger hasAlgae = new Trigger(coralIntake::hasIntakeAlgae);
 
     public static void setupDefaultCommand() {
-        coralIntake.setDefaultCommand(
-                log(coralIntake.runStop()).withName("coralIntake.default"));
+        coralIntake.setDefaultCommand(coralIntake.runStop().withName("coralIntake.default"));
     }
 
     public static void setStates() {
-        stationIntaking.whileTrue(log(coralIntake()));
-        stationExtendedIntake.whileTrue(log(coralIntake()));
+
+        stationIntaking.whileTrue(coralIntake()); // log(coralIntake()));
+        stationExtendedIntake.whileTrue(coralEject()); // log(coralIntake()));
 
         scoreState.and(barge.not()).onTrue(log(coralScore()));
         scoreState.and(barge).onTrue(log(barge()));

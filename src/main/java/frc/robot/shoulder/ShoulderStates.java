@@ -24,11 +24,10 @@ public class ShoulderStates {
     public static void setStates() {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-
-        stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
-        stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralExtendedIntake()));
-        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralExtendedIntake())));
+        stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
+        stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
+        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
+        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
 
         L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
         L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
@@ -61,7 +60,7 @@ public class ShoulderStates {
     }
 
     public static Command home() {
-        return shoulder.moveToPercentage(config::getHome).withName("Shoulder.home");
+        return shoulder.moveToDegrees(config::getHome).withName("Shoulder.home");
     }
 
     public static DoubleSupplier getPosition() {
@@ -69,64 +68,63 @@ public class ShoulderStates {
     }
 
     public static Command climbHome() {
-        return shoulder.moveToPercentage(config::getClimbHome).withName("Shoulder.climbHome");
+        return shoulder.moveToDegrees(config::getClimbHome).withName("Shoulder.climbHome");
     }
 
     public static Command handOffAlgae() {
-        return shoulder.moveToPercentage(config::getHandAlgae).withName("Elbow.handOffAlgae");
+        return shoulder.moveToDegrees(config::getHandAlgae).withName("Elbow.handOffAlgae");
     }
 
     /* Scoring positions */
 
     public static Command l2Algae() {
-        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL2Algae))
+        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL2Algae))
                 .withName("Shoulder.l2Algae");
     }
 
     public static Command l3Algae() {
-        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL3Algae))
+        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL3Algae))
                 .withName("Shoulder.l3Algae");
     }
 
     public static Command l1Coral() {
-        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL1Coral))
+        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL1Coral))
                 .withName("Twist.L1Coral");
     }
 
     public static Command l2Coral() {
-        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL2Coral))
+        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL2Coral))
                 .withName("Shoulder.l2Coral");
     }
 
     public static Command l3Coral() {
-        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL3Coral))
+        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL3Coral))
                 .withName("Shoulder.l3Coral");
     }
 
     public static Command l4Coral() {
-        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getL4Coral))
+        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL4Coral))
                 .withName("Shoulder.l4Coral");
     }
 
     public static Command barge() {
-        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getBarge))
+        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getBarge))
                 .withName("Shoulder.barge");
     }
 
-    // missing auton Shoulder commands, add when auton is added
-
     public static Command floorIntake() {
-        return shoulder.moveToPercentage(config::getFloorIntake).withName("Shoulder.floorIntake");
+        return shoulder.moveToDegrees(config::getClawGroundAlgaeIntake)
+                .withName("Shoulder.floorIntake");
     }
 
-    public static Command coralIntake() {
-        return shoulder.moveToPercentage(() -> shoulder.checkReversed(config::getCoralIntake))
+    public static Command stationIntake() {
+        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getStationIntake))
                 .withName("Shoulder.coralIntake");
     }
 
-    public static Command coralExtendedIntake() {
-        return shoulder.moveToPercentage(
-                        () -> shoulder.checkReversed(config::getCoralExtendedIntake))
+    public static Command stationExtendedIntake() {
+        return shoulder.moveToDegrees(
+                        () -> shoulder.checkReversed(config::getStationExtendedIntake))
                 .withName("Shoulder.coralExtendedIntake");
     }
 
@@ -144,9 +142,9 @@ public class ShoulderStates {
 
     // Tune value command
     public static Command tuneShoulder() {
-        // return shoulder.moveToPercentage(new TuneValue("Tune Shoulder", 0).getSupplier())
+        // return shoulder.moveToDegrees(new TuneValue("Tune Shoulder", 0).getSupplier())
         //         .withName("Shoulder.Tune");
-        return shoulder.moveToPercentage(config::getTuneShoulder);
+        return shoulder.moveToDegrees(config::getTuneShoulder);
     }
 
     // Log Command
