@@ -52,13 +52,16 @@ public class RobotStates {
 
     // intake Triggers
     public static final Trigger visionIntaking = Trigger.kFalse;
-    public static final Trigger stationIntaking =
-            pilot.stationIntake_LT.or(visionIntaking, autonSourceIntake);
+    // public static final Trigger stationIntaking =
+    //      pilot.stationIntake_LT.or(visionIntaking, autonSourceIntake); //TODO: uncomment
     // .and(bottomLeftZone.or(bottomRightZone));
     public static final Trigger stationExtendedIntake =
             pilot.stationExtendedIntake_LB_LT; // TODO: add zone
-    public static final Trigger groundAlgae = pilot.groundAlgae_RT;
-    public static final Trigger groundCoral = pilot.groundCoral_LB_RT;
+    // public static final Trigger groundAlgae = pilot.groundAlgae_RT; //TODO: Uncomment
+    // public static final Trigger groundCoral = pilot.groundCoral_LB_RT; //TODO: uncomment
+    public static final Trigger stationIntaking = Trigger.kFalse;
+    public static final Trigger groundAlgae = Trigger.kFalse;
+    public static final Trigger groundCoral = Trigger.kFalse;
 
     // score Triggers
     public static final Trigger actionPrepState = pilot.actionReady;

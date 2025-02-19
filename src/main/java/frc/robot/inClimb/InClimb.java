@@ -23,9 +23,8 @@ public class InClimb extends Mechanism {
 
     public static class InClimbConfig extends Config {
 
-        @Getter private final double maxRotations = .3; // TODO: find max rotations
-        @Getter private final double minRotations = -0.1;
-
+        @Getter private final double maxRotations = .26; // TODO: find max rotations
+        @Getter private final double minRotations = -0.085;
         /* InClimb positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = 0;
         @Getter private final double intake = 35.5;
@@ -41,8 +40,8 @@ public class InClimb extends Mechanism {
         /* InClimb config settings */
         @Getter private final double zeroSpeed = -0.1;
 
-        @Getter private final double currentLimit = 20;
-        @Getter private final double torqueCurrentLimit = 100;
+        @Getter private final double currentLimit = 30;
+        @Getter private final double torqueCurrentLimit = 120;
         @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
         @Getter private final double velocityKv = 0.018;
         @Getter private final double velocityKs = 0;
@@ -95,6 +94,7 @@ public class InClimb extends Mechanism {
         super(config);
         this.config = config;
         motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything
+        followerMotors[0].setPosition(0.25);
         simulationInit();
         telemetryInit();
         Telemetry.print(getName() + " Subsystem Initialized");

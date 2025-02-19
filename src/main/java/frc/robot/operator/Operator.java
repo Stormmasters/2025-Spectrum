@@ -19,7 +19,8 @@ public class Operator extends Gamepad {
 
     public final Trigger operatorCoralStage = leftBumper.and(teleop);
     public final Trigger operatorAlgaeStage = rightBumper.and(teleop);
-    public final Trigger homeState = operatorCoralStage.not().and(operatorAlgaeStage.not());
+    public final Trigger homeState =
+            Trigger.kFalse; // operatorCoralStage.not().and(operatorAlgaeStage.not());
 
     public final Trigger L1Coral_A = A.and(operatorCoralStage);
     public final Trigger L2Coral_B = B.and(operatorCoralStage);
