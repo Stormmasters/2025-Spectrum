@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.reefscape.Field;
 import frc.robot.Robot;
+import frc.robot.swerve.Swerve;
+import frc.robot.swerve.SwerveStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.Trio;
 import frc.spectrumLib.vision.Limelight;
@@ -671,6 +673,9 @@ public class Vision extends SubsystemBase {
     //     return new Translation2d(x, y);
     // }
 
+    public static void setOutput(double output) {
+        
+    } 
 
     // ------------------------------------------------------------------------------
     // VisionStates Commands
@@ -688,38 +693,37 @@ public class Vision extends SubsystemBase {
      * @return
      */
 
-     public Command alignToVisionTarget(CommandConfig config, DoubleSupplier fwdPositiveSupplier, DoubleSupplier offset) {
-        return new Command() {
-            private final PIDController controller = new PIDController(config.kp, 0, 0);
-            private DoubleSupplier measurement = config.limelight.getHorizontalOffset();
-            private DoubleSupplier output;
-            private DoubleSupplier setpoint = offset;
+     public void alignToVisionTarget(CommandConfig config, DoubleSupplier fwdPositiveSupplier, double offset) {
+
+            final PIDController controller = new PIDController(config.kp, 0, 0);
+            Command driveCommand = 
+                                    SwerveStates.fpvDrive( 
+                                        fwdPositiveSupplier, 
+                                        () -> config.verticalSetpoint, 
+                                        () -> config.verticalMaxView);
+            double measurement = config.limelight.getHorizontalOffset();
+            double output = 0;
+            double setpoint = offset;
+            double error = config.error;
+            double horizontalSetpoint = setpoint;
+            double heading = Integer.MIN_VALUE;
+            Limelight limelight = config.limelight;
+
+
             
-
-
-            @Override
-            public void initialize() {
-                controller.setTolerance(config.tolerance);
-                controller.enableContinuousInput(-180, 180);
-                controller.setSetpoint(measurement.getAsDouble() + offset.getAsDouble());
+            if (Math.abs(output) > 1) {
+                output = 1 * Math.signum(output);
+            } else {
+                output = output * config.maxOutput;
             }
 
-            @Override
-            public void execute() {
-                output = MathUtil.clamp(controller.calculate(measurement.getAsDouble()), -config.maxOutput, config.maxOutput);
-                config.alignCommand.setOutput(output);
-            }
 
-            @Override
-            public boolean isFinished() {
-                return controller.atSetpoint();
-            }
 
-            @Override
-            public void end(boolean interrupted) {
-                config.alignCommand.setOutput(0);
-            }
-        };
+            if (controller.atSetpoint() || !limelight.targetInView()) {
+                output = 0;
+            } else {
+                driveCommand.execute();
+            }            
     }
 
 

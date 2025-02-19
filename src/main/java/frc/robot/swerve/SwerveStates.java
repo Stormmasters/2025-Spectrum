@@ -157,7 +157,7 @@ public class SwerveStates {
     private static final SwerveRequest.RobotCentric robotCentric =
             new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private static Command fpvDrive(
+    public static Command fpvDrive(
             DoubleSupplier fwdPositive, DoubleSupplier leftPositive, DoubleSupplier ccwPositive) {
         return swerve.applyRequest(
                         () ->
