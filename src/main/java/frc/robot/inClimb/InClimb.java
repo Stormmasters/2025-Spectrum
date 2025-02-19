@@ -96,6 +96,7 @@ public class InClimb extends Mechanism {
         super(config);
         this.config = config;
         motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything        motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+        //motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
 
         simulationInit();
         telemetryInit();
