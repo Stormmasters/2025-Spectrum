@@ -57,6 +57,7 @@ public class Elbow extends Mechanism {
         @Getter @Setter private boolean leftScore = true;
 
         @Getter private final double offsetConstant = -90;
+        @Getter private final double initPosition = 180;
 
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -120,6 +121,14 @@ public class Elbow extends Mechanism {
                         .setGearRatio(config.getCANcoderGearRatio())
                         .setOffset(config.getCANcoderOffset())
                         .setAttached(true);
+
+        if (canCoder.isAttached()) {
+            motor.setPosition(
+                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                            * config.getGearRatio());
+        } else {
+            motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+        }
 
         simulationInit();
         telemetryInit();
