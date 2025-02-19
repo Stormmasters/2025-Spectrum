@@ -6,8 +6,11 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
+import frc.robot.elbow.ElbowStates;
+import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
+import frc.robot.shoulder.ShoulderStates;
 import frc.robot.swerve.Swerve;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
@@ -85,7 +88,8 @@ public class RobotStates {
     public static final Trigger algaeHandoff = operator.algaeHandoff_X;
     public static final Trigger coralHandoff = operator.coralHandoff_Y;
 
-    public static final Trigger homeAll = operator.homeState;
+    public static final Trigger isAtHome =
+            ElevatorStates.isHome.and(ElbowStates.isHome, ShoulderStates.isHome);
 
     // reset triggers
     public static final Trigger homeElevator = operator.homeElevator_A;
@@ -98,6 +102,7 @@ public class RobotStates {
     public static final SpectrumState leftScore = new SpectrumState("leftScore");
     public static final SpectrumState rightScore = new SpectrumState("rightScore");
     public static final SpectrumState scoreState = new SpectrumState("scoreState");
+    public static final SpectrumState homeAll = new SpectrumState("homeAll");
 
     public static final Trigger coastOn = pilot.coastOn_dB;
 
@@ -114,6 +119,9 @@ public class RobotStates {
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
         actionPrepState.onTrue(scoreState.setFalse());
         actionPrepState.onFalseOnce(scoreState.setTrue());
+        operator.operatorCoralStage.onFalseOnce(homeAll.setTrue());
+        operator.operatorAlgaeStage.onFalseOnce(homeAll.setTrue());
+        isAtHome.onTrue(homeAll.setFalse());
 
         bottomLeftZone
                 .and(stationIntaking)

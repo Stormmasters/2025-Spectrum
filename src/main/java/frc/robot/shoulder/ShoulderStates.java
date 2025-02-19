@@ -4,6 +4,7 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.spectrumLib.Telemetry;
@@ -12,6 +13,8 @@ import java.util.function.DoubleSupplier;
 public class ShoulderStates {
     private static Shoulder shoulder = Robot.getShoulder();
     private static ShoulderConfig config = Robot.getConfig().shoulder;
+    public static final Trigger isHome =
+            shoulder.atPercentage(config::getHome, config::getTolerance);
 
     public static void setupDefaultCommand() {
         shoulder.setDefaultCommand(

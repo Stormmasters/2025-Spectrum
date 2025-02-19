@@ -48,6 +48,8 @@ public class Elbow extends Mechanism {
         @Getter @Setter private double tuneElbow = 0;
         @Getter @Setter private boolean leftScore = true;
 
+        @Getter private final double tolerance = 0.95;
+
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
 

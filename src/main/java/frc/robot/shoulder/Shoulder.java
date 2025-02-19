@@ -46,6 +46,8 @@ public class Shoulder extends Mechanism {
         @Getter private final double barge = -88.9;
         @Getter @Setter private double tuneShoulder = 0;
 
+        @Getter private final double tolerance = 0.95;
+
         /* Shoulder config settings */
         @Getter private final double zeroSpeed = -0.1;
 
