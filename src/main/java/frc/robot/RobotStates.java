@@ -112,8 +112,8 @@ public class RobotStates {
     public static void setupStates() {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
-        actionPrepState.onFalse(scoreState.setTrue());
         actionPrepState.onTrue(scoreState.setFalse());
+        actionPrepState.onFalseOnce(scoreState.setTrue());
 
         bottomLeftZone
                 .and(stationIntaking)
