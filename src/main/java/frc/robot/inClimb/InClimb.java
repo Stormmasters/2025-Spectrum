@@ -93,8 +93,10 @@ public class InClimb extends Mechanism {
     public InClimb(InClimbConfig config) {
         super(config);
         this.config = config;
-        motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything
-        followerMotors[0].setPosition(0.25);
+        if (config.isAttached()) {
+            motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything
+            followerMotors[0].setPosition(0.25);
+        }
         simulationInit();
         telemetryInit();
         Telemetry.print(getName() + " Subsystem Initialized");

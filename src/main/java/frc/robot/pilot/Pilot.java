@@ -51,6 +51,8 @@ public class Pilot extends Gamepad {
 
     // TEST TRIGGERS
     public final Trigger tuneElevator_tB = testMode.and(B);
+    public final Trigger tuneElevator_tA = testMode.and(A);
+    public final Trigger testTriggersTrigger = testMode.and(leftTrigger.or(rightTrigger));
 
     public static class PilotConfig extends Config {
 

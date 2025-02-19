@@ -123,12 +123,15 @@ public class Shoulder extends Mechanism {
                         .setOffset(config.getCANcoderOffset())
                         .setAttached(true);
 
-        if (canCoder.isAttached()) {
-            motor.setPosition(
-                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                            * config.getGearRatio());
-        } else {
-            motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+        if (isAttached()) {
+            if (canCoder.isAttached()) {
+                motor.setPosition(
+                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                                * config.getGearRatio());
+            } else {
+                motor.setPosition(
+                        degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+            }
         }
 
         simulationInit();

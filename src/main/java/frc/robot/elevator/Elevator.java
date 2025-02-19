@@ -20,8 +20,8 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxRotations = 10; // TODO: Reset to 21.1;
-        @Getter private double minRotations = 5; // TODO: Reset to 0;
+        @Getter private double maxRotations = 12; // TODO: Reset to 21.1;
+        @Getter private double minRotations = 3; // TODO: Reset to 0;
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
@@ -79,11 +79,11 @@ public class Elevator extends Mechanism {
 
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
-        @Getter private final double positionKp = 0; // TODO: Old value = 0.86;
-        @Getter private final double positionKa = 0.05;
-        @Getter private final double positionKv = 3.39;
+        @Getter private final double positionKp = 0;
+        @Getter private final double positionKa = 0.001;
+        @Getter private final double positionKv = 0;
         @Getter private final double positionKs = 0.005;
-        @Getter @Setter private double positionKg = 0.485;
+        @Getter private double positionKg = 0.485;
         @Getter private double currentLimit = 40;
         @Getter private double torqueCurrentLimit = 120;
 
@@ -102,11 +102,11 @@ public class Elevator extends Mechanism {
             configMinMaxRotations(minRotations, maxRotations);
             configPIDGains(0, positionKp, 0, 0);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
-            configMotionMagic(700, 900, 0); // 40, 120 FOC // 120, 195 Regular
+            configMotionMagic(5, 5, 0);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
-            configReverseTorqueCurrentLimit(torqueCurrentLimit);
+            configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
             configForwardSoftLimit(maxRotations, true);
             configReverseSoftLimit(minRotations, true);
             configNeutralBrakeMode(true);
@@ -128,7 +128,10 @@ public class Elevator extends Mechanism {
         super(config);
         this.config = config;
 
-        motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
+        if (isAttached()) {
+            motor.setPosition(config.getInitPosition());
+            followerMotors[0].setPosition(config.getInitPosition());
+        }
 
         simulationInit();
         telemetryInit();

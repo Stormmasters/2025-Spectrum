@@ -124,18 +124,20 @@ public class Twist extends Mechanism {
         super(config);
         this.config = config;
 
-        canCoder =
-                new SpectrumCANcoder(44, motor, config)
-                        .setGearRatio(config.getCANcoderGearRatio())
-                        .setOffset(config.getCANcoderOffset())
-                        .setAttached(true);
+        if (isAttached()) {
+            canCoder =
+                    new SpectrumCANcoder(44, motor, config)
+                            .setGearRatio(config.getCANcoderGearRatio())
+                            .setOffset(config.getCANcoderOffset())
+                            .setAttached(true);
 
-        if (canCoder.isAttached()) {
-            motor.setPosition(
-                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                            * config.getGearRatio());
-        } else {
-            motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
+            if (canCoder.isAttached()) {
+                motor.setPosition(
+                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                                * config.getGearRatio());
+            } else {
+                motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
+            }
         }
 
         simulationInit();
