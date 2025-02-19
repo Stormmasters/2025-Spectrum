@@ -21,7 +21,7 @@ public class Elevator extends Mechanism {
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
         @Getter private double maxRotations = 12; // TODO: Reset to 21.1;
-        @Getter private double minRotations = 3; // TODO: Reset to 0;
+        @Getter private double minRotations = 2; // TODO: Reset to 0;
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
@@ -79,13 +79,18 @@ public class Elevator extends Mechanism {
 
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
-        @Getter private final double positionKp = 0;
-        @Getter private final double positionKa = 0.001;
+        @Getter private final double positionKp = 100;
+        @Getter private final double positionKd = 6;
+        @Getter private final double positionKa = 0.2;
         @Getter private final double positionKv = 0;
-        @Getter private final double positionKs = 0.005;
-        @Getter private double positionKg = 0.485;
+        @Getter private final double positionKs = 5;
+        @Getter private final double positionKg = 25.3;
+        @Getter private final double cruiseVelocity = 40;
+        @Getter private final double acceleration = 280;
+        @Getter private final double jerk = 2000;
+
         @Getter private double currentLimit = 40;
-        @Getter private double torqueCurrentLimit = 120;
+        @Getter private double torqueCurrentLimit = 160;
 
         /* Sim properties */
         @Getter private double kElevatorGearing = 3.62722;
@@ -100,9 +105,9 @@ public class Elevator extends Mechanism {
         public ElevatorConfig() {
             super("ElevatorFront", 40, Rio.CANIVORE);
             configMinMaxRotations(minRotations, maxRotations);
-            configPIDGains(0, positionKp, 0, 0);
+            configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
-            configMotionMagic(5, 5, 0);
+            configMotionMagic(cruiseVelocity, acceleration, jerk);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
@@ -181,14 +186,14 @@ public class Elevator extends Mechanism {
 
             @Override
             public void initialize() {
-                stop();
                 holdPosition = getPositionRotations();
+                setMMPosition(() -> holdPosition);
             }
 
             @Override
             public void execute() {
                 double currentPosition = getPositionRotations();
-                if (Math.abs(holdPosition - currentPosition) <= 5) {
+                if (Math.abs(holdPosition - currentPosition) <= 1) {
                     setMMPosition(() -> holdPosition);
                 } else {
                     stop();
@@ -232,6 +237,10 @@ public class Elevator extends Mechanism {
                                         || ElevatorStates.getPosition().getAsDouble()
                                                 > config.getL2Coral())
                 .andThen(run(() -> setMMPosition(rotations)).withName("Elevator.moveToRotations"));
+    }
+
+    public Command setElevatorMMPositionFOC(DoubleSupplier rotations) {
+        return run(() -> setMMPositionFoc(rotations)).withName("Elevator Set MM Position");
     }
 
     // --------------------------------------------------------------------------------

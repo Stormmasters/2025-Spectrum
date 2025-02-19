@@ -24,7 +24,8 @@ public class ElevatorStates {
 
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(
-                holdPosition().ignoringDisable(true).withName("Elevator.default"));
+                // holdPosition().ignoringDisable(true).withName("Elevator.default"));
+                elevator.runStop());
     }
 
     public static void setStates() {
@@ -62,8 +63,8 @@ public class ElevatorStates {
         homeAll.whileTrue(home());
         homeElevator.whileTrue(zero());
 
-        Robot.getPilot().tuneElevator_tA.whileTrue(elevator.moveToRotations(() -> 5.0));
-        Robot.getPilot().tuneElevator_tB.whileTrue(elevator.moveToRotations(() -> 10.0));
+        Robot.getPilot().tuneElevator_tA.whileTrue(elevator.setElevatorMMPositionFOC(() -> 5.0));
+        Robot.getPilot().tuneElevator_tB.whileTrue(elevator.setElevatorMMPositionFOC(() -> 10.0));
         Robot.getPilot()
                 .testTriggersTrigger
                 .whileTrue(runElevator(() -> Robot.getPilot().getInClimbManualAxis()));
