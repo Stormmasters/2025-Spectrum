@@ -31,27 +31,27 @@ public class Elbow extends Mechanism {
         /* Elbow positions in percentage of max rotation || 0 is vertical up || positions should be towards the front of the robot */
 
         // TODO: Find elbow positions
-        @Getter private final double handAlgae = 99;
-        @Getter private final double home = 0;
+        @Getter private final double handAlgae = 0;
+        @Getter private final double home = 180;
 
-        @Getter private final double algaeLollipop = 56.7;
-        @Getter private final double coralLollipop = 58.3;
-        @Getter private final double stationIntake = 14.4;
-        @Getter private final double stationExtendedIntake = 24.4;
-        @Getter private final double floorIntake = 0;
-        @Getter private final double clawGroundAlgaeIntake = 58.3;
-        @Getter private final double clawGroundCoralIntake = 58.3;
-        @Getter private final double handOff = 100;
+        @Getter private final double algaeLollipop = 78;
+        @Getter private final double coralLollipop = 76;
+        @Getter private final double stationIntake = 150;
+        @Getter private final double stationExtendedIntake = 136;
+        @Getter private final double floorIntake = 120;
+        @Getter private final double clawGroundAlgaeIntake = 75;
+        @Getter private final double clawGroundCoralIntake = 75;
+        @Getter private final double handOff = 0;
 
-        @Getter private final double l2Algae = 33.3;
-        @Getter private final double l3Algae = 33.3;
+        @Getter private final double l2Algae = 120;
+        @Getter private final double l3Algae = 120;
 
-        @Getter private final double l1Coral = 36.1;
-        @Getter private final double l2Coral = 30.6;
-        @Getter private final double l3Coral = 30.6;
-        @Getter private final double l4Coral = 25;
+        @Getter private final double l1Coral = 115;
+        @Getter private final double l2Coral = 126;
+        @Getter private final double l3Coral = 126;
+        @Getter private final double l4Coral = 135;
 
-        @Getter private final double barge = 7.2;
+        @Getter private final double barge = 167;
 
         @Getter @Setter private double tuneElbow = 0;
         @Getter @Setter private boolean leftScore = true;

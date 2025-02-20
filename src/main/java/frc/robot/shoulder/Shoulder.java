@@ -25,31 +25,31 @@ public class Shoulder extends Mechanism {
     public static class ShoulderConfig extends Config {
         @Getter @Setter private boolean reversed = false;
 
-        // Positions set as percentage of shoulder
-        @Getter private final int initializedPosition = 20;
+        // Positions set as degrees of rotation || 0 is vertical down
+        @Getter private final int initializedPosition = 0;
 
-        /* Shoulder positions in percentage of max rotation || 0 is vertical down || positions should be towards front of robot */
+        /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
         // TODO: Find shoulder positions
-        @Getter private final double score = 100 - 65;
-        @Getter private final double climbHome = 100 - 3;
-        @Getter private final double handAlgae = -21;
+        @Getter private final double score = 117;
+        @Getter private final double climbHome = 180;
+        @Getter private final double handAlgae = -144;
         @Getter private final double home = 0;
 
         @Getter private final double algaeLollipop = 0;
-        @Getter private final double coralLollipop = -13.3;
-        @Getter private final double stationIntake = 4.4;
-        @Getter private final double stationExtendedIntake = 4.4;
-        @Getter private final double clawGroundAlgaeIntake = -8.9;
-        @Getter private final double clawGroundCoralIntake = -8.9;
-        @Getter private final double handOff = 100;
+        @Getter private final double coralLollipop = -157;
+        @Getter private final double stationIntake = 172;
+        @Getter private final double stationExtendedIntake = 172;
+        @Getter private final double clawGroundAlgaeIntake = -164;
+        @Getter private final double clawGroundCoralIntake = -164;
+        @Getter private final double handOff = 180;
 
-        @Getter private final double l2Algae = -5.6;
-        @Getter private final double l3Algae = -5.6;
+        @Getter private final double l2Algae = 10;
+        @Getter private final double l3Algae = 10;
 
-        @Getter private final double l1Coral = -1.1;
-        @Getter private final double l2Coral = -19.4;
-        @Getter private final double l3Coral = -19.4;
-        @Getter private final double l4Coral = -75;
+        @Getter private final double l1Coral = 2;
+        @Getter private final double l2Coral = 34;
+        @Getter private final double l3Coral = 34;
+        @Getter private final double l4Coral = 135;
 
         @Getter private final double barge = -94.4;
         @Getter @Setter private double tuneShoulder = 0;

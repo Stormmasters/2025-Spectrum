@@ -30,9 +30,7 @@ public class Elevator extends Mechanism {
         @Getter @Setter private double fullExtend = maxRotations * .999;
         @Getter private double home = 0;
 
-        @Getter
-        private final double algaeLollipop =
-                43.5267; // TODO: update, max changed from 110.6304660319
+        @Getter private final double algaeLollipop = 8;
 
         @Getter
         private final double coralLollipop = 0; // TODO: update, max changed from 110.6304660319
@@ -47,33 +45,32 @@ public class Elevator extends Mechanism {
 
         @Getter
         private final double stationIntake =
-                7.2545; // TODO: update, as max changed from 110.6304660319
+                1.5; // TODO: update, as max changed from 110.6304660319
 
         @Getter
         private final double stationExtendedIntake =
-                32.645; // TODO: update, as max changed from 110.6304660319
+                6.5; // TODO: update, as max changed from 110.6304660319
 
         @Getter
-        private final double handOff = 29.0178; // TODO: update, as max changed from 110.6304660319
+        private final double handOff = 5.5; // TODO: update, as max changed from 110.6304660319
 
         @Getter
-        private final double l2Algae = 29.0178; // TODO: update, as max changed from 110.6304660319
+        private final double l2Algae = 5.5; // TODO: update, as max changed from 110.6304660319
 
         @Getter
-        private final double l3Algae = 87.0535; // TODO: update, as max changed from 110.6304660319
+        private final double l3Algae = 16.5; // TODO: update, as max changed from 110.6304660319
 
         @Getter private final double l1 = 0;
 
         @Getter
-        private final double l2Coral = 21.7634; // TODO: update, as max changed from 110.6304660319
+        private final double l2Coral = 4.15; // TODO: update, as max changed from 110.6304660319
 
         @Getter
-        private final double l3Coral = 79.799; // TODO: update, as max changed from 110.6304660319
+        private final double l3Coral = 15.25; // TODO: update, as max changed from 110.6304660319
 
-        @Getter
-        private final double l4 = 101.5624; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double l4 = 19.25; // TODO: update, as max changed from 110.6304660319
 
-        @Getter private final double barge = fullExtend;
+        @Getter private final double barge = 20;
 
         @Getter private double triggerTolerance = 0.95;
         @Getter private double elevatorIsUpHeight = 5;

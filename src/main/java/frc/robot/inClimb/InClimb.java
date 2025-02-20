@@ -25,15 +25,15 @@ public class InClimb extends Mechanism {
 
         @Getter private final double maxRotations = 0.26; // TODO: find max rotations
         @Getter private final double minRotations = -0.085;
-        /* InClimb positions in percentage of max rotation || 0 is horizontal */
-        @Getter private final double home = 0;
-        @Getter private final double intake = 35.5;
-        @Getter private final double algaeFloorIntake = 70;
+        /* InClimb positions in degrees || 0 is horizontal */
+        @Getter private final double home = 90;
+        @Getter private final double intake = 0;
+        @Getter private final double algaeFloorIntake = 30;
         @Getter @Setter private double tuneInClimb = 0;
-        @Getter private final double prepClimber = 180;
-        @Getter private final double finishClimb = 90;
-        @Getter private final double coralFloorIntake = 95;
-        @Getter private final double processorScore = 65;
+        @Getter private final double prepClimber = -10;
+        @Getter private final double finishClimb = 100;
+        @Getter private final double coralFloorIntake = -10;
+        @Getter private final double processorScore = 60;
 
         @Getter private final double offsetConstant = -90;
 
