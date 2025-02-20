@@ -782,20 +782,32 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         }
 
         public void configSupplyCurrentLimit(double supplyLimit, boolean enabled) {
+            if (supplyLimit < 0) {
+                supplyLimit = -supplyLimit;
+            }
             talonConfig.CurrentLimits.SupplyCurrentLimit = supplyLimit;
             talonConfig.CurrentLimits.SupplyCurrentLimitEnable = enabled;
         }
 
         public void configStatorCurrentLimit(double statorLimit, boolean enabled) {
+            if (statorLimit < 0) {
+                statorLimit = -statorLimit;
+            }
             talonConfig.CurrentLimits.StatorCurrentLimit = statorLimit;
             talonConfig.CurrentLimits.StatorCurrentLimitEnable = enabled;
         }
 
         public void configForwardTorqueCurrentLimit(double currentLimit) {
+            if (currentLimit < 0) {
+                currentLimit = -currentLimit;
+            }
             talonConfig.TorqueCurrent.PeakForwardTorqueCurrent = currentLimit;
         }
 
         public void configReverseTorqueCurrentLimit(double currentLimit) {
+            if (currentLimit > 0) {
+                currentLimit = -currentLimit;
+            }
             talonConfig.TorqueCurrent.PeakReverseTorqueCurrent = currentLimit;
         }
 
