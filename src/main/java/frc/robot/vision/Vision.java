@@ -547,37 +547,59 @@ public class Vision extends SubsystemBase {
      * @param offset
      * @return
      */
+    public static class alignToVisionTarget {
+        final PIDController controller;
+        Limelight limelight;
 
-     public void alignToVisionTarget(CommandConfig config, DoubleSupplier fwdPositiveSupplier, double offset) {
-
-        final PIDController controller = new PIDController(config.kp, 0, 0);
-        //config for the drive command run for the robot
-        Command driveCommand = 
-                                SwerveStates.fpvDrive( 
-                                    fwdPositiveSupplier, 
-                                    () -> config.verticalSetpoint, 
-                                    () -> config.verticalMaxView);
-        double measurement = config.limelight.getHorizontalOffset();
-        double output = 0;
-        double setpoint = offset;
-        double error = config.error;
-        double horizontalSetpoint = setpoint;
-        double heading = Integer.MIN_VALUE;
-        Limelight limelight = config.limelight;
-
-        //initializing command
-        driveCommand.initialize();
-        limelight.setLimelightPipeline(config.pipelineIndex);
-
-        
-        if (Math.abs(output) > 1) {
-            output = 1 * Math.signum(output);
-        } else {
-            output = output * config.maxOutput;
+        public alignToVisionTarget( CommandConfig config, DoubleSupplier fwdPositiveSupplier, double offset) {
+            controller = new PIDController(config.kp, 0, 0);
+                //config for the drive command run for the robot
+                Command driveCommand = 
+                                        SwerveStates.fpvDrive( 
+                                            fwdPositiveSupplier, 
+                                            () -> config.verticalSetpoint, 
+                                            () -> config.verticalMaxView);
+                double measurement = config.limelight.getHorizontalOffset();
+                double output = 0;
+                double setpoint = offset;
+                double error = config.error;
+                double horizontalSetpoint = setpoint;
+                double heading = Integer.MIN_VALUE;
+                
+                driveCommand.initialize();
+            
         }
-        //executes the following command
-        execute();
     }
+
+        public void intialize() {
+            limelight.setLimelightPipeline(config.pipelineIndex);
+            controller.setTolerance(config.tolerance);
+            controller.setSetpoint(setpoint);
+        }
+
+        public void execute() {
+            if(this.getController().atSetPoint() || !limelight.targetInView()) {
+                output = 0;
+            } 
+            driveCommand.execute();
+
+            
+        }
+
+        public void getOutPut() {
+            if (Math.abs(output) > 1) {
+                output = 1 * Math.signum(output);
+            } else {
+                output = output * config.maxOutput;
+            }
+        }
+
+
+    } 
+
+    
+        
+        
 
 
 
@@ -723,14 +745,7 @@ public class Vision extends SubsystemBase {
     // }
 
     //Executes the alignToVisionTarget command
-    private void execute() {
-        if (controller.atSetpoint() || !limelight.targetInView()) {
-            output = 0;
-        } else {
-            driveCommand.execute();
-        }
-    }  
-    
+
 
     // ------------------------------------------------------------------------------
     // VisionStates Commands
