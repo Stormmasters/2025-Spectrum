@@ -18,7 +18,8 @@ public class ElbowStates {
 
     public static void setupDefaultCommand() {
         elbow.setDefaultCommand(
-                log(elbow.runHoldElbow().ignoringDisable(true).withName("Elbow.default")));
+                // log(elbow.runHoldElbow().ignoringDisable(true).withName("Elbow.default")));
+                elbow.runStop());
     }
 
     public static void setStates() {
@@ -56,6 +57,13 @@ public class ElbowStates {
 
         algaeHandoff.whileTrue(log(handOffAlgae()));
         coralHandoff.whileTrue(log(handOffAlgae()));
+
+        // TODO: for testing
+        // Robot.getPilot().tuneShoulder_tA.whileTrue(elbow.moveToDegrees(() -> 180));
+        // Robot.getPilot().tuneShoulder_tB.whileTrue(elbow.moveToDegrees(() -> 90));
+        // Robot.getPilot()
+        //         .testTriggersTrigger
+        //         .whileTrue(runElbow(() -> Robot.getPilot().getInClimbManualAxis()));
     }
 
     public static DoubleSupplier getPosition() {

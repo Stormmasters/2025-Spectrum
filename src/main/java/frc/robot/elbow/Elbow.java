@@ -66,9 +66,9 @@ public class Elbow extends Mechanism {
 
         @Getter private final double currentLimit = 20;
         @Getter private final double torqueCurrentLimit = 100;
-        @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
-        @Getter private final double velocityKv = 0.018;
-        @Getter private final double velocityKs = 0;
+        @Getter private final double velocityKp = 1400;
+        @Getter private final double velocityKv = 0;
+        @Getter private final double velocityKs = 0.4;
 
         /* Cancoder config settings */
         @Getter private final double CANcoderGearRatio = 30 / 36;
@@ -84,19 +84,20 @@ public class Elbow extends Mechanism {
 
         public ElbowConfig() {
             super("Elbow", 43, Rio.CANIVORE);
-            configPIDGains(0, velocityKp, 0, 0);
-            configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
+            configPIDGains(0, velocityKp, 0, 160);
+            configFeedForwardGains(velocityKs, velocityKv, 0.002, 7);
+            configMotionMagic(10, 50, 0); // 147000, 161000, 0);
             configGearRatio(102.857);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-25.201172 * 2, 25.201172 * 2); // calculated to be 51.4285
-            configReverseSoftLimit(-25.201172, true);
-            configForwardSoftLimit(25.201172, true);
+            configMinMaxRotations(-0.75, 0.25); // calculated to be 51.4285
+            configReverseSoftLimit(0, true);
+            configForwardSoftLimit(0.5, true);
             configNeutralBrakeMode(true);
             configClockwise_Positive();
             setSimRatio(102.857);
+            // TODO: set gravity type to arm cosine
         }
 
         public ElbowConfig modifyMotorConfig(TalonFX motor) {
@@ -123,7 +124,7 @@ public class Elbow extends Mechanism {
                     new SpectrumCANcoder(43, motor, config)
                             .setGearRatio(config.getCANcoderGearRatio())
                             .setOffset(config.getCANcoderOffset())
-                            .setAttached(true);
+                            .setAttached(false);
 
             if (canCoder.isAttached()) {
                 motor.setPosition(
@@ -202,6 +203,7 @@ public class Elbow extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
+                moveToRotations(() -> holdPosition);
             }
 
             @Override

@@ -18,7 +18,8 @@ public class ShoulderStates {
 
     public static void setupDefaultCommand() {
         shoulder.setDefaultCommand(
-                log(shoulder.runHoldShoulder().ignoringDisable(true).withName("Shoulder.default")));
+                // log(shoulder.runHoldShoulder().ignoringDisable(true).withName("Shoulder.default")));
+                shoulder.runStop());
     }
 
     public static void setStates() {
@@ -53,6 +54,13 @@ public class ShoulderStates {
         coralHandoff.whileTrue(log(handOffAlgae()));
 
         homeAll.whileTrue(home());
+
+        // TODO: for testing
+        // Robot.getPilot().tuneShoulder_tA.whileTrue(shoulder.moveToDegrees(() -> 90));
+        // Robot.getPilot().tuneShoulder_tB.whileTrue(shoulder.moveToDegrees(() -> 0));
+        // Robot.getPilot()
+        //         .testTriggersTrigger
+        //         .whileTrue(runShoulder(() -> Robot.getPilot().getInClimbManualAxis()));
     }
 
     public static Command runShoulder(DoubleSupplier speed) {

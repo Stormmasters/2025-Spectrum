@@ -50,8 +50,8 @@ public class Pilot extends Gamepad {
     public final Trigger coastOff_dA = disabled.and(A);
 
     // TEST TRIGGERS
-    public final Trigger tuneElevator_tB = testMode.and(B);
-    public final Trigger tuneElevator_tA = testMode.and(A);
+    public final Trigger tuneShoulder_tB = testMode.and(B);
+    public final Trigger tuneShoulder_tA = testMode.and(A);
     public final Trigger testTriggersTrigger = testMode.and(leftTrigger.or(rightTrigger));
 
     public static class PilotConfig extends Config {

@@ -211,7 +211,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * @return rotations
      */
     public double degreesToRotations(DoubleSupplier degrees) {
-        return config.getGearRatio() * (degrees.getAsDouble() / 360);
+        return (degrees.getAsDouble() / 360);
     }
 
     /**
@@ -301,7 +301,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * @param rotations position in revolutions
      */
     public Command moveToRotations(DoubleSupplier rotations) {
-        return run(() -> setMMPosition(rotations)).withName(getName() + ".runPoseRevolutions");
+        return run(() -> setMMPositionFoc(rotations)).withName(getName() + ".runPoseRevolutions");
     }
 
     /**
@@ -310,7 +310,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * @param percent position in percentage of max revolutions
      */
     public Command moveToPercentage(DoubleSupplier percent) {
-        return run(() -> setMMPosition(() -> percentToRotations(percent)))
+        return run(() -> setMMPositionFoc(() -> percentToRotations(percent)))
                 .withName(getName() + ".runPosePercentage");
     }
 
@@ -320,7 +320,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * @param degrees position in degrees
      */
     public Command moveToDegrees(DoubleSupplier degrees) {
-        return run(() -> setMMPosition(() -> degreesToRotations(degrees)))
+        return run(() -> setMMPositionFoc(() -> degreesToRotations(degrees)))
                 .withName(getName() + ".runPoseDegrees");
     }
 
@@ -739,6 +739,10 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         public void configReverseSoftLimit(double threshold, boolean enabled) {
             talonConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = threshold;
             talonConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = enabled;
+        }
+
+        public void configContinuousWrap(boolean enabled) {
+            talonConfig.ClosedLoopGeneral.ContinuousWrap = enabled;
         }
 
         // Configure optional motion magic velocity parameters

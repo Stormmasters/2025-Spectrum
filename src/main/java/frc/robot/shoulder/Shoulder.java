@@ -64,9 +64,9 @@ public class Shoulder extends Mechanism {
 
         @Getter private final double currentLimit = 20;
         @Getter private final double torqueCurrentLimit = 100;
-        @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
-        @Getter private final double velocityKv = 0.018;
-        @Getter private final double velocityKs = 0;
+        @Getter private final double velocityKp = 1500;
+        @Getter private final double velocityKv = 0;
+        @Getter private final double velocityKs = 0.06;
 
         /* Cancoder config settings */
         @Getter private final double CANcoderGearRatio = 30 / 36;
@@ -83,19 +83,20 @@ public class Shoulder extends Mechanism {
 
         public ShoulderConfig() {
             super("Shoulder", 42, Rio.CANIVORE);
-            configPIDGains(0, velocityKp, 0, 0);
-            configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
+            configPIDGains(0, velocityKp, 0, 140);
+            configFeedForwardGains(velocityKs, velocityKv, 0.001, 12.5);
+            configMotionMagic(10, 50, 0); // 147000, 161000, 0);
             configGearRatio(102.857);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
-            configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-50.055176, 50.055176); // calculated to be 51.4285
-            configReverseSoftLimit(-40, true);
-            configForwardSoftLimit(40, true);
+            configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
+            configMinMaxRotations(-0.75, 0.25); // calculated to be 51.4285
+            configReverseSoftLimit(-0.75, true);
+            configForwardSoftLimit(0.25, true);
             configNeutralBrakeMode(true);
             configClockwise_Positive();
             setSimRatio(102.857);
+            // TODO: set gravity type to arm cosine
         }
 
         public ShoulderConfig modifyMotorConfig(TalonFX motor) {
@@ -117,13 +118,13 @@ public class Shoulder extends Mechanism {
         super(config);
         this.config = config;
 
-        canCoder =
-                new SpectrumCANcoder(42, motor, config)
-                        .setGearRatio(config.getCANcoderGearRatio())
-                        .setOffset(config.getCANcoderOffset())
-                        .setAttached(true);
-
         if (isAttached()) {
+            canCoder =
+                    new SpectrumCANcoder(42, motor, config)
+                            .setGearRatio(config.getCANcoderGearRatio())
+                            .setOffset(config.getCANcoderOffset())
+                            .setAttached(false);
+
             if (canCoder.isAttached()) {
                 motor.setPosition(
                         canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
@@ -201,6 +202,7 @@ public class Shoulder extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
+                moveToRotations(() -> holdPosition);
             }
 
             @Override

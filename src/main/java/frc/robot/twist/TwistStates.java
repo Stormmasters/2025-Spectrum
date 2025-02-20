@@ -14,7 +14,8 @@ public class TwistStates {
 
     public static void setupDefaultCommand() {
         twist.setDefaultCommand(
-                log(twist.runHoldTwist().ignoringDisable(true).withName("Twist.default")));
+                // log(twist.runHoldTwist().ignoringDisable(true).withName("Twist.default")));
+                twist.runStop());
     }
 
     public static void setStates() {
@@ -43,6 +44,13 @@ public class TwistStates {
 
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+
+        // TODO: for testing
+        // Robot.getPilot().tuneShoulder_tA.whileTrue(twist.moveToDegrees(() -> 90));
+        // Robot.getPilot().tuneShoulder_tB.whileTrue(twist.moveToDegrees(() -> 0));
+        // Robot.getPilot()
+        //         .testTriggersTrigger
+        //         .whileTrue(runTwist(() -> Robot.getPilot().getInClimbManualAxis()));
     }
 
     public static DoubleSupplier switchSigns(DoubleSupplier supplier) {

@@ -187,14 +187,14 @@ public class Elevator extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
-                setMMPosition(() -> holdPosition);
+                setMMPositionFoc(() -> holdPosition);
             }
 
             @Override
             public void execute() {
                 double currentPosition = getPositionRotations();
                 if (Math.abs(holdPosition - currentPosition) <= 1) {
-                    setMMPosition(() -> holdPosition);
+                    setMMPositionFoc(() -> holdPosition);
                 } else {
                     stop();
                     DriverStation.reportError(
@@ -236,9 +236,12 @@ public class Elevator extends Mechanism {
                                                 < rotations.getAsDouble()
                                         || ElevatorStates.getPosition().getAsDouble()
                                                 > config.getL2Coral())
-                .andThen(run(() -> setMMPosition(rotations)).withName("Elevator.moveToRotations"));
+                .andThen(
+                        run(() -> setMMPositionFoc(rotations))
+                                .withName("Elevator.moveToRotations"));
     }
 
+    // TODO: remove after testing
     public Command setElevatorMMPositionFOC(DoubleSupplier rotations) {
         return run(() -> setMMPositionFoc(rotations)).withName("Elevator Set MM Position");
     }

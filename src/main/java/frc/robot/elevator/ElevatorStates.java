@@ -63,11 +63,13 @@ public class ElevatorStates {
         homeAll.whileTrue(home());
         homeElevator.whileTrue(zero());
 
-        Robot.getPilot().tuneElevator_tA.whileTrue(elevator.setElevatorMMPositionFOC(() -> 5.0));
-        Robot.getPilot().tuneElevator_tB.whileTrue(elevator.setElevatorMMPositionFOC(() -> 10.0));
-        Robot.getPilot()
-                .testTriggersTrigger
-                .whileTrue(runElevator(() -> Robot.getPilot().getInClimbManualAxis()));
+        // TODO: For Testing
+        // Robot.getPilot().tuneElevator_tA.whileTrue(elevator.setElevatorMMPositionFOC(() -> 5.0));
+        // Robot.getPilot().tuneElevator_tB.whileTrue(elevator.setElevatorMMPositionFOC(() ->
+        // 10.0));
+        // Robot.getPilot()
+        //         .testTriggersTrigger
+        //         .whileTrue(runElevator(() -> Robot.getPilot().getInClimbManualAxis()));
     }
 
     private static Command runElevator(DoubleSupplier speed) {

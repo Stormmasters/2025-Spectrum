@@ -23,8 +23,8 @@ public class InClimb extends Mechanism {
 
     public static class InClimbConfig extends Config {
 
-        @Getter private final double maxRotations = .26; // TODO: find max rotations
-        @Getter private final double minRotations = -0.085;
+        @Getter private final double maxRotations = 0.5; // TODO: find max rotations
+        @Getter private final double minRotations = 0;
         /* InClimb positions in percentage of max rotation || 0 is horizontal */
         @Getter private final double home = 0;
         @Getter private final double intake = 35.5;
@@ -42,8 +42,8 @@ public class InClimb extends Mechanism {
 
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 120;
-        @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
-        @Getter private final double velocityKv = 0.018;
+        @Getter private final double velocityKp = 0; // 186; // 200 w/ 0.013 good
+        @Getter private final double velocityKv = 0;
         @Getter private final double velocityKs = 0;
 
         // Need to add auto launching positions when auton is added
@@ -63,7 +63,7 @@ public class InClimb extends Mechanism {
             super("InClimbTop", 55, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
+            configMotionMagic(4, 40, 0); // 147000, 161000, 0);
             configGearRatio(99.5555555555);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
@@ -150,6 +150,7 @@ public class InClimb extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
+                moveToRotations(() -> holdPosition);
             }
 
             @Override

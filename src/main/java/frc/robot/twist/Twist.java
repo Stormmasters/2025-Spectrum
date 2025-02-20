@@ -65,9 +65,9 @@ public class Twist extends Mechanism {
 
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
-        @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
-        @Getter private final double velocityKv = 0.018;
-        @Getter private final double velocityKs = 0;
+        @Getter private final double velocityKp = 80; // 186; // 200 w/ 0.013 good
+        @Getter private final double velocityKv = 0;
+        @Getter private final double velocityKs = 1.8;
 
         // Need to add auto launching positions when auton is added
 
@@ -91,17 +91,18 @@ public class Twist extends Mechanism {
 
         public TwistConfig() {
             super("Twist", 44, Rio.CANIVORE); // Rio.CANIVORE);
-            configPIDGains(0, velocityKp, 0, 0);
-            configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configMotionMagic(54.6, 60, 0); // 73500, 80500, 0); // 147000, 161000, 0);
+            configPIDGains(0, velocityKp, 0, 35);
+            configFeedForwardGains(velocityKs, velocityKv, 0.001, 0);
+            configMotionMagic(4.2, 42, 0); // 73500, 80500, 0); // 147000, 161000, 0);
             configGearRatio(22.4);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-22.267090, 22.267090); // Calculated to be 22.4
-            configReverseSoftLimit(getMinRotations(), true);
-            configForwardSoftLimit(getMaxRotations(), true);
+            configMinMaxRotations(-0.5, 0.5); // Calculated to be 22.4
+            configReverseSoftLimit(getMinRotations(), false);
+            configForwardSoftLimit(getMaxRotations(), false);
             configNeutralBrakeMode(true);
+            configContinuousWrap(true);
             configClockwise_Positive();
         }
 
@@ -129,7 +130,7 @@ public class Twist extends Mechanism {
                     new SpectrumCANcoder(44, motor, config)
                             .setGearRatio(config.getCANcoderGearRatio())
                             .setOffset(config.getCANcoderOffset())
-                            .setAttached(true);
+                            .setAttached(false);
 
             if (canCoder.isAttached()) {
                 motor.setPosition(

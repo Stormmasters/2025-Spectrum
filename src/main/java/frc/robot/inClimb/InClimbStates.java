@@ -16,7 +16,8 @@ public class InClimbStates {
         // inClimb.setDefaultCommand(
         //         log(inClimb.runHoldInClimb().ignoringDisable(true).withName("InClimb.default")));
         inClimb.setDefaultCommand(
-                inClimb.runPercentage(() -> Robot.getPilot().getInClimbManualAxis()));
+                // inClimb.runPercentage(() -> Robot.getPilot().getInClimbManualAxis()));
+                inClimb.runStop());
     }
 
     public static void setStates() {
@@ -32,6 +33,13 @@ public class InClimbStates {
         processorLollipopScore.whileTrue(log(processorLollipopScore()));
 
         homeInClimb.whileTrue(log(zero()));
+
+        // TODO: for testing
+        Robot.getPilot().tuneShoulder_tA.whileTrue(inClimb.moveToDegrees(() -> 90));
+        Robot.getPilot().tuneShoulder_tB.whileTrue(inClimb.moveToDegrees(() -> 0));
+        Robot.getPilot()
+                .testTriggersTrigger
+                .whileTrue(runInClimb(() -> Robot.getPilot().getInClimbManualAxis()));
     }
 
     public static Command runInClimb(DoubleSupplier speed) {
