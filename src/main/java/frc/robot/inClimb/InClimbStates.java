@@ -35,8 +35,8 @@ public class InClimbStates {
         homeInClimb.whileTrue(log(zero()));
 
         // TODO: for testing
-        Robot.getPilot().tuneShoulder_tA.whileTrue(inClimb.moveToDegrees(() -> 90));
-        Robot.getPilot().tuneShoulder_tB.whileTrue(inClimb.moveToDegrees(() -> 0));
+        Robot.getPilot().tuneShoulder_tA.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0.25));
+        Robot.getPilot().tuneShoulder_tB.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0));
         Robot.getPilot()
                 .testTriggersTrigger
                 .whileTrue(runInClimb(() -> Robot.getPilot().getInClimbManualAxis()));

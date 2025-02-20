@@ -13,8 +13,8 @@ public class CoralIntakeStates {
     private static CoralIntake coralIntake = Robot.getCoralIntake();
     private static CoralIntakeConfig config = Robot.getConfig().coralIntake;
 
-    public static Trigger hasCoral = new Trigger(coralIntake::hasIntakeCoral);
-    public static Trigger hasAlgae = new Trigger(coralIntake::hasIntakeAlgae);
+    public static final Trigger hasCoral = new Trigger(coralIntake::hasIntakeCoral);
+    public static final Trigger hasAlgae = new Trigger(coralIntake::hasIntakeAlgae);
 
     public static void setupDefaultCommand() {
         coralIntake.setDefaultCommand(coralIntake.runStop().withName("coralIntake.default"));
