@@ -17,7 +17,8 @@ public class ShoulderStates {
             shoulder.atPercentage(config::getHome, config::getTolerance);
 
     public static void setupDefaultCommand() {
-        shoulder.setDefaultCommand(shoulder.runHoldShoulder().withName("Shoulder.Holddefault"));
+        shoulder.setDefaultCommand(
+                log(shoulder.runHoldShoulder().withName("Shoulder.Holddefault")));
         // shoulder.runStop());
     }
 

@@ -39,6 +39,7 @@ public class InClimb extends Mechanism {
 
         /* InClimb config settings */
         @Getter private final double zeroSpeed = -0.1;
+        @Getter private final double holdMaxSpeedRPM = 18;
 
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 120;
@@ -48,6 +49,9 @@ public class InClimb extends Mechanism {
         @Getter private final double positionKs = 0.3;
         @Getter private final double positionKa = 0.001;
         @Getter private final double positionKg = 2.9;
+        @Getter private final double mmCruiseVelocity = 4;
+        @Getter private final double mmAcceleration = 40;
+        @Getter private final double mmJerk = 0;
 
         // Need to add auto launching positions when auton is added
 
@@ -58,7 +62,7 @@ public class InClimb extends Mechanism {
         @Getter private double InClimbY = 0.55;
 
         @Getter @Setter
-        private double simRatio = 1; // TODO: Set to number of rotations per mech revolution
+        private double simRatio = 14; // TODO: Set to number of rotations per mech revolution
 
         @Getter private double length = 0.4;
 
@@ -66,9 +70,10 @@ public class InClimb extends Mechanism {
             super("InClimbTop", 55, Rio.CANIVORE);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, psotionKv, positionKa, positionKg);
-            configMotionMagic(4, 40, 0); // 147000, 161000, 0);
+            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
             configGearRatio(99.5555555555);
             configSupplyCurrentLimit(currentLimit, true);
+            configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
             configMinMaxRotations(getMinRotations(), getMaxRotations());
@@ -76,7 +81,8 @@ public class InClimb extends Mechanism {
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive();
-            setSimRatio(14);
+            configGravityType(true);
+            setSimRatio(simRatio);
             setFollowerConfigs(new FollowerConfig("InClimbBottom", 56, Rio.CANIVORE, false));
         }
 
@@ -153,12 +159,21 @@ public class InClimb extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
-                moveToRotations(() -> holdPosition);
+                stop();
             }
 
             @Override
             public void execute() {
-                moveToRotations(() -> holdPosition);
+                if (Math.abs(getVelocityRPM()) > config.holdMaxSpeedRPM) {
+                    stop();
+                    holdPosition = getPositionRotations();
+                } else {
+                    setDynMMPositionFoc(
+                            () -> holdPosition,
+                            () -> config.getMmCruiseVelocity(),
+                            () -> config.getMmAcceleration(),
+                            () -> 20);
+                }
             }
 
             @Override

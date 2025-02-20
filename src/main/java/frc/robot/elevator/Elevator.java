@@ -78,6 +78,7 @@ public class Elevator extends Mechanism {
         @Getter private double triggerTolerance = 0.95;
         @Getter private double elevatorIsUpHeight = 5;
         @Getter private double initPosition = 0;
+        @Getter private double holdMaxSpeedRPM = 60;
 
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
@@ -87,9 +88,9 @@ public class Elevator extends Mechanism {
         @Getter private final double positionKv = 0;
         @Getter private final double positionKs = 5;
         @Getter private final double positionKg = 25.3;
-        @Getter private final double cruiseVelocity = 40;
-        @Getter private final double acceleration = 280;
-        @Getter private final double jerk = 2000;
+        @Getter private final double mmCruiseVelocity = 40;
+        @Getter private final double mmAcceleration = 280;
+        @Getter private final double mmJerk = 2000;
 
         @Getter private double currentLimit = 40;
         @Getter private double torqueCurrentLimit = 160;
@@ -109,7 +110,7 @@ public class Elevator extends Mechanism {
             configMinMaxRotations(minRotations, maxRotations);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
-            configMotionMagic(cruiseVelocity, acceleration, jerk);
+            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
@@ -198,6 +199,9 @@ public class Elevator extends Mechanism {
                 if (Math.abs(holdPosition)
                         < 0.03) { // Added so it doesn't try to hold when all the way down
                     stop();
+                } else if (Math.abs(getVelocityRPM()) > config.holdMaxSpeedRPM) {
+                    stop(); // Don't hold if moving too fast
+                    holdPosition = currentPosition; // Update to a new hold position
                 } else if (Math.abs(holdPosition - currentPosition) <= 1) {
                     setMMPositionFoc(() -> holdPosition);
                 } else {

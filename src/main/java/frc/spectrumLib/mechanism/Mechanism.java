@@ -3,6 +3,7 @@ package frc.spectrumLib.mechanism;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.DynamicMotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -468,6 +469,31 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     /**
+     * Closed-loop Position Motion Magic with torque control (requires Pro) Dynamic allows you to
+     * set velocity, acceleration, and jerk during the command
+     *
+     * @param rotations
+     * @param velocity
+     * @param acceleration
+     * @param jerk
+     */
+    protected void setDynMMPositionFoc(
+            DoubleSupplier rotations,
+            DoubleSupplier velocity,
+            DoubleSupplier acceleration,
+            DoubleSupplier jerk) {
+        if (isAttached()) {
+            DynamicMotionMagicTorqueCurrentFOC mm =
+                    config.dynamicMMPositionFOC
+                            .withPosition(rotations.getAsDouble())
+                            .withVelocity(velocity.getAsDouble())
+                            .withAcceleration(acceleration.getAsDouble())
+                            .withJerk(jerk.getAsDouble());
+            motor.setControl(mm);
+        }
+    }
+
+    /**
      * Closed-loop Position Motion Magic
      *
      * @param rotations rotations
@@ -694,6 +720,10 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
         @Getter
         private MotionMagicTorqueCurrentFOC mmPositionFOC = new MotionMagicTorqueCurrentFOC(0);
+
+        @Getter
+        private DynamicMotionMagicTorqueCurrentFOC dynamicMMPositionFOC =
+                new DynamicMotionMagicTorqueCurrentFOC(0, 0, 0, 0);
 
         @Getter
         private MotionMagicVelocityVoltage mmVelocityVoltage = new MotionMagicVelocityVoltage(0);

@@ -17,53 +17,54 @@ public class ElbowStates {
     public static final Trigger isHome = elbow.atPercentage(config::getHome, config::getTolerance);
 
     public static void setupDefaultCommand() {
-        elbow.setDefaultCommand(
-                // log(elbow.runHoldElbow().ignoringDisable(true).withName("Elbow.default")));
-                elbow.runStop());
+        elbow.setDefaultCommand(log(elbow.runHoldElbow().withName("Elbow.default")));
+        // elbow.runStop());
     }
 
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
-        stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
-        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
-        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
 
-        scoreState.and(L2Coral).and(backwardMode.not()).onTrue(log(score2()));
-        scoreState.and(L2Coral).and(backwardMode).onTrue(log(reverse(score2())));
-        scoreState.and(L3Coral).and(backwardMode.not()).onTrue(log(score3()));
-        scoreState.and(L3Coral).and(backwardMode).onTrue(log(reverse(score3())));
-        scoreState.and(L4Coral).and(backwardMode.not()).onTrue(log(score4()));
-        scoreState.and(L4Coral).and(backwardMode).onTrue(log(reverse(score4())));
+        // TODO: Uncomment after Testing
+        // stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
+        // stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
+        // stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
+        // stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
 
-        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
-        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
-        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
-        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
+        // scoreState.and(L2Coral).and(backwardMode.not()).onTrue(log(score2()));
+        // scoreState.and(L2Coral).and(backwardMode).onTrue(log(reverse(score2())));
+        // scoreState.and(L3Coral).and(backwardMode.not()).onTrue(log(score3()));
+        // scoreState.and(L3Coral).and(backwardMode).onTrue(log(reverse(score3())));
+        // scoreState.and(L4Coral).and(backwardMode.not()).onTrue(log(score4()));
+        // scoreState.and(L4Coral).and(backwardMode).onTrue(log(reverse(score4())));
 
-        L1Coral.and(backwardMode.not()).whileTrue(log(l1Coral()));
-        L1Coral.and(backwardMode).whileTrue(log(reverse(l1Coral())));
-        L2Coral.and(backwardMode.not()).whileTrue(log(l2Coral()));
-        L2Coral.and(backwardMode).whileTrue(log(reverse(l2Coral())));
-        L3Coral.and(backwardMode.not()).whileTrue(log(l3Coral()));
-        L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
-        L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
-        L4Coral.and(backwardMode).whileTrue(log(reverse(l4Coral())));
+        // L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
+        // L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
+        // L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
+        // L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
 
-        barge.and(backwardMode.not()).whileTrue(log(barge()));
-        barge.and(backwardMode).whileTrue(log(reverse(barge())));
-        homeAll.whileTrue(log(home()));
+        // L1Coral.and(backwardMode.not()).whileTrue(log(l1Coral()));
+        // L1Coral.and(backwardMode).whileTrue(log(reverse(l1Coral())));
+        // L2Coral.and(backwardMode.not()).whileTrue(log(l2Coral()));
+        // L2Coral.and(backwardMode).whileTrue(log(reverse(l2Coral())));
+        // L3Coral.and(backwardMode.not()).whileTrue(log(l3Coral()));
+        // L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
+        // L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
+        // L4Coral.and(backwardMode).whileTrue(log(reverse(l4Coral())));
 
-        algaeHandoff.whileTrue(log(handOffAlgae()));
-        coralHandoff.whileTrue(log(handOffAlgae()));
+        // barge.and(backwardMode.not()).whileTrue(log(barge()));
+        // barge.and(backwardMode).whileTrue(log(reverse(barge())));
+        // homeAll.whileTrue(log(home()));
+
+        // algaeHandoff.whileTrue(log(handOffAlgae()));
+        // coralHandoff.whileTrue(log(handOffAlgae()));
 
         // TODO: for testing
-        // Robot.getPilot().tuneShoulder_tA.whileTrue(elbow.moveToDegrees(() -> 180));
-        // Robot.getPilot().tuneShoulder_tB.whileTrue(elbow.moveToDegrees(() -> 90));
-        // Robot.getPilot()
-        //         .testTriggersTrigger
-        //         .whileTrue(runElbow(() -> Robot.getPilot().getInClimbManualAxis()));
+        Robot.getPilot().testTune_tA.whileTrue(elbow.moveToDegrees(() -> 180));
+        Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(() -> 90));
+        Robot.getPilot()
+                .testTriggersTrigger
+                .whileTrue(runElbow(() -> Robot.getPilot().getTestTriggersAxis()));
     }
 
     public static DoubleSupplier getPosition() {

@@ -63,12 +63,18 @@ public class Elbow extends Mechanism {
 
         /* Elbow config settings */
         @Getter private final double zeroSpeed = -0.1;
+        @Getter private final double holdMaxSpeedRPM = 18;
 
         @Getter private final double currentLimit = 20;
-        @Getter private final double torqueCurrentLimit = 100;
-        @Getter private final double velocityKp = 1400;
-        @Getter private final double velocityKv = 0;
-        @Getter private final double velocityKs = 0.4;
+        @Getter private final double torqueCurrentLimit = 60;
+        @Getter private final double positionKp = 1400;
+        @Getter private final double positionKv = 0;
+        @Getter private final double positionKs = 0.4;
+        @Getter private final double positionKa = 0.002;
+        @Getter private final double positionKg = 7;
+        @Getter private final double mmCruiseVelocity = 10;
+        @Getter private final double mmAcceleration = 50;
+        @Getter private final double mmJerk = 0;
 
         /* Cancoder config settings */
         @Getter private final double CANcoderGearRatio = 30 / 36;
@@ -84,11 +90,12 @@ public class Elbow extends Mechanism {
 
         public ElbowConfig() {
             super("Elbow", 43, Rio.CANIVORE);
-            configPIDGains(0, velocityKp, 0, 160);
-            configFeedForwardGains(velocityKs, velocityKv, 0.002, 7);
-            configMotionMagic(10, 50, 0); // 147000, 161000, 0);
+            configPIDGains(0, positionKp, 0, 160);
+            configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
+            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk); // 147000, 161000, 0);
             configGearRatio(102.857);
             configSupplyCurrentLimit(currentLimit, true);
+            configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configMinMaxRotations(-0.75, 0.25); // calculated to be 51.4285
@@ -96,6 +103,7 @@ public class Elbow extends Mechanism {
             configForwardSoftLimit(0.5, true);
             configNeutralBrakeMode(true);
             configClockwise_Positive();
+            configGravityType(true);
             setSimRatio(102.857);
             // TODO: set gravity type to arm cosine
         }
@@ -203,12 +211,21 @@ public class Elbow extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
-                setMMPositionFoc(() -> holdPosition);
+                stop();
             }
 
             @Override
             public void execute() {
-                setMMPositionFoc(() -> holdPosition);
+                if (Math.abs(getVelocityRPM()) > config.holdMaxSpeedRPM) {
+                    stop();
+                    holdPosition = getPositionRotations();
+                } else {
+                    setDynMMPositionFoc(
+                            () -> holdPosition,
+                            () -> config.getMmCruiseVelocity(),
+                            () -> config.getMmAcceleration(),
+                            () -> 20);
+                }
             }
 
             @Override
@@ -227,7 +244,7 @@ public class Elbow extends Mechanism {
 
     public Command moveToPercentage(DoubleSupplier percent) {
         return runHoldElbow()
-                .until(() -> ((ElevatorStates.allowedPosition()) || percent.getAsDouble() < 50))
+                .until(() -> ((ElevatorStates.allowedPosition()) || percent.getAsDouble() < 90))
                 .andThen(
                         run(() -> setMMPositionFoc(() -> percentToRotations(percent)))
                                 .withName(getName() + ".runPosePercentage"));

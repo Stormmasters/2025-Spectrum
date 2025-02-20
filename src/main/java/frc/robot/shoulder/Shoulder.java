@@ -61,6 +61,7 @@ public class Shoulder extends Mechanism {
 
         /* Shoulder config settings */
         @Getter private final double zeroSpeed = -0.1;
+        @Getter private final double holdMaxSpeedRPM = 18;
 
         @Getter private final double currentLimit = 20;
         @Getter private final double torqueCurrentLimit = 100;
@@ -70,6 +71,9 @@ public class Shoulder extends Mechanism {
         @Getter private final double positionKs = 0.06;
         @Getter private final double positionKa = 0.001;
         @Getter private final double positionKg = 12.5;
+        @Getter private final double mmCruiseVelocity = 10;
+        @Getter private final double mmAcceleration = 50;
+        @Getter private final double mmJerk = 0;
 
         /* Cancoder config settings */
         @Getter private final double CANcoderGearRatio = 30 / 36;
@@ -88,18 +92,18 @@ public class Shoulder extends Mechanism {
             super("Shoulder", 42, Rio.CANIVORE);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
-            configMotionMagic(10, 50, 0); // 147000, 161000, 0);
+            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
             configGearRatio(102.857);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
-            configMinMaxRotations(-0.75, 0.25); // calculated to be 51.4285
+            configMinMaxRotations(-0.75, 0.25);
             configReverseSoftLimit(-0.75, true);
             configForwardSoftLimit(0.25, true);
             configNeutralBrakeMode(true);
             configClockwise_Positive();
+            configGravityType(true);
             setSimRatio(102.857);
-            // TODO: set gravity type to arm cosine
         }
 
         public ShoulderConfig modifyMotorConfig(TalonFX motor) {
@@ -205,12 +209,21 @@ public class Shoulder extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
-                setMMPositionFoc(() -> holdPosition);
+                stop();
             }
 
             @Override
             public void execute() {
-                setMMPositionFoc(() -> holdPosition);
+                if (Math.abs(getVelocityRPM()) > config.holdMaxSpeedRPM) {
+                    stop();
+                    holdPosition = getPositionRotations();
+                } else {
+                    setDynMMPositionFoc(
+                            () -> holdPosition,
+                            () -> config.getMmCruiseVelocity(),
+                            () -> config.getMmAcceleration(),
+                            () -> 20);
+                }
             }
 
             @Override
