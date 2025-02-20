@@ -17,50 +17,51 @@ public class ShoulderStates {
             shoulder.atPercentage(config::getHome, config::getTolerance);
 
     public static void setupDefaultCommand() {
-        shoulder.setDefaultCommand(
-                // log(shoulder.runHoldShoulder().ignoringDisable(true).withName("Shoulder.default")));
-                shoulder.runStop());
+        shoulder.setDefaultCommand(shoulder.runHoldShoulder().withName("Shoulder.Holddefault"));
+        // shoulder.runStop());
     }
 
     public static void setStates() {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
-        stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
-        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
-        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
+        // stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
+        // stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
+        // stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
+        // stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
 
-        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
-        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
-        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
-        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
-        barge.and(backwardMode.not()).whileTrue(log(barge()));
-        barge.and(backwardMode).whileTrue(log(reverse(barge())));
+        // L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
+        // L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
+        // L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
+        // L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
+        // barge.and(backwardMode.not()).whileTrue(log(barge()));
+        // barge.and(backwardMode).whileTrue(log(reverse(barge())));
 
-        L1Coral.and(backwardMode.not()).whileTrue(log(l1Coral()));
-        L1Coral.and(backwardMode).whileTrue(log(reverse(l1Coral())));
-        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
-        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
-        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
-        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
-        L2Coral.and(backwardMode.not()).whileTrue(log(l2Coral()));
-        L2Coral.and(backwardMode).whileTrue(log(reverse(l2Coral())));
-        L3Coral.and(backwardMode.not()).whileTrue(log(l3Coral()));
-        L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
-        L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
-        L4Coral.and(backwardMode).whileTrue(log(reverse(l4Coral())));
+        // L1Coral.and(backwardMode.not()).whileTrue(log(l1Coral()));
+        // L1Coral.and(backwardMode).whileTrue(log(reverse(l1Coral())));
+        // L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
+        // L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
+        // L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
+        // L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
+        // L2Coral.and(backwardMode.not()).whileTrue(log(l2Coral()));
+        // L2Coral.and(backwardMode).whileTrue(log(reverse(l2Coral())));
+        // L3Coral.and(backwardMode.not()).whileTrue(log(l3Coral()));
+        // L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
+        // L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
+        // L4Coral.and(backwardMode).whileTrue(log(reverse(l4Coral())));
 
-        algaeHandoff.whileTrue(log(handOffAlgae()));
-        coralHandoff.whileTrue(log(handOffAlgae()));
+        // algaeHandoff.whileTrue(log(handOffAlgae()));
+        // coralHandoff.whileTrue(log(handOffAlgae()));
 
-        homeAll.whileTrue(home());
+        // homeAll.whileTrue(home());
 
         // TODO: for testing
-        // Robot.getPilot().tuneShoulder_tA.whileTrue(shoulder.moveToDegrees(() -> 90));
-        // Robot.getPilot().tuneShoulder_tB.whileTrue(shoulder.moveToDegrees(() -> 0));
+        // Robot.getPilot().testTune_tA.whileTrue(shoulder.moveToDegrees(() -> 90));
+        // Robot.getPilot().testTune_tB.whileTrue(shoulder.moveToDegrees(() -> 0));
         // Robot.getPilot()
         //         .testTriggersTrigger
-        //         .whileTrue(runShoulder(() -> Robot.getPilot().getInClimbManualAxis()));
+        //         .whileTrue(
+        //                 runShoulder(() -> Robot.getPilot().getTestTriggersAxis())
+        //                         .withName("test Shoulder"));
     }
 
     public static Command runShoulder(DoubleSupplier speed) {

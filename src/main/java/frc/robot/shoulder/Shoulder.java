@@ -64,9 +64,12 @@ public class Shoulder extends Mechanism {
 
         @Getter private final double currentLimit = 20;
         @Getter private final double torqueCurrentLimit = 100;
-        @Getter private final double velocityKp = 1500;
-        @Getter private final double velocityKv = 0;
-        @Getter private final double velocityKs = 0.06;
+        @Getter private final double positionKp = 1500;
+        @Getter private final double positionKd = 140;
+        @Getter private final double positionKv = 0;
+        @Getter private final double positionKs = 0.06;
+        @Getter private final double positionKa = 0.001;
+        @Getter private final double positionKg = 12.5;
 
         /* Cancoder config settings */
         @Getter private final double CANcoderGearRatio = 30 / 36;
@@ -83,8 +86,8 @@ public class Shoulder extends Mechanism {
 
         public ShoulderConfig() {
             super("Shoulder", 42, Rio.CANIVORE);
-            configPIDGains(0, velocityKp, 0, 140);
-            configFeedForwardGains(velocityKs, velocityKv, 0.001, 12.5);
+            configPIDGains(0, positionKp, 0, positionKd);
+            configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(10, 50, 0); // 147000, 161000, 0);
             configGearRatio(102.857);
             configSupplyCurrentLimit(currentLimit, true);
@@ -196,23 +199,28 @@ public class Shoulder extends Mechanism {
             // constructor
             {
                 setName("Shoulder.holdPosition");
-                addRequirements(Shoulder.this);
+                addRequirements(Robot.getShoulder());
             }
 
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
-                moveToRotations(() -> holdPosition);
+                setMMPositionFoc(() -> holdPosition);
             }
 
             @Override
             public void execute() {
-                moveToRotations(() -> holdPosition);
+                setMMPositionFoc(() -> holdPosition);
             }
 
             @Override
             public void end(boolean interrupted) {
                 stop();
+            }
+
+            @Override
+            public boolean isFinished() {
+                return false;
             }
         };
     }

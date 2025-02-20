@@ -20,13 +20,15 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxRotations = 12; // TODO: Reset to 21.1;
-        @Getter private double minRotations = 2; // TODO: Reset to 0;
+        @Getter private double maxRotations = 18; // TODO: Reset to 21.1;
+
+        @Getter
+        private double minRotations = 0.3; // This is to prevent it from driving to zero too hard
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
-        @Getter private double home = minRotations;
+        @Getter private double home = 0;
 
         @Getter
         private final double algaeLollipop =
@@ -193,7 +195,10 @@ public class Elevator extends Mechanism {
             @Override
             public void execute() {
                 double currentPosition = getPositionRotations();
-                if (Math.abs(holdPosition - currentPosition) <= 1) {
+                if (Math.abs(holdPosition)
+                        < 0.03) { // Added so it doesn't try to hold when all the way down
+                    stop();
+                } else if (Math.abs(holdPosition - currentPosition) <= 1) {
                     setMMPositionFoc(() -> holdPosition);
                 } else {
                     stop();

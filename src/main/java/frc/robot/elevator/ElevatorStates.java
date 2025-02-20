@@ -23,9 +23,8 @@ public class ElevatorStates {
             elevator.atPercentage(config::getHome, config::getTriggerTolerance);
 
     public static void setupDefaultCommand() {
-        elevator.setDefaultCommand(
-                // holdPosition().ignoringDisable(true).withName("Elevator.default"));
-                elevator.runStop());
+        elevator.setDefaultCommand(holdPosition().withName("Elevator.default"));
+        // Rmoved run when disabled, so that the elevator doesn't jump up on enable
     }
 
     public static void setStates() {
@@ -33,43 +32,44 @@ public class ElevatorStates {
         // Test Mode Buttons
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        scoreState.onTrue(score());
 
-        algaeHandoff.whileTrue(handOff());
-        coralHandoff.whileTrue(handOff());
+        // TODO: Reenable other states
+        // scoreState.onTrue(score());
 
-        stationIntaking.whileTrue(stationIntake());
-        stationExtendedIntake.whileTrue(stationExtendedIntake());
-        L2Algae.whileTrue(l1());
-        L3Algae.whileTrue(l1());
-        barge.whileTrue(l1());
+        // algaeHandoff.whileTrue(handOff());
+        // coralHandoff.whileTrue(handOff());
 
-        L1Coral.whileTrue(l1());
-        L2Coral.whileTrue(l1());
-        L3Coral.whileTrue(l1());
-        L4Coral.whileTrue(l1());
+        // stationIntaking.whileTrue(stationIntake());
+        // stationExtendedIntake.whileTrue(stationExtendedIntake());
+        // L2Algae.whileTrue(l1());
+        // L3Algae.whileTrue(l1());
+        // barge.whileTrue(l1());
 
-        actionPrepState.and(L1Coral).whileTrue(l1());
-        actionPrepState
-                .and(L2Coral.not())
-                .whileTrue(l2Coral()); // TODO: Remove not used for twisting
-        actionPrepState.and(L3Coral).whileTrue(l3Coral());
-        actionPrepState.and(L4Coral).whileTrue(l4());
+        // L1Coral.whileTrue(l1());
+        // L2Coral.whileTrue(l1());
+        // L3Coral.whileTrue(l1());
+        // L4Coral.whileTrue(l1());
 
-        actionPrepState.and(L2Algae).whileTrue(l2Algae());
-        actionPrepState.and(L3Algae).whileTrue(l3Algae());
-        actionPrepState.and(barge).whileTrue(barge());
+        // actionPrepState.and(L1Coral).whileTrue(l1());
+        // actionPrepState
+        //         .and(L2Coral.not())
+        //         .whileTrue(l2Coral()); // TODO: Remove not used for twisting
+        // actionPrepState.and(L3Coral).whileTrue(l3Coral());
+        // actionPrepState.and(L4Coral).whileTrue(l4());
 
-        homeAll.whileTrue(home());
-        homeElevator.whileTrue(zero());
+        // actionPrepState.and(L2Algae).whileTrue(l2Algae());
+        // actionPrepState.and(L3Algae).whileTrue(l3Algae());
+        // actionPrepState.and(barge).whileTrue(barge());
+
+        // homeAll.whileTrue(home());
+        // homeElevator.whileTrue(zero());
 
         // TODO: For Testing
-        // Robot.getPilot().tuneElevator_tA.whileTrue(elevator.setElevatorMMPositionFOC(() -> 5.0));
-        // Robot.getPilot().tuneElevator_tB.whileTrue(elevator.setElevatorMMPositionFOC(() ->
-        // 10.0));
-        // Robot.getPilot()
-        //         .testTriggersTrigger
-        //         .whileTrue(runElevator(() -> Robot.getPilot().getInClimbManualAxis()));
+        Robot.getPilot().testTune_tA.whileTrue(elevator.setElevatorMMPositionFOC(() -> 5.0));
+        Robot.getPilot().testTune_tB.whileTrue(elevator.setElevatorMMPositionFOC(() -> 10.0));
+        Robot.getPilot()
+                .testTriggersTrigger
+                .whileTrue(runElevator(() -> Robot.getPilot().getTestTriggersAxis()));
     }
 
     private static Command runElevator(DoubleSupplier speed) {

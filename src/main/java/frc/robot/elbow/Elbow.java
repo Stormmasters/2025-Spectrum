@@ -203,12 +203,12 @@ public class Elbow extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
-                moveToRotations(() -> holdPosition);
+                setMMPositionFoc(() -> holdPosition);
             }
 
             @Override
             public void execute() {
-                moveToRotations(() -> holdPosition);
+                setMMPositionFoc(() -> holdPosition);
             }
 
             @Override
@@ -229,7 +229,7 @@ public class Elbow extends Mechanism {
         return runHoldElbow()
                 .until(() -> ((ElevatorStates.allowedPosition()) || percent.getAsDouble() < 50))
                 .andThen(
-                        run(() -> setMMPosition(() -> percentToRotations(percent)))
+                        run(() -> setMMPositionFoc(() -> percentToRotations(percent)))
                                 .withName(getName() + ".runPosePercentage"));
     }
 
