@@ -21,23 +21,26 @@ public class CoralIntakeStates {
     }
 
     public static void setStates() {
+        // TODO: Fix this after testing
+        // stationIntaking.whileTrue(coralIntake()); // log(coralIntake()));
+        // stationExtendedIntake.whileTrue(coralEject()); // log(coralIntake()));
 
-        stationIntaking.whileTrue(coralIntake()); // log(coralIntake()));
-        stationExtendedIntake.whileTrue(coralEject()); // log(coralIntake()));
+        // scoreState.and(barge.not()).onTrue(log(coralScore()));
+        // scoreState.and(barge).onTrue(log(barge()));
 
-        scoreState.and(barge.not()).onTrue(log(coralScore()));
-        scoreState.and(barge).onTrue(log(barge()));
+        // processorLollipopScore.whileTrue(log(coralIntake()));
 
-        processorLollipopScore.whileTrue(log(coralIntake()));
+        // hasCoral.whileTrue(log(coralIntake()));
+        // hasAlgae.whileTrue(log(algaeIntake()));
 
-        hasCoral.whileTrue(log(coralIntake()));
-        hasAlgae.whileTrue(log(algaeIntake()));
-
-        algaeHandoff.onTrue(log(algaeHandOff()));
-        coralHandoff.onTrue(log(coralHandOff()));
+        // algaeHandoff.onTrue(log(algaeHandOff()));
+        // coralHandoff.onTrue(log(coralHandOff()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+
+        // Robot.getPilot().tuneShoulder_tA.onTrue(coralIntake.coralIntake());
+        // Robot.getPilot().tuneShoulder_tB.whileTrue(coralIntake.coralScore());
     }
 
     private static Command coralHandOff() {

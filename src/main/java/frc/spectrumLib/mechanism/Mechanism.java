@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.spectrumLib.CachedDouble;
 import frc.spectrumLib.SpectrumRobot;
@@ -295,6 +297,14 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         return run(() -> setPercentOutput(percent)).withName(getName() + ".runPercentage");
     }
 
+    public Command runVoltage(DoubleSupplier voltage) {
+        return run(() -> setVoltageOutput(voltage)).withName(getName() + ".runVoltage");
+    }
+
+    public Command runTorqueCurrentFoc(DoubleSupplier current) {
+        return run(() -> setTorqueCurrentFoc(current)).withName(getName() + ".runTorqueCurrentFoc");
+    }
+
     /**
      * Run to the specified position.
      *
@@ -358,6 +368,14 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
                                                 == NeutralModeValue.Coast)
                 .ignoringDisable(true)
                 .withName(getName() + ".ensureBrakeMode");
+    }
+
+    protected Command setCurrentLimits(DoubleSupplier supplyLimit, DoubleSupplier statorLimit) {
+        return new InstantCommand(
+                () -> {
+                    toggleSupplyCurrentLimit(supplyLimit, true);
+                    toggleTorqueCurrentLimit(statorLimit, true);
+                });
     }
 
     protected void stop() {
@@ -488,6 +506,20 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         }
     }
 
+    public void setVoltageOutput(DoubleSupplier voltage) {
+        if (isAttached()) {
+            VoltageOut output = config.voltageControl.withOutput(voltage.getAsDouble());
+            motor.setControl(output);
+        }
+    }
+
+    public void setTorqueCurrentFoc(DoubleSupplier current) {
+        if (isAttached()) {
+            TorqueCurrentFOC output = config.torqueCurrentFOC.withOutput(current.getAsDouble());
+            motor.setControl(output);
+        }
+    }
+
     public void setBrakeMode(boolean isInBrake) {
         if (isAttached()) {
             config.configNeutralBrakeMode(isInBrake);
@@ -507,11 +539,24 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         if (isAttached()) {
             if (enabled) {
                 config.configForwardTorqueCurrentLimit(enabledLimit.getAsDouble());
-                config.configReverseTorqueCurrentLimit(enabledLimit.getAsDouble());
+                config.configReverseTorqueCurrentLimit(-1 * enabledLimit.getAsDouble());
+                config.configStatorCurrentLimit(enabledLimit.getAsDouble(), true);
                 config.applyTalonConfig(motor);
             } else {
-                config.configForwardTorqueCurrentLimit(400);
-                config.configReverseTorqueCurrentLimit(400);
+                config.configForwardTorqueCurrentLimit(300);
+                config.configReverseTorqueCurrentLimit(-300);
+                config.applyTalonConfig(motor);
+            }
+        }
+    }
+
+    public void toggleSupplyCurrentLimit(DoubleSupplier enabledLimit, boolean enabled) {
+        if (isAttached()) {
+            if (enabled) {
+                config.configSupplyCurrentLimit(enabledLimit.getAsDouble(), true);
+                config.applyTalonConfig(motor);
+            } else {
+                config.configSupplyCurrentLimit(enabledLimit.getAsDouble(), false);
                 config.applyTalonConfig(motor);
             }
         }
@@ -663,6 +708,8 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
         @Getter
         private VelocityTorqueCurrentFOC velocityTorqueCurrentFOC = new VelocityTorqueCurrentFOC(0);
+
+        @Getter private TorqueCurrentFOC torqueCurrentFOC = new TorqueCurrentFOC(0);
 
         @Getter
         private DutyCycleOut percentOutput =

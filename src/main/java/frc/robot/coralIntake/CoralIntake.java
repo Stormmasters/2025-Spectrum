@@ -3,6 +3,7 @@ package frc.robot.coralIntake;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
@@ -15,6 +16,24 @@ import lombok.Getter;
 public class CoralIntake extends Mechanism {
 
     public static class CoralIntakeConfig extends Config {
+
+        // Algae Voltages and Current
+        @Getter private double algaeIntakeVoltage = -8.0;
+        @Getter private double algaeIntakeSupplyCurrent = 15.0;
+        @Getter private double algaeIntakeTorqueCurrent = 90.0;
+
+        @Getter private double algaeScoreVoltage = 12.0;
+        @Getter private double algaeScoreSupplyCurrent = 30;
+        @Getter private double algaeScoreTorqueCurrent = 180;
+
+        // Coral Voltages and Current
+        @Getter private double coralIntakeVoltage = 9.0;
+        @Getter private double coralIntakeSupplyCurrent = 12.0;
+        @Getter private double coralIntakeTorqueCurrent = 27.0;
+
+        @Getter private double coralScoreVoltage = -2.0;
+        @Getter private double coralScoreSupplyCurrent = 12;
+        @Getter private double coralScoreTorqueCurrent = 27;
 
         /* Revolutions per min Intake Output */
         @Getter private double maxSpeed = 5000;
@@ -105,6 +124,38 @@ public class CoralIntake extends Mechanism {
     public boolean hasIntakeAlgae() {
         double motorOutput = Robot.getCoralIntake().getVelocityRPM();
         return (Math.abs(motorOutput) < 10);
+    }
+
+    public Command algaeIntake() {
+        return runVoltage(() -> config.algaeIntakeVoltage)
+                .alongWith(
+                        setCurrentLimits(
+                                () -> config.algaeIntakeSupplyCurrent,
+                                () -> config.algaeIntakeTorqueCurrent));
+    }
+
+    public Command algaeScore() {
+        return runVoltage(() -> config.algaeScoreVoltage)
+                .alongWith(
+                        setCurrentLimits(
+                                () -> config.algaeScoreSupplyCurrent,
+                                () -> config.algaeScoreTorqueCurrent));
+    }
+
+    public Command coralIntake() {
+        return runVoltage(() -> config.coralIntakeVoltage)
+                .alongWith(
+                        setCurrentLimits(
+                                () -> config.coralIntakeSupplyCurrent,
+                                () -> config.coralIntakeTorqueCurrent));
+    }
+
+    public Command coralScore() {
+        return runVoltage(() -> config.coralScoreVoltage)
+                .alongWith(
+                        setCurrentLimits(
+                                () -> config.coralScoreSupplyCurrent,
+                                () -> config.coralScoreTorqueCurrent));
     }
 
     // --------------------------------------------------------------------------------
