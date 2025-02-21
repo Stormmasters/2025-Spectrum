@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
@@ -34,6 +35,8 @@ public class InClimb extends Mechanism {
         @Getter private final double finishClimb = 100;
         @Getter private final double coralFloorIntake = -10;
         @Getter private final double processorScore = 60;
+        @Getter private final double latchOpen = 0;
+        @Getter private final double latchClosed = 1;        
 
         @Getter private final double offsetConstant = -90;
 
@@ -97,6 +100,7 @@ public class InClimb extends Mechanism {
     }
 
     private InClimbConfig config;
+    private Servo latchServo = new Servo(0); // TODO: set to correct channel
     @Getter private InClimbSim sim;
 
     public InClimb(InClimbConfig config) {
@@ -104,6 +108,7 @@ public class InClimb extends Mechanism {
         this.config = config;
 
         setIntialPosition();
+        openLatch();
 
         simulationInit();
         telemetryInit();
@@ -218,6 +223,14 @@ public class InClimb extends Mechanism {
     // TODO: remove after testing
     public Command setInClimbMMPositionFOC(DoubleSupplier rotations) {
         return run(() -> setMMPositionFoc(rotations)).withName("InClimb Set MM Position");
+    }
+
+    public Command openLatch() {
+        return run(() -> latchServo.set(config.getLatchOpen())).withName("InClimb.openLatch");
+    }
+
+    public Command closeLatch() {
+        return run(() -> latchServo.set(config.getLatchClosed())).withName("InClimb.closeLatch");
     }
 
     // --------------------------------------------------------------------------------

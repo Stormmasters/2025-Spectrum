@@ -27,8 +27,8 @@ public class InClimbStates {
         groundAlgae.whileTrue(log(algaeFloorIntake()));
         groundCoral.whileTrue(log(coralFloorIntake()));
 
-        climbPrep.whileTrue(log(climbPrep()));
-        climbFinish.whileTrue(log(climbFinish()));
+        climbPrep.whileTrue(log(climbPrep()).alongWith(openLatch()));
+        climbFinish.whileTrue(log(climbFinish()).alongWith(closeLatch()));
         homeAll.whileTrue(log(home()));
         processorLollipopScore.whileTrue(log(processorLollipopScore()));
 
@@ -97,6 +97,14 @@ public class InClimbStates {
 
     public static Command ensureBrakeMode() {
         return inClimb.ensureBrakeMode().withName("InClimb.BrakeMode");
+    }
+
+    public static Command openLatch() {
+        return inClimb.openLatch().withName("InClimb.openLatch");
+    }
+
+    public static Command closeLatch() {
+        return inClimb.closeLatch().withName("InClimb.closeLatch");
     }
 
     // Tune value command
