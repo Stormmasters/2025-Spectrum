@@ -17,7 +17,7 @@ import org.photonvision.simulation.VisionSystemSim;
 
 public class VisionSystem extends SubsystemBase {
     private final PhotonCamera camera = new PhotonCamera("cameraName");
-    private final PhotonCamera frontCam = new PhotonCamera(VisionConfig.LEFT_LL);
+    private final PhotonCamera frontCam = new PhotonCamera(VisionConfig.FRONT_LL);
     private final PhotonCamera backCam = new PhotonCamera(VisionConfig.RIGHT_LL);
     private final VisionSystemSim visionSim = new VisionSystemSim("main");
     private final Pose2dSupplier getSimPose;

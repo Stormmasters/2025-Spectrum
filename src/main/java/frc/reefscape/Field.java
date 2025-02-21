@@ -74,32 +74,32 @@ public class Field {
 
         static {
             // Initialize faces
-            centerFaces[0] =
+            centerFaces[0] = //reef id 18
                     new Pose2d(
                             Units.inchesToMeters(144.003),
                             Units.inchesToMeters(158.500),
                             Rotation2d.fromDegrees(180));
-            centerFaces[1] =
+            centerFaces[1] = //reef id 19
                     new Pose2d(
                             Units.inchesToMeters(160.373),
                             Units.inchesToMeters(186.857),
                             Rotation2d.fromDegrees(120));
-            centerFaces[2] =
+            centerFaces[2] = //reef id 20
                     new Pose2d(
                             Units.inchesToMeters(193.116),
                             Units.inchesToMeters(186.858),
                             Rotation2d.fromDegrees(60));
-            centerFaces[3] =
+            centerFaces[3] = //reef id 21
                     new Pose2d(
                             Units.inchesToMeters(209.489),
                             Units.inchesToMeters(158.502),
                             Rotation2d.fromDegrees(0));
-            centerFaces[4] =
+            centerFaces[4] = //reef id 22
                     new Pose2d(
                             Units.inchesToMeters(193.118),
                             Units.inchesToMeters(130.145),
                             Rotation2d.fromDegrees(-60));
-            centerFaces[5] =
+            centerFaces[5] = //reef id 17
                     new Pose2d(
                             Units.inchesToMeters(160.375),
                             Units.inchesToMeters(130.144),

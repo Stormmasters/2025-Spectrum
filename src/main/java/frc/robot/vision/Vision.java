@@ -1,9 +1,11 @@
 package frc.robot.vision;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -13,12 +15,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.reefscape.Field;
 import frc.robot.Robot;
 import frc.spectrumLib.Telemetry;
+import frc.spectrumLib.Telemetry.PrintPriority;
 import frc.spectrumLib.util.Trio;
 import frc.spectrumLib.vision.Limelight;
 import frc.spectrumLib.vision.Limelight.LimelightConfig;
 import frc.spectrumLib.vision.LimelightHelpers.RawFiducial;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,11 +30,11 @@ public class Vision extends SubsystemBase {
 
     public static final class VisionConfig {
         /* Limelight Configuration */
-        public static final String LEFT_LL = "limelight-left";
-        public static final LimelightConfig LEFT_Config =
-                new LimelightConfig(LEFT_LL)
-                        .withTranslation(0, 0, 0.5)
-                        .withRotation(0, Math.toRadians(-15), 0);
+        public static final String FRONT_LL = "limelight-front";
+        public static final LimelightConfig FRONT_CONFIG =
+                new LimelightConfig(FRONT_LL)
+                        .withTranslation(0, -27.36, -8.04)
+                        .withRotation(0, Math.toRadians(.5), Math.toRadians(-7.96));
 
         public static final String RIGHT_LL = "limelight-right";
         public static final LimelightConfig Right_Config =
@@ -41,7 +45,7 @@ public class Vision extends SubsystemBase {
         // TODO: Limelight config needs to be updated to actual position on robot
 
         /* Pipeline configs */
-        public static final int leftTagPipeline = 0;
+        public static final int frontTagPipeline = 0;
         public static final int rightTagPipeline = 1;
 
         /* Pose Estimation Constants */
@@ -64,11 +68,13 @@ public class Vision extends SubsystemBase {
 
     /** Limelights */
     @Getter
-    public final Limelight leftLL =
+    public final Limelight frontLL =
             new Limelight(
-                    VisionConfig.LEFT_LL, VisionConfig.leftTagPipeline, VisionConfig.LEFT_Config);
+                    VisionConfig.FRONT_LL,
+                    VisionConfig.frontTagPipeline,
+                    VisionConfig.FRONT_CONFIG);
 
-    public final LimelightLogger leftLLogger = new LimelightLogger("left", leftLL);
+    public final LimelightLogger leftLLogger = new LimelightLogger("front", frontLL);
 
     public final Limelight rightLL =
             new Limelight(
@@ -76,7 +82,7 @@ public class Vision extends SubsystemBase {
                     VisionConfig.rightTagPipeline,
                     VisionConfig.Right_Config);
 
-    public final Limelight[] allLimelights = {leftLL, rightLL};
+    public final Limelight[] allLimelights = {frontLL, rightLL};
 
     private final DecimalFormat df = new DecimalFormat();
 
@@ -281,7 +287,7 @@ public class Vision extends SubsystemBase {
     }
 
     public Limelight getBestLimelight() {
-        Limelight bestLimelight = leftLL;
+        Limelight bestLimelight = frontLL;
         double bestScore = 0;
         for (Limelight limelight : allLimelights) {
             double score = 0;
@@ -538,36 +544,44 @@ public class Vision extends SubsystemBase {
     //     return angleBetweenRobotAndSpeaker;
     // }
 
-    // public double getThetaToReefFace() {
-    //     Translation2d reefFace;
-    //     //runs closestReefFace to get the closest reef face id
-    //     private double closestReefFace = closestReefFace();
+    public double getThetaToReefFace() {
+        double closestReefFace = closestReefFace();
 
-    // }
+        Translation2d robot2d = Robot.getSwerve().getRobotPose().getTranslation();
 
-    // public int closestReefFace() {
-    //     if (getDistanceToReefFromRobot() > -1) {
-    //         RawFiducial[] tags = leftLL.getRawFiducial();
-    //         if (Field.isRed()) {
-    //             int closestReef = tags[0].id;
-    //             for (RawFiducial tag : tags) {
-    //                 if (tag.distToRobot < tags[closestReef].distToRobot) {
-    //                     closestReef = tag.id;
-    //                 }
-    //             }
-    //             return closestReef;
-    //         }
-    //         else {
-    //             int closestReef = tags[0].id;
-    //             for (RawFiducial tag : tags) {
-    //                 if (tag.distToRobot < tags[closestReef].distToRobot) {
-    //                     closestReef = tag.id;
-    //                 }
-    //             }
-    //             return closestReef;
-    //         }
-    //     }
-    // }
+        double angleBetweenRobotandReefFace = 
+            MathUtil.angleModulus(
+                Field.Reef.centerFace(closestReefFace).getTranslation().minus(robot2d).getAngle().getRadians());
+        
+        //runs closestReefFace to get the closest reef face id
+
+    }
+
+    public int closestReefFace() {
+        double[] reefdistance = getDistanceToReefFromRobot();
+        if (reefdistance[0] > -1) {
+            RawFiducial[] tags = frontLL.getRawFiducial();
+            if (Field.isRed()) {
+                int closestReef = tags[0].id;
+                for (RawFiducial tag : tags) {
+                    if (tag.distToRobot < tags[closestReef].distToRobot) {
+                        closestReef = tag.id;
+                    }
+                }
+                return closestReef; //red reef tag
+            }
+            else {
+                int closestReef = tags[0].id;
+                for (RawFiducial tag : tags) {
+                    if (tag.distToRobot < tags[closestReef].distToRobot) {
+                        closestReef = tag.id;
+                    }
+                }
+                return closestReef; //blue reef tag
+            }
+        }
+        return -1; //no reef tag found
+    }
 
     // public Translation2d getAdjustedReefPos() {
     //     return getAdjustedTargetPos(
@@ -602,8 +616,8 @@ public class Vision extends SubsystemBase {
     // }
 
     // // Returns distance to the center of the speaker tag from the robot or -1 if not found
-    public ArrayList<Double> getDistanceToReefFromRobot() {
-        RawFiducial[] leftTags = leftLL.getRawFiducial();
+    public double[] getDistanceToReefFromRobot() {
+        RawFiducial[] frontTags = frontLL.getRawFiducial();
         RawFiducial[] rightTags = rightLL.getRawFiducial();
 
         ArrayList<Integer> ValidReefFaceIDsRed = new ArrayList<Integer>();
@@ -615,20 +629,21 @@ public class Vision extends SubsystemBase {
             ValidReefFaceIDsBlue.add(i);
         }
 
-        ArrayList<Double> seenReefFaces = new ArrayList<Double>();
-        for (RawFiducial tag : leftTags) {
+        //ArrayList<Double> seenReefFaces = new ArrayList<Double>();
+        double[] seenReefFaces = new double[12];
+        for (RawFiducial tag : frontTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
-                seenReefFaces.add(tag.distToCamera);
+                seenReefFaces[0] = tag.distToCamera;
             }
         }
 
         for (RawFiducial tag : rightTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
-                seenReefFaces.add(tag.distToCamera);
+               // seenReefFaces.add(tag.distToCamera);
             }
         }
 
-        Telemetry.print(seenReefFaces.toString());
+        Telemetry.print("Distance to Limelight: " + seenReefFaces[0] , PrintPriority.HIGH);
         return seenReefFaces;
     }
 
@@ -713,10 +728,10 @@ public class Vision extends SubsystemBase {
     public Command solidLimelight() {
         return startEnd(
                         () -> {
-                            leftLL.setLEDMode(true);
+                            frontLL.setLEDMode(true);
                         },
                         () -> {
-                            leftLL.setLEDMode(false);
+                            frontLL.setLEDMode(false);
                         })
                 .withName("Vision.solidLimelight");
     }
