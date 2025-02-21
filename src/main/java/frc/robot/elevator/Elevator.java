@@ -44,8 +44,7 @@ public class Elevator extends Mechanism {
                 0; // TODO: update, as max changed from 110.6304660319
 
         @Getter
-        private final double stationIntake =
-                1.5; // TODO: update, as max changed from 110.6304660319
+        private final double stationIntake = 5; // TODO: update, as max changed from 110.6304660319
 
         @Getter
         private final double stationExtendedIntake =
@@ -94,7 +93,7 @@ public class Elevator extends Mechanism {
 
         /* Sim properties */
         @Getter private double kElevatorGearing = 3.62722;
-        @Getter private double kCarriageMass = 1;
+        @Getter private double kCarriageMass = 13.6078;
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.8;
         @Getter private double initialY = 0.35;

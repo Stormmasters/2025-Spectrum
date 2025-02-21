@@ -19,35 +19,35 @@ public class TwistStates {
     }
 
     public static void setStates() {
-        stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
-        stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
-        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
+        // stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
+        // stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
+        // stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
+        // stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
 
-        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
-        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
-        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
-        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
+        // L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
+        // L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
+        // L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
+        // L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
 
-        coralReefPosition.and(backwardMode.not()).and(leftScore).whileTrue(log(leftCoral()));
-        coralReefPosition.and(backwardMode).and(leftScore).whileTrue(log(reverse(leftCoral())));
-        coralReefPosition.and(backwardMode.not()).and(rightScore).whileTrue(log(rightCoral()));
-        coralReefPosition.and(backwardMode).and(rightScore).whileTrue(log(reverse(rightCoral())));
+        // coralReefPosition.and(backwardMode.not()).and(leftScore).whileTrue(log(leftCoral()));
+        // coralReefPosition.and(backwardMode).and(leftScore).whileTrue(log(reverse(leftCoral())));
+        // coralReefPosition.and(backwardMode.not()).and(rightScore).whileTrue(log(rightCoral()));
+        // coralReefPosition.and(backwardMode).and(rightScore).whileTrue(log(reverse(rightCoral())));
 
-        barge.and(backwardMode.not()).whileTrue(log(barge()));
-        barge.and(backwardMode).whileTrue(log(reverse(barge())));
+        // barge.and(backwardMode.not()).whileTrue(log(barge()));
+        // barge.and(backwardMode).whileTrue(log(reverse(barge())));
 
-        homeAll.whileTrue(log(home()));
+        // homeAll.whileTrue(log(home()));
 
-        algaeHandoff.whileTrue(log(handOffAlgae()));
-        coralHandoff.whileTrue(log(handOffCoral()));
+        // algaeHandoff.whileTrue(log(handOffAlgae()));
+        // coralHandoff.whileTrue(log(handOffCoral()));
 
-        coastMode.onTrue(log(coastMode()));
-        coastMode.onFalse(log(ensureBrakeMode()));
+        // coastMode.onTrue(log(coastMode()));
+        // coastMode.onFalse(log(ensureBrakeMode()));
 
         // TODO: for testing
-        // Robot.getPilot().tuneShoulder_tA.whileTrue(twist.moveToDegrees(() -> 90));
-        // Robot.getPilot().tuneShoulder_tB.whileTrue(twist.moveToDegrees(() -> 0));
+        Robot.getPilot().testTune_tA.whileTrue(twist.moveToDegrees(() -> 0));
+        Robot.getPilot().testTune_tB.whileTrue(twist.moveToDegrees(() -> -90));
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(runTwist(() -> Robot.getPilot().getInClimbManualAxis()));
