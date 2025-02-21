@@ -100,7 +100,7 @@ public class InClimb extends Mechanism {
     }
 
     private InClimbConfig config;
-    private Servo latchServo = new Servo(0); // TODO: set to correct channel
+    private Servo latchServo = new Servo(9); // TODO: set to correct channel
     @Getter private InClimbSim sim;
 
     public InClimb(InClimbConfig config) {
