@@ -1,14 +1,9 @@
 package frc.robot.vision;
 
-import java.util.ArrayList;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.controller.PIDController;
-import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -17,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.reefscape.Field;
 import frc.robot.Robot;
-import frc.robot.swerve.Swerve;
-import frc.robot.swerve.SwerveStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.Trio;
 import frc.spectrumLib.vision.Limelight;
@@ -70,6 +63,7 @@ public class Vision extends SubsystemBase {
     }
 
     /** Limelights */
+    @Getter
     public final Limelight leftLL =
             new Limelight(
                     VisionConfig.LEFT_LL, VisionConfig.leftTagPipeline, VisionConfig.LEFT_Config);
@@ -118,7 +112,7 @@ public class Vision extends SubsystemBase {
                 Pose2d integratablePose =
                         new Pose2d(megaPose2d.getTranslation(), botpose3D.toPose2d().getRotation());
                 autonPoses.add(Trio.of(botpose3D, integratablePose, timeStamp));
-            } 
+            }
         }
         try {
             isIntegrating = false;
@@ -136,15 +130,16 @@ public class Vision extends SubsystemBase {
                 //     }
                 // } else {
 
-                //choose LL with best view of tags and integrate from only that camera
+                // choose LL with best view of tags and integrate from only that camera
                 Limelight bestLimelight = getBestLimelight();
                 for (Limelight limelight : allLimelights) {
                     if (limelight.getCameraName() == bestLimelight.getCameraName()) {
                         addFilteredVisionInput(bestLimelight);
                     } else {
                         limelight.sendInvalidStatus("not best rejection");
-                    } 
-                    isIntegrating |= limelight.isIntegrating(); 
+                    }
+                    isIntegrating |= limelight.isIntegrating();
+                    getDistanceToReefFromRobot();
                 }
             }
 
@@ -152,8 +147,6 @@ public class Vision extends SubsystemBase {
             Telemetry.print("Vision pose not present but tried to access it");
         }
     }
-
-    
 
     private void addFilteredVisionInput(Limelight ll) {
         double xyStds = 1000;
@@ -173,7 +166,10 @@ public class Vision extends SubsystemBase {
 
             // distance from current pose to vision estimated pose
             double poseDifference =
-                    Robot.getSwerve().getRobotPose().getTranslation().getDistance(botpose.getTranslation());
+                    Robot.getSwerve()
+                            .getRobotPose()
+                            .getTranslation()
+                            .getDistance(botpose.getTranslation());
 
             /* rejections */
             // reject pose if individual tag ambiguity is too high
@@ -243,10 +239,7 @@ public class Vision extends SubsystemBase {
                 xyStds = 0.5;
                 degStds = 999999;
             } else {
-                ll.sendInvalidStatus(
-                        "catch rejection: "
-                                + df.format(poseDifference)
-                                + " poseDiff");
+                ll.sendInvalidStatus("catch rejection: " + df.format(poseDifference) + " poseDiff");
                 return;
             }
 
@@ -264,11 +257,12 @@ public class Vision extends SubsystemBase {
             VisionConfig.VISION_STD_DEV_Y = xyStds;
             VisionConfig.VISION_STD_DEV_THETA = degStds;
 
-            Robot.getSwerve().setVisionMeasurementStdDevs(
-                    VecBuilder.fill(
-                            VisionConfig.VISION_STD_DEV_X,
-                            VisionConfig.VISION_STD_DEV_Y,
-                            VisionConfig.VISION_STD_DEV_THETA));
+            Robot.getSwerve()
+                    .setVisionMeasurementStdDevs(
+                            VecBuilder.fill(
+                                    VisionConfig.VISION_STD_DEV_X,
+                                    VisionConfig.VISION_STD_DEV_Y,
+                                    VisionConfig.VISION_STD_DEV_THETA));
 
             Pose2d integratedPose = new Pose2d(megaPose2d.getTranslation(), botpose.getRotation());
             Robot.getSwerve().addVisionMeasurement(integratedPose, timeStamp);
@@ -279,7 +273,6 @@ public class Vision extends SubsystemBase {
     }
 
     // TODO:Auton Reset pose to Vision method
-
 
     public void resetPoseToVision() {
         Limelight ll = getBestLimelight();
@@ -327,7 +320,7 @@ public class Vision extends SubsystemBase {
                 Telemetry.log("Pose out of field", reject);
                 reject = true;
             } else if (Math.abs(botpose3D.getZ()) > 0.25) { // when in air
-                Telemetry.log("Pose in air" , reject);
+                Telemetry.log("Pose in air", reject);
                 reject = true;
             } else if ((Math.abs(botpose3D.getRotation().getX()) > 5
                     || Math.abs(botpose3D.getRotation().getY()) > 5)) { // when tilted
@@ -347,7 +340,9 @@ public class Vision extends SubsystemBase {
             VisionConfig.VISION_STD_DEV_THETA = 0.001;
 
             // Posts Current X,Y, and Angle (Theta) values
-            double[] visionPose = {botpose.getX(), botpose.getY(), botpose.getRotation().getDegrees()};
+            double[] visionPose = {
+                botpose.getX(), botpose.getY(), botpose.getRotation().getDegrees()
+            };
             Telemetry.log("Vision Pose", visionPose);
             // Telemetry.log("Vision X: ", botpose.getX());
             // Telemetry.log("Vision Y: ", botpose.getY());
@@ -392,14 +387,8 @@ public class Vision extends SubsystemBase {
         }
     }
 
-   
-
-
     /** Logging */
-    /**
-     * Tracks position with Limelight using current logger (DogLog) to
-     * record data
-     */
+    /** Tracks position with Limelight using current logger (DogLog) to record data */
     public static class LimelightLogger {
         private final Limelight limelight;
         private String name;
@@ -410,69 +399,59 @@ public class Vision extends SubsystemBase {
         }
 
         public boolean getCameraConnection() {
-            Telemetry.log(
-                "Vision " + name + " ConnectionStatus", limelight.isCameraConnected());
+            Telemetry.log("Vision " + name + " ConnectionStatus", limelight.isCameraConnected());
             return limelight.isCameraConnected();
         }
 
         public boolean getIntegratingStatus() { // Vision/Integrating
-            Telemetry.log(
-                "Vision " + name + " IntegratingStatus", limelight.isIntegrating());
+            Telemetry.log("Vision " + name + " IntegratingStatus", limelight.isIntegrating());
             return limelight.isIntegrating();
         }
 
         public String getLogStatus() {
-            Telemetry.log(
-                "Vision " + name + " LogStatus", limelight.getLogStatus());
+            Telemetry.log("Vision " + name + " LogStatus", limelight.getLogStatus());
             return limelight.getLogStatus();
         }
 
         public String getTagStatus() {
-            Telemetry.log(
-                "Vision " + name + " TagStatus", limelight.getTagStatus());
+            Telemetry.log("Vision " + name + " TagStatus", limelight.getTagStatus());
             return limelight.getLogStatus();
         }
 
         public Pose2d getPose() {
-            Telemetry.log(
-                "Vision " + name + " Pose", limelight.getRawPose3d().toPose2d());
+            Telemetry.log("Vision " + name + " Pose", limelight.getRawPose3d().toPose2d());
             return limelight.getRawPose3d().toPose2d();
         }
 
         public Pose2d getMegaPose() {
-            Telemetry.log(
-                "Vision " + name + " MegaPose", limelight.getMegaPose2d());
+            Telemetry.log("Vision " + name + " MegaPose", limelight.getMegaPose2d());
             return limelight.getMegaPose2d();
         }
 
         public double getPoseX() {
-            Telemetry.log(
-                "Vision " + name + " PoseX", getPose().getX());
+            Telemetry.log("Vision " + name + " PoseX", getPose().getX());
             return getPose().getX();
         }
 
         public double getPoseY() {
-            Telemetry.log(
-                "Vision " + name + " PoseY", getPose().getY());
+            Telemetry.log("Vision " + name + " PoseY", getPose().getY());
             return getPose().getY();
         }
 
         public double getTagCount() {
-            Telemetry.log(
-                "Vision " + name + " TagCount", limelight.getTagCountInView());
+            Telemetry.log("Vision " + name + " TagCount", limelight.getTagCountInView());
             return limelight.getTagCountInView();
         }
 
         public double getTargetSize() {
-            Telemetry.log(
-                "Vision " + name + " TargetSize", limelight.getTargetSize());
+            Telemetry.log("Vision " + name + " TargetSize", limelight.getTargetSize());
             return limelight.getTargetSize();
         }
     }
 
     /**
-     * CommandConfig used to create a PIDController
-     * and for vision commands using other subsystems (i.e. swerve)
+     * CommandConfig used to create a PIDController and for vision commands using other subsystems
+     * (i.e. swerve)
      */
     public static class CommandConfig {
         public double kp;
@@ -529,34 +508,18 @@ public class Vision extends SubsystemBase {
     // Config
     // ------------------------------------------------------------------------------
 
-
-
-
     // ------------------------------------------------------------------------------
     // Vision Commands
     // ------------------------------------------------------------------------------
 
-
-    //method (Command) alignToVisionTarget ( config, DoubleSupplier, offset) 
+    // method (Command) alignToVisionTarget ( config, DoubleSupplier, offset)
     // custom commandconfig to send into alignToVisionTarget
-    //TODO Build alignToVisionTarget 
-         
-        
+    // TODO Build alignToVisionTarget
 
+    // TODO: Changes between 2024 usage of Speaker to 2025 usage of Coral
+    /** closestReefFace getThetaToReefFace getDistancetoReefFace */
 
-
-
-
-
-    //TODO: Changes between 2024 usage of Speaker to 2025 usage of Coral
-    /** 
-     * closestReefFace
-     * getThetaToReefFace
-     * getDistancetoReefFace
-     * 
-     */
-    
-     /**
+    /**
      * REQUIRES ACCURATE POSE ESTIMATION. Uses trigonometric functions to calculate the angle
      * between the robot heading and the angle required to face coral faces.
      *
@@ -575,41 +538,42 @@ public class Vision extends SubsystemBase {
     //     return angleBetweenRobotAndSpeaker;
     // }
 
-    public double getThetaToReefFace() {
-        Translation2d reefFace;
-        //runs closestReefFace to get the closest reef face id
-        private double closestReefFace = closestReefFace();
-        
-    }
+    // public double getThetaToReefFace() {
+    //     Translation2d reefFace;
+    //     //runs closestReefFace to get the closest reef face id
+    //     private double closestReefFace = closestReefFace();
 
-    public int closestReefFace() {
-        if (getDistanceToReefFromRobot() > -1) {
-            RawFiducial[] tags = leftLL.getRawFiducial();
-            if (Field.isRed()) {
-                int closestReef = tags[0].id;
-                for (RawFiducial tag : tags) {
-                    if (tag.distToRobot < tags[closestReef].distToRobot) {
-                        closestReef = tag.id;
-                    }
-                }
-                return closestReef;
-            }
-            else {
-                int closestReef = tags[0].id;
-                for (RawFiducial tag : tags) {
-                    if (tag.distToRobot < tags[closestReef].distToRobot) {
-                        closestReef = tag.id;
-                    }
-                }
-                return closestReef;
-            }
-        }
-    }
+    // }
 
-    public Translation2d getAdjustedReefPos() {
-        return getAdjustedTargetPos(
-                new Translation2d(0, Field.Speaker.centerSpeakerOpening.toTranslation2d().getY()));
-    }
+    // public int closestReefFace() {
+    //     if (getDistanceToReefFromRobot() > -1) {
+    //         RawFiducial[] tags = leftLL.getRawFiducial();
+    //         if (Field.isRed()) {
+    //             int closestReef = tags[0].id;
+    //             for (RawFiducial tag : tags) {
+    //                 if (tag.distToRobot < tags[closestReef].distToRobot) {
+    //                     closestReef = tag.id;
+    //                 }
+    //             }
+    //             return closestReef;
+    //         }
+    //         else {
+    //             int closestReef = tags[0].id;
+    //             for (RawFiducial tag : tags) {
+    //                 if (tag.distToRobot < tags[closestReef].distToRobot) {
+    //                     closestReef = tag.id;
+    //                 }
+    //             }
+    //             return closestReef;
+    //         }
+    //     }
+    // }
+
+    // public Translation2d getAdjustedReefPos() {
+    //     return getAdjustedTargetPos(
+    //             new Translation2d(0,
+    // Field.Speaker.centerSpeakerOpening.toTranslation2d().getY()));
+    // }
 
     // public double getAdjustedThetaToSpeaker() {
     //     Translation2d speaker = getAdjustedSpeakerPos();
@@ -637,27 +601,34 @@ public class Vision extends SubsystemBase {
     //     return Robot.swerve.getPose().getTranslation().getY() - getAdjustedSpeakerPos().getY();
     // }
 
-
-
     // // Returns distance to the center of the speaker tag from the robot or -1 if not found
     public ArrayList<Double> getDistanceToReefFromRobot() {
-        RawFiducial[] tags = leftLL.getRawFiducial();
-        
+        RawFiducial[] leftTags = leftLL.getRawFiducial();
+        RawFiducial[] rightTags = rightLL.getRawFiducial();
+
         ArrayList<Integer> ValidReefFaceIDsRed = new ArrayList<Integer>();
         for (int i = 6; i < 12; i++) {
             ValidReefFaceIDsRed.add(i);
         }
         ArrayList<Integer> ValidReefFaceIDsBlue = new ArrayList<Integer>();
-        for (int i = 16; i < 23; i++) {
+        for (int i = 17; i < 22; i++) {
             ValidReefFaceIDsBlue.add(i);
         }
 
         ArrayList<Double> seenReefFaces = new ArrayList<Double>();
-        for (RawFiducial tag : tags) {
+        for (RawFiducial tag : leftTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
                 seenReefFaces.add(tag.distToCamera);
             }
         }
+
+        for (RawFiducial tag : rightTags) {
+            if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
+                seenReefFaces.add(tag.distToCamera);
+            }
+        }
+
+        Telemetry.print(seenReefFaces.toString());
         return seenReefFaces;
     }
 
@@ -683,7 +654,8 @@ public class Vision extends SubsystemBase {
     //                     ? 0.05
     //                     : 0.8; // change spin fudge for score distances vs. feed distances
 
-    //     ChassisSpeeds robotVel = Robot.getSwerve().getCurrentRobotChassisSpeeds(); // TODO: change
+    //     ChassisSpeeds robotVel = Robot.getSwerve().getCurrentRobotChassisSpeeds(); // TODO:
+    // change
 
     //     double distance = robotPos.getDistance(targetPose);
     //     double normFactor =
@@ -691,14 +663,16 @@ public class Vision extends SubsystemBase {
     //                     ? 0.0
     //                     : Math.abs(
     //                             MathUtil.angleModulus(
-    //                                             robotPos.minus(targetPose).getAngle().getRadians()
+    //
+    // robotPos.minus(targetPose).getAngle().getRadians()
     //                                                     - Math.atan2(
     //                                                             robotVel.vyMetersPerSecond,
     //                                                             robotVel.vxMetersPerSecond))
     //                                     / Math.PI);
 
     //     double x =
-    //             targetPose.getX() + (Field.isBlue() ? tunableSpeakerXFudge : -tunableSpeakerXFudge);
+    //             targetPose.getX() + (Field.isBlue() ? tunableSpeakerXFudge :
+    // -tunableSpeakerXFudge);
     //     // - (robotVel.vxMetersPerSecond * (distance / tunableNoteVelocity));
     //     //      * (1.0 - (tunableNormFudge * normFactor)));
     //     double y =
@@ -711,18 +685,16 @@ public class Vision extends SubsystemBase {
     //     return new Translation2d(x, y);
     // }
 
-    //Executes the alignToVisionTarget command
-
+    // Executes the alignToVisionTarget command
 
     // ------------------------------------------------------------------------------
     // VisionStates Commands
     // ------------------------------------------------------------------------------
 
+    // TODO: Build alignToReefFace
 
-    //TODO: Build alignToReefFace 
-
-     /** Set all Limelights to blink */
-     public Command blinkLimelights() {
+    /** Set all Limelights to blink */
+    public Command blinkLimelights() {
         return startEnd(
                         () -> {
                             for (Limelight limelight : allLimelights) {
@@ -748,6 +720,4 @@ public class Vision extends SubsystemBase {
                         })
                 .withName("Vision.solidLimelight");
     }
-
-
 }
