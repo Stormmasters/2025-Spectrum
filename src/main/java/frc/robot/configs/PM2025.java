@@ -13,11 +13,11 @@ public class PM2025 extends Config {
         pilot.setAttached(true);
         operator.setAttached(true);
 
-        elevator.setAttached(false);
-        shoulder.setAttached(false);
+        elevator.setAttached(true);
+        shoulder.setAttached(true);
         elbow.setAttached(true);
         twist.setAttached(true);
-        coralIntake.setAttached(false);
+        coralIntake.setAttached(true);
         inClimb.setAttached(false);
         groundIntake.setAttached(false);
     }

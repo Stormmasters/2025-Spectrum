@@ -68,6 +68,7 @@ public class Elbow extends Mechanism {
         @Getter private final double currentLimit = 20;
         @Getter private final double torqueCurrentLimit = 60;
         @Getter private final double positionKp = 1400;
+        @Getter private final double positionKd = 160;
         @Getter private final double positionKv = 0;
         @Getter private final double positionKs = 0.4;
         @Getter private final double positionKa = 0.002;
@@ -90,14 +91,14 @@ public class Elbow extends Mechanism {
 
         public ElbowConfig() {
             super("Elbow", 43, Rio.CANIVORE);
-            configPIDGains(0, positionKp, 0, 160);
+            configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk); // 147000, 161000, 0);
             configGearRatio(102.857);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
-            configReverseTorqueCurrentLimit(torqueCurrentLimit);
+            configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
             configMinMaxRotations(-0.75, 0.25); // calculated to be 51.4285
             configReverseSoftLimit(0, true);
             configForwardSoftLimit(0.5, true);

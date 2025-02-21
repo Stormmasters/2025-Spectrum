@@ -65,11 +65,11 @@ public class ElevatorStates {
         // homeElevator.whileTrue(zero());
 
         // TODO: For Testing
-        Robot.getPilot().testTune_tA.whileTrue(elevator.setElevatorMMPositionFOC(() -> 5.0));
-        Robot.getPilot().testTune_tB.whileTrue(elevator.setElevatorMMPositionFOC(() -> 10.0));
-        Robot.getPilot()
-                .testTriggersTrigger
-                .whileTrue(runElevator(() -> Robot.getPilot().getTestTriggersAxis()));
+        // Robot.getPilot().testTune_tA.whileTrue(elevator.setElevatorMMPositionFOC(() -> 5.0));
+        // Robot.getPilot().testTune_tB.whileTrue(elevator.setElevatorMMPositionFOC(() -> 10.0));
+        // Robot.getPilot()
+        //         .testTriggersTrigger
+        //         .whileTrue(runElevator(() -> Robot.getPilot().getTestTriggersAxis()));
     }
 
     private static Command runElevator(DoubleSupplier speed) {
