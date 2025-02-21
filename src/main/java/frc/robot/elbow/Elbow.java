@@ -36,7 +36,7 @@ public class Elbow extends Mechanism {
 
         @Getter private final double algaeLollipop = 78;
         @Getter private final double coralLollipop = 76;
-        @Getter private final double stationIntake = 150;
+        @Getter private final double stationIntake = -150;
         @Getter private final double stationExtendedIntake = 136;
         @Getter private final double floorIntake = 120;
         @Getter private final double clawGroundAlgaeIntake = 75;
@@ -103,7 +103,11 @@ public class Elbow extends Mechanism {
             configReverseSoftLimit(0, true);
             configForwardSoftLimit(0.5, true);
             configNeutralBrakeMode(true);
-            configClockwise_Positive();
+            if (Robot.isSimulation()) {
+                configCounterClockwise_Positive();
+            } else {
+                configClockwise_Positive();
+            }
             configGravityType(true);
             setSimRatio(102.857);
             // TODO: set gravity type to arm cosine
@@ -295,9 +299,9 @@ public class Elbow extends Mechanism {
                                     config.elbowY,
                                     config.simRatio,
                                     config.length,
-                                    -90,
-                                    180 + 90,
-                                    config.getStartingAngle())
+                                    90 - 360,
+                                    360 - 90,
+                                    180 - config.getStartingAngle())
                             .setColor(new Color8Bit(Color.kAqua))
                             .setMount(Robot.getShoulder().getSim(), true),
                     mech,

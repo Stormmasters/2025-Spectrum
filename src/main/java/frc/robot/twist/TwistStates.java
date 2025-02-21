@@ -41,12 +41,12 @@ public class TwistStates {
         // algaeHandoff.whileTrue(log(handOffAlgae()));
         // coralHandoff.whileTrue(log(handOffCoral()));
 
-        coastMode.onTrue(log(coastMode()));
-        coastMode.onFalse(log(ensureBrakeMode()));
+        // coastMode.onTrue(log(coastMode()));
+        // coastMode.onFalse(log(ensureBrakeMode()));
 
         // TODO: for testing
-        // Robot.getPilot().testTune_tA.whileTrue(twist.moveToDegrees(() -> 90));
-        // Robot.getPilot().testTune_tB.whileTrue(twist.moveToDegrees(() -> 0));
+        Robot.getPilot().testTune_tA.whileTrue(twist.moveToDegrees(() -> 0));
+        Robot.getPilot().testTune_tB.whileTrue(twist.moveToDegrees(() -> -90));
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(runTwist(() -> Robot.getPilot().getTestTriggersAxis()));

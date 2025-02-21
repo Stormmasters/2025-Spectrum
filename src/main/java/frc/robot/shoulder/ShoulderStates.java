@@ -56,8 +56,8 @@ public class ShoulderStates {
         // homeAll.whileTrue(home());
 
         // TODO: for testing
-        // Robot.getPilot().testTune_tA.whileTrue(shoulder.moveToDegrees(() -> 90));
-        // Robot.getPilot().testTune_tB.whileTrue(shoulder.moveToDegrees(() -> 0));
+        Robot.getPilot().testTune_tA.whileTrue(shoulder.moveToDegrees(config::getStationIntake));
+        Robot.getPilot().testTune_tB.whileTrue(shoulder.moveToDegrees(config::getL2Coral));
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(

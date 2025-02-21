@@ -100,6 +100,7 @@ public class Twist extends Mechanism {
             super("Twist", 44, Rio.CANIVORE); // Rio.CANIVORE);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
+            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
             configMotionMagic(
                     mmCruiseVelocity,
                     mmAcceleration,
@@ -110,12 +111,13 @@ public class Twist extends Mechanism {
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configMinMaxRotations(-0.5, 0.5); // Calculated to be 22.4
+            configMinMaxRotations(-0.5, 0.5); // Calculated to be 22.4
             configReverseSoftLimit(getMinRotations(), false);
             configForwardSoftLimit(getMaxRotations(), false);
             configNeutralBrakeMode(true);
             configContinuousWrap(true);
             configGravityType(true);
-            configClockwise_Positive();
+            configClockwise_Positive(); // TODO: switch to clockwise
         }
 
         public TwistConfig modifyMotorConfig(TalonFX motor) {

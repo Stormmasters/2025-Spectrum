@@ -37,7 +37,7 @@ public class Shoulder extends Mechanism {
 
         @Getter private final double algaeLollipop = 0;
         @Getter private final double coralLollipop = -157;
-        @Getter private final double stationIntake = 172;
+        @Getter private final double stationIntake = -15;
         @Getter private final double stationExtendedIntake = 172;
         @Getter private final double clawGroundAlgaeIntake = -164;
         @Getter private final double clawGroundCoralIntake = -164;
@@ -101,7 +101,11 @@ public class Shoulder extends Mechanism {
             configReverseSoftLimit(-0.75, true);
             configForwardSoftLimit(0.25, true);
             configNeutralBrakeMode(true);
-            configClockwise_Positive();
+            if (Robot.isSimulation()) {
+                configCounterClockwise_Positive();
+            } else {
+                configClockwise_Positive();
+            }
             configGravityType(true);
             setSimRatio(102.857);
         }
@@ -268,7 +272,6 @@ public class Shoulder extends Mechanism {
     private void simulationInit() {
         if (isAttached()) {
             sim = new ShoulderSim(motor.getSimState(), RobotSim.leftView);
-
             // m_CANcoder.setPosition(0);
         }
     }
