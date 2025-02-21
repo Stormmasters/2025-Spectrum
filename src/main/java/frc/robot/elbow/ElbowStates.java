@@ -60,7 +60,7 @@ public class ElbowStates {
         // coralHandoff.whileTrue(log(handOffAlgae()));
 
         // TODO: for testing
-        Robot.getPilot().testTune_tA.whileTrue(elbow.moveToDegrees(config::getStationIntake));
+        Robot.getPilot().testTune_tA.whileTrue(elbow.moveToMotorPosition(() -> 0.35));
         Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL2Coral));
         // Robot.getPilot()
         //         .testTriggersTrigger
