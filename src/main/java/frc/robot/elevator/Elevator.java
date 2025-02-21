@@ -92,7 +92,7 @@ public class Elevator extends Mechanism {
         @Getter private double torqueCurrentLimit = 160;
 
         /* Sim properties */
-        @Getter private double kElevatorGearing = 3.62722;
+        @Getter private double kElevatorGearing = 0.69180327868;
         @Getter private double kCarriageMass = 13.6078;
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.8;

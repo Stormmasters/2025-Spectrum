@@ -51,6 +51,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     private final CachedDouble cachedRotations;
     private final CachedDouble cachedPercentage;
+    private final CachedDouble cachedDegrees;
     private final CachedDouble cachedVelocity;
     private final CachedDouble cachedCurrent;
 
@@ -73,6 +74,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         cachedCurrent = new CachedDouble(this::updateCurrent);
         cachedRotations = new CachedDouble(this::updatePositionRotations);
         cachedPercentage = new CachedDouble(this::updatePositionPercentage);
+        cachedDegrees = new CachedDouble(this::updatePositionDegrees);
         cachedVelocity = new CachedDouble(this::updateVelocityRPM);
 
         SpectrumRobot.add(this);
@@ -143,6 +145,23 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     public Trigger abovePercentage(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
                 () -> getPositionPercentage() > (target.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    public Trigger atDegrees(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(getPositionDegrees() - target.getAsDouble())
+                                < tolerance.getAsDouble());
+    }
+
+    public Trigger belowDegrees(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getPositionDegrees() < (target.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    public Trigger aboveDegrees(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () -> getPositionDegrees() > (target.getAsDouble() - tolerance.getAsDouble()));
     }
 
     public Trigger atVelocityRPM(DoubleSupplier target, DoubleSupplier tolerance) {
@@ -249,6 +268,14 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     private double updatePositionPercentage() {
         return rotationsToPercent(this::getPositionRotations);
+    }
+
+    public double getPositionDegrees() {
+        return cachedDegrees.getAsDouble();
+    }
+
+    private double updatePositionDegrees() {
+        return rotationsToDegrees(this::getPositionRotations);
     }
 
     /**

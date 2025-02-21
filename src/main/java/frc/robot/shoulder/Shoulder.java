@@ -56,7 +56,7 @@ public class Shoulder extends Mechanism {
 
         @Getter private final double tolerance = 0.95;
 
-        @Getter private final double offsetConstant = -90;
+        @Getter private final double offset = -90;
         @Getter private final double initPosition = 0;
 
         /* Shoulder config settings */
@@ -269,7 +269,7 @@ public class Shoulder extends Mechanism {
     }
 
     public DoubleSupplier offsetPosition(DoubleSupplier position) {
-        return () -> (position.getAsDouble() + config.getOffsetConstant());
+        return () -> (position.getAsDouble() + config.getOffset());
     }
 
     public Command moveToDegreesAndCheckReversed(DoubleSupplier degrees) {

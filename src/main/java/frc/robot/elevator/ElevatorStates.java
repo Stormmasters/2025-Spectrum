@@ -24,7 +24,7 @@ public class ElevatorStates {
 
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(holdPosition().withName("Elevator.default"));
-        // Rmoved run when disabled, so that the elevator doesn't jump up on enable
+        // Removed run when disabled, so that the elevator doesn't jump up on enable
     }
 
     public static void setStates() {
@@ -67,7 +67,7 @@ public class ElevatorStates {
         // // TODO: For Testing
         Robot.getPilot()
                 .testTune_tA
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getStationIntake));
+                .whileTrue(elevator.setElevatorMMPositionFOC((config::getStationIntake)));
         Robot.getPilot()
                 .testTune_tB
                 .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
