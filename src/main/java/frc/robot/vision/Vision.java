@@ -1,5 +1,6 @@
 package frc.robot.vision;
 
+import java.util.ArrayList;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -633,15 +634,35 @@ public class Vision extends SubsystemBase {
     //     return angleBetweenRobotAndSpeaker;
     // }
 
-    public double getThetaToReefFace () {
+    public double getThetaToReefFace() {
         Translation2d reefFace;
         //runs closestReefFace to get the closest reef face id
         private double closestReefFace = closestReefFace();
         
     }
 
-    public double closestReefFace () {
-
+    public int closestReefFace() {
+        if (getDistanceToReefFromRobot() > -1) {
+            RawFiducial[] tags = leftLL.getRawFiducial();
+            if (Field.isRed()) {
+                int closestReef = tags[0].id;
+                for (RawFiducial tag : tags) {
+                    if (tag.distToRobot < tags[closestReef].distToRobot) {
+                        closestReef = tag.id;
+                    }
+                }
+                return closestReef;
+            }
+            else {
+                int closestReef = tags[0].id;
+                for (RawFiducial tag : tags) {
+                    if (tag.distToRobot < tags[closestReef].distToRobot) {
+                        closestReef = tag.id;
+                    }
+                }
+                return closestReef;
+            }
+        }
     }
 
     public Translation2d getAdjustedReefPos() {
@@ -678,21 +699,26 @@ public class Vision extends SubsystemBase {
 
 
     // // Returns distance to the center of the speaker tag from the robot or -1 if not found
-    // public double getDistanceToCenterSpeakerTagFromRobot() {
-    //     RawFiducial[] tags = frontLL.getRawFiducial();
-    //     int speakerTagID = 7; // Blue Speaker Tag
-    //     if (Field.isRed()) {
-    //         speakerTagID = 4; // Red Speaker Tag
-    //     }
+    public double getDistanceToReefFromRobot() {
+        RawFiducial[] tags = leftLL.getRawFiducial();
+        
+        ArrayList<Integer> ValidReefFaceIDsRed;
+        for (int i = 0; i < 6; i++) {
+            ValidReefFaceIDsRed.add(i+6);
+        } 
+        for (RawFiducial tag : tags) {
+            if (ValidReefFaceIDs(tag.id)) {
+                return tag.distToRobot;
+            }
+        }
+        else {
+            reefFaceID = 17;
+        }
 
-    //     for (RawFiducial tag : tags) {
-    //         if (tag.id == speakerTagID) {
-    //             return tag.distToRobot;
-    //         }
-    //     }
+        
 
-    //     return -1;
-    // }
+        return -1;
+    }
 
     /**
      * Gets a field-relative position for the shot to the speaker the robot should take, adjusted
