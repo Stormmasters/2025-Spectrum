@@ -100,8 +100,7 @@ public class ShoulderStates {
     }
 
     public static Command l1Coral() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getL1Coral)
-                .withName("Twist.L1Coral");
+        return shoulder.moveToDegreesAndCheckReversed(config::getL1Coral).withName("Twist.L1Coral");
     }
 
     public static Command l2Coral() {
@@ -120,8 +119,7 @@ public class ShoulderStates {
     }
 
     public static Command barge() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getBarge)
-                .withName("Shoulder.barge");
+        return shoulder.moveToDegreesAndCheckReversed(config::getBarge).withName("Shoulder.barge");
     }
 
     public static Command floorIntake() {

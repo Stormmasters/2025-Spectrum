@@ -272,7 +272,13 @@ public class Elbow extends Mechanism {
 
     @Override
     public Command moveToDegrees(DoubleSupplier degrees) {
-        return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
+        double newDeg = degrees.getAsDouble();
+        if (newDeg < 0) {
+            newDeg += 360;
+        }
+        final double Deg = newDeg;
+        return super.moveToDegrees(offsetPosition(() -> Deg))
+                .withName(getName() + ".runPoseDegrees");
     }
 
     public Command moveToMotorPosition(DoubleSupplier position) {

@@ -102,7 +102,7 @@ public class InClimb extends Mechanism {
     public InClimb(InClimbConfig config) {
         super(config);
         this.config = config;
-        
+
         setIntialPosition();
 
         simulationInit();

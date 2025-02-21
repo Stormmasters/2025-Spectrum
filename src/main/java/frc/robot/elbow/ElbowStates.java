@@ -61,6 +61,7 @@ public class ElbowStates {
 
         // TODO: for testing
         Robot.getPilot().testTune_tA.whileTrue(elbow.moveToMotorPosition(() -> 0.18));
+        //Robot.getPilot().testTune_tA.whileTrue(elbow.moveToDegrees(config::getStationIntake));
         Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL2Coral));
         Robot.getPilot().testTune_tX.whileTrue(elbow.moveToDegrees(config::getHome));
         Robot.getPilot().reZero_start.onTrue(elbow.resetToIntialPos());
@@ -75,20 +76,17 @@ public class ElbowStates {
 
     public static Command score2() {
         double newPos = 15 + config.getL2Coral();
-        return elbow.moveToDegreesAndCheckReversed(() -> newPos)
-                .withName("Elbow.score2");
+        return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score2");
     }
 
     public static Command score3() {
         double newPos = 15 + config.getL3Coral();
-        return elbow.moveToDegreesAndCheckReversed(() -> newPos)
-                .withName("Elbow.score3");
+        return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score3");
     }
 
     public static Command score4() {
         double newPos = 20 + config.getL4Coral();
-        return elbow.moveToDegreesAndCheckReversed(() -> newPos)
-                .withName("Elbow.score4");
+        return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score4");
     }
 
     public static Command runElbow(DoubleSupplier speed) {
@@ -105,38 +103,31 @@ public class ElbowStates {
 
     /* Scoring positions */
     public static Command l2Algae() {
-        return elbow.moveToDegreesAndCheckReversed(config::getL2Algae)
-                .withName("Elbow.l2Algae");
+        return elbow.moveToDegreesAndCheckReversed(config::getL2Algae).withName("Elbow.l2Algae");
     }
 
     public static Command l3Algae() {
-        return elbow.moveToDegreesAndCheckReversed(config::getL3Algae)
-                .withName("Elbow.l3Algae");
+        return elbow.moveToDegreesAndCheckReversed(config::getL3Algae).withName("Elbow.l3Algae");
     }
 
     public static Command barge() {
-        return elbow.moveToDegreesAndCheckReversed(config::getBarge)
-                .withName("Elbow.barge");
+        return elbow.moveToDegreesAndCheckReversed(config::getBarge).withName("Elbow.barge");
     }
 
     public static Command l1Coral() {
-        return elbow.moveToDegreesAndCheckReversed(config::getL1Coral)
-                .withName("Twist.L1Coral");
+        return elbow.moveToDegreesAndCheckReversed(config::getL1Coral).withName("Twist.L1Coral");
     }
 
     public static Command l2Coral() {
-        return elbow.moveToDegreesAndCheckReversed(config::getL2Coral)
-                .withName("Elbow.l2Coral");
+        return elbow.moveToDegreesAndCheckReversed(config::getL2Coral).withName("Elbow.l2Coral");
     }
 
     public static Command l3Coral() {
-        return elbow.moveToDegreesAndCheckReversed(config::getL3Coral)
-                .withName("Elbow.l3Coral");
+        return elbow.moveToDegreesAndCheckReversed(config::getL3Coral).withName("Elbow.l3Coral");
     }
 
     public static Command l4Coral() {
-        return elbow.moveToDegreesAndCheckReversed(config::getL4Coral)
-                .withName("Elbow.l4Coral");
+        return elbow.moveToDegreesAndCheckReversed(config::getL4Coral).withName("Elbow.l4Coral");
     }
 
     // missing auton Elbow commands, add when auton is added
