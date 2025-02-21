@@ -699,25 +699,25 @@ public class Vision extends SubsystemBase {
 
 
     // // Returns distance to the center of the speaker tag from the robot or -1 if not found
-    public double getDistanceToReefFromRobot() {
+    public ArrayList<Double> getDistanceToReefFromRobot() {
         RawFiducial[] tags = leftLL.getRawFiducial();
         
-        ArrayList<Integer> ValidReefFaceIDsRed;
-        for (int i = 0; i < 6; i++) {
-            ValidReefFaceIDsRed.add(i+6);
-        } 
+        ArrayList<Integer> ValidReefFaceIDsRed = new ArrayList<Integer>();
+        for (int i = 6; i < 12; i++) {
+            ValidReefFaceIDsRed.add(i);
+        }
+        ArrayList<Integer> ValidReefFaceIDsBlue = new ArrayList<Integer>();
+        for (int i = 16; i < 23; i++) {
+            ValidReefFaceIDsBlue.add(i);
+        }
+
+        ArrayList<Double> seenReefFaces = new ArrayList<Double>();
         for (RawFiducial tag : tags) {
-            if (ValidReefFaceIDs(tag.id)) {
-                return tag.distToRobot;
+            if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
+                seenReefFaces.add(tag.distToCamera);
             }
         }
-        else {
-            reefFaceID = 17;
-        }
-
-        
-
-        return -1;
+        return seenReefFaces;
     }
 
     /**
