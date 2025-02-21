@@ -71,6 +71,7 @@ public class ElevatorStates {
         Robot.getPilot()
                 .testTune_tB
                 .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
+        Robot.getPilot().testTune_tX.whileTrue(elevator.setElevatorMMPositionFOC(config::getHome));
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(runElevator(() -> Robot.getPilot().getTestTriggersAxis()));
