@@ -39,7 +39,7 @@ public class CoralIntakeStates {
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        Robot.getPilot().testTune_tA.onTrue(coralIntake.coralIntake());
+        Robot.getPilot().testTune_tA.whileTrue(coralIntake.coralIntake());
         // Robot.getPilot().tuneShoulder_tB.whileTrue(coralIntake.coralScore());
     }
 

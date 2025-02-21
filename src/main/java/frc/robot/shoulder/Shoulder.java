@@ -135,15 +135,7 @@ public class Shoulder extends Mechanism {
                             .setGearRatio(config.getCANcoderGearRatio())
                             .setOffset(config.getCANcoderOffset())
                             .setAttached(false);
-
-            if (canCoder.isAttached()) {
-                motor.setPosition(
-                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                                * config.getGearRatio());
-            } else {
-                motor.setPosition(
-                        degreesToRotations(offsetPosition(() -> config.getInitPosition())));
-            }
+            setIntialPosition();
         }
 
         simulationInit();
@@ -180,6 +172,20 @@ public class Shoulder extends Mechanism {
             builder.addDoubleProperty(
                     "#Tune Position Percent", config::getTuneShoulder, config::setTuneShoulder);
         }
+    }
+
+    private void setIntialPosition() {
+        if (canCoder.isAttached()) {
+            motor.setPosition(
+                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                            * config.getGearRatio());
+        } else {
+            motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+        }
+    }
+
+    public Command resetToIntialPos() {
+        return run(() -> setIntialPosition());
     }
 
     // --------------------------------------------------------------------------------
