@@ -132,10 +132,7 @@ public class Elevator extends Mechanism {
         super(config);
         this.config = config;
 
-        if (isAttached()) {
-            motor.setPosition(config.getInitPosition());
-            followerMotors[0].setPosition(config.getInitPosition());
-        }
+        setIntialPosition();
 
         simulationInit();
         telemetryInit();
@@ -166,6 +163,17 @@ public class Elevator extends Mechanism {
             builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
             builder.addDoubleProperty("#FullExtend", config::getFullExtend, config::setFullExtend);
         }
+    }
+
+    private void setIntialPosition() {
+        if (isAttached()) {
+            motor.setPosition(config.getInitPosition());
+            followerMotors[0].setPosition(config.getInitPosition());
+        }
+    }
+
+    public Command resetToIntialPos() {
+        return run(() -> setIntialPosition());
     }
 
     // --------------------------------------------------------------------------------

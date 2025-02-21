@@ -139,14 +139,7 @@ public class Elbow extends Mechanism {
                             .setOffset(config.getCANcoderOffset())
                             .setAttached(false);
 
-            if (canCoder.isAttached()) {
-                motor.setPosition(
-                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                                * config.getGearRatio());
-            } else {
-                motor.setPosition(
-                        degreesToRotations(offsetPosition(() -> config.getInitPosition())));
-            }
+            setIntialPosition();
         }
 
         simulationInit();
@@ -183,6 +176,20 @@ public class Elbow extends Mechanism {
             builder.addDoubleProperty(
                     "#Tune Position Percent", config::getTuneElbow, config::setTuneElbow);
         }
+    }
+
+    private void setIntialPosition() {
+        if (canCoder.isAttached()) {
+            motor.setPosition(
+                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                            * config.getGearRatio());
+        } else {
+            motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+        }
+    }
+
+    public Command resetToIntialPos() {
+        return run(() -> setIntialPosition());
     }
 
     // --------------------------------------------------------------------------------
@@ -274,6 +281,10 @@ public class Elbow extends Mechanism {
 
     public DoubleSupplier offsetPosition(DoubleSupplier position) {
         return () -> (position.getAsDouble() + config.getOffsetConstant());
+    }
+
+    public Command moveToDegreesAndCheckReversed(DoubleSupplier degrees) {
+        return moveToDegrees(() -> checkReversed(degrees));
     }
 
     // --------------------------------------------------------------------------------

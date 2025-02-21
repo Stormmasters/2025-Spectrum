@@ -145,13 +145,7 @@ public class Twist extends Mechanism {
                             .setOffset(config.getCANcoderOffset())
                             .setAttached(false);
 
-            if (canCoder.isAttached()) {
-                motor.setPosition(
-                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                                * config.getGearRatio());
-            } else {
-                motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
-            }
+            setIntialPosition();
         }
 
         simulationInit();
@@ -188,6 +182,20 @@ public class Twist extends Mechanism {
             builder.addDoubleProperty(
                     "#Tune Position Percent", config::getTuneTwist, config::setTuneTwist);
         }
+    }
+
+    private void setIntialPosition() {
+        if (canCoder.isAttached()) {
+            motor.setPosition(
+                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                            * config.getGearRatio());
+        } else {
+            motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
+        }
+    }
+
+    public Command resetToIntialPos() {
+        return run(() -> setIntialPosition());
     }
 
     // --------------------------------------------------------------------------------

@@ -272,6 +272,10 @@ public class Shoulder extends Mechanism {
         return () -> (position.getAsDouble() + config.getOffsetConstant());
     }
 
+    public Command moveToDegreesAndCheckReversed(DoubleSupplier degrees) {
+        return moveToDegrees(() -> checkReversed(degrees));
+    }
+
     // --------------------------------------------------------------------------------
     // Simulation
     // --------------------------------------------------------------------------------

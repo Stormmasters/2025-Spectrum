@@ -59,6 +59,7 @@ public class ShoulderStates {
         Robot.getPilot().testTune_tA.whileTrue(shoulder.moveToDegrees(config::getStationIntake));
         Robot.getPilot().testTune_tB.whileTrue(shoulder.moveToDegrees(config::getL2Coral));
         Robot.getPilot().testTune_tX.whileTrue(shoulder.moveToDegrees(config::getHome));
+        Robot.getPilot().reZero_start.onTrue(shoulder.resetToIntialPos());
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(
@@ -89,37 +90,37 @@ public class ShoulderStates {
     /* Scoring positions */
 
     public static Command l2Algae() {
-        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL2Algae))
+        return shoulder.moveToDegreesAndCheckReversed(config::getL2Algae)
                 .withName("Shoulder.l2Algae");
     }
 
     public static Command l3Algae() {
-        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL3Algae))
+        return shoulder.moveToDegreesAndCheckReversed(config::getL3Algae)
                 .withName("Shoulder.l3Algae");
     }
 
     public static Command l1Coral() {
-        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL1Coral))
+        return shoulder.moveToDegreesAndCheckReversed(config::getL1Coral)
                 .withName("Twist.L1Coral");
     }
 
     public static Command l2Coral() {
-        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL2Coral))
+        return shoulder.moveToDegreesAndCheckReversed(config::getL2Coral)
                 .withName("Shoulder.l2Coral");
     }
 
     public static Command l3Coral() {
-        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL3Coral))
+        return shoulder.moveToDegreesAndCheckReversed(config::getL3Coral)
                 .withName("Shoulder.l3Coral");
     }
 
     public static Command l4Coral() {
-        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getL4Coral))
+        return shoulder.moveToDegreesAndCheckReversed(config::getL4Coral)
                 .withName("Shoulder.l4Coral");
     }
 
     public static Command barge() {
-        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getBarge))
+        return shoulder.moveToDegreesAndCheckReversed(config::getBarge)
                 .withName("Shoulder.barge");
     }
 
@@ -129,13 +130,12 @@ public class ShoulderStates {
     }
 
     public static Command stationIntake() {
-        return shoulder.moveToDegrees(() -> shoulder.checkReversed(config::getStationIntake))
+        return shoulder.moveToDegreesAndCheckReversed(config::getStationIntake)
                 .withName("Shoulder.coralIntake");
     }
 
     public static Command stationExtendedIntake() {
-        return shoulder.moveToDegrees(
-                        () -> shoulder.checkReversed(config::getStationExtendedIntake))
+        return shoulder.moveToDegreesAndCheckReversed(config::getStationExtendedIntake)
                 .withName("Shoulder.coralExtendedIntake");
     }
 

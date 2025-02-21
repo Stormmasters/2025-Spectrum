@@ -48,6 +48,7 @@ public class Pilot extends Gamepad {
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);
     public final Trigger coastOff_dA = disabled.and(A);
+    public final Trigger reZero_start = disabled.and(leftBumper, rightBumper, start);
 
     // TEST TRIGGERS
     public final Trigger testTune_tB = testMode.and(B);

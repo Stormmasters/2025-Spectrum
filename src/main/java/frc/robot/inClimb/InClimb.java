@@ -102,10 +102,9 @@ public class InClimb extends Mechanism {
     public InClimb(InClimbConfig config) {
         super(config);
         this.config = config;
-        if (config.isAttached()) {
-            motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything
-            followerMotors[0].setPosition(0.25);
-        }
+        
+        setIntialPosition();
+
         simulationInit();
         telemetryInit();
         Telemetry.print(getName() + " Subsystem Initialized");
@@ -140,6 +139,17 @@ public class InClimb extends Mechanism {
             builder.addDoubleProperty(
                     "#Tune Position Percent", config::getTuneInClimb, config::setTuneInClimb);
         }
+    }
+
+    private void setIntialPosition() {
+        if (config.isAttached()) {
+            motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything
+            followerMotors[0].setPosition(0.25);
+        }
+    }
+
+    public Command resetToIntialPos() {
+        return run(() -> setIntialPosition());
     }
 
     // --------------------------------------------------------------------------------

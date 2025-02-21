@@ -35,6 +35,7 @@ public class InClimbStates {
         homeInClimb.whileTrue(log(zero()));
 
         // TODO: for testing
+        Robot.getPilot().reZero_start.onTrue(inClimb.resetToIntialPos());
         // Robot.getPilot().tuneShoulder_tA.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0.25));
         // Robot.getPilot().tuneShoulder_tB.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0));
         // Robot.getPilot()
