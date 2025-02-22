@@ -45,7 +45,7 @@ public class InClimb extends Mechanism {
         @Getter private final double torqueCurrentLimit = 120;
         @Getter private final double positionKp = 190;
         @Getter private final double positionKd = 40;
-        @Getter private final double psotionKv = 0;
+        @Getter private final double positionKv = 0;
         @Getter private final double positionKs = 0.3;
         @Getter private final double positionKa = 0.001;
         @Getter private final double positionKg = 2.9;
@@ -69,7 +69,7 @@ public class InClimb extends Mechanism {
         public InClimbConfig() {
             super("InClimbTop", 55, Rio.CANIVORE);
             configPIDGains(0, positionKp, 0, positionKd);
-            configFeedForwardGains(positionKs, psotionKv, positionKa, positionKg);
+            configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
             configGearRatio(99.5555555555);
             configSupplyCurrentLimit(currentLimit, true);
