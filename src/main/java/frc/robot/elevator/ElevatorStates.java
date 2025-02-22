@@ -20,7 +20,7 @@ public class ElevatorStates {
     public static final Trigger isUp =
             elevator.atPercentage(config::getElevatorIsUpHeight, config::getTriggerTolerance);
     public static final Trigger isHigh =
-            elevator.atPercentage(config::getElevatorIsHighHeight, config::getTriggerTolerance);    
+            elevator.atPercentage(config::getElevatorIsHighHeight, config::getTriggerTolerance);
     public static final Trigger isHome =
             elevator.atPercentage(config::getHome, config::getTriggerTolerance);
 
@@ -72,11 +72,11 @@ public class ElevatorStates {
                 .whileTrue(elevator.setElevatorMMPositionFOC((config::getStationIntake)));
         Robot.getPilot()
                 .testTune_tB
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Algae));
         Robot.getPilot().testTune_tX.whileTrue(elevator.setElevatorMMPositionFOC(config::getHome));
-        Robot.getPilot()
-                .testTune_tY
-                .whileTrue(elevator.setElevatorMMPositionFOC(() -> (config.getL2Coral() - 3)));
+        // Robot.getPilot()
+        //         .testTune_tY
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
         Robot.getPilot().reZero_start.onTrue(elevator.resetToIntialPos());
         // Robot.getPilot()
         //         .testTriggersTrigger
@@ -117,8 +117,7 @@ public class ElevatorStates {
     }
 
     private static Command score() {
-        double originalPosition = ElevatorStates.getPosition().getAsDouble() - 5;
-        return elevator.moveToPercentage(() -> originalPosition).withName("Elevator.score");
+        return elevator.moveToRelativePosition(() -> -2).withName("Elbow.score");
     }
 
     private static Command home() {

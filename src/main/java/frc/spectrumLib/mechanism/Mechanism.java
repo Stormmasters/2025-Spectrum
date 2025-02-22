@@ -243,7 +243,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
      * @return degrees
      */
     public double rotationsToDegrees(DoubleSupplier rotations) {
-        return 360 * (rotations.getAsDouble() / config.getGearRatio());
+        return 360 * rotations.getAsDouble();
     }
 
     public double getPositionRotations() {

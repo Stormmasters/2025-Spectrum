@@ -63,10 +63,15 @@ public class ElbowStates {
         // coralHandoff.whileTrue(log(handOffAlgae()));
 
         // TODO: for testing
-        Robot.getPilot().testTune_tA.whileTrue(elbow.moveToDegrees(config::getStationIntake)); //(elbow.moveToMotorPosition(() -> 0.18));
-        Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL2Coral));
+        Robot.getPilot()
+                .testTune_tA
+                .whileTrue(
+                        elbow.moveToDegrees(
+                                config::getStationIntake)); // (elbow.moveToMotorPosition(() ->
+        // 0.18));
+        Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL3Algae));
         Robot.getPilot().testTune_tX.whileTrue(elbow.moveToDegrees(config::getHome));
-        Robot.getPilot().testTune_tY.whileTrue(score2());
+        // Robot.getPilot().testTune_tY.whileTrue(score4());
         Robot.getPilot().reZero_start.onTrue(elbow.resetToInitialPos());
         // Robot.getPilot()
         //         .testTriggersTrigger
@@ -77,19 +82,23 @@ public class ElbowStates {
         return () -> elbow.getPositionPercentage();
     }
 
+    public static Command score() {
+        return elbow.moveToRelativePosition(() -> -15).withName("Elbow.score");
+    }
+
     public static Command score2() {
-        //double newPos = config.getL2Coral() - 15;
-        //return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score2");
+        // double newPos = config.getL2Coral() - 15;
+        // return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score2");
         return elbow.moveToRelativePosition(() -> -15).withName("Elbow.score2");
     }
 
     public static Command score3() {
-        double newPos = 15 + config.getL3Coral();
+        double newPos = -15 + config.getL3Coral();
         return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score3");
     }
 
     public static Command score4() {
-        double newPos = 20 + config.getL4Coral();
+        double newPos = -20 + config.getL4Coral();
         return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score4");
     }
 

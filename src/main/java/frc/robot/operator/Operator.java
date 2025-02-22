@@ -42,6 +42,8 @@ public class Operator extends Gamepad {
     public final Trigger coastOff_dA = disabled.and(A);
 
     // TEST TRIGGERS
+    public final Trigger testOperatorCoralStage = leftBumper.and(testMode);
+    public final Trigger test_tA = A.and(testOperatorCoralStage);
 
     public static class OperatorConfig extends Config {
 

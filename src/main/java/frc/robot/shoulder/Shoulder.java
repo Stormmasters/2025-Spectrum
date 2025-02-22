@@ -43,13 +43,13 @@ public class Shoulder extends Mechanism {
         @Getter private final double clawGroundCoralIntake = -164; // TODO: find this value
         @Getter private final double handOff = 180;
 
-        @Getter private final double l2Algae = 10; // TODO: find this value
-        @Getter private final double l3Algae = 10; // TODO: find this value
+        @Getter private final double l2Algae = 43.07; // TODO: find this value
+        @Getter private final double l3Algae = 43.07; // TODO: find this value
 
-        @Getter private final double l1Coral = 2; // TODO: find this value
+        @Getter private final double l1Coral = 14; // TODO: find this value
         @Getter private final double l2Coral = 34;
         @Getter private final double l3Coral = 34;
-        @Getter private final double l4Coral = 135; // TODO: find this value
+        @Getter private final double l4Coral = 180;
 
         @Getter private final double barge = -94.4;
         @Getter @Setter private double tuneShoulder = 0;

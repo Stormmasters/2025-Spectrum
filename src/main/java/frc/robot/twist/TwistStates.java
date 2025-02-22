@@ -46,7 +46,7 @@ public class TwistStates {
 
         // TODO: for testing
         Robot.getPilot().testTune_tA.whileTrue(twist.moveToDegrees(() -> 179));
-        Robot.getPilot().testTune_tB.whileTrue(twist.moveToDegrees(() -> 90));
+        Robot.getPilot().testTune_tB.whileTrue(twist.moveToDegrees(config::getL2Algae));
         Robot.getPilot().testTune_tX.whileTrue(twist.moveToDegrees(() -> 0));
         Robot.getPilot().reZero_start.onTrue(twist.resetToIntialPos());
         // Robot.getPilot()

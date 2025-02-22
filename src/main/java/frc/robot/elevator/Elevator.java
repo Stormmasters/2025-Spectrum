@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
@@ -20,7 +21,7 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxRotations = 18; // TODO: Reset to 21.1;
+        @Getter private double maxRotations = 20.5; // TODO: Reset to 21.1;
 
         @Getter
         private double minRotations = 0.3; // This is to prevent it from driving to zero too hard
@@ -54,22 +55,18 @@ public class Elevator extends Mechanism {
         @Getter
         private final double handOff = 5.5; // TODO: update, as max changed from 110.6304660319
 
-        @Getter
-        private final double l2Algae = 5.5; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double l2Algae = 0; // TODO: find real value
 
         @Getter
-        private final double l3Algae = 16.5; // TODO: update, as max changed from 110.6304660319
+        private final double l3Algae = 12.5; // TODO: update, as max changed from 110.6304660319
 
         @Getter private final double l1 = 0;
 
-        @Getter
-        private final double l2Coral = 7.15; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double l2Coral = 7.15;
 
-        @Getter
-        private final double l3Coral = 15.25; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double l3Coral = 14.54;
 
-        @Getter private final double l4 = 19.25; // TODO: update, as max changed from 110.6304660319
-
+        @Getter private final double l4 = 18.86;
         @Getter private final double barge = 20;
 
         @Getter private double triggerTolerance = 0.95;
@@ -259,6 +256,11 @@ public class Elevator extends Mechanism {
     // TODO: remove after testing
     public Command setElevatorMMPositionFOC(DoubleSupplier rotations) {
         return run(() -> setMMPositionFoc(rotations)).withName("Elevator Set MM Position");
+    }
+
+    public Command moveToRelativePosition(DoubleSupplier position) {
+        return new InstantCommand(
+                () -> setMMPositionFoc(() -> getPositionRotations() + position.getAsDouble()));
     }
 
     // --------------------------------------------------------------------------------
