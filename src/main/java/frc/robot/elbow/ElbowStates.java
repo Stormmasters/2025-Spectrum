@@ -15,6 +15,7 @@ public class ElbowStates {
     private static ElbowConfig config = Robot.getConfig().elbow;
 
     public static final Trigger isHome = elbow.atPercentage(config::getHome, config::getTolerance);
+    public static final Trigger pastElevator = elbow.aboveDegrees(elbow.offsetPosition(() -> -160 + 360), config::getTolerance).and(elbow.belowDegrees(() -> 160, config::getTolerance));
 
     public static void setupDefaultCommand() {
         elbow.setDefaultCommand(log(elbow.runHoldElbow().withName("Elbow.default")));

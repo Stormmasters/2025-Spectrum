@@ -58,7 +58,7 @@ public class Elbow extends Mechanism {
 
         @Getter private final double tolerance = 0.95;
 
-        @Getter private final double offsetConstant = -90;
+        @Getter private final double offset = -90;
         @Getter private final double initPosition = 180;
 
         /* Elbow config settings */
@@ -139,7 +139,7 @@ public class Elbow extends Mechanism {
                             .setOffset(config.getCANcoderOffset())
                             .setAttached(false);
 
-            setIntialPosition();
+            setInitialPosition();
         }
 
         simulationInit();
@@ -165,11 +165,7 @@ public class Elbow extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
-            builder.addDoubleProperty(
-                    "Position Percent",
-                    () -> (getPositionRotations() / config.getMaxRotations()) * 100,
-                    null);
+            builder.addDoubleProperty("Position Degrees", () -> (this.getPositionDegrees()-config.offset), null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
@@ -178,7 +174,7 @@ public class Elbow extends Mechanism {
         }
     }
 
-    private void setIntialPosition() {
+    private void setInitialPosition() {
         if (canCoder.isAttached()) {
             motor.setPosition(
                     canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
@@ -188,8 +184,8 @@ public class Elbow extends Mechanism {
         }
     }
 
-    public Command resetToIntialPos() {
-        return run(() -> setIntialPosition());
+    public Command resetToInitialPos() {
+        return run(() -> setInitialPosition());
     }
 
     // --------------------------------------------------------------------------------
@@ -286,7 +282,7 @@ public class Elbow extends Mechanism {
     }
 
     public DoubleSupplier offsetPosition(DoubleSupplier position) {
-        return () -> (position.getAsDouble() + config.getOffsetConstant());
+        return () -> (position.getAsDouble() + config.getOffset());
     }
 
     public Command moveToDegreesAndCheckReversed(DoubleSupplier degrees) {
