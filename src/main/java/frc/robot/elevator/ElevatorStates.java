@@ -19,6 +19,8 @@ public class ElevatorStates {
     /* Check Elevator States */
     public static final Trigger isUp =
             elevator.atPercentage(config::getElevatorIsUpHeight, config::getTriggerTolerance);
+    public static final Trigger isHigh =
+            elevator.atPercentage(config::getElevatorIsHighHeight, config::getTriggerTolerance);    
     public static final Trigger isHome =
             elevator.atPercentage(config::getHome, config::getTriggerTolerance);
 

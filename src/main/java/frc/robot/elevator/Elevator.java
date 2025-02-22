@@ -74,6 +74,7 @@ public class Elevator extends Mechanism {
 
         @Getter private double triggerTolerance = 0.95;
         @Getter private double elevatorIsUpHeight = 5;
+        @Getter private double elevatorIsHighHeight = 10;
         @Getter private double initPosition = 0;
         @Getter private double holdMaxSpeedRPM = 100;
 
