@@ -32,10 +32,10 @@ public class Pilot extends Gamepad {
     public final Trigger actionReady = rightBumper.and(teleop);
 
     // Drive Triggers
-    public final Trigger upReorient = upDpad.and(fn, teleop);
-    public final Trigger leftReorient = leftDpad.and(fn, teleop);
-    public final Trigger downReorient = downDpad.and(fn, teleop);
-    public final Trigger rightReorient = rightDpad.and(fn, teleop);
+    public final Trigger upReorient = upDpad.and(fn, teleop.or(testMode));
+    public final Trigger leftReorient = leftDpad.and(fn, teleop.or(testMode));
+    public final Trigger downReorient = downDpad.and(fn, teleop.or(testMode));
+    public final Trigger rightReorient = rightDpad.and(fn, teleop.or(testMode));
 
     /* Use the right stick to set a cardinal direction to aim at */
     public final Trigger driving;
@@ -55,6 +55,8 @@ public class Pilot extends Gamepad {
     public final Trigger testTune_tA = testMode.and(A);
     public final Trigger testTune_tX = testMode.and(X);
     public final Trigger testTune_tY = testMode.and(Y);
+    public final Trigger testTune_RB = testMode.and(rightBumper);
+    public final Trigger testTune_LB = testMode.and(leftBumper);
     public final Trigger testTriggersTrigger = testMode.and(leftTrigger.or(rightTrigger));
 
     public static class PilotConfig extends Config {
@@ -141,7 +143,7 @@ public class Pilot extends Gamepad {
     // Positive is counter-clockwise, left Trigger is positive
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveCCWPositive() {
-        double ccwPositive = rightStickCurve.calculate(getRightX());
+        double ccwPositive = -1 * rightStickCurve.calculate(getRightX());
         if (isSlowMode) {
             ccwPositive *= Math.abs(config.getSlowModeScalor());
         } else if (isTurboMode) {

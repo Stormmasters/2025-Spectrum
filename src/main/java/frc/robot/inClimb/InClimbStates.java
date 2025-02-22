@@ -13,11 +13,10 @@ public class InClimbStates {
     private static InClimbConfig config = Robot.getConfig().inClimb;
 
     public static void setupDefaultCommand() {
+        inClimb.setDefaultCommand(log(inClimb.runHoldInClimb().withName("InClimb.default")));
         // inClimb.setDefaultCommand(
-        //         log(inClimb.runHoldInClimb().ignoringDisable(true).withName("InClimb.default")));
-        inClimb.setDefaultCommand(
-                // inClimb.runPercentage(() -> Robot.getPilot().getInClimbManualAxis()));
-                inClimb.runStop());
+        // inClimb.runPercentage(() -> Robot.getPilot().getTestTriggersAxis()));
+        // inClimb.runStop());
     }
 
     public static void setStates() {
@@ -35,12 +34,14 @@ public class InClimbStates {
         homeInClimb.whileTrue(log(zero()));
 
         // TODO: for testing
-        Robot.getPilot().reZero_start.onTrue(inClimb.resetToIntialPos());
+        // Robot.getPilot().reZero_start.onTrue(inClimb.resetToIntialPos());
+        // Robot.getPilot().testTune_RB.whileTrue(inClimb.closeLatch());
+        // Robot.getPilot().testTune_LB.whileTrue(inClimb.openLatch());
         // Robot.getPilot().tuneShoulder_tA.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0.25));
-        // Robot.getPilot().tuneShoulder_tB.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0));
+        // Robot.getPilot().testTune_tB.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0));
         // Robot.getPilot()
         //         .testTriggersTrigger
-        //         .whileTrue(runInClimb(() -> Robot.getPilot().getInClimbManualAxis()));
+        //         .whileTrue(runInClimb(() -> Robot.getPilot().getTestTriggersAxis()));
     }
 
     public static Command runInClimb(DoubleSupplier speed) {

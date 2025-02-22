@@ -60,10 +60,11 @@ public class ElbowStates {
         // coralHandoff.whileTrue(log(handOffAlgae()));
 
         // TODO: for testing
-        Robot.getPilot().testTune_tA.whileTrue(elbow.moveToMotorPosition(() -> 0.18));
-        //Robot.getPilot().testTune_tA.whileTrue(elbow.moveToDegrees(config::getStationIntake));
+        Robot.getPilot().testTune_tA.whileTrue(elbow.moveToMotorPosition(() -> 0.179));
+        // Robot.getPilot().testTune_tA.whileTrue(elbow.moveToDegrees(config::getStationIntake));
         Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL2Coral));
         Robot.getPilot().testTune_tX.whileTrue(elbow.moveToDegrees(config::getHome));
+        Robot.getPilot().testTune_tY.whileTrue(score2());
         Robot.getPilot().reZero_start.onTrue(elbow.resetToIntialPos());
         // Robot.getPilot()
         //         .testTriggersTrigger
@@ -75,7 +76,7 @@ public class ElbowStates {
     }
 
     public static Command score2() {
-        double newPos = 15 + config.getL2Coral();
+        double newPos = config.getL2Coral() - 15;
         return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score2");
     }
 

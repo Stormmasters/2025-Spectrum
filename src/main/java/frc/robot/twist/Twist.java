@@ -111,8 +111,8 @@ public class Twist extends Mechanism {
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configMinMaxRotations(0, 0.499); // Calculated to be 22.4
-            configReverseSoftLimit(getMinRotations(), false);
-            configForwardSoftLimit(getMaxRotations(), false);
+            configReverseSoftLimit(getMinRotations(), true);
+            configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
             configContinuousWrap(true);
             configGravityType(true);

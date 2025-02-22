@@ -5,14 +5,15 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
+import frc.spectrumLib.SpectrumServo;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
@@ -36,7 +37,7 @@ public class InClimb extends Mechanism {
         @Getter private final double coralFloorIntake = -10;
         @Getter private final double processorScore = 60;
         @Getter private final double latchOpen = 0;
-        @Getter private final double latchClosed = 1;        
+        @Getter private final double latchClosed = 1;
 
         @Getter private final double offsetConstant = -90;
 
@@ -81,7 +82,8 @@ public class InClimb extends Mechanism {
             configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
             configMinMaxRotations(getMinRotations(), getMaxRotations());
             configReverseSoftLimit(getMinRotations(), true);
-            configForwardSoftLimit(getMaxRotations(), true);
+            configForwardSoftLimit(
+                    getMaxRotations(), true); // TODO: increase soft limit (used .35 in testing)
             configNeutralBrakeMode(true);
             configCounterClockwise_Positive();
             configGravityType(true);
@@ -100,7 +102,7 @@ public class InClimb extends Mechanism {
     }
 
     private InClimbConfig config;
-    private Servo latchServo = new Servo(9); // TODO: set to correct channel
+    private SpectrumServo latchServo = new SpectrumServo(9);
     @Getter private InClimbSim sim;
 
     public InClimb(InClimbConfig config) {
@@ -108,7 +110,7 @@ public class InClimb extends Mechanism {
         this.config = config;
 
         setIntialPosition();
-        openLatch();
+        setLatchOpen();
 
         simulationInit();
         telemetryInit();
@@ -153,13 +155,21 @@ public class InClimb extends Mechanism {
         }
     }
 
-    public Command resetToIntialPos() {
-        return run(() -> setIntialPosition());
+    private void setLatchOpen() {
+        latchServo.set(config.getLatchOpen());
+    }
+
+    private void setLatchClosed() {
+        latchServo.set(config.getLatchClosed());
     }
 
     // --------------------------------------------------------------------------------
     // Custom Commands
     // --------------------------------------------------------------------------------
+
+    public Command resetToIntialPos() {
+        return run(() -> setIntialPosition());
+    }
 
     public Command runHoldInClimb() {
         return new Command() {
@@ -226,11 +236,12 @@ public class InClimb extends Mechanism {
     }
 
     public Command openLatch() {
-        return run(() -> latchServo.set(config.getLatchOpen())).withName("InClimb.openLatch");
+        return new RunCommand(() -> setLatchOpen(), latchServo).withName("InClimbLatch.openLatch");
     }
 
     public Command closeLatch() {
-        return run(() -> latchServo.set(config.getLatchClosed())).withName("InClimb.closeLatch");
+        return new RunCommand(() -> setLatchClosed(), latchServo)
+                .withName("InClimbLatch.closeLatch");
     }
 
     // --------------------------------------------------------------------------------

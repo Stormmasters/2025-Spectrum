@@ -40,16 +40,10 @@ public class CoralIntakeStates {
         coastMode.onFalse(log(ensureBrakeMode()));
 
         Robot.getPilot().testTune_tA.whileTrue(coralIntake.coralIntake());
+        Robot.getPilot().testTune_tB.whileTrue(coralIntake.coralIntake());
+        Robot.getPilot().testTune_tX.whileTrue(coralIntake.coralIntake());
+        Robot.getPilot().testTune_tY.whileTrue(coralIntake.coralScore());
         // Robot.getPilot().tuneShoulder_tB.whileTrue(coralIntake.coralScore());
-    }
-
-    private static Command coralHandOff() {
-        return coralIntake
-                .runStop()
-                .withName("coralIntake.coralHandOffWait")
-                .until(() -> ElbowStates.getPosition().getAsDouble() > 95.0)
-                .andThen(coralIntake())
-                .withName("coralIntake.coralHandOff");
     }
 
     private static Command algaeHandOff() {
@@ -61,27 +55,12 @@ public class CoralIntakeStates {
                 .withName("coralIntake.algaeHandOff");
     }
 
-    private static Command coralScore() {
-        return slowEject()
-                .withName("coralIntake.score")
-                .until(() -> (!coralIntake.hasIntakeCoral()))
-                .withName("coralIntake.scoreDone");
-    }
-
     private static Command barge() {
         return coralIntake
                 .runVelocityTcFocRpm(config::getBarge)
                 .withName("coralIntake.barge")
                 .until(() -> (!coralIntake.hasIntakeAlgae()))
                 .withName("coralIntake.bargeScoreDone");
-    }
-
-    private static Command coralIntake() {
-        return coralIntake.runVelocityTcFocRpm(config::getIntake).withName("coralIntake.intake");
-    }
-
-    private static Command coralEject() {
-        return coralIntake.runVelocityTcFocRpm(config::getEject).withName("coralIntake.eject");
     }
 
     private static Command algaeIntake() {
@@ -94,12 +73,6 @@ public class CoralIntakeStates {
         return coralIntake
                 .runVelocityTcFocRpm(config::getIntake)
                 .withName("coralIntake.algaeEject");
-    }
-
-    private static Command slowEject() {
-        return coralIntake
-                .runVelocityTcFocRpm(config::getSlowEject)
-                .withName("coralIntake.slowEject");
     }
 
     private static Command coastMode() {

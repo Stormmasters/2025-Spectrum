@@ -37,7 +37,7 @@ public class Shoulder extends Mechanism {
 
         @Getter private final double algaeLollipop = 0;
         @Getter private final double coralLollipop = -157;
-        @Getter private final double stationIntake = -15;
+        @Getter private final double stationIntake = 0;
         @Getter private final double stationExtendedIntake = 172;
         @Getter private final double clawGroundAlgaeIntake = -164;
         @Getter private final double clawGroundCoralIntake = -164;
