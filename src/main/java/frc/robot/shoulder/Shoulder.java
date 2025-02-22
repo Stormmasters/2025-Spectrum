@@ -161,7 +161,8 @@ public class Shoulder extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position Degrees", () -> (this.getPositionDegrees()-config.offset), null);
+            builder.addDoubleProperty(
+                    "Position Degrees", () -> (this.getPositionDegrees() - config.offset), null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);

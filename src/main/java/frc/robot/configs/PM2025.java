@@ -6,8 +6,8 @@ public class PM2025 extends Config {
 
     public PM2025() {
         super();
-        // swerve.configEncoderOffsets(0.017822, -0.411865, -0.290039, -0.424072);
-        swerve.configEncoderOffsets(-0.018066, -0.099121, 0.289795, -0.098389);
+        // swerve.configEncoderOffsets(-0.018066, -0.099121, 0.289795, -0.098389);
+        swerve.configEncoderOffsets(0.490967, 0.410400, -0.208252, 0.422607);
 
         // Attached Mechanisms
         pilot.setAttached(true);

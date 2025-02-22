@@ -30,7 +30,7 @@ public class Auton {
     public static final EventTrigger autonHighAlgae = new EventTrigger("highAlgae");
     public static final EventTrigger autonScore = new EventTrigger("score");
     public static final EventTrigger autonLeftL4 = new EventTrigger("leftL4");
-    public static final EventTrigger autonRightL4 = new EventTrigger("rightR4");
+    public static final EventTrigger autonRightL4 = new EventTrigger("rightL4");
     public static final EventTrigger autonNet = new EventTrigger("net");
     public static final EventTrigger autonProcessor = new EventTrigger("processor");
 
@@ -49,6 +49,8 @@ public class Auton {
         pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
         pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
+
+        pathChooser.addOption("Source 3 Test", SpectrumAuton("Source 3", false));
 
         pathChooser.addOption("Left - Source", SpectrumAuton("Blue Left - Source", false));
         pathChooser.addOption("Right - Source", SpectrumAuton("Blue Left - Source", true));
