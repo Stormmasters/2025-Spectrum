@@ -66,7 +66,7 @@ public class ElbowStates {
         Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL2Coral));
         Robot.getPilot().testTune_tX.whileTrue(elbow.moveToDegrees(config::getHome));
         Robot.getPilot().testTune_tY.whileTrue(score2());
-        Robot.getPilot().reZero_start.onTrue(elbow.resetToIntialPos());
+        Robot.getPilot().reZero_start.onTrue(elbow.resetToInitialPos());
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(runElbow(() -> Robot.getPilot().getTestTriggersAxis()));
