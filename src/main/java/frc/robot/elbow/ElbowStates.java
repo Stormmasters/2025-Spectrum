@@ -15,6 +15,7 @@ public class ElbowStates {
     private static ElbowConfig config = Robot.getConfig().elbow;
 
     public static final Trigger isHome = elbow.atPercentage(config::getHome, config::getTolerance);
+    public static final Trigger pastElevator = elbow.aboveDegrees(elbow.offsetPosition(() -> -160 + 360), config::getTolerance).and(elbow.belowDegrees(() -> 160, config::getTolerance));
 
     public static void setupDefaultCommand() {
         elbow.setDefaultCommand(log(elbow.runHoldElbow().withName("Elbow.default")));
@@ -61,10 +62,10 @@ public class ElbowStates {
 
         // TODO: for testing
         Robot.getPilot().testTune_tA.whileTrue(elbow.moveToMotorPosition(() -> 0.18));
-        //Robot.getPilot().testTune_tA.whileTrue(elbow.moveToDegrees(config::getStationIntake));
+        // Robot.getPilot().testTune_tA.whileTrue(elbow.moveToDegrees(config::getStationIntake));
         Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL2Coral));
         Robot.getPilot().testTune_tX.whileTrue(elbow.moveToDegrees(config::getHome));
-        Robot.getPilot().reZero_start.onTrue(elbow.resetToIntialPos());
+        Robot.getPilot().reZero_start.onTrue(elbow.resetToInitialPos());
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(runElbow(() -> Robot.getPilot().getTestTriggersAxis()));
