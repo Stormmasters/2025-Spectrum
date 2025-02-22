@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.elevator.ElevatorStates;
@@ -34,24 +35,24 @@ public class Elbow extends Mechanism {
         @Getter private final double handAlgae = 0;
         @Getter private final double home = 180;
 
-        @Getter private final double algaeLollipop = 78;
-        @Getter private final double coralLollipop = 76;
-        @Getter private final double stationIntake = -150;
-        @Getter private final double stationExtendedIntake = 136;
-        @Getter private final double floorIntake = 120;
-        @Getter private final double clawGroundAlgaeIntake = 75;
-        @Getter private final double clawGroundCoralIntake = 75;
+        @Getter private final double algaeLollipop = 78; // TODO: find this value
+        @Getter private final double coralLollipop = 76; // TODO: find this value
+        @Getter private final double stationIntake = 154.4;
+        @Getter private final double stationExtendedIntake = 136; // TODO: find this value
+        @Getter private final double floorIntake = 120; // TODO: find this value
+        @Getter private final double clawGroundAlgaeIntake = 75; // TODO: find this value
+        @Getter private final double clawGroundCoralIntake = 75; // TODO: find this value
         @Getter private final double handOff = 0;
 
-        @Getter private final double l2Algae = 120;
-        @Getter private final double l3Algae = 120;
+        @Getter private final double l2Algae = 120; // TODO: find this value
+        @Getter private final double l3Algae = 120; // TODO: find this value
 
-        @Getter private final double l1Coral = 115;
+        @Getter private final double l1Coral = 115; // TODO: find this value
         @Getter private final double l2Coral = 126;
         @Getter private final double l3Coral = 126;
-        @Getter private final double l4Coral = 135;
+        @Getter private final double l4Coral = 135; // TODO: find this value
 
-        @Getter private final double barge = 167;
+        @Getter private final double barge = 167; // TODO: find this value
 
         @Getter @Setter private double tuneElbow = 0;
         @Getter @Setter private boolean leftScore = true;
@@ -287,6 +288,10 @@ public class Elbow extends Mechanism {
 
     public Command moveToDegreesAndCheckReversed(DoubleSupplier degrees) {
         return moveToDegrees(() -> checkReversed(degrees));
+    }
+
+    public Command moveToRelativePosition(DoubleSupplier position) {
+        return new InstantCommand(() -> setMMPositionFoc(() -> getPositionRotations() + position.getAsDouble()));
     }
 
     // --------------------------------------------------------------------------------

@@ -32,24 +32,24 @@ public class Shoulder extends Mechanism {
         // TODO: Find shoulder positions
         @Getter private final double score = 117;
         @Getter private final double climbHome = 180;
-        @Getter private final double handAlgae = -144;
+        @Getter private final double handAlgae = -144; // TODO: find this value
         @Getter private final double home = 0;
 
         @Getter private final double algaeLollipop = 0;
-        @Getter private final double coralLollipop = -157;
+        @Getter private final double coralLollipop = -157; // TODO: find this value
         @Getter private final double stationIntake = 0;
-        @Getter private final double stationExtendedIntake = 172;
-        @Getter private final double clawGroundAlgaeIntake = -164;
-        @Getter private final double clawGroundCoralIntake = -164;
+        @Getter private final double stationExtendedIntake = 172; // TODO: find this value
+        @Getter private final double clawGroundAlgaeIntake = -164; // TODO: find this value
+        @Getter private final double clawGroundCoralIntake = -164; // TODO: find this value
         @Getter private final double handOff = 180;
 
-        @Getter private final double l2Algae = 10;
-        @Getter private final double l3Algae = 10;
+        @Getter private final double l2Algae = 10; // TODO: find this value
+        @Getter private final double l3Algae = 10; // TODO: find this value
 
-        @Getter private final double l1Coral = 2;
+        @Getter private final double l1Coral = 2; // TODO: find this value
         @Getter private final double l2Coral = 34;
         @Getter private final double l3Coral = 34;
-        @Getter private final double l4Coral = 135;
+        @Getter private final double l4Coral = 135; // TODO: find this value
 
         @Getter private final double barge = -94.4;
         @Getter @Setter private double tuneShoulder = 0;
