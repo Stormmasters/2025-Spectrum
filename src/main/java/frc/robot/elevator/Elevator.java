@@ -29,7 +29,7 @@ public class Elevator extends Mechanism {
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
-        @Getter private double home = 0;
+        @Getter private double home = 0.3;
 
         @Getter private final double algaeLollipop = 8;
 
@@ -69,7 +69,7 @@ public class Elevator extends Mechanism {
         @Getter private final double l4 = 18.86;
         @Getter private final double barge = 20;
 
-        @Getter private double triggerTolerance = 0.95;
+        @Getter private double triggerTolerance = 100;
         @Getter private double elevatorIsUpHeight = 5;
         @Getter private double elevatorIsHighHeight = 10;
         @Getter private double initPosition = 0;

@@ -169,25 +169,26 @@ public class Trigger implements BooleanSupplier {
      */
     public Trigger onFalseOnce(Command command) {
         requireNonNullParam(command, "command", "onFalse");
-
         m_loop.bind(
                 new Runnable() {
                     private boolean m_pressedLast = true;
-                    private boolean hasRunOnce = false; // Flag to track first execution
+                    private boolean m_hasRun = false;
 
                     @Override
                     public void run() {
                         boolean pressed = m_condition.getAsBoolean();
 
-                        if (hasRunOnce && m_pressedLast && !pressed) {
+                        if (m_pressedLast && !pressed && m_hasRun) {
                             command.schedule();
                         }
 
+                        if (m_pressedLast && !pressed) {
+                            m_hasRun = true;
+                        }
+
                         m_pressedLast = pressed;
-                        hasRunOnce = true; // Ensure subsequent executions are allowed
                     }
                 });
-
         return this;
     }
 

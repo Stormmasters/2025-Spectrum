@@ -82,6 +82,7 @@ public class ElevatorStates {
         //         .testTriggersTrigger
         //         .whileTrue(runElevator(() -> Robot.getPilot().getTestTriggersAxis()));
         Robot.getOperator().test_tA.whileTrue(elevator.moveToDegrees(config::getL1));
+        homeAll.whileTrue(home());
     }
 
     private static Command runElevator(DoubleSupplier speed) {

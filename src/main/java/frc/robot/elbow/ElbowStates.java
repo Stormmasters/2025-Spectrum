@@ -69,7 +69,7 @@ public class ElbowStates {
                         elbow.moveToDegrees(
                                 config::getStationIntake)); // (elbow.moveToMotorPosition(() ->
         // 0.18));
-        //Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL3Algae));
+        // Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL3Algae));
         Robot.getPilot().testTune_tX.whileTrue(elbow.moveToDegrees(config::getHome));
         // Robot.getPilot().testTune_tY.whileTrue(score4());
         Robot.getPilot().reZero_start.onTrue(elbow.resetToInitialPos());
@@ -78,6 +78,7 @@ public class ElbowStates {
         //         .whileTrue(runElbow(() -> Robot.getPilot().getTestTriggersAxis()));
 
         Robot.getOperator().test_tA.whileTrue(elbow.moveToDegrees(config::getL1Coral));
+        homeAll.whileTrue(home());
     }
 
     public static DoubleSupplier getPosition() {

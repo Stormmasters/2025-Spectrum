@@ -123,6 +123,8 @@ public class RobotStates {
         actionPrepState.onTrue(scoreState.setFalse());
         actionPrepState.onFalseOnce(scoreState.setTrue());
         operator.operatorCoralStage.onFalseOnce(homeAll.setTrue());
+        operator.testOperatorCoralStage.onFalseOnce(
+                homeAll.setTrue()); // TODO: remove after testing
         operator.operatorAlgaeStage.onFalseOnce(homeAll.setTrue());
         isAtHome.onTrue(homeAll.setFalse());
 
