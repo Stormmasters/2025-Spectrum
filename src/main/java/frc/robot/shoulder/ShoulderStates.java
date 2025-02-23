@@ -57,7 +57,7 @@ public class ShoulderStates {
 
         // TODO: for testing
         Robot.getPilot().testTune_tA.whileTrue(shoulder.moveToDegrees(config::getStationIntake));
-        Robot.getPilot().testTune_tB.whileTrue(shoulder.moveToDegrees(config::getL3Algae));
+        //Robot.getPilot().testTune_tB.whileTrue(shoulder.moveToDegrees(config::getL3Algae));
         Robot.getPilot().testTune_tX.whileTrue(shoulder.moveToDegrees(config::getHome));
         // Robot.getPilot()
         //         .testTune_tY
@@ -68,7 +68,7 @@ public class ShoulderStates {
         //         .whileTrue(
         //                 runShoulder(() -> Robot.getPilot().getTestTriggersAxis())
         //                         .withName("test Shoulder"));
-        Robot.getOperator().test_tA.whileTrue(l1Coral());
+        Robot.getOperator().test_tA.whileTrue(shoulder.moveToDegrees(config::getL1Coral));
     }
 
     public static Command runShoulder(DoubleSupplier speed) {

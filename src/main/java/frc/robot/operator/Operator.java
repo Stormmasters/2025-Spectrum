@@ -44,6 +44,7 @@ public class Operator extends Gamepad {
     // TEST TRIGGERS
     public final Trigger testOperatorCoralStage = leftBumper.and(testMode);
     public final Trigger test_tA = A.and(testOperatorCoralStage);
+    //  TODO: move reef scoring/intaking to operator
 
     public static class OperatorConfig extends Config {
 

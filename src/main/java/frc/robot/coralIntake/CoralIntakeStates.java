@@ -40,10 +40,11 @@ public class CoralIntakeStates {
         coastMode.onFalse(log(ensureBrakeMode()));
 
         Robot.getPilot().testTune_tA.whileTrue(coralIntake.coralIntake());
-        Robot.getPilot().testTune_tB.whileTrue(coralIntake.algaeIntake());
+        //Robot.getPilot().testTune_tB.whileTrue(coralIntake.algaeIntake());
         Robot.getPilot().testTune_tX.whileTrue(coralIntake.coralIntake());
         Robot.getPilot().testTune_tY.whileTrue(coralIntake.coralScore());
         // Robot.getPilot().tuneShoulder_tB.whileTrue(coralIntake.coralScore());
+        Robot.getOperator().test_tA.whileTrue(coralIntake.coralIntake());
     }
 
     private static Command algaeHandOff() {

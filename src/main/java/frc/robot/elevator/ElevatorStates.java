@@ -70,10 +70,10 @@ public class ElevatorStates {
         Robot.getPilot()
                 .testTune_tA
                 .whileTrue(elevator.setElevatorMMPositionFOC((config::getStationIntake)));
-        Robot.getPilot()
-                .testTune_tB
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Algae));
-        Robot.getPilot().testTune_tX.whileTrue(elevator.setElevatorMMPositionFOC(config::getHome));
+        // Robot.getPilot()
+        //         .testTune_tB
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Algae));
+        // Robot.getPilot().testTune_tX.whileTrue(elevator.setElevatorMMPositionFOC(config::getHome));
         // Robot.getPilot()
         //         .testTune_tY
         //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
@@ -81,6 +81,7 @@ public class ElevatorStates {
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(runElevator(() -> Robot.getPilot().getTestTriggersAxis()));
+        Robot.getOperator().test_tA.whileTrue(elevator.moveToDegrees(config::getL1));
     }
 
     private static Command runElevator(DoubleSupplier speed) {
