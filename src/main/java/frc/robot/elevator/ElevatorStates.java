@@ -3,7 +3,6 @@ package frc.robot.elevator;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elbow.ElbowStates;
@@ -33,7 +32,7 @@ public class ElevatorStates {
         // Test Mode Buttons
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-        scoreState.onTrue(score());
+        // scoreState.onTrue(score());
 
         algaeHandoff.whileTrue(handOff());
         coralHandoff.whileTrue(handOff());
@@ -91,18 +90,18 @@ public class ElevatorStates {
         return elevator.holdPosition().withName("Elevator.holdPosition");
     }
 
-    private static Command fullExtend() {
-        return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
-    }
+    // private static Command fullExtend() {
+    //     return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
+    // }
 
-    private static Command score() {
-        return new ProxyCommand(
-                () -> {
-                    double originalPosition = ElevatorStates.getPosition().getAsDouble() - 10;
-                    return elevator.moveToPercentage(() -> originalPosition)
-                            .withName("Elevator.score");
-                });
-    }
+    // private static Command score() {
+    //     return new ProxyCommand(
+    //             () -> {
+    //                 double originalPosition = ElevatorStates.getPosition().getAsDouble() - 10;
+    //                 return elevator.moveToPercentage(() -> originalPosition)
+    //                         .withName("Elevator.score");
+    //             });
+    // }
 
     private static Command home() {
         return elevator.moveToRotations(config::getHome)

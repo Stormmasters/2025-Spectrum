@@ -28,11 +28,6 @@ public class VisionStates {
                 .withName("VisionCommands.resetPoseToVision");
     }
 
-    public static Command turnToReef() {
-        return vision.run(vision::getAdjustedThetaToReefFace)
-                .withName("VisionCommands.turnToReef");
-    }
-
     // TODO: rebuild autonResetPoseToVision and forcePoseToVision for later use
 
     /** Set robot pose to vision pose looking at 5 of the last available poses in auto / public */

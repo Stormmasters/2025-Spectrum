@@ -8,17 +8,15 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.vision.Vision.VisionConfig;
 import java.io.IOException;
 import org.photonvision.PhotonCamera;
-import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 
 public class VisionSystem extends SubsystemBase {
     private final PhotonCamera camera = new PhotonCamera("cameraName");
-    private final PhotonCamera frontCam = new PhotonCamera(VisionConfig.FRONT_LL);
-    private final PhotonCamera backCam = new PhotonCamera(VisionConfig.RIGHT_LL);
+    // private final PhotonCamera frontCam = new PhotonCamera(VisionConfig.FRONT_LL);
+    // private final PhotonCamera backCam = new PhotonCamera(VisionConfig.RIGHT_LL);
     private final VisionSystemSim visionSim = new VisionSystemSim("main");
     private final Pose2dSupplier getSimPose;
 
@@ -47,15 +45,15 @@ public class VisionSystem extends SubsystemBase {
         props.setLatencyStdDevMs(5.0);
 
         // Setup simulated camera
-        PhotonCameraSim cameraSimFront = new PhotonCameraSim(frontCam, props);
-        PhotonCameraSim cameraSimBack = new PhotonCameraSim(backCam, props);
+        // PhotonCameraSim cameraSimFront = new PhotonCameraSim(frontCam, props);
+        // PhotonCameraSim cameraSimBack = new PhotonCameraSim(backCam, props);
         // Draw field wireframe in simulated camera view
-        cameraSimFront.enableDrawWireframe(true);
-        cameraSimBack.enableDrawWireframe(false);
+        // cameraSimFront.enableDrawWireframe(true);
+        // cameraSimBack.enableDrawWireframe(false);
 
-        // Add simulated camera to vision sim
-        visionSim.addCamera(cameraSimFront, robotToFrontCamera);
-        visionSim.addCamera(cameraSimBack, robotToBackCamera);
+        // // Add simulated camera to vision sim
+        // visionSim.addCamera(cameraSimFront, robotToFrontCamera);
+        // visionSim.addCamera(cameraSimBack, robotToBackCamera);
 
         // Add AprilTags to vision sim
         try {

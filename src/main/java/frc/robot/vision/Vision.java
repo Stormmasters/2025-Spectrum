@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.reefscape.Field;
 import frc.robot.Robot;
-import frc.robot.swerve.SwerveStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.Telemetry.PrintPriority;
 import frc.spectrumLib.util.Trio;
@@ -23,7 +22,6 @@ import frc.spectrumLib.vision.Limelight.LimelightConfig;
 import frc.spectrumLib.vision.LimelightHelpers.RawFiducial;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,9 +35,9 @@ public class Vision extends SubsystemBase {
                         .withTranslation(0, -27.36, -8.04)
                         .withRotation(0, Math.toRadians(.5), Math.toRadians(-7.96));
 
-        public static final String RIGHT_LL = "limelight-right";
-        public static final LimelightConfig Right_Config =
-                new LimelightConfig(RIGHT_LL)
+        public static final String BACK_LL = "limelight-back";
+        public static final LimelightConfig BACK_CONFIG =
+                new LimelightConfig(BACK_LL)
                         .withTranslation(0, 0.5, 0.5)
                         .withRotation(0, Math.toRadians(15), 0);
 
@@ -47,12 +45,11 @@ public class Vision extends SubsystemBase {
 
         /* Pipeline configs */
         public static final int frontTagPipeline = 0;
-        public static final int rightTagPipeline = 1;
+        public static final int backTagPipeline = 1;
 
         /* Pose Estimation Constants */
 
         // Increase these numbers to trust global measurements from vision less. (uses a matrix)
-        //
         public static final double VISION_REJECT_Distance = 1.8;
 
         public static double VISION_STD_DEV_X = 0.5;
@@ -64,7 +61,6 @@ public class Vision extends SubsystemBase {
 
         /* Vision Command Configs */
         // TODO: alignToTag vision etc.
-
     }
 
     /** Limelights */
@@ -77,13 +73,11 @@ public class Vision extends SubsystemBase {
 
     public final LimelightLogger leftLLogger = new LimelightLogger("front", frontLL);
 
-    public final Limelight rightLL =
+    public final Limelight backLL =
             new Limelight(
-                    VisionConfig.RIGHT_LL,
-                    VisionConfig.rightTagPipeline,
-                    VisionConfig.Right_Config);
+                    VisionConfig.BACK_LL, VisionConfig.backTagPipeline, VisionConfig.BACK_CONFIG);
 
-    public final Limelight[] allLimelights = {frontLL, rightLL};
+    public final Limelight[] allLimelights = {frontLL, backLL};
 
     private final DecimalFormat df = new DecimalFormat();
 
@@ -100,11 +94,11 @@ public class Vision extends SubsystemBase {
         // logging
         df.setMaximumFractionDigits(2);
 
-        /* Configure Limelight Settings Here */
-        for (Limelight limelight : allLimelights) {
-            limelight.setLEDMode(false);
-        }
-    }
+        /* Configure Limelight Settings Here */ 
+        for (Limelight limelight : allLimelights) {  
+            limelight.setLEDMode(false); 
+        } 
+    } 
 
     @Override
     public void periodic() {
@@ -125,17 +119,6 @@ public class Vision extends SubsystemBase {
             isIntegrating = false;
             // Will NOT run in auto
             if (DriverStation.isTeleopEnabled()) {
-                // if the front camera sees tag and we are aiming, only use that camera
-                // if (isAiming && speakerLL.targetInView()) {
-                //     for (Limelight limelight : allLimelights) {
-                //         if (limelight.CAMERA_NAME == speakerLL.CAMERA_NAME) {
-                //             addFilteredVisionInput(limelight);
-                //         } else {
-                //             limelight.sendInvalidStatus("speaker only rejection");
-                //         }
-                //         isIntegrating |= limelight.isIntegrating;
-                //     }
-                // } else {
 
                 // choose LL with best view of tags and integrate from only that camera
                 Limelight bestLimelight = getBestLimelight();
@@ -146,8 +129,8 @@ public class Vision extends SubsystemBase {
                         limelight.sendInvalidStatus("not best rejection");
                     }
                     isIntegrating |= limelight.isIntegrating();
-                    getDistanceToReefFromRobot();
                 }
+                getDistanceToReefFromRobot();
             }
 
         } catch (Exception e) {
@@ -394,57 +377,10 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    /**
-     * Gets a field-relative position for the shot to the speaker the robot should take, adjusted
-     * for the robot's movement.
-     *
-     * @return A {@link Translation2d} representing a field relative position in meters.
-     */
-    public Translation2d getAdjustedTargetPos(Translation2d targetPose) {
-        double NORM_FUDGE = 0.075;
-        double tunableNoteVelocity = 1;
-        double tunableNormFudge = 0;
-        double tunableStrafeFudge = 1;
-        double tunableSpeakerYFudge = 0.0;
-        double tunableSpeakerXFudge = 0.0;
+    // ------------------------------------------------------------------------------
+    // Logging
+    // ------------------------------------------------------------------------------
 
-        Translation2d robotPos = Robot.getSwerve().getRobotPose().getTranslation();
-        targetPose = Field.flipXifRed(targetPose);
-        double xDifference = Math.abs(robotPos.getX() - targetPose.getX());
-        double spinYFudge =
-                (xDifference < 5.8)
-                        ? 0.05
-                        : 0.8; // change spin fudge for score distances vs. feed distances
-
-        ChassisSpeeds robotVel = Robot.getSwerve().getCurrentRobotChassisSpeeds(); // TODO: change
-
-        double distance = robotPos.getDistance(targetPose);
-        double normFactor =
-                Math.hypot(robotVel.vxMetersPerSecond, robotVel.vyMetersPerSecond) < NORM_FUDGE
-                        ? 0.0
-                        : Math.abs(
-                                MathUtil.angleModulus(
-                                                robotPos.minus(targetPose).getAngle().getRadians()
-                                                        - Math.atan2(
-                                                                robotVel.vyMetersPerSecond,
-                                                                robotVel.vxMetersPerSecond))
-                                        / Math.PI);
-
-        double x =
-                targetPose.getX() + (Field.isBlue() ? tunableSpeakerXFudge : -tunableSpeakerXFudge);
-        // - (robotVel.vxMetersPerSecond * (distance / tunableNoteVelocity));
-        //      * (1.0 - (tunableNormFudge * normFactor)));
-        double y =
-                targetPose.getY()
-                        + (Field.isBlue() ? -spinYFudge : spinYFudge)
-                        + tunableSpeakerYFudge;
-        // - (robotVel.vyMetersPerSecond * (distance / tunableNoteVelocity));
-        //       * tunableStrafeFudge);
-
-        return new Translation2d(x, y);
-    }
-
-    /** Logging */
     /** Tracks position with Limelight using current logger (DogLog) to record data */
     public static class LimelightLogger {
         private final Limelight limelight;
@@ -506,6 +442,10 @@ public class Vision extends SubsystemBase {
         }
     }
 
+    // ------------------------------------------------------------------------------
+    // Config
+    // ------------------------------------------------------------------------------
+
     /**
      * CommandConfig used to create a PIDController and for vision commands using other subsystems
      * (i.e. swerve)
@@ -562,96 +502,49 @@ public class Vision extends SubsystemBase {
     }
 
     // ------------------------------------------------------------------------------
-    // Config
+    // Calculation Functions
     // ------------------------------------------------------------------------------
-
-    // ------------------------------------------------------------------------------
-    // Vision Commands
-    // ------------------------------------------------------------------------------
-
-    // method (Command) alignToVisionTarget ( config, DoubleSupplier, offset)
-    // custom commandconfig to send into alignToVisionTarget
-    // TODO Build alignToVisionTarget
-
-    // TODO: Changes between 2024 usage of Speaker to 2025 usage of Coral
-    /** closestReefFace getThetaToReefFace getDistancetoReefFace */
 
     /**
      * REQUIRES ACCURATE POSE ESTIMATION. Uses trigonometric functions to calculate the angle
      * between the robot heading and the angle required to face coral faces.
      *
-     * @return angle between robot heading and speaker in degrees
+     * @return angle between robot heading and the closest reef face in degrees
      */
-    // public double getThetaToSpeaker() {
-    //     // Translation2d speaker =
-    //     //         Field.flipXifRed(Field.Speaker.centerSpeakerOpening).toTranslation2d();
-    //     Translation2d speaker =
-    //             Field.flipXifRed(Field.Speaker.centerSpeakerPose)
-    //                     .getTranslation(); // getAdjustedSpeakerPos();
-    //     Translation2d robotXY = Robot.swerve.getPose().getTranslation();
-    //     double angleBetweenRobotAndSpeaker =
-    //             MathUtil.angleModulus(speaker.minus(robotXY).getAngle().getRadians());
+    private int fieldReefID;
 
-    //     return angleBetweenRobotAndSpeaker;
+    // public double getThetaToReefFace() {
+    //     double closestReefFace = closestReefFace();
+    //     Translation2d robot2d = Robot.getSwerve().getRobotPose().getTranslation();
+    //     fieldReefID = -1;
+    //     for(int i = 18; i<23; i++){
+    //         if(closestReefFace == i){
+    //             fieldReefID = i;
+    //         } else if(closestReefFace == 17 ){
+    //             fieldReefID = 5;
+    //         }
+    //     }
+    //     if (fieldReefID == -1) {
+    //         return -1;
+    //     }
+
+    //     Translation2d reefFace = Field.Reef.centerFaces[fieldReefID].getTranslation();
+
+    //     double angleBetweenRobotandReefFace =
+    //         MathUtil.angleModulus(
+    //             reefFace.minus(robot2d).getAngle().getRadians());
+
+    //     return angleBetweenRobotandReefFace;
+
+    //     //runs closestReefFace to get the closest reef face id
     // }
-
-
-    public double getThetaToReefFace() {
-        double closestReefFace = closestReefFace();
-        Translation2d robot2d = Robot.getSwerve().getRobotPose().getTranslation();
-        int FieldReefid = -1;
-        for(int i = 18; i<23; i++){
-            if(closestReefFace == i){
-                FieldReefid = i;
-            } else if(closestReefFace == 17 ){
-                FieldReefid = 5;
-            }
-        }
-        if (FieldReefid == -1) {
-            return -1;
-        }
-
-        Translation2d reefFace = Field.Reef.centerFaces[FieldReefid].getTranslation();
-
-        double angleBetweenRobotandReefFace = 
-            MathUtil.angleModulus(
-                reefFace.minus(robot2d).getAngle().getRadians());
-
-        return angleBetweenRobotandReefFace;
-        
-        //runs closestReefFace to get the closest reef face id
-    }
-
-    // public Translation2d getAdjustedReefPos() {
-    //     return getAdjustedTargetPos(
-    //             new Translation2d(0,
-    // Field.Speaker.centerSpeakerOpening.toTranslation2d().getY()));
-    // }
-
-    // public double getAdjustedThetaToSpeaker() {
-    //     Translation2d speaker = getAdjustedSpeakerPos();
-    //     Translation2d robotXY = Robot.swerve.getPose().getTranslation();
-    //     double angleBetweenRobotAndSpeaker =
-    //             MathUtil.angleModulus(speaker.minus(robotXY).getAngle().getRadians());
-
-    //     return angleBetweenRobotAndSpeaker;
-    // }
-    public Translation2d getAdjustedReefPose() {
-        return getAdjustedTargetPos(
-                new Translation2d(0, Field.Reef.centerFaces[closestReefFace()].getTranslation().getY()));
-    }
-
-    public Translation2d getAdjustedTargetPose() {
-        return getAdjustedTargetPos(Field.Reef.centerFaces[closestReefFace()].getTranslation());        
-    }
 
     public double getAdjustedThetaToReefFace() {
-        Translation2d reefFace = getAdjustedReefPose();
+        Translation2d reefFace = getAdjustedReefPos();
         Translation2d robot2d = Robot.getSwerve().getRobotPose().getTranslation();
-        double angleBetweenRobotandReefFace = 
-            MathUtil.angleModulus(
-                reefFace.minus(robot2d).getAngle().getRadians());
-        
+        double angleBetweenRobotandReefFace =
+                MathUtil.angleModulus(reefFace.minus(robot2d).getAngle().getRadians());
+
         return angleBetweenRobotandReefFace;
     }
 
@@ -666,44 +559,27 @@ public class Vision extends SubsystemBase {
                         closestReef = tag.id;
                     }
                 }
-                return closestReef; //red reef tag
-            }
-            else {
+                Telemetry.print("Closest Reef Face: " + closestReef, PrintPriority.HIGH);
+                return closestReef; // red reef tag
+            } else {
                 int closestReef = tags[0].id;
                 for (RawFiducial tag : tags) {
                     if (tag.distToRobot < tags[closestReef].distToRobot) {
                         closestReef = tag.id;
                     }
                 }
-                return closestReef; //blue reef tag
+                Telemetry.print("Closest Reef Face: " + closestReef, PrintPriority.HIGH);
+                return closestReef; // blue reef tag
             }
         }
-        return -1; //no reef tag found
+        Telemetry.print("No reef tag found", PrintPriority.HIGH);
+        return -1; // no reef tag found
     }
 
-    
-
-    // /** Returns the distance from the speaker in meters, adjusted for the robot's movement. */
-    // @AutoLogOutput(key = "Vision/SpeakerDistance")
-    // public double getSpeakerDistance() {
-    //     double poseDistance =
-    //             Robot.swerve.getPose().getTranslation().getDistance(getAdjustedSpeakerPos());
-    //     double tagDistance = getDistanceToCenterSpeakerTagFromRobot();
-    //     if (tagDistance != -1) {
-    //         return poseDistance; // tagDistance;
-    //     }
-    //     return poseDistance;
-    // }
-
-    // @AutoLogOutput(key = "Vision/SpeakerYDistance")
-    // public double getSpeakerYDelta() {
-    //     return Robot.swerve.getPose().getTranslation().getY() - getAdjustedSpeakerPos().getY();
-    // }
-
-    // // Returns distance to the center of the speaker tag from the robot or -1 if not found
+    /** Returns the distance from the reef in meters, adjusted for the robot's movement. */
     public double[] getDistanceToReefFromRobot() {
         RawFiducial[] frontTags = frontLL.getRawFiducial();
-        RawFiducial[] rightTags = rightLL.getRawFiducial();
+        RawFiducial[] rightTags = backLL.getRawFiducial();
 
         ArrayList<Integer> ValidReefFaceIDsRed = new ArrayList<Integer>();
         for (int i = 6; i < 12; i++) {
@@ -714,7 +590,7 @@ public class Vision extends SubsystemBase {
             ValidReefFaceIDsBlue.add(i);
         }
 
-        //ArrayList<Double> seenReefFaces = new ArrayList<Double>();
+        // ArrayList<Double> seenReefFaces = new ArrayList<Double>();
         double[] seenReefFaces = new double[12];
         for (RawFiducial tag : frontTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
@@ -724,66 +600,69 @@ public class Vision extends SubsystemBase {
 
         for (RawFiducial tag : rightTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
-               // seenReefFaces.add(tag.distToCamera);
+                // seenReefFaces.add(tag.distToCamera);
             }
         }
 
-        Telemetry.print("Distance to Limelight: " + seenReefFaces[0] , PrintPriority.HIGH);
+        Telemetry.print("Distance to Limelight: " + seenReefFaces[0], PrintPriority.HIGH);
+        System.out.println("Distance to Limelight" + seenReefFaces[0]);
         return seenReefFaces;
     }
 
     /**
-     * Gets a field-relative position for the shot to the speaker the robot should take, adjusted
-     * for the robot's movement.
+     * Gets a field-relative position for the score to the reef the robot should align, adjusted for
+     * the robot's movement.
      *
      * @return A {@link Translation2d} representing a field relative position in meters.
      */
-    // public Translation2d getAdjustedTargetPos(Translation2d targetPose) {
-    //     double NORM_FUDGE = 0.075;
-    //     double tunableNoteVelocity = 1;
-    //     double tunableNormFudge = 0;
-    //     double tunableStrafeFudge = 1;
-    //     double tunableSpeakerYFudge = 0.0;
-    //     double tunableSpeakerXFudge = 0.0;
+    public Translation2d getAdjustedReefPos() {
 
-    //     Translation2d robotPos = Robot.getSwerve().getRobotPose().getTranslation();
-    //     targetPose = Field.flipXifRed(targetPose);
-    //     double xDifference = Math.abs(robotPos.getX() - targetPose.getX());
-    //     double spinYFudge =
-    //             (xDifference < 5.8)
-    //                     ? 0.05
-    //                     : 0.8; // change spin fudge for score distances vs. feed distances
+        int reefID = closestReefFace(); // must call closestReefFace before this method gets passed
+        Pose2d[] reefFaces = Field.Reef.getCenterFaces();
+        double NORM_FUDGE = 0.075;
+        double tunableNoteVelocity = 1;
+        double tunableNormFudge = 0;
+        double tunableStrafeFudge = 1;
+        double tunableReefYFudge = 0.0;
+        double tunableReefXFudge = 0.0;
 
-    //     ChassisSpeeds robotVel = Robot.getSwerve().getCurrentRobotChassisSpeeds(); // TODO:
-    // change
+        Translation2d robotPos = Robot.getSwerve().getRobotPose().getTranslation();
+        Translation2d targetPose =
+                Field.flipXifRed(reefFaces[reefID].getTranslation()); // given reefface
+        double xDifference = Math.abs(robotPos.getX() - targetPose.getX());
+        double spinYFudge =
+                (xDifference < 5.8)
+                        ? 0.05
+                        : 0.8; // change spin fudge for score distances vs. feed distances
 
-    //     double distance = robotPos.getDistance(targetPose);
-    //     double normFactor =
-    //             Math.hypot(robotVel.vxMetersPerSecond, robotVel.vyMetersPerSecond) < NORM_FUDGE
-    //                     ? 0.0
-    //                     : Math.abs(
-    //                             MathUtil.angleModulus(
-    //
-    // robotPos.minus(targetPose).getAngle().getRadians()
-    //                                                     - Math.atan2(
-    //                                                             robotVel.vyMetersPerSecond,
-    //                                                             robotVel.vxMetersPerSecond))
-    //                                     / Math.PI);
+        ChassisSpeeds robotVel =
+                Robot.getSwerve().getCurrentRobotChassisSpeeds(); // get current robot velocity
 
-    //     double x =
-    //             targetPose.getX() + (Field.isBlue() ? tunableSpeakerXFudge :
-    // -tunableSpeakerXFudge);
-    //     // - (robotVel.vxMetersPerSecond * (distance / tunableNoteVelocity));
-    //     //      * (1.0 - (tunableNormFudge * normFactor)));
-    //     double y =
-    //             targetPose.getY()
-    //                     + (Field.isBlue() ? -spinYFudge : spinYFudge)
-    //                     + tunableSpeakerYFudge;
-    //     // - (robotVel.vyMetersPerSecond * (distance / tunableNoteVelocity));
-    //     //       * tunableStrafeFudge);
+        double distance = robotPos.getDistance(reefFaces[fieldReefID].getTranslation());
+        double normFactor =
+                Math.hypot(robotVel.vxMetersPerSecond, robotVel.vyMetersPerSecond) < NORM_FUDGE
+                        ? 0.0
+                        : Math.abs(
+                                MathUtil.angleModulus(
+                                                robotPos.minus(targetPose).getAngle().getRadians()
+                                                        - Math.atan2(
+                                                                robotVel.vyMetersPerSecond,
+                                                                robotVel.vxMetersPerSecond))
+                                        / Math.PI);
 
-    //     return new Translation2d(x, y);
-    // }
+        double x =
+                reefFaces[fieldReefID].getX()
+                        + (Field.isBlue() ? tunableReefXFudge : -tunableReefXFudge);
+        // - (robotVel.vxMetersPerSecond * (distance / tunableNoteVelocity));
+        //      * (1.0 - (tunableNormFudge * normFactor)));
+        double y =
+                reefFaces[fieldReefID].getY()
+                        + (Field.isBlue() ? -spinYFudge : spinYFudge)
+                        + tunableReefYFudge;
+        // - (robotVel.vyMetersPerSecond * (distance / tunableNoteVelocity));
+        //       * tunableStrafeFudge);
+        return new Translation2d(x, y);
+    }
 
     // Executes the alignToVisionTarget command
 
@@ -791,13 +670,9 @@ public class Vision extends SubsystemBase {
     // VisionStates Commands
     // ------------------------------------------------------------------------------
 
-    // TODO: Build alignToReefFace
-    public Command alignToReefFace() {
-        return SwerveStates.aimDrive(
-    }
-
     /** Set all Limelights to blink */
     public Command blinkLimelights() {
+        Telemetry.print("Vision.blinkLimelights", PrintPriority.HIGH);
         return startEnd(
                         () -> {
                             for (Limelight limelight : allLimelights) {
