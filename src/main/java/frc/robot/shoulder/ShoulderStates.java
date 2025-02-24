@@ -14,7 +14,7 @@ public class ShoulderStates {
     private static Shoulder shoulder = Robot.getShoulder();
     private static ShoulderConfig config = Robot.getConfig().shoulder;
     public static final Trigger isHome =
-            shoulder.atPercentage(config::getHome, config::getTolerance);
+            shoulder.atDegrees(() -> (config.getHome() + config.getOffset()), config::getTolerance);
 
     public static void setupDefaultCommand() {
         shoulder.setDefaultCommand(
@@ -69,6 +69,21 @@ public class ShoulderStates {
         //                 runShoulder(() -> Robot.getPilot().getTestTriggersAxis())
         //                         .withName("test Shoulder"));
         Robot.getOperator().test_tA.whileTrue(shoulder.moveToDegrees(config::getL1Coral));
+        Robot.getOperator().test_tB.whileTrue(shoulder.moveToDegrees(config::getL2Coral));
+        // Robot.getOperator().test_tX.whileTrue(shoulder.moveToDegrees(config::getL3Coral));
+        Robot.getOperator()
+                .test_tX
+                .and(backwardMode.not())
+                .whileTrue(shoulder.moveToDegreesAndCheckReversed(config::getL3Coral));
+        Robot.getOperator()
+                .test_tX
+                .and(backwardMode)
+                // .whileTrue(reverse(shoulder.moveToDegreesAndCheckReversed(config::getL3Coral)));
+                .whileTrue(shoulder.moveToDegreesAndCheckReversed(() -> -config.getL3Coral()));
+        Robot.getOperator().test_tY.whileTrue(shoulder.moveToDegrees(config::getL4Coral));
+        Robot.getOperator().test_A.whileTrue(shoulder.moveToDegrees(config::getL2Algae));
+        Robot.getOperator().test_B.whileTrue(shoulder.moveToDegrees(config::getL3Algae));
+        Robot.getOperator().test_X.whileTrue(shoulder.moveToDegrees(config::getBarge));
         homeAll.whileTrue(home());
     }
 
@@ -81,7 +96,7 @@ public class ShoulderStates {
     }
 
     public static DoubleSupplier getPosition() {
-        return () -> shoulder.getPositionPercentage();
+        return () -> (shoulder.getPositionDegrees() + 90);
     }
 
     public static Command climbHome() {
@@ -168,7 +183,11 @@ public class ShoulderStates {
 
     // Check robot side command
     protected static Command reverse(Command cmd) {
-        return cmd.deadlineFor(
-                Commands.startEnd(() -> config.setReversed(true), () -> config.setReversed(false)));
+        // return cmd.deadlineFor(
+        //         Commands.startEnd(() -> config.setReversed(true), () ->
+        // config.setReversed(false)));
+        return Commands.runOnce(() -> config.setReversed(true))
+                .andThen(cmd)
+                .andThen(() -> config.setReversed(false));
     }
 }

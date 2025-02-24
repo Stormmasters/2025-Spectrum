@@ -3,6 +3,7 @@ package frc.robot.elevator;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elbow.ElbowStates;
@@ -22,7 +23,7 @@ public class ElevatorStates {
     public static final Trigger isHigh =
             elevator.atPercentage(config::getElevatorIsHighHeight, config::getTriggerTolerance);
     public static final Trigger isHome =
-            elevator.atPercentage(config::getHome, config::getTriggerTolerance);
+            elevator.atRotations(config::getHome, config::getTriggerTolerance);
 
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(holdPosition().withName("Elevator.default"));
@@ -77,11 +78,25 @@ public class ElevatorStates {
         // Robot.getPilot()
         //         .testTune_tY
         //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
-        Robot.getPilot().reZero_start.onTrue(elevator.resetToIntialPos());
+        Robot.getPilot().reZero_start.onTrue(elevator.resetToInitialPos());
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(runElevator(() -> Robot.getPilot().getTestTriggersAxis()));
-        Robot.getOperator().test_tA.whileTrue(elevator.moveToDegrees(config::getL1));
+        Robot.getOperator()
+                .test_tA
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL1Coral));
+        Robot.getOperator()
+                .test_tB
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
+        Robot.getOperator()
+                .test_tX
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Coral));
+        Robot.getOperator()
+                .test_tY
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL4Coral));
+        Robot.getOperator().test_X.whileTrue(elevator.setElevatorMMPositionFOC(config::getBarge));
+        Robot.getOperator().test_A.whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Algae));
+        Robot.getOperator().test_B.whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Algae));
         homeAll.whileTrue(home());
     }
 
@@ -101,7 +116,7 @@ public class ElevatorStates {
     }
 
     public static boolean allowedPosition() {
-        if ((getPosition().getAsDouble() * 100 / config.getL4() + 10)
+        if ((getPosition().getAsDouble() * 100 / config.getL4Coral() + 10)
                         - getElbowShoulderPos().getAsDouble()
                 > 0) {
             return true;
@@ -123,8 +138,23 @@ public class ElevatorStates {
     }
 
     private static Command home() {
+        System.out.println("position1 is: " + getPosition().getAsDouble());
+        if (getPosition().getAsDouble() > config.getL2Coral()) {
+            System.out.println("position is: " + getPosition().getAsDouble());
+            return elevator.holdPosition()
+                    .until(
+                            () ->
+                                    (Math.abs(ElbowStates.getPosition().getAsDouble()) > 170)
+                                            && (Math.abs(ShoulderStates.getPosition().getAsDouble())
+                                                    < 10))
+                    .andThen(
+                            elevator.moveToRotations(config::getHome)
+                                    .alongWith(elevator.checkMaxCurrent(() -> 100))
+                                    .withName("Elevator.home"));
+        }
         return elevator.moveToRotations(config::getHome)
                 .alongWith(elevator.checkMaxCurrent(() -> 100))
+                .alongWith(new PrintCommand("pos is: " + getPosition().getAsDouble()))
                 .withName("Elevator.home");
     }
 
@@ -141,7 +171,7 @@ public class ElevatorStates {
     }
 
     private static Command l1() {
-        return elevator.moveToRotations(config::getL1).withName("Elevator.l1");
+        return elevator.moveToRotations(config::getL1Coral).withName("Elevator.l1");
     }
 
     private static Command l2Coral() {
@@ -153,7 +183,7 @@ public class ElevatorStates {
     }
 
     private static Command l4() {
-        return elevator.moveToRotations(config::getL4).withName("Elevator.l4");
+        return elevator.moveToRotations(config::getL4Coral).withName("Elevator.l4");
     }
 
     private static Command barge() {

@@ -47,12 +47,26 @@ public class TwistStates {
         // TODO: for testing
         Robot.getPilot().testTune_tA.whileTrue(twist.moveToDegrees(() -> 179));
         // Robot.getPilot().testTune_tB.whileTrue(twist.moveToDegrees(config::getL2Algae));
-        Robot.getPilot().testTune_tX.whileTrue(twist.moveToDegrees(() -> 0));
+        //  Robot.getPilot().testTune_tX.whileTrue(twist.moveToDegrees(() -> 0));
+        //    Robot.getOperator()
+        //             .test_tX
+        //             .and(backwardMode.not())
+        //             .whileTrue(twist.moveToDegreesAndCheckReversed(() -> 0));
+        //     Robot.getOperator()
+        //             .test_tX
+        //             .and(backwardMode)
+        //             .whileTrue(reverse(elbow.moveToDegreesAndCheckReversed(config::getL3Coral)));
         Robot.getPilot().reZero_start.onTrue(twist.resetToIntialPos());
         // Robot.getPilot()
         //         .testTriggersTrigger
         //         .whileTrue(runTwist(() -> Robot.getPilot().getTestTriggersAxis()));
         Robot.getOperator().test_tA.whileTrue(twist.moveToDegrees(config::getL1Coral));
+        Robot.getOperator().test_tB.whileTrue(twist.moveToDegrees(config::getL2Coral));
+        Robot.getOperator().test_tX.whileTrue(twist.moveToDegrees(config::getL3Coral));
+        Robot.getOperator().test_tY.whileTrue(twist.moveToDegrees(config::getL4Coral));
+        Robot.getOperator().test_A.whileTrue(twist.moveToDegrees(config::getL2Algae));
+        Robot.getOperator().test_B.whileTrue(twist.moveToDegrees(config::getL3Algae));
+        Robot.getOperator().test_X.whileTrue(twist.moveToDegrees(config::getBarge));
         homeAll.whileTrue(home());
     }
 

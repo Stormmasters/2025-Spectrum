@@ -59,6 +59,8 @@ public class Pilot extends Gamepad {
     public final Trigger testTune_LB = testMode.and(leftBumper);
     public final Trigger testTriggersTrigger = testMode.and(leftTrigger.or(rightTrigger));
 
+    public final Trigger testActionReady = rightBumper.and(testMode);
+
     public static class PilotConfig extends Config {
 
         @Getter @Setter private double slowModeScalor = 0.45;

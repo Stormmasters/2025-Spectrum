@@ -50,7 +50,7 @@ public class Twist extends Mechanism {
         @Getter private final double l1Coral = 179;
         @Getter private final double l2Algae = 0;
         @Getter private final double l3Algae = 0;
-        @Getter private final double l2Coral = 179;
+        @Getter private final double l2Coral = 90;
         @Getter private final double l3Coral = 90;
         @Getter private final double l4Coral = 90;
         @Getter private final double barge = 180; // TODO: find this
@@ -275,6 +275,10 @@ public class Twist extends Mechanism {
     public Command moveToDegrees(DoubleSupplier degrees) {
         return super.moveToDegrees(degrees).withName(getName() + ".runPoseDegrees");
     }
+
+    // public Command moveToDegreesAvoidElevator(DoubleSupplier degrees) {
+
+    // }
 
     // --------------------------------------------------------------------------------
     // Simulation

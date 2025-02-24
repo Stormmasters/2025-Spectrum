@@ -117,13 +117,16 @@ public class CoralIntake extends Mechanism {
     // TODO: check if these actually need to be two separate methods
 
     public boolean hasIntakeCoral() {
-        double motorOutput = Robot.getCoralIntake().getVelocityRPM();
-        return (Math.abs(motorOutput) < 10);
+        double motorOutput =
+                Robot.getCoralIntake()
+                        .getVelocityRPM(); // might be better to check with motor voltage
+        // return (Math.abs(motorOutput) < 120);
+        return motorOutput < 120; // got rid of abs because motor velocity might drop below 0
     }
 
     public boolean hasIntakeAlgae() {
         double motorOutput = Robot.getCoralIntake().getVelocityRPM();
-        return (Math.abs(motorOutput) < 10);
+        return (Math.abs(motorOutput) < 120);
     }
 
     public Command algaeIntake() {

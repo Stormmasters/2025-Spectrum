@@ -30,7 +30,8 @@ public class CoralIntakeStates {
 
         // processorLollipopScore.whileTrue(log(coralIntake()));
 
-        // hasCoral.whileTrue(log(coralIntake()));
+        hasCoral.and(Robot.getOperator().testOperatorCoralStage)
+                .whileTrue(log(coralIntake.coralIntake()));
         // hasAlgae.whileTrue(log(algaeIntake()));
 
         // algaeHandoff.onTrue(log(algaeHandOff()));
@@ -42,9 +43,13 @@ public class CoralIntakeStates {
         Robot.getPilot().testTune_tA.whileTrue(coralIntake.coralIntake());
         // Robot.getPilot().testTune_tB.whileTrue(coralIntake.algaeIntake());
         Robot.getPilot().testTune_tX.whileTrue(coralIntake.coralIntake());
-        Robot.getPilot().testTune_tY.whileTrue(coralIntake.coralScore());
+        // Robot.getPilot().testTune_tY.whileTrue(coralIntake.coralScore());
         // Robot.getPilot().tuneShoulder_tB.whileTrue(coralIntake.coralScore());
-        Robot.getOperator().test_tA.whileTrue(coralIntake.coralIntake());
+        // Robot.getOperator().test_tA.whileTrue(coralIntake.coralIntake());
+        Robot.getPilot().testTune_RB.whileTrue(coralIntake.algaeScore());
+        Robot.getOperator().test_X.whileTrue(coralIntake.algaeIntake());
+        Robot.getOperator().test_A.whileTrue(coralIntake.algaeIntake());
+        Robot.getOperator().test_B.whileTrue(coralIntake.algaeIntake());
     }
 
     private static Command algaeHandOff() {

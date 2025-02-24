@@ -31,45 +31,32 @@ public class Elevator extends Mechanism {
         @Getter @Setter private double fullExtend = maxRotations * .999;
         @Getter private double home = 0.3;
 
-        @Getter private final double algaeLollipop = 8;
+        @Getter private final double algaeLollipop = 0.3; // TODO: find real value
+        @Getter private final double coralLollipop = 0.3; // TODO: find real value
 
-        @Getter
-        private final double coralLollipop = 0; // TODO: update, max changed from 110.6304660319
+        @Getter private final double clawGroundAlgaeIntake = 0.3; // TODO: find real value
+        @Getter private final double clawGroundCoralIntake = 0.3; // TODO: find real value
 
-        @Getter
-        private final double clawGroundAlgaeIntake =
-                0; // TODO: update, max changed from 110.6304660319
+        @Getter private final double stationIntake = 2.7;
+        @Getter private final double stationExtendedIntake = 6.5;
 
-        @Getter
-        private final double clawGroundCoralIntake =
-                0; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double handOff = 5.5; // TODO: check if this works
 
-        @Getter
-        private final double stationIntake =
-                2.7; // TODO: update, as max changed from 110.6304660319
+        @Getter private final double l2Algae = 0.3;
+        @Getter private final double preL3Algae = 3; // TODO: find this value
+        @Getter private final double l3Algae = 12.5;
 
-        @Getter
-        private final double stationExtendedIntake =
-                6.5; // TODO: update, as max changed from 110.6304660319
-
-        @Getter
-        private final double handOff = 5.5; // TODO: update, as max changed from 110.6304660319
-
-        @Getter private final double l2Algae = 0; // TODO: find real value
-
-        @Getter
-        private final double l3Algae = 12.5; // TODO: update, as max changed from 110.6304660319
-
-        @Getter private final double l1 = 0;
-
+        @Getter private final double l1Coral = 0.3;
+        @Getter private final double preL2Coral = 3; // TODO: find this value
         @Getter private final double l2Coral = 7.15;
+        @Getter private final double preL3Coral = 3; // TODO: find this value
+        @Getter private final double l3Coral = 17.5;
+        @Getter private final double preL4Coral = 3; // TODO: find this value
+        @Getter private final double l4Coral = 18.86;
 
-        @Getter private final double l3Coral = 14.54;
-
-        @Getter private final double l4 = 18.86;
         @Getter private final double barge = 20;
 
-        @Getter private double triggerTolerance = 100;
+        @Getter private double triggerTolerance = 0.95;
         @Getter private double elevatorIsUpHeight = 5;
         @Getter private double elevatorIsHighHeight = 10;
         @Getter private double initPosition = 0;
@@ -91,7 +78,7 @@ public class Elevator extends Mechanism {
         @Getter private double torqueCurrentLimit = 160;
 
         /* Sim properties */
-        @Getter private double kElevatorGearing = 0.69180327868;
+        @Getter private double kElevatorGearing = 1.7;
         @Getter private double kCarriageMass = 13.6078;
         @Getter private double kElevatorDrumRadiusMeters = Units.inchesToMeters(0.955 / 2);
         @Getter private double initialX = 0.8;
@@ -131,7 +118,7 @@ public class Elevator extends Mechanism {
         super(config);
         this.config = config;
 
-        setIntialPosition();
+        setInitialPosition();
 
         simulationInit();
         telemetryInit();
@@ -164,15 +151,15 @@ public class Elevator extends Mechanism {
         }
     }
 
-    private void setIntialPosition() {
+    private void setInitialPosition() {
         if (isAttached()) {
             motor.setPosition(config.getInitPosition());
             followerMotors[0].setPosition(config.getInitPosition());
         }
     }
 
-    public Command resetToIntialPos() {
-        return run(() -> setIntialPosition());
+    public Command resetToInitialPos() {
+        return run(() -> setInitialPosition());
     }
 
     // --------------------------------------------------------------------------------
@@ -290,7 +277,7 @@ public class Elevator extends Mechanism {
                             .setAngle(config.angle)
                             .setMovingLength(config.getMovingLength())
                             .setStaticLength(config.getStaticLength())
-                            .setMaxHeight(30.5),
+                            .setMaxHeight(30.5 + 7),
                     mech,
                     elevatorMotorSim,
                     "1" + config.getName()); // added 1 to the name to create it first

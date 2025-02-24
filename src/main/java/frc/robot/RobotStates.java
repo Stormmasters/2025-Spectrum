@@ -67,7 +67,7 @@ public class RobotStates {
     public static final Trigger groundCoral = Trigger.kFalse;
 
     // score Triggers
-    public static final Trigger actionPrepState = pilot.actionReady;
+    public static final Trigger actionPrepState = pilot.actionReady.or(pilot.testActionReady);
 
     // climb Triggers
     public static final Trigger climbPrep = operator.climbPrep_start;
@@ -120,95 +120,100 @@ public class RobotStates {
     public static void setupStates() {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
+
         actionPrepState.onTrue(scoreState.setFalse());
         actionPrepState.onFalseOnce(scoreState.setTrue());
+
         operator.operatorCoralStage.onFalseOnce(homeAll.setTrue());
-        operator.testOperatorCoralStage.onFalseOnce(
-                homeAll.setTrue()); // TODO: remove after testing
         operator.operatorAlgaeStage.onFalseOnce(homeAll.setTrue());
         isAtHome.onTrue(homeAll.setFalse());
 
-        bottomLeftZone
-                .and(stationIntaking)
-                .onTrue(
-                        backwardMode
-                                .setTrue()
-                                .onlyIf(
-                                        () ->
-                                                !swerve.frontClosestToAngle(
-                                                        Field.CoralStation.leftCenterFace
-                                                                .getRotation()
-                                                                .getDegrees())));
-        bottomLeftZone
-                .and(stationIntaking)
-                .onTrue(
-                        backwardMode
-                                .setFalse()
-                                .onlyIf(
-                                        () ->
-                                                swerve.frontClosestToAngle(
-                                                        Field.CoralStation.leftCenterFace
-                                                                .getRotation()
-                                                                .getDegrees())));
+        (operator.testOperatorCoralStage.not().and(operator.testOperatorAlgaeStage.not()))
+                .onTrueOnce(homeAll.setTrue()); // TODO: remove after testing
 
-        bottomRightZone
-                .and(stationIntaking)
-                .onTrue(
-                        backwardMode
-                                .setTrue()
-                                .onlyIf(
-                                        () ->
-                                                !swerve.frontClosestToAngle(
-                                                        Field.CoralStation.rightCenterFace
-                                                                .getRotation()
-                                                                .getDegrees())));
-        bottomRightZone
-                .and(stationIntaking)
-                .onTrue(
-                        backwardMode
-                                .setFalse()
-                                .onlyIf(
-                                        () ->
-                                                swerve.frontClosestToAngle(
-                                                        Field.CoralStation.rightCenterFace
-                                                                .getRotation()
-                                                                .getDegrees())));
+        // TODO: uncomment the backwards zones
+        // bottomLeftZone
+        //         .and(stationIntaking)
+        //         .onTrue(
+        //                 backwardMode
+        //                         .setTrue()
+        //                         .onlyIf(
+        //                                 () ->
+        //                                         !swerve.frontClosestToAngle(
+        //                                                 Field.CoralStation.leftCenterFace
+        //                                                         .getRotation()
+        //                                                         .getDegrees())));
+        // bottomLeftZone
+        //         .and(stationIntaking)
+        //         .onTrue(
+        //                 backwardMode
+        //                         .setFalse()
+        //                         .onlyIf(
+        //                                 () ->
+        //                                         swerve.frontClosestToAngle(
+        //                                                 Field.CoralStation.leftCenterFace
+        //                                                         .getRotation()
+        //                                                         .getDegrees())));
 
-        bargeZone
-                .and(barge)
-                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(180)));
-        bargeZone
-                .and(barge)
-                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(180)));
+        // bottomRightZone
+        //         .and(stationIntaking)
+        //         .onTrue(
+        //                 backwardMode
+        //                         .setTrue()
+        //                         .onlyIf(
+        //                                 () ->
+        //                                         !swerve.frontClosestToAngle(
+        //                                                 Field.CoralStation.rightCenterFace
+        //                                                         .getRotation()
+        //                                                         .getDegrees())));
+        // bottomRightZone
+        //         .and(stationIntaking)
+        //         .onTrue(
+        //                 backwardMode
+        //                         .setFalse()
+        //                         .onlyIf(
+        //                                 () ->
+        //                                         swerve.frontClosestToAngle(
+        //                                                 Field.CoralStation.rightCenterFace
+        //                                                         .getRotation()
+        //                                                         .getDegrees())));
 
-        topLeftZone
-                .and(reefPosition)
-                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(60)));
-        topLeftZone
-                .and(reefPosition)
-                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(60)));
+        // bargeZone
+        //         .and(barge)
+        //         .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(180)));
+        // bargeZone
+        //         .and(barge)
+        //         .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(180)));
 
-        topRightZone
-                .and(reefPosition)
-                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(-60)));
-        topRightZone
-                .and(reefPosition)
-                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(-60)));
+        // topLeftZone
+        //         .and(reefPosition)
+        //         .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(60)));
+        // topLeftZone
+        //         .and(reefPosition)
+        //         .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(60)));
 
-        bottomLeftZone
-                .and(reefPosition)
-                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(120)));
-        bottomLeftZone
-                .and(reefPosition)
-                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(120)));
+        // topRightZone
+        //         .and(reefPosition)
+        //         .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(-60)));
+        // topRightZone
+        //         .and(reefPosition)
+        //         .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(-60)));
 
-        bottomRightZone
-                .and(reefPosition)
-                .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(-120)));
-        bottomRightZone
-                .and(reefPosition)
-                .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(-120)));
+        // bottomLeftZone
+        //         .and(reefPosition)
+        //         .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(120)));
+        // bottomLeftZone
+        //         .and(reefPosition)
+        //         .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(120)));
 
+        // bottomRightZone
+        //         .and(reefPosition)
+        //         .onTrue(backwardMode.setTrue().onlyIf(() -> !swerve.frontClosestToAngle(-120)));
+        // bottomRightZone
+        //         .and(reefPosition)
+        //         .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(-120)));
+
+        pilot.testTune_tY.onTrue(backwardMode.toggle());
         operator.leftScore_Dpad.onTrue(leftScore.setTrue(), rightScore.setFalse());
         operator.rightScore_Dpad.onTrue(rightScore.setTrue(), leftScore.setFalse());
     }

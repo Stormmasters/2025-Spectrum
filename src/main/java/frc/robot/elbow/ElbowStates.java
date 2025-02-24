@@ -14,7 +14,8 @@ public class ElbowStates {
     private static Elbow elbow = Robot.getElbow();
     private static ElbowConfig config = Robot.getConfig().elbow;
 
-    public static final Trigger isHome = elbow.atPercentage(config::getHome, config::getTolerance);
+    public static final Trigger isHome =
+            elbow.atDegrees(() -> (config.getHome() + config.getOffset()), config::getTolerance);
     public static final Trigger pastElevator =
             elbow.aboveDegrees(elbow.offsetPosition(() -> -160 + 360), config::getTolerance)
                     .and(elbow.belowDegrees(() -> 160, config::getTolerance));
@@ -78,11 +79,26 @@ public class ElbowStates {
         //         .whileTrue(runElbow(() -> Robot.getPilot().getTestTriggersAxis()));
 
         Robot.getOperator().test_tA.whileTrue(elbow.moveToDegrees(config::getL1Coral));
+        Robot.getOperator().test_tB.whileTrue(elbow.moveToDegrees(config::getL2Coral));
+        Robot.getOperator()
+                .test_tX
+                .and(backwardMode.not())
+                .whileTrue(elbow.moveToDegreesAndCheckReversed(config::getL3Coral));
+        Robot.getOperator()
+                .test_tX
+                .and(backwardMode)
+                .whileTrue(
+                        (elbow.moveToDegreesAndCheckReversed(
+                                () -> -config.getL3Coral()))); // TODO: FIX REVERSED
+        Robot.getOperator().test_tY.whileTrue(elbow.moveToDegrees(config::getL4Coral));
+        Robot.getOperator().test_A.whileTrue(elbow.moveToDegrees(config::getL2Algae));
+        Robot.getOperator().test_B.whileTrue(elbow.moveToDegrees(config::getL3Algae));
+        Robot.getOperator().test_X.whileTrue(elbow.moveToDegrees(config::getBarge));
         homeAll.whileTrue(home());
     }
 
     public static DoubleSupplier getPosition() {
-        return () -> elbow.getPositionPercentage();
+        return () -> (elbow.getPositionDegrees() + 90);
     }
 
     public static Command score() {
@@ -188,7 +204,11 @@ public class ElbowStates {
 
     // Negate position command
     protected static Command reverse(Command cmd) {
-        return cmd.deadlineFor(
-                Commands.startEnd(() -> config.setReversed(true), () -> config.setReversed(false)));
+        // return cmd.deadlineFor(
+        //         Commands.startEnd(() -> config.setReversed(true), () ->
+        // config.setReversed(false)));
+        return Commands.runOnce(() -> config.setReversed(true))
+                .andThen(cmd)
+                .andThen(() -> config.setReversed(false));
     }
 }
