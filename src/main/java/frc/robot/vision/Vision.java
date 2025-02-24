@@ -94,11 +94,11 @@ public class Vision extends SubsystemBase {
         // logging
         df.setMaximumFractionDigits(2);
 
-        /* Configure Limelight Settings Here */ 
-        for (Limelight limelight : allLimelights) {  
-            limelight.setLEDMode(false); 
-        } 
-    } 
+        /* Configure Limelight Settings Here */
+        for (Limelight limelight : allLimelights) {
+            limelight.setLEDMode(false);
+        }
+    }
 
     @Override
     public void periodic() {
