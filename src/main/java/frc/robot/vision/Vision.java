@@ -605,7 +605,7 @@ public class Vision extends SubsystemBase {
             }
         }
 
-        SmartDashboard.putNumber("Get Distance Seen Reef Face", seenReefFaces[0]);
+        SmartDashboard.putNumber("GetDistanceSeenReefFace", seenReefFaces[0]);
         return seenReefFaces;
     }
 
