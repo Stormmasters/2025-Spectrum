@@ -135,7 +135,7 @@ public class Shoulder extends Mechanism {
                             .setGearRatio(config.getCANcoderGearRatio())
                             .setOffset(config.getCANcoderOffset())
                             .setAttached(false);
-            setIntialPosition();
+            setInitialPosition();
         }
 
         simulationInit();
@@ -171,7 +171,7 @@ public class Shoulder extends Mechanism {
         }
     }
 
-    private void setIntialPosition() {
+    private void setInitialPosition() {
         if (canCoder.isAttached()) {
             motor.setPosition(
                     canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
@@ -182,7 +182,7 @@ public class Shoulder extends Mechanism {
     }
 
     public Command resetToIntialPos() {
-        return run(() -> setIntialPosition());
+        return run(() -> setInitialPosition());
     }
 
     // --------------------------------------------------------------------------------

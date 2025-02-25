@@ -11,10 +11,12 @@ public class PM2025 extends Config {
 
         // Attached Mechanisms
         pilot.setAttached(true);
+        photonPilot.setAttached(false);
         operator.setAttached(true);
-
+        photonOperator.setAttached(false);
         elevator.setAttached(true);
         shoulder.setAttached(true);
+        photonShoulder.setAttached(false);
         elbow.setAttached(true);
         twist.setAttached(true);
         coralIntake.setAttached(true);

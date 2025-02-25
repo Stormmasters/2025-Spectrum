@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
+import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
@@ -35,18 +36,31 @@ public class PhotonShoulder extends Mechanism {
         @Getter private final double l4Coral = -88.9;
         @Getter @Setter private double tunePhotonShoulder = 0;
 
+        @Getter private final double tolerance = 0.95;
+        
+        @Getter private final double offset = -90;
+        @Getter private final double initPosition = 0;
+
         /* PhotonShoulder config settings */
         @Getter private final double zeroSpeed = -0.1;
+        @Getter private final double holdMaxSpeedRPM = 18;
 
         @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
-        @Getter private final double velocityKp = .4; // 186; // 200 w/ 0.013 good
-        @Getter private final double velocityKv = 0.018;
-        @Getter private final double velocityKs = 0;
+        @Getter private final double positionKp = 1500;
+        @Getter private final double positionKd = 140;
+        @Getter private final double positionKv = 0;
+        @Getter private final double positionKs = 0.06;
+        @Getter private final double positionKa = 0.001;
+        @Getter private final double positionKg = 12.5;
+        @Getter private final double mmCruiseVelocity = 10;
+        @Getter private final double mmAcceleration = 50;
+        @Getter private final double mmJerk = 0;
 
-        // Need to add auto launching positions when auton is added
-
-        // Removed implementation of tree map
+        /* Cancoder config settings */
+        @Getter private final double CANcoderGearRatio = 30 / 36;
+        @Getter private double CANcoderOffset = 0;
+        @Getter private boolean isCANcoderAttached = false;
 
         /* Sim properties */
         @Getter private double photonShoulderX = 0.8;
@@ -58,20 +72,25 @@ public class PhotonShoulder extends Mechanism {
 
         //TODO: get correct configs
         public PhotonShoulderConfig() {
-            super("PhotonShoulder", 42, Rio.RIO_CANBUS); // Rio.CANIVORE);
-            configPIDGains(0, velocityKp, 0, 0);
-            configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configMotionMagic(54.6, 60, 0); // 147000, 161000, 0);
-            configGearRatio(1); // 50.43);
+            super("PhotonShoulder", 42, Rio.CANIVORE);
+            configPIDGains(0, positionKp, 0, positionKd);
+            configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
+            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk); // 147000, 161000, 0);
+            configGearRatio(102.857); 
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
-            configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-7.714285714, 7.714285714);
+            configReverseTorqueCurrentLimit(-torqueCurrentLimit);
+            configMinMaxRotations(-0.25, 0.75);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive();
-            setSimRatio(15.429);
+            if (Robot.isSimulation()) {
+                configCounterClockwise_Positive();
+            } else {
+                configClockwise_Positive();
+            }
+            configGravityType(true);
+            setSimRatio(102.857);
         }
 
         public PhotonShoulderConfig modifyMotorConfig(TalonFX motor) {
@@ -85,13 +104,21 @@ public class PhotonShoulder extends Mechanism {
     }
 
     private PhotonShoulderConfig config;
-    private CANcoder m_CANcoder;
+    private SpectrumCANcoder canCoder;
     @Getter private PhotonShoulderSim sim;
     CANcoderSimState canCoderSim;
 
     public PhotonShoulder(PhotonShoulderConfig config) {
         super(config);
         this.config = config;
+
+        if (isAttached()) {
+            canCoder =
+                    new SpectrumCANcoder(42, motor, config)
+                            .setGearRatio(config.getCANcoderGearRatio())
+                            .setOffset(config.getCANcoderOffset())
+                            .setAttached(false);
+            setInitialPosition();
 
         simulationInit();
         telemetryInit();
@@ -116,17 +143,29 @@ public class PhotonShoulder extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
+            builder.addDoubleProperty("Position Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty(
-                    "Position Percent",
-                    () -> (getPositionRotations() / config.getMaxRotations()) * 100,
-                    null);
+                    "Position Degrees", () -> (this.getPositionDegrees() - config.offset), null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
             builder.addDoubleProperty(
                     "#Tune Position Percent", config::getTunePhotonShoulder, config::setTunePhotonShoulder);
         }
+    }
+
+    private void setInitialPosition() {
+        if (canCoder.isAttached()) {
+            motor.setPosition(
+                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                            * config.getGearRatio());
+        } else {
+            motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+        }
+    }
+
+    public Command resetToIntialPos() {
+        return run(() -> setInitialPosition());
     }
 
     // --------------------------------------------------------------------------------
@@ -138,7 +177,7 @@ public class PhotonShoulder extends Mechanism {
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
                         b -> {
-                            m_CANcoder.setPosition(0);
+                            canCoder.getCanCoder().setPosition(0);
                             toggleReverseSoftLimit(true); // end
                         },
                         () -> false, // isFinished
@@ -160,16 +199,31 @@ public class PhotonShoulder extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
+                stop();
             }
 
             @Override
             public void execute() {
-                moveToRotations(() -> holdPosition);
+                if (Math.abs(getVelocityRPM()) > config.holdMaxSpeedRPM) {
+                    stop();
+                    holdPosition = getPositionRotations();
+                } else {
+                    setDynMMPositionFoc(
+                            () -> holdPosition,
+                            () -> config.getMmCruiseVelocity(),
+                            () -> config.getMmAcceleration(),
+                            () -> 20);
+                }
             }
 
             @Override
             public void end(boolean interrupted) {
                 stop();
+            }
+
+            @Override
+            public boolean isFinished() {
+                return false;
             }
         };
     }
@@ -179,6 +233,15 @@ public class PhotonShoulder extends Mechanism {
             return getPositionRotations() > config.getMaxRotations();
         }
         return false;
+    }
+
+    @Override
+    public Command moveToDegrees(DoubleSupplier degrees) {
+        return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
+    }
+
+    public DoubleSupplier offsetPosition(DoubleSupplier position) {
+        return () -> (position.getAsDouble() + config.getOffset());
     }
 
     // --------------------------------------------------------------------------------

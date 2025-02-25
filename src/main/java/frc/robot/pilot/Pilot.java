@@ -145,7 +145,7 @@ public class Pilot extends Gamepad {
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveCCWPositive() {
         double ccwPositive = -1 * rightStickCurve.calculate(getRightX());
-        if (isSlowMode) {
+        if (slowMode.getAsBoolean()) {
             ccwPositive *= Math.abs(config.getSlowModeScalor());
         } else if (turboMode.getAsBoolean()) {
             ccwPositive *= Math.abs(config.getTurboModeScalor());
