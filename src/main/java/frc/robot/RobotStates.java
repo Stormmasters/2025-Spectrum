@@ -4,6 +4,7 @@ import static frc.robot.auton.Auton.*;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
 import frc.robot.elbow.ElbowStates;
@@ -62,8 +63,8 @@ public class RobotStates {
             pilot.stationExtendedIntake_LB_LT; // TODO: add zone
     // public static final Trigger groundAlgae = pilot.groundAlgae_RT; //TODO: Uncomment
     // public static final Trigger groundCoral = pilot.groundCoral_LB_RT; //TODO: uncomment
-    public static final Trigger stationIntaking = Trigger.kFalse;
-    public static final Trigger groundAlgae = Trigger.kFalse;
+    public static final Trigger stationIntaking = pilot.stationIntake_LT; // Trigger.kFalse;
+    public static final Trigger groundAlgae = pilot.groundAlgae_RT;
     public static final Trigger groundCoral = Trigger.kFalse;
 
     // score Triggers
@@ -107,12 +108,23 @@ public class RobotStates {
     public static final SpectrumState scoreState = new SpectrumState("scoreState");
     public static final SpectrumState homeAll = new SpectrumState("homeAll");
 
+    // public static final SpectrumState passiveCoral = new SpectrumState("passiveCoralIntake");
+    // public static final SpectrumState passiveAlgae = new SpectrumState("passiveAlgaeIntake");
+
     public static final Trigger coastOn = pilot.coastOn_dB;
 
     public static final Trigger reefPosition =
             L2Algae.or(L3Algae, L1Coral, L2Coral, L3Coral, L4Coral);
 
     public static final Trigger coralReefPosition = L1Coral.or(L2Coral, L3Coral, L4Coral);
+
+    public static final Trigger coralStage = operator.operatorCoralStage;
+    public static final Trigger algaeStage = operator.operatorAlgaeStage;
+
+    public static final Trigger hasCoral = new Trigger(Robot.getCoralIntake()::hasIntakeCoral);
+    public static final Trigger hasAlgae = new Trigger(Robot.getCoralIntake()::hasIntakeAlgae);
+
+    public static final Trigger homeAllStopIntake = operator.notStage.and(scoreState);
 
     public static final SpectrumState backwardMode = new SpectrumState("backward");
 
@@ -122,14 +134,41 @@ public class RobotStates {
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
 
         actionPrepState.onTrue(scoreState.setFalse());
-        actionPrepState.onFalseOnce(scoreState.setTrue());
+        actionPrepState.onChangeToFalse(
+                scoreState.setTrue().alongWith(new WaitCommand(5)).andThen(scoreState.setFalse()));
+        operator.operatorAlgaeStage.or(operator.operatorCoralStage).onTrue(scoreState.setFalse());
 
-        operator.operatorCoralStage.onFalseOnce(homeAll.setTrue());
-        operator.operatorAlgaeStage.onFalseOnce(homeAll.setTrue());
+        (operator.operatorCoralStage.not().and(operator.operatorAlgaeStage.not()))
+                .onChangeToTrue(
+                        homeAll.setTrue()
+                                .alongWith(new WaitCommand(1.5))
+                                .andThen(homeAll.setFalse()));
+        stationIntaking
+                .not()
+                .onChangeToTrue(
+                        homeAll.setTrue()
+                                .alongWith(new WaitCommand(1.5))
+                                .andThen(homeAll.setFalse()));
+        homeAllStopIntake.onTrue(
+                homeAll.setTrue().alongWith(new WaitCommand(1.5)).andThen(homeAll.setFalse()));
         isAtHome.onTrue(homeAll.setFalse());
 
+        // hasCoral.and(operator.operatorCoralStage.or(stationIntaking))
+        //         .onTrue(passiveCoral.setTrue());
+        // hasCoral.not()
+        //         .and(operator.operatorCoralStage.not())
+        //         .or(scoreState)
+        //         .debounce(0.5)
+        //         .onTrue(passiveCoral.setFalse());
+
+        // hasAlgae.and(operator.operatorAlgaeStage).onTrue(passiveAlgae.setTrue());
+        // hasAlgae.not()
+        //         .or(operator.operatorAlgaeStage.not())
+        //         .debounce(0.5)
+        //         .onTrue(passiveAlgae.setFalse());
+
         (operator.testOperatorCoralStage.not().and(operator.testOperatorAlgaeStage.not()))
-                .onTrueOnce(homeAll.setTrue()); // TODO: remove after testing
+                .onChangeToTrue(homeAll.setTrue()); // TODO: remove after testing
 
         // TODO: uncomment the backwards zones
         // bottomLeftZone

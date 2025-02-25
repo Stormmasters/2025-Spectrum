@@ -4,8 +4,11 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.elbow.ElbowStates;
+import frc.robot.elevator.ElevatorStates;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
@@ -27,6 +30,7 @@ public class ShoulderStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         // stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
         // stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
+        stationIntaking.whileTrue(shoulder.moveToDegrees((config::getStationIntake)));
         // stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
         // stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
 
@@ -43,8 +47,50 @@ public class ShoulderStates {
         // L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
         // L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
         // L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
-        // L2Coral.and(backwardMode.not()).whileTrue(log(l2Coral()));
-        // L2Coral.and(backwardMode).whileTrue(log(reverse(l2Coral())));
+        L2Coral.and(backwardMode.not(), actionPrepState, ElevatorStates.isL2Coral)
+                .whileTrue(l2Coral());
+        L2Coral.and(backwardMode, actionPrepState, ElevatorStates.isL2Coral)
+                .whileTrue(
+                        shoulder.moveToDegrees(
+                                () -> -config.getL2Coral())); // TODO: change back to command
+
+        L2Coral.and(backwardMode.not(), scoreState).whileTrue(score2());
+        L2Coral.and(backwardMode, scoreState)
+                .whileTrue(
+                        shoulder.moveToDegrees(
+                                () ->
+                                        -config.getL2Coral()
+                                                + 15)); // TODO: change back to command when
+
+        L3Coral.and(backwardMode.not(), actionPrepState, ElevatorStates.isL3Coral)
+                .whileTrue(l3Coral());
+        L3Coral.and(backwardMode, actionPrepState, ElevatorStates.isL3Coral)
+                .whileTrue(
+                        shoulder.moveToDegrees(
+                                () -> -config.getL3Coral())); // TODO: change back to command
+
+        L3Coral.and(backwardMode.not(), scoreState).whileTrue(score3());
+        L3Coral.and(backwardMode, scoreState)
+                .whileTrue(
+                        shoulder.moveToDegrees(
+                                () ->
+                                        -config.getL3Coral()
+                                                + 15)); // TODO: change back to command when
+
+        L4Coral.and(backwardMode.not(), actionPrepState).whileTrue(l4Coral());
+        L4Coral.and(backwardMode, actionPrepState)
+                .whileTrue(
+                        shoulder.moveToDegrees(
+                                () -> -config.getL4Coral())); // TODO: change back to command
+
+        L4Coral.and(backwardMode.not(), scoreState).whileTrue(score4());
+        L4Coral.and(backwardMode, scoreState, ElbowStates.atTarget)
+                .whileTrue(
+                        shoulder.moveToDegrees(
+                                () ->
+                                        -config.getL4Coral()
+                                                + 15)); // TODO: change back to command when
+
         // L3Coral.and(backwardMode.not()).whileTrue(log(l3Coral()));
         // L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
         // L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
@@ -108,6 +154,24 @@ public class ShoulderStates {
     }
 
     /* Scoring positions */
+
+    public static Command score2() {
+        double newPos = config.getL2Coral() - 15;
+        return shoulder.moveToDegreesAndCheckReversed(() -> newPos).withName("Shoulder.score2");
+        // return elbow.moveToRelativePosition(() -> -15).withName("Elbow.score2");
+    }
+
+    public static Command score3() {
+        double newPos = -15 + config.getL3Coral();
+        return shoulder.moveToDegreesAndCheckReversed(() -> newPos).withName("Shoulder.score3");
+    }
+
+    public static Command score4() {
+        double newPos = 50 + config.getL4Coral();
+        return new WaitCommand(0.2)
+                .andThen(shoulder.moveToDegreesAndCheckReversed(() -> newPos))
+                .withName("Shoulder.score3");
+    }
 
     public static Command l2Algae() {
         return shoulder.moveToDegreesAndCheckReversed(config::getL2Algae)

@@ -46,12 +46,11 @@ public class Elbow extends Mechanism {
         @Getter private final double l2Algae = 123.9;
         @Getter private final double l3Algae = 123.9;
 
+        @Getter private final double stage = 160;
         @Getter private final double l1Coral = 125.8;
-        @Getter private final double preL2Coral = 150;
         @Getter private final double l2Coral = 126;
-        @Getter private final double preL3Coral = 150;
         @Getter private final double l3Coral = 126;
-        @Getter private final double l4Coral = 135;
+        @Getter private final double l4Coral = 145;
 
         @Getter private final double barge = 170; // TODO: find this value
 

@@ -3,7 +3,6 @@ package frc.robot.coralIntake;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
 import frc.robot.elbow.ElbowStates;
@@ -13,25 +12,31 @@ public class CoralIntakeStates {
     private static CoralIntake coralIntake = Robot.getCoralIntake();
     private static CoralIntakeConfig config = Robot.getConfig().coralIntake;
 
-    public static final Trigger hasCoral = new Trigger(coralIntake::hasIntakeCoral);
-    public static final Trigger hasAlgae = new Trigger(coralIntake::hasIntakeAlgae);
-
     public static void setupDefaultCommand() {
         coralIntake.setDefaultCommand(coralIntake.runStop().withName("coralIntake.default"));
     }
 
     public static void setStates() {
         // TODO: Fix this after testing
-        // stationIntaking.whileTrue(coralIntake()); // log(coralIntake()));
+        stationIntaking.onTrue(coralIntake.coralIntake()); // log(coralIntake()));
         // stationExtendedIntake.whileTrue(coralEject()); // log(coralIntake()));
+
+        L2Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
+        L2Coral.and(scoreState).whileTrue(coralIntake.coralScore());
+        L3Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
+        L3Coral.and(scoreState).whileTrue(coralIntake.coralScore());
+        L4Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
+        L4Coral.and(scoreState).whileTrue(coralIntake.coralScore());
+
+        homeAllStopIntake.onTrue(coralIntake.runStop());
 
         // scoreState.and(barge.not()).onTrue(log(coralScore()));
         // scoreState.and(barge).onTrue(log(barge()));
 
         // processorLollipopScore.whileTrue(log(coralIntake()));
 
-        hasCoral.and(Robot.getOperator().testOperatorCoralStage)
-                .whileTrue(log(coralIntake.coralIntake()));
+        // passiveCoral.whileTrue(coralIntake.coralIntake()); // TODO: delete?
+        // passiveAlgae.whileTrue(coralIntake.algaeIntake());
         // hasAlgae.whileTrue(log(algaeIntake()));
 
         // algaeHandoff.onTrue(log(algaeHandOff()));
@@ -46,7 +51,7 @@ public class CoralIntakeStates {
         // Robot.getPilot().testTune_tY.whileTrue(coralIntake.coralScore());
         // Robot.getPilot().tuneShoulder_tB.whileTrue(coralIntake.coralScore());
         // Robot.getOperator().test_tA.whileTrue(coralIntake.coralIntake());
-        Robot.getPilot().testTune_RB.whileTrue(coralIntake.algaeScore());
+        // Robot.getPilot().testTune_RB.whileTrue(coralIntake.algaeScore());
         Robot.getOperator().test_X.whileTrue(coralIntake.algaeIntake());
         Robot.getOperator().test_A.whileTrue(coralIntake.algaeIntake());
         Robot.getOperator().test_B.whileTrue(coralIntake.algaeIntake());

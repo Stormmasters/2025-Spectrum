@@ -1,7 +1,7 @@
 {
   "Docking": {
     "Data": [
-      "DockNode  ID=0x00000001 Pos=7,1001 Size=905,316 Selected=0x48913727"
+      "DockNode  ID=0x00000001 Pos=7,1001 Size=905,316 Selected=0x2D9B9756"
     ]
   },
   "MainWindow": {
@@ -79,7 +79,7 @@
     "###Joysticks": {
       "Collapsed": "0",
       "Pos": "913,1162",
-      "Size": "976,252"
+      "Size": "976,278"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",

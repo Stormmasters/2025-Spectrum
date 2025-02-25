@@ -19,8 +19,7 @@ public class Operator extends Gamepad {
 
     public final Trigger operatorCoralStage = leftBumper.and(teleop);
     public final Trigger operatorAlgaeStage = rightBumper.and(teleop);
-    public final Trigger homeState =
-            Trigger.kFalse; // operatorCoralStage.not().and(operatorAlgaeStage.not());
+    public final Trigger notStage = operatorCoralStage.not().and(operatorAlgaeStage.not());
 
     public final Trigger L1Coral_A = A.and(operatorCoralStage);
     public final Trigger L2Coral_B = B.and(operatorCoralStage);
@@ -31,11 +30,11 @@ public class Operator extends Gamepad {
     public final Trigger L3Algae_X = X.and(operatorAlgaeStage);
     public final Trigger barge_Y = Y.and(operatorAlgaeStage);
 
-    public final Trigger homeElevator_A = A.and(homeState, teleop);
-    public final Trigger homeInClimb_B = B.and(homeState, teleop);
+    public final Trigger homeElevator_A = A.and(notStage, teleop);
+    public final Trigger homeInClimb_B = B.and(notStage, teleop);
 
-    public final Trigger algaeHandoff_X = X.and(homeState, teleop);
-    public final Trigger coralHandoff_Y = Y.and(homeState, teleop);
+    public final Trigger algaeHandoff_X = X.and(notStage, teleop);
+    public final Trigger coralHandoff_Y = Y.and(notStage, teleop);
 
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);

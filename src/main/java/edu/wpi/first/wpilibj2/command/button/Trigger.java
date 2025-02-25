@@ -167,23 +167,18 @@ public class Trigger implements BooleanSupplier {
      * @param command the command to start
      * @return this trigger, so calls can be chained
      */
-    public Trigger onFalseOnce(Command command) {
+    public Trigger onChangeToFalse(Command command) {
         requireNonNullParam(command, "command", "onFalse");
         m_loop.bind(
                 new Runnable() {
-                    private boolean m_pressedLast = true;
-                    private boolean m_hasRun = false;
+                    private boolean m_pressedLast = false;
 
                     @Override
                     public void run() {
                         boolean pressed = m_condition.getAsBoolean();
 
-                        if (m_pressedLast && !pressed && m_hasRun) {
-                            command.schedule();
-                        }
-
                         if (m_pressedLast && !pressed) {
-                            m_hasRun = true;
+                            command.schedule();
                         }
 
                         m_pressedLast = pressed;
@@ -199,23 +194,18 @@ public class Trigger implements BooleanSupplier {
      * @param command the command to start
      * @return this trigger, so calls can be chained
      */
-    public Trigger onTrueOnce(Command command) {
+    public Trigger onChangeToTrue(Command command) {
         requireNonNullParam(command, "command", "onTrue");
         m_loop.bind(
                 new Runnable() {
-                    private boolean m_pressedLast = false;
-                    private boolean m_hasRun = false;
+                    private boolean m_pressedLast = true;
 
                     @Override
                     public void run() {
                         boolean pressed = m_condition.getAsBoolean();
 
-                        if (!m_pressedLast && pressed && m_hasRun) {
-                            command.schedule();
-                        }
-
                         if (!m_pressedLast && pressed) {
-                            m_hasRun = true;
+                            command.schedule();
                         }
 
                         m_pressedLast = pressed;

@@ -3,7 +3,6 @@ package frc.robot.elevator;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NTSendableBuilder;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -43,15 +42,11 @@ public class Elevator extends Mechanism {
         @Getter private final double handOff = 5.5; // TODO: check if this works
 
         @Getter private final double l2Algae = 0.3;
-        @Getter private final double preL3Algae = 3; // TODO: find this value
         @Getter private final double l3Algae = 12.5;
 
         @Getter private final double l1Coral = 0.3;
-        @Getter private final double preL2Coral = 3; // TODO: find this value
         @Getter private final double l2Coral = 7.15;
-        @Getter private final double preL3Coral = 3; // TODO: find this value
         @Getter private final double l3Coral = 17.5;
-        @Getter private final double preL4Coral = 3; // TODO: find this value
         @Getter private final double l4Coral = 18.86;
 
         @Getter private final double barge = 20;
@@ -60,7 +55,7 @@ public class Elevator extends Mechanism {
         @Getter private double elevatorIsUpHeight = 5;
         @Getter private double elevatorIsHighHeight = 10;
         @Getter private double initPosition = 0;
-        @Getter private double holdMaxSpeedRPM = 100;
+        @Getter private double holdMaxSpeedRPM = 10000;
 
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
@@ -180,7 +175,7 @@ public class Elevator extends Mechanism {
             @Override
             public void initialize() {
                 holdPosition = getPositionRotations();
-                setMMPositionFoc(() -> holdPosition);
+                stop();
             }
 
             @Override
@@ -192,16 +187,8 @@ public class Elevator extends Mechanism {
                 } else if (Math.abs(getVelocityRPM()) > config.holdMaxSpeedRPM) {
                     stop(); // Don't hold if moving too fast
                     holdPosition = currentPosition; // Update to a new hold position
-                } else if (Math.abs(holdPosition - currentPosition) <= 2) {
-                    setMMPositionFoc(() -> holdPosition);
                 } else {
-                    stop();
-                    DriverStation.reportError(
-                            "ElevatorHoldPosition tried to go too far away from current position. Current Position: "
-                                    + currentPosition
-                                    + " || Hold Position: "
-                                    + holdPosition,
-                            false);
+                    setMMPositionFoc(() -> holdPosition);
                 }
             }
 

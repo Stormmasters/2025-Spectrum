@@ -4,6 +4,7 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
+import frc.robot.elevator.ElevatorStates;
 import frc.robot.twist.Twist.TwistConfig;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
@@ -20,6 +21,7 @@ public class TwistStates {
     public static void setStates() {
         // stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
         // stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
+        stationIntaking.whileTrue(twist.moveToDegrees((config::getStationIntake)));
         // stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
         // stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
 
@@ -32,11 +34,15 @@ public class TwistStates {
         // coralReefPosition.and(backwardMode).and(leftScore).whileTrue(log(reverse(leftCoral())));
         // coralReefPosition.and(backwardMode.not()).and(rightScore).whileTrue(log(rightCoral()));
         // coralReefPosition.and(backwardMode).and(rightScore).whileTrue(log(reverse(rightCoral())));
+        coralStage.whileTrue(rightCoral());
+        // coralReefPosition.and(backwardMode.not()).whileTrue(twist.moveToDegrees(() ->
+        // -config.getRightCoral()));
 
         // barge.and(backwardMode.not()).whileTrue(log(barge()));
         // barge.and(backwardMode).whileTrue(log(reverse(barge())));
 
         // homeAll.whileTrue(log(home()));
+        homeAllStopIntake.and(ElevatorStates.isHome).onTrue(home());
 
         // algaeHandoff.whileTrue(log(handOffAlgae()));
         // coralHandoff.whileTrue(log(handOffCoral()));
@@ -67,7 +73,7 @@ public class TwistStates {
         Robot.getOperator().test_A.whileTrue(twist.moveToDegrees(config::getL2Algae));
         Robot.getOperator().test_B.whileTrue(twist.moveToDegrees(config::getL3Algae));
         Robot.getOperator().test_X.whileTrue(twist.moveToDegrees(config::getBarge));
-        homeAll.whileTrue(home());
+        // homeAll.whileTrue(home());
     }
 
     public static DoubleSupplier switchSigns(DoubleSupplier supplier) {

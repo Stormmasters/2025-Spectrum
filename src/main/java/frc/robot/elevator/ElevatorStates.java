@@ -24,6 +24,12 @@ public class ElevatorStates {
             elevator.atPercentage(config::getElevatorIsHighHeight, config::getTriggerTolerance);
     public static final Trigger isHome =
             elevator.atRotations(config::getHome, config::getTriggerTolerance);
+    public static final Trigger isL2Coral =
+            elevator.atRotations(config::getL2Coral, config::getTriggerTolerance);
+    public static final Trigger isL3Coral =
+            elevator.atRotations(config::getL3Coral, config::getTriggerTolerance);
+    public static final Trigger isL4Coral =
+            elevator.atRotations(config::getL4Coral, config::getTriggerTolerance);
 
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(holdPosition().withName("Elevator.default"));
@@ -43,6 +49,7 @@ public class ElevatorStates {
         // coralHandoff.whileTrue(handOff());
 
         // stationIntaking.whileTrue(stationIntake());
+        stationIntaking.whileTrue(elevator.setElevatorMMPositionFOC((config::getStationIntake)));
         // stationExtendedIntake.whileTrue(stationExtendedIntake());
         // L2Algae.whileTrue(l1());
         // L3Algae.whileTrue(l1());
@@ -50,6 +57,20 @@ public class ElevatorStates {
 
         // L1Coral.whileTrue(l1());
         // L2Coral.whileTrue(l1());
+        L2Coral.and(actionPrepState)
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
+        L2Coral.and(scoreState)
+                .whileTrue(elevator.setElevatorMMPositionFOC(() -> config.getL2Coral() - 2));
+
+        L3Coral.and(actionPrepState)
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Coral));
+        L3Coral.and(scoreState)
+                .whileTrue(elevator.setElevatorMMPositionFOC(() -> config.getL3Coral() - 2));
+
+        L4Coral.and(actionPrepState)
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL4Coral));
+        // L4Coral.and(scoreState)
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(() -> config.getL4Coral() - 2));
         // L3Coral.whileTrue(l1());
         // L4Coral.whileTrue(l1());
 
@@ -130,7 +151,8 @@ public class ElevatorStates {
     }
 
     private static Command fullExtend() {
-        return elevator.moveToRotations(config::getFullExtend).withName("Elevator.fullExtend");
+        return elevator.setElevatorMMPositionFOC(config::getFullExtend)
+                .withName("Elevator.fullExtend");
     }
 
     private static Command score() {
@@ -138,65 +160,66 @@ public class ElevatorStates {
     }
 
     private static Command home() {
-        System.out.println("position1 is: " + getPosition().getAsDouble());
-        if (getPosition().getAsDouble() > config.getL2Coral()) {
-            System.out.println("position is: " + getPosition().getAsDouble());
-            return elevator.holdPosition()
-                    .until(
-                            () ->
-                                    (Math.abs(ElbowStates.getPosition().getAsDouble()) > 170)
-                                            && (Math.abs(ShoulderStates.getPosition().getAsDouble())
-                                                    < 10))
-                    .andThen(
-                            elevator.moveToRotations(config::getHome)
-                                    .alongWith(elevator.checkMaxCurrent(() -> 100))
-                                    .withName("Elevator.home"));
-        }
-        return elevator.moveToRotations(config::getHome)
+        // System.out.println("position1 is: " + getPosition().getAsDouble());
+        // if (getPosition().getAsDouble() > config.getL2Coral()) {
+        //     System.out.println("position is: " + getPosition().getAsDouble());
+        //     return elevator.holdPosition()
+        //             .until(
+        //                     () ->
+        //                             (Math.abs(ElbowStates.getPosition().getAsDouble()) > 170)
+        //                                     &&
+        // (Math.abs(ShoulderStates.getPosition().getAsDouble())
+        //                                             < 10))
+        //             .andThen(
+        //                     elevator.setElevatorMMPositionFOC(config::getHome)
+        //                             .alongWith(elevator.checkMaxCurrent(() -> 100))
+        //                             .withName("Elevator.home"));
+        // }
+        return elevator.setElevatorMMPositionFOC(config::getHome)
                 .alongWith(elevator.checkMaxCurrent(() -> 100))
                 .alongWith(new PrintCommand("pos is: " + getPosition().getAsDouble()))
                 .withName("Elevator.home");
     }
 
     private static Command handOff() {
-        return elevator.moveToRotations(config::getHandOff).withName("Elevator.handOff");
+        return elevator.setElevatorMMPositionFOC(config::getHandOff).withName("Elevator.handOff");
     }
 
     private static Command l2Algae() {
-        return elevator.moveToRotations(config::getL2Algae).withName("Elevator.l2Algae");
+        return elevator.setElevatorMMPositionFOC(config::getL2Algae).withName("Elevator.l2Algae");
     }
 
     private static Command l3Algae() {
-        return elevator.moveToRotations(config::getL3Algae).withName("Elevator.l3Algae");
+        return elevator.setElevatorMMPositionFOC(config::getL3Algae).withName("Elevator.l3Algae");
     }
 
     private static Command l1() {
-        return elevator.moveToRotations(config::getL1Coral).withName("Elevator.l1");
+        return elevator.setElevatorMMPositionFOC(config::getL1Coral).withName("Elevator.l1");
     }
 
     private static Command l2Coral() {
-        return elevator.moveToRotations(config::getL2Coral).withName("Elevator.l2Coral");
+        return elevator.setElevatorMMPositionFOC(config::getL2Coral).withName("Elevator.l2Coral");
     }
 
     private static Command l3Coral() {
-        return elevator.moveToRotations(config::getL3Coral).withName("Elevator.l3Coral");
+        return elevator.setElevatorMMPositionFOC(config::getL3Coral).withName("Elevator.l3Coral");
     }
 
     private static Command l4() {
-        return elevator.moveToRotations(config::getL4Coral).withName("Elevator.l4");
+        return elevator.setElevatorMMPositionFOC(config::getL4Coral).withName("Elevator.l4");
     }
 
     private static Command barge() {
-        return elevator.moveToRotations(config::getBarge).withName("Elevator.barge");
+        return elevator.setElevatorMMPositionFOC(config::getBarge).withName("Elevator.barge");
     }
 
     private static Command stationIntake() {
-        return elevator.moveToRotations(config::getStationIntake)
+        return elevator.setElevatorMMPositionFOC(config::getStationIntake)
                 .withName("Elevator.stationIntake");
     }
 
     private static Command stationExtendedIntake() {
-        return elevator.moveToRotations(config::getStationExtendedIntake)
+        return elevator.setElevatorMMPositionFOC(config::getStationExtendedIntake)
                 .withName("Elevator.stationExtendedIntake");
     }
 
@@ -214,7 +237,7 @@ public class ElevatorStates {
 
     // Example of a TuneValue that is used to tune a single value in the code
     private static Command tuneElevator() {
-        return elevator.moveToRotations(new TuneValue("Tune Elevator", 0).getSupplier())
+        return elevator.setElevatorMMPositionFOC(new TuneValue("Tune Elevator", 0).getSupplier())
                 .withName("Elevator.Tune");
     }
 

@@ -31,7 +31,7 @@ public class CoralIntake extends Mechanism {
         @Getter private double coralIntakeSupplyCurrent = 12.0;
         @Getter private double coralIntakeTorqueCurrent = 27.0;
 
-        @Getter private double coralScoreVoltage = -2.0;
+        @Getter private double coralScoreVoltage = -0.5;
         @Getter private double coralScoreSupplyCurrent = 12;
         @Getter private double coralScoreTorqueCurrent = 27;
 
@@ -120,8 +120,7 @@ public class CoralIntake extends Mechanism {
         double motorOutput =
                 Robot.getCoralIntake()
                         .getVelocityRPM(); // might be better to check with motor voltage
-        // return (Math.abs(motorOutput) < 120);
-        return motorOutput < 120; // got rid of abs because motor velocity might drop below 0
+        return (Math.abs(motorOutput) < 120);
     }
 
     public boolean hasIntakeAlgae() {

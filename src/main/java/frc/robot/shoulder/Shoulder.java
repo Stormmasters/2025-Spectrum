@@ -49,7 +49,7 @@ public class Shoulder extends Mechanism {
         @Getter private final double l1Coral = 14;
         @Getter private final double l2Coral = 34;
         @Getter private final double l3Coral = 34;
-        @Getter private final double l4Coral = -180;
+        @Getter private final double l4Coral = -210;
 
         @Getter private final double barge = 180; // TODO: find this value
         @Getter @Setter private double tuneShoulder = 0;
@@ -97,9 +97,9 @@ public class Shoulder extends Mechanism {
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
-            configMinMaxRotations(-0.75, 0.25);
-            configReverseSoftLimit(-0.75, true);
-            configForwardSoftLimit(0.25, true);
+            configMinMaxRotations(-1, 0.5);
+            configReverseSoftLimit(-1, true);
+            configForwardSoftLimit(0.5, true);
             configNeutralBrakeMode(true);
             if (Robot.isSimulation()) {
                 configCounterClockwise_Positive();
