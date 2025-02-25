@@ -89,7 +89,7 @@ public abstract class Gamepad implements SpectrumSubsystem {
         @Getter @Setter double rightStickExp = 1.0;
         @Getter @Setter double rightStickScalor = 1.0;
 
-        @Getter @Setter double triggersDeadzone = 0.001;
+        @Getter @Setter double triggersDeadzone = 0.002;
         @Getter @Setter double triggersExp = 1.0;
         @Getter @Setter double triggersScalor = 1.0;
 

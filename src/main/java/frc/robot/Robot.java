@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auton.Auton;
 import frc.robot.configs.AM2025;
 import frc.robot.configs.FM20235;
+import frc.robot.configs.PM2025;
 import frc.robot.coralIntake.CoralIntake;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
 import frc.robot.elbow.Elbow;
@@ -107,8 +108,11 @@ public class Robot extends SpectrumRobot {
                 case FM_20235:
                     config = new FM20235();
                     break;
+                case PM_2025:
+                    config = new PM2025();
+                    break;
                 default: // SIM and UNKNOWN
-                    config = new AM2025();
+                    config = new PM2025();
                     break;
             }
 

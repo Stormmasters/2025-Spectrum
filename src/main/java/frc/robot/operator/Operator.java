@@ -19,7 +19,7 @@ public class Operator extends Gamepad {
 
     public final Trigger operatorCoralStage = leftBumper.and(teleop);
     public final Trigger operatorAlgaeStage = rightBumper.and(teleop);
-    public final Trigger homeState = operatorCoralStage.not().and(operatorAlgaeStage.not());
+    public final Trigger notStage = operatorCoralStage.not().and(operatorAlgaeStage.not());
 
     public final Trigger L1Coral_A = A.and(operatorCoralStage);
     public final Trigger L2Coral_B = B.and(operatorCoralStage);
@@ -30,17 +30,28 @@ public class Operator extends Gamepad {
     public final Trigger L3Algae_X = X.and(operatorAlgaeStage);
     public final Trigger barge_Y = Y.and(operatorAlgaeStage);
 
-    public final Trigger homeElevator_A = A.and(homeState, teleop);
-    public final Trigger homeInClimb_B = B.and(homeState, teleop);
+    public final Trigger homeElevator_A = A.and(notStage, teleop);
+    public final Trigger homeInClimb_B = B.and(notStage, teleop);
 
-    public final Trigger algaeHandoff_X = X.and(homeState, teleop);
-    public final Trigger coralHandoff_Y = Y.and(homeState, teleop);
+    public final Trigger algaeHandoff_X = X.and(notStage, teleop);
+    public final Trigger coralHandoff_Y = Y.and(notStage, teleop);
 
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);
     public final Trigger coastOff_dA = disabled.and(A);
 
     // TEST TRIGGERS
+    public final Trigger testOperatorCoralStage = leftBumper.and(testMode);
+    public final Trigger testOperatorAlgaeStage = rightBumper.and(testMode);
+    public final Trigger test_tA = A.and(testOperatorCoralStage);
+    public final Trigger test_tB = B.and(testOperatorCoralStage);
+    public final Trigger test_tX = X.and(testOperatorCoralStage);
+    public final Trigger test_tY = Y.and(testOperatorCoralStage);
+    public final Trigger test_A = A.and(testOperatorAlgaeStage);
+    public final Trigger test_B = B.and(testOperatorAlgaeStage);
+    public final Trigger test_X = X.and(testOperatorAlgaeStage);
+    public final Trigger test_Y = Y.and(testMode);
+    //  TODO: move reef scoring/intaking to operator
 
     public static class OperatorConfig extends Config {
 

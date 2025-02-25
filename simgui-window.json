@@ -1,7 +1,7 @@
 {
   "Docking": {
     "Data": [
-      "DockNode  ID=0x00000001 Pos=7,1001 Size=905,316 Selected=0x48913727"
+      "DockNode  ID=0x00000001 Pos=7,1001 Size=905,316 Selected=0x2D9B9756"
     ]
   },
   "MainWindow": {
@@ -43,7 +43,7 @@
     },
     "###/SmartDashboard/LeftView": {
       "Collapsed": "0",
-      "Pos": "1693,662",
+      "Pos": "1720,643",
       "Size": "544,547"
     },
     "###/SmartDashboard/Scheduler": {
@@ -68,7 +68,7 @@
     },
     "###Addressable LEDs": {
       "Collapsed": "0",
-      "Pos": "308,34",
+      "Pos": "486,229",
       "Size": "402,220"
     },
     "###FMS": {
@@ -78,8 +78,8 @@
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "4,382",
-      "Size": "976,252"
+      "Pos": "913,1162",
+      "Size": "976,278"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
@@ -121,7 +121,7 @@
     },
     "###System Joysticks": {
       "Collapsed": "0",
-      "Pos": "683,638",
+      "Pos": "370,471",
       "Size": "232,254"
     },
     "###Timing": {
