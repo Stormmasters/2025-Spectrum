@@ -5,7 +5,9 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,6 +16,7 @@ import frc.robot.auton.Auton;
 import frc.robot.configs.AM2025;
 import frc.robot.configs.FM20235;
 import frc.robot.configs.PHOTON2025;
+import frc.robot.configs.PM2025;
 import frc.robot.coralIntake.CoralIntake;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
 import frc.robot.elbow.Elbow;
@@ -42,6 +45,7 @@ import frc.robot.swerve.Swerve;
 import frc.robot.swerve.SwerveConfig;
 import frc.robot.twist.Twist;
 import frc.robot.twist.Twist.TwistConfig;
+import frc.robot.vision.Vision;
 import frc.robot.vision.VisionSystem;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumRobot;
@@ -94,6 +98,7 @@ public class Robot extends SpectrumRobot {
     @Getter private static PhotonPilot photonPilot;
     @Getter private static PhotonShoulder photonShoulder;
     @Getter private static VisionSystem visionSystem;
+    @Getter private static Vision vision;
     @Getter private static Auton auton;
     @Getter private static InClimb inClimb;
     @Getter private static Elbow elbow;
@@ -119,8 +124,11 @@ public class Robot extends SpectrumRobot {
                 case PHOTON_2025:
                     config = new PHOTON2025();
                     break;
+                case PM_2025:
+                    config = new PM2025();
+                    break;
                 default: // SIM and UNKNOWN
-                    config = new AM2025();
+                    config = new PM2025();
                     break;
             }
 
@@ -155,6 +163,7 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
+            vision = new Vision();
 
             // Setup Default Commands for all subsystems
             setupDefaultCommands();
@@ -202,6 +211,7 @@ public class Robot extends SpectrumRobot {
     @Override // Deprecated
     public void robotInit() {
         setupAutoVisualizer();
+        WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
     }
 
     /* ROBOT PERIODIC  */

@@ -13,26 +13,35 @@ public class InClimbStates {
     private static InClimbConfig config = Robot.getConfig().inClimb;
 
     public static void setupDefaultCommand() {
-        inClimb.setDefaultCommand(
-                log(inClimb.runHoldInClimb().ignoringDisable(true).withName("InClimb.default")));
+        inClimb.setDefaultCommand(log(inClimb.runHoldInClimb().withName("InClimb.default")));
+        // inClimb.setDefaultCommand(
+        // inClimb.runPercentage(() -> Robot.getPilot().getTestTriggersAxis()));
+        // inClimb.runStop());
     }
 
     public static void setStates() {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        groundAlgae.whileTrue(log(algaeFloorIntake()));
-        groundAlgae.onFalse(log(home()));
-        groundCoral.whileTrue(log(coralFloorIntake()));
-        groundCoral.onFalse(log(home()));
+        //groundAlgae.whileTrue(log(algaeFloorIntake()));
+        //groundCoral.whileTrue(log(coralFloorIntake()));
 
-        climbPrep.whileTrue(log(climbPrep()));
-        climbFinish.whileTrue(log(climbFinish()));
-        homeAll.onTrue(log(home()));
+        climbPrep.whileTrue(log(climbPrep()).alongWith(openLatch()));
+        climbFinish.whileTrue(log(climbFinish()).alongWith(closeLatch()));
+        homeAll.whileTrue(log(home()));
         processorLollipopScore.whileTrue(log(processorLollipopScore()));
-        processorLollipopScore.onFalse(log(home()));
 
         homeInClimb.whileTrue(log(zero()));
+
+        // TODO: for testing
+        // Robot.getPilot().reZero_start.onTrue(inClimb.resetToInitialPos());
+        // Robot.getPilot().testTune_RB.whileTrue(inClimb.closeLatch());
+        // Robot.getPilot().testTune_LB.whileTrue(inClimb.openLatch());
+        // Robot.getPilot().tuneShoulder_tA.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0.25));
+        // Robot.getPilot().testTune_tB.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0));
+        // Robot.getPilot()
+        //         .testTriggersTrigger
+        //         .whileTrue(runInClimb(() -> Robot.getPilot().getTestTriggersAxis()));
     }
 
     public static Command runInClimb(DoubleSupplier speed) {
@@ -46,34 +55,33 @@ public class InClimbStates {
     }
 
     public static Command intake() {
-        return inClimb.moveToPercentage(config::getIntake).withName("InClimb.intake");
+        return inClimb.moveToDegrees(config::getIntake).withName("InClimb.intake");
     }
 
     public static Command home() {
-        return inClimb.moveToPercentage(config::getHome).withName("InClimb.home");
+        return inClimb.moveToDegrees(config::getHome).withName("InClimb.home");
     }
 
     public static Command climbPrep() {
-        return inClimb.moveToPercentage(config::getPrepClimber).withName("InClimb.prepClimber");
+        return inClimb.moveToDegrees(config::getPrepClimber).withName("InClimb.prepClimber");
     }
 
     public static Command climbFinish() {
-        return inClimb.moveToPercentage(config::getFinishClimb).withName("InClimb.finishClimb");
+        return inClimb.moveToDegrees(config::getFinishClimb).withName("InClimb.finishClimb");
     }
 
     public static Command algaeFloorIntake() {
-        return inClimb.moveToPercentage(config::getAlgaeFloorIntake)
+        return inClimb.moveToDegrees(config::getAlgaeFloorIntake)
                 .withName("InClimb.algaeFloorIntake");
     }
 
     public static Command coralFloorIntake() {
-        return inClimb.moveToPercentage(config::getCoralFloorIntake)
+        return inClimb.moveToDegrees(config::getCoralFloorIntake)
                 .withName("InClimb.coralFloorIntake");
     }
 
     public static Command processorLollipopScore() {
-        return inClimb.moveToPercentage(config::getProcessorScore)
-                .withName("InClimb.processorScore");
+        return inClimb.moveToDegrees(config::getProcessorScore).withName("InClimb.processorScore");
     }
 
     public static DoubleSupplier getPosition() {
@@ -92,11 +100,17 @@ public class InClimbStates {
         return inClimb.ensureBrakeMode().withName("InClimb.BrakeMode");
     }
 
+    public static Command openLatch() {
+        return inClimb.openLatch().withName("InClimb.openLatch");
+    }
+
+    public static Command closeLatch() {
+        return inClimb.closeLatch().withName("InClimb.closeLatch");
+    }
+
     // Tune value command
     public static Command tuneInClimb() {
-        // return pivot.moveToPercentage(new TuneValue("Tune InClimb", 0).getSupplier())
-        //         .withName("InClimb.Tune");
-        return inClimb.moveToPercentage(config::getTuneInClimb);
+        return inClimb.moveToDegrees(config::getTuneInClimb);
     }
 
     // Log Command

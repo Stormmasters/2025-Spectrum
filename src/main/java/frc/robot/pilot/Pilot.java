@@ -25,15 +25,18 @@ public class Pilot extends Gamepad {
     public final Trigger lollipopProcessor_A = A.and(noFn, teleop);
     public final Trigger algaeRetract_B = B.and(noFn, teleop);
 
+    public final Trigger coralIntake_X = X.and(noFn, teleop);
+    public final Trigger coralEject_Y = Y.and(noFn, teleop);
+
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
 
     public final Trigger actionReady = rightBumper.and(teleop);
 
     // Drive Triggers
-    public final Trigger upReorient = upDpad.and(fn, teleop);
-    public final Trigger leftReorient = leftDpad.and(fn, teleop);
-    public final Trigger downReorient = downDpad.and(fn, teleop);
-    public final Trigger rightReorient = rightDpad.and(fn, teleop);
+    public final Trigger upReorient = upDpad.and(fn, teleop.or(testMode));
+    public final Trigger leftReorient = leftDpad.and(fn, teleop.or(testMode));
+    public final Trigger downReorient = downDpad.and(fn, teleop.or(testMode));
+    public final Trigger rightReorient = rightDpad.and(fn, teleop.or(testMode));
 
     /* Use the right stick to set a cardinal direction to aim at */
     public final Trigger driving;
@@ -46,9 +49,18 @@ public class Pilot extends Gamepad {
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);
     public final Trigger coastOff_dA = disabled.and(A);
+    public final Trigger reZero_start = disabled.and(leftBumper, rightBumper, start);
 
     // TEST TRIGGERS
-    public final Trigger tuneElevator_tB = testMode.and(B);
+    public final Trigger testTune_tB = testMode.and(B);
+    public final Trigger testTune_tA = testMode.and(A);
+    public final Trigger testTune_tX = testMode.and(X);
+    public final Trigger testTune_tY = testMode.and(Y);
+    public final Trigger testTune_RB = testMode.and(rightBumper);
+    public final Trigger testTune_LB = testMode.and(leftBumper);
+    public final Trigger testTriggersTrigger = testMode.and(leftTrigger.or(rightTrigger));
+
+    public final Trigger testActionReady = rightBumper.and(testMode);
 
     public static class PilotConfig extends Config {
 
@@ -132,8 +144,8 @@ public class Pilot extends Gamepad {
     // Positive is counter-clockwise, left Trigger is positive
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveCCWPositive() {
-        double ccwPositive = rightStickCurve.calculate(getRightX());
-        if (slowMode.getAsBoolean()) {
+        double ccwPositive = -1 * rightStickCurve.calculate(getRightX());
+        if (isSlowMode) {
             ccwPositive *= Math.abs(config.getSlowModeScalor());
         } else if (turboMode.getAsBoolean()) {
             ccwPositive *= Math.abs(config.getTurboModeScalor());
@@ -143,8 +155,7 @@ public class Pilot extends Gamepad {
         return -1 * ccwPositive; // invert the value
     }
 
-    // ELEVATOR METHODS
-    public double getElevatorManualAxis() {
-        return getLeftY();
+    public double getTestTriggersAxis() { // TODO: Remove after Testing
+        return getRightTriggerAxis() - getLeftTriggerAxis();
     }
 }

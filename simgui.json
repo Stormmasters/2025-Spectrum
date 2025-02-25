@@ -127,6 +127,9 @@
         "Elbow": {
           "open": true
         },
+        "ElevatorFront": {
+          "open": true
+        },
         "Shoulder": {
           "open": true
         },
