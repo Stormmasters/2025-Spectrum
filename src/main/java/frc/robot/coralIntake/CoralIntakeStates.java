@@ -5,7 +5,6 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
-import frc.robot.elbow.ElbowStates;
 import frc.spectrumLib.Telemetry;
 
 public class CoralIntakeStates {
@@ -21,12 +20,12 @@ public class CoralIntakeStates {
         stationIntaking.onTrue(coralIntake.coralIntake()); // log(coralIntake()));
         // stationExtendedIntake.whileTrue(coralEject()); // log(coralIntake()));
 
-        L2Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
-        L2Coral.and(scoreState).whileTrue(coralIntake.coralScore());
-        L3Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
-        L3Coral.and(scoreState).whileTrue(coralIntake.coralScore());
-        L4Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
-        L4Coral.and(scoreState).whileTrue(coralIntake.coralScore());
+        L2Coral.and(scoring.not()).onTrue(coralIntake.coralIntake());
+        L2Coral.and(scoring).whileTrue(coralIntake.coralScore());
+        L3Coral.and(scoring.not()).onTrue(coralIntake.coralIntake());
+        L3Coral.and(scoring).whileTrue(coralIntake.coralScore());
+        L4Coral.and(scoring.not()).onTrue(coralIntake.coralIntake());
+        L4Coral.and(scoring).whileTrue(coralIntake.coralScore());
 
         homeAllStopIntake.onTrue(coralIntake.runStop());
 
@@ -44,27 +43,16 @@ public class CoralIntakeStates {
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-
-        Robot.getPilot().testTune_tA.whileTrue(coralIntake.coralIntake());
-        // Robot.getPilot().testTune_tB.whileTrue(coralIntake.algaeIntake());
-        Robot.getPilot().testTune_tX.whileTrue(coralIntake.coralIntake());
-        // Robot.getPilot().testTune_tY.whileTrue(coralIntake.coralScore());
-        // Robot.getPilot().tuneShoulder_tB.whileTrue(coralIntake.coralScore());
-        // Robot.getOperator().test_tA.whileTrue(coralIntake.coralIntake());
-        // Robot.getPilot().testTune_RB.whileTrue(coralIntake.algaeScore());
-        Robot.getOperator().test_X.whileTrue(coralIntake.algaeIntake());
-        Robot.getOperator().test_A.whileTrue(coralIntake.algaeIntake());
-        Robot.getOperator().test_B.whileTrue(coralIntake.algaeIntake());
     }
 
-    private static Command algaeHandOff() {
-        return coralIntake
-                .runStop()
-                .withName("coralIntake.algaeHandOffWait")
-                .until(() -> ElbowStates.getPosition().getAsDouble() > 95.0)
-                .andThen(algaeIntake())
-                .withName("coralIntake.algaeHandOff");
-    }
+    // private static Command algaeHandOff() {
+    //     return coralIntake
+    //             .runStop()
+    //             .withName("coralIntake.algaeHandOffWait")
+    //             .until(() -> ElbowStates.getPosition().getAsDouble() > 95.0)
+    //             .andThen(algaeIntake())
+    //             .withName("coralIntake.algaeHandOff");
+    // }
 
     private static Command barge() {
         return coralIntake

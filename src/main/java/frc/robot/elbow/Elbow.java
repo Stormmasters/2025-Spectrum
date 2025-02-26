@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
-import frc.robot.elevator.ElevatorStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
@@ -252,13 +251,13 @@ public class Elbow extends Mechanism {
         return false;
     }
 
-    public Command moveToPercentage(DoubleSupplier percent) {
-        return runHoldElbow()
-                .until(() -> ((ElevatorStates.allowedPosition()) || percent.getAsDouble() < 90))
-                .andThen(
-                        run(() -> setMMPositionFoc(() -> percentToRotations(percent)))
-                                .withName(getName() + ".runPosePercentage"));
-    }
+    // public Command moveToPercentage(DoubleSupplier percent) {
+    //     return runHoldElbow()
+    //             .until(() -> ((ElevatorStates.allowedPosition()) || percent.getAsDouble() < 90))
+    //             .andThen(
+    //                     run(() -> setMMPositionFoc(() -> percentToRotations(percent)))
+    //                             .withName(getName() + ".runPosePercentage"));
+    // }
 
     public double checkReversed(DoubleSupplier position) {
         if (!config.isReversed()) {

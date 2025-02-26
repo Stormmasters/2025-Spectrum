@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
-import frc.spectrumLib.util.Util;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,11 +12,12 @@ public class Pilot extends Gamepad {
     // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
     // If triggers need any of the config values set them in the constructor
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
+    public final Trigger enabled = teleop.or(testMode); // works for both teleop and testMode
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
 
     public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
-    public final Trigger stationExtendedIntake_LB_LT = leftTrigger.and(fn, teleop);
+    public final Trigger stationIntakeExtended_LT_RB = leftTrigger.and(fn, teleop);
     public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop);
     public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop);
 
@@ -30,20 +30,19 @@ public class Pilot extends Gamepad {
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
 
     public final Trigger actionReady = rightBumper.and(teleop);
+    public final Trigger score = actionReady.not().and(teleop);
 
     // Drive Triggers
-    public final Trigger upReorient = upDpad.and(fn, teleop.or(testMode));
-    public final Trigger leftReorient = leftDpad.and(fn, teleop.or(testMode));
-    public final Trigger downReorient = downDpad.and(fn, teleop.or(testMode));
-    public final Trigger rightReorient = rightDpad.and(fn, teleop.or(testMode));
+    public final Trigger upReorient = upDpad.and(fn, teleop);
+    public final Trigger leftReorient = leftDpad.and(fn, teleop);
+    public final Trigger downReorient = downDpad.and(fn, teleop);
+    public final Trigger rightReorient = rightDpad.and(fn, teleop);
 
     /* Use the right stick to set a cardinal direction to aim at */
-    public final Trigger driving;
-    public final Trigger steer;
+    public final Trigger driving = enabled.and(leftStickX.or(leftStickY));
+    public final Trigger steer = enabled.and(rightStickX.or(rightStickY));
 
-    public final Trigger snapSteer = Trigger.kFalse;
-
-    public final Trigger fpv_rs = rightStickClick.and(teleop); // Remapped to Right back button
+    public final Trigger fpv_RS = rightStickClick.and(enabled); // Remapped to Right back button
 
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);
@@ -97,10 +96,6 @@ public class Pilot extends Gamepad {
         super(config);
         this.config = config;
         Robot.add(this);
-
-        driving = Util.teleop.and(leftStickX.or(leftStickY));
-        steer = Util.teleop.and(rightStickX.or(rightStickY));
-
         Telemetry.print("Pilot Subsystem Initialized: ");
     }
 

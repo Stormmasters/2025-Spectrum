@@ -6,7 +6,6 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
@@ -41,13 +40,16 @@ public class Elevator extends Mechanism {
 
         @Getter private final double handOff = 5.5; // TODO: check if this works
 
+        @Getter private final double l1Algae = 0.3;
         @Getter private final double l2Algae = 0.3;
         @Getter private final double l3Algae = 12.5;
+        @Getter private final double l4Algae = fullExtend;
 
         @Getter private final double l1Coral = 0.3;
         @Getter private final double l2Coral = 7.15;
         @Getter private final double l3Coral = 17.5;
         @Getter private final double l4Coral = 18.86;
+        @Getter private final double scoreDrop = 2;
 
         @Getter private final double barge = 20;
 
@@ -55,7 +57,7 @@ public class Elevator extends Mechanism {
         @Getter private double elevatorIsUpHeight = 5;
         @Getter private double elevatorIsHighHeight = 10;
         @Getter private double initPosition = 0;
-        @Getter private double holdMaxSpeedRPM = 10000;
+        @Getter private double holdMaxSpeedRPM = 1000;
 
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
@@ -212,29 +214,9 @@ public class Elevator extends Mechanism {
                 .withName("Elevator.zeroElevatorRoutine");
     }
 
-    public Command moveToRotations(DoubleSupplier rotations) {
-        return run(() -> stop())
-                .withName("Elevator.waitForElbow")
-                .until(
-                        () ->
-                                (ElevatorStates.getElbowShoulderPos().getAsDouble() < 50.0)
-                                        || ElevatorStates.getPosition().getAsDouble()
-                                                < rotations.getAsDouble()
-                                        || ElevatorStates.getPosition().getAsDouble()
-                                                > config.getL2Coral())
-                .andThen(
-                        run(() -> setMMPositionFoc(rotations))
-                                .withName("Elevator.moveToRotations"));
-    }
-
-    // TODO: remove after testing
-    public Command setElevatorMMPositionFOC(DoubleSupplier rotations) {
+    public Command setPosition(DoubleSupplier rotations) {
+        // TODO: Add checks for reversal and check for elbow pointing down
         return run(() -> setMMPositionFoc(rotations)).withName("Elevator Set MM Position");
-    }
-
-    public Command moveToRelativePosition(DoubleSupplier position) {
-        return new InstantCommand(
-                () -> setMMPositionFoc(() -> getPositionRotations() + position.getAsDouble()));
     }
 
     // --------------------------------------------------------------------------------

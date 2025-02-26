@@ -26,27 +26,12 @@ public class ShoulderStates {
     }
 
     public static void setStates() {
+        homeAll.whileTrue(home());
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        // stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
-        // stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
+
         stationIntaking.whileTrue(shoulder.moveToDegrees((config::getStationIntake)));
-        // stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
-        // stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
 
-        // L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
-        // L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
-        // L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
-        // L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
-        // barge.and(backwardMode.not()).whileTrue(log(barge()));
-        // barge.and(backwardMode).whileTrue(log(reverse(barge())));
-
-        // L1Coral.and(backwardMode.not()).whileTrue(log(l1Coral()));
-        // L1Coral.and(backwardMode).whileTrue(log(reverse(l1Coral())));
-        // L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
-        // L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
-        // L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
-        // L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
         L2Coral.and(backwardMode.not(), actionPrepState, ElevatorStates.isL2Coral)
                 .whileTrue(l2Coral());
         L2Coral.and(backwardMode, actionPrepState, ElevatorStates.isL2Coral)
@@ -54,8 +39,8 @@ public class ShoulderStates {
                         shoulder.moveToDegrees(
                                 () -> -config.getL2Coral())); // TODO: change back to command
 
-        L2Coral.and(backwardMode.not(), scoreState).whileTrue(score2());
-        L2Coral.and(backwardMode, scoreState)
+        L2Coral.and(backwardMode.not(), scoring).whileTrue(score2());
+        L2Coral.and(backwardMode, scoring)
                 .whileTrue(
                         shoulder.moveToDegrees(
                                 () ->
@@ -69,8 +54,8 @@ public class ShoulderStates {
                         shoulder.moveToDegrees(
                                 () -> -config.getL3Coral())); // TODO: change back to command
 
-        L3Coral.and(backwardMode.not(), scoreState).whileTrue(score3());
-        L3Coral.and(backwardMode, scoreState)
+        L3Coral.and(backwardMode.not(), scoring).whileTrue(score3());
+        L3Coral.and(backwardMode, scoring)
                 .whileTrue(
                         shoulder.moveToDegrees(
                                 () ->
@@ -83,54 +68,15 @@ public class ShoulderStates {
                         shoulder.moveToDegrees(
                                 () -> -config.getL4Coral())); // TODO: change back to command
 
-        L4Coral.and(backwardMode.not(), scoreState).whileTrue(score4());
-        L4Coral.and(backwardMode, scoreState, ElbowStates.atTarget)
+        L4Coral.and(backwardMode.not(), scoring).whileTrue(score4());
+        L4Coral.and(backwardMode, scoring, ElbowStates.atTarget)
                 .whileTrue(
                         shoulder.moveToDegrees(
                                 () ->
                                         -config.getL4Coral()
                                                 + 15)); // TODO: change back to command when
 
-        // L3Coral.and(backwardMode.not()).whileTrue(log(l3Coral()));
-        // L3Coral.and(backwardMode).whileTrue(log(reverse(l3Coral())));
-        // L4Coral.and(backwardMode.not()).whileTrue(log(l4Coral()));
-        // L4Coral.and(backwardMode).whileTrue(log(reverse(l4Coral())));
-
-        // algaeHandoff.whileTrue(log(handOffAlgae()));
-        // coralHandoff.whileTrue(log(handOffAlgae()));
-
-        // homeAll.whileTrue(home());
-
-        // TODO: for testing
-        Robot.getPilot().testTune_tA.whileTrue(shoulder.moveToDegrees(config::getStationIntake));
-        // Robot.getPilot().testTune_tB.whileTrue(shoulder.moveToDegrees(config::getL3Algae));
-        Robot.getPilot().testTune_tX.whileTrue(shoulder.moveToDegrees(config::getHome));
-        // Robot.getPilot()
-        //         .testTune_tY
-        //         .whileTrue(shoulder.moveToDegrees(() -> (config.getL4Coral() - 6)));
         Robot.getPilot().reZero_start.onTrue(shoulder.resetToIntialPos());
-        // Robot.getPilot()
-        //         .testTriggersTrigger
-        //         .whileTrue(
-        //                 runShoulder(() -> Robot.getPilot().getTestTriggersAxis())
-        //                         .withName("test Shoulder"));
-        Robot.getOperator().test_tA.whileTrue(shoulder.moveToDegrees(config::getL1Coral));
-        Robot.getOperator().test_tB.whileTrue(shoulder.moveToDegrees(config::getL2Coral));
-        // Robot.getOperator().test_tX.whileTrue(shoulder.moveToDegrees(config::getL3Coral));
-        Robot.getOperator()
-                .test_tX
-                .and(backwardMode.not())
-                .whileTrue(shoulder.moveToDegreesAndCheckReversed(config::getL3Coral));
-        Robot.getOperator()
-                .test_tX
-                .and(backwardMode)
-                // .whileTrue(reverse(shoulder.moveToDegreesAndCheckReversed(config::getL3Coral)));
-                .whileTrue(shoulder.moveToDegreesAndCheckReversed(() -> -config.getL3Coral()));
-        Robot.getOperator().test_tY.whileTrue(shoulder.moveToDegrees(config::getL4Coral));
-        Robot.getOperator().test_A.whileTrue(shoulder.moveToDegrees(config::getL2Algae));
-        Robot.getOperator().test_B.whileTrue(shoulder.moveToDegrees(config::getL3Algae));
-        Robot.getOperator().test_X.whileTrue(shoulder.moveToDegrees(config::getBarge));
-        homeAll.whileTrue(home());
     }
 
     public static Command runShoulder(DoubleSupplier speed) {
