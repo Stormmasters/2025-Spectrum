@@ -45,8 +45,7 @@ public class CoralIntakeStates {
                                 config::getCoralScoreSupplyCurrent,
                                 config::getCoralScoreTorqueCurrent));
 
-        processorAlgae
-                .or(L2Algae, L3Algae, netAlgae)
+        stagedAlgae
                 .and(actionState)
                 .whileTrue(
                         runVoltageCurrentLimits(
