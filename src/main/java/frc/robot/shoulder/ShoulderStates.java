@@ -27,29 +27,34 @@ public class ShoulderStates {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        L1Coral.and(preScore.or(preScore))
+        stationIntaking.whileTrue(
+                moveToDegrees(config::getStationIntake, "Shoulder.stationIntake"));
+        stationExtenededIntaking.whileTrue(
+                moveToDegrees(config::getStationExtendedIntake, "Shoulder.stationExtendedIntake"));
+
+        L1Coral.and(actionState.or(actionPrepState))
                 .whileTrue(moveToDegrees(config::getL1Coral, "Shoulder.L1Coral"));
-        L2Coral.and(preScore)
+        L2Coral.and(actionPrepState)
                 .whileTrue(moveToDegrees(config::getL2Coral, "Shoulder.L2Coral.prescore"));
         L2Coral.and(actionState)
                 .whileTrue(moveToDegrees(config::getL2CoralScore, "Shoulder.L2Coral.score"));
-        L3Coral.and(preScore)
+        L3Coral.and(actionPrepState)
                 .whileTrue(moveToDegrees(config::getL3Coral, "Shoulder.L3Coral.prescore"));
         L3Coral.and(actionState)
                 .whileTrue(moveToDegrees(config::getL3CoralScore, "Shoulder.L3Coral.score"));
-        L4Coral.and(preScore)
+        L4Coral.and(actionPrepState)
                 .whileTrue(moveToDegrees(config::getL4Coral, "Shoulder.L4Coral.prescore"));
         L4Coral.and(actionState)
                 .whileTrue(moveToDegrees(config::getL4CoralScore, "Shoulder.L4Coral.score"));
 
         processorAlgae
-                .and(preScore.or(actionState))
+                .and(actionPrepState.or(actionState))
                 .whileTrue(moveToDegrees(config::getProcessorAlgae, "Shoulder.processorAlgae"));
-        L2Algae.and(preScore.or(actionState))
+        L2Algae.and(actionPrepState.or(actionState))
                 .whileTrue(moveToDegrees(config::getL2Algae, "Shoulder.L2Algae"));
-        L3Algae.and(preScore.or(actionState))
+        L3Algae.and(actionPrepState.or(actionState))
                 .whileTrue(moveToDegrees(config::getL3Algae, "Shoulder.L3Algae"));
-        netAlgae.and(preScore.or(actionState))
+        netAlgae.and(actionPrepState.or(actionState))
                 .whileTrue(moveToDegrees(config::getNetAlgae, "Shoulder.netAlgae"));
 
         Robot.getPilot().reZero_start.onTrue(shoulder.resetToIntialPos());

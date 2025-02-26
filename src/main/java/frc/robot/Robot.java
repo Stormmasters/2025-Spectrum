@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auton.Auton;
-import frc.robot.configs.AM2025;
-import frc.robot.configs.FM20235;
 import frc.robot.configs.PHOTON2025;
 import frc.robot.configs.PM2025;
 import frc.robot.coralIntake.CoralIntake;
@@ -105,12 +103,6 @@ public class Robot extends SpectrumRobot {
 
             /** Set up the config */
             switch (Rio.id) {
-                case AM_2025:
-                    config = new AM2025();
-                    break;
-                case FM_20235:
-                    config = new FM20235();
-                    break;
                 case PHOTON_2025:
                     config = new PHOTON2025();
                     break;

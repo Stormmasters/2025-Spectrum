@@ -6,30 +6,53 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
 import frc.spectrumLib.Telemetry;
+import java.util.function.DoubleSupplier;
 
 public class CoralIntakeStates {
     private static CoralIntake coralIntake = Robot.getCoralIntake();
     private static CoralIntakeConfig config = Robot.getConfig().coralIntake;
 
     public static void setupDefaultCommand() {
-        coralIntake.setDefaultCommand(coralIntake.runStop().withName("coralIntake.default"));
+        coralIntake.setDefaultCommand(
+                coralIntake.runStop().ignoringDisable(true).withName("coralIntake.default"));
     }
 
     public static void setStates() {
         homeAllStopIntake.onTrue(coralIntake.getDefaultCommand());
 
-        stationIntaking.onTrue(coralIntake.coralIntake());
-        intaking.and(algae).onTrue(coralIntake.algaeIntake());
+        stationIntaking.onTrue(
+                runVoltageCurrentLimits(
+                        config::getCoralIntakeVoltage,
+                        config::getCoralIntakeSupplyCurrent,
+                        config::getCoralIntakeTorqueCurrent));
+        intaking.and(algae)
+                .onTrue(
+                        runVoltageCurrentLimits(
+                                config::getAlgaeIntakeVoltage,
+                                config::getAlgaeIntakeSupplyCurrent,
+                                config::getAlgaeIntakeTorqueCurrent));
 
-        L1Coral.and(actionState).whileTrue(coralIntake.coralL1Score());
-        L2Coral.and(actionState).whileTrue(coralIntake.coralScore());
-        L3Coral.and(actionState).whileTrue(coralIntake.coralScore());
-        L4Coral.and(actionState).whileTrue(coralIntake.coralScore());
+        L1Coral.and(actionState)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getCoralL1ScoreVoltage,
+                                config::getCoralL1ScoreSupplyCurrent,
+                                config::getCoralL1ScoreTorqueCurrent));
+        branch.and(actionState)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getCoralScoreVoltage,
+                                config::getCoralScoreSupplyCurrent,
+                                config::getCoralScoreTorqueCurrent));
 
-        processorAlgae.and(actionState).whileTrue(coralIntake.algaeScore());
-        L2Algae.and(actionState).whileTrue(coralIntake.algaeIntake());
-        L3Algae.and(actionState).whileTrue(coralIntake.algaeIntake());
-        netAlgae.and(actionState).whileTrue(coralIntake.algaeScore());
+        processorAlgae
+                .or(L2Algae, L3Algae, netAlgae)
+                .and(actionState)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getAlgaeScoreVoltage,
+                                config::getAlgaeScoreSupplyCurrent,
+                                config::getAlgaeScoreTorqueCurrent));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
@@ -41,6 +64,11 @@ public class CoralIntakeStates {
 
     private static Command ensureBrakeMode() {
         return coralIntake.ensureBrakeMode();
+    }
+
+    private static Command runVoltageCurrentLimits(
+            DoubleSupplier voltage, DoubleSupplier supplyCurrent, DoubleSupplier torqueCurrent) {
+        return coralIntake.runVoltageCurrentLimits(voltage, supplyCurrent, torqueCurrent);
     }
 
     // Log Command

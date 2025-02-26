@@ -11,6 +11,7 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
+import java.util.function.DoubleSupplier;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -100,6 +101,7 @@ public class CoralIntake extends Mechanism {
             builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty("Velocity RPM", this::getVelocityRPM, null);
             builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
+            builder.addDoubleProperty("Coral Score Config", config::getCoralScoreVoltage, null);
         }
     }
 
@@ -121,44 +123,9 @@ public class CoralIntake extends Mechanism {
         return (Math.abs(motorOutput) < 120);
     }
 
-    public Command algaeIntake() {
-        return runVoltage(() -> config.algaeIntakeVoltage)
-                .alongWith(
-                        setCurrentLimits(
-                                () -> config.algaeIntakeSupplyCurrent,
-                                () -> config.algaeIntakeTorqueCurrent));
-    }
-
-    public Command algaeScore() {
-        return runVoltage(() -> config.algaeScoreVoltage)
-                .alongWith(
-                        setCurrentLimits(
-                                () -> config.algaeScoreSupplyCurrent,
-                                () -> config.algaeScoreTorqueCurrent));
-    }
-
-    public Command coralIntake() {
-        return runVoltage(() -> config.coralIntakeVoltage)
-                .alongWith(
-                        setCurrentLimits(
-                                () -> config.coralIntakeSupplyCurrent,
-                                () -> config.coralIntakeTorqueCurrent));
-    }
-
-    public Command coralScore() {
-        return runVoltage(() -> config.coralScoreVoltage)
-                .alongWith(
-                        setCurrentLimits(
-                                () -> config.coralScoreSupplyCurrent,
-                                () -> config.coralScoreTorqueCurrent));
-    }
-
-    public Command coralL1Score() {
-        return runVoltage(() -> config.coralL1ScoreVoltage)
-                .alongWith(
-                        setCurrentLimits(
-                                () -> config.coralL1ScoreSupplyCurrent,
-                                () -> config.coralL1ScoreTorqueCurrent));
+    public Command runVoltageCurrentLimits(
+            DoubleSupplier voltage, DoubleSupplier supplyCurrent, DoubleSupplier torqueCurrent) {
+        return runVoltage(voltage).alongWith(setCurrentLimits(supplyCurrent, torqueCurrent));
     }
 
     // --------------------------------------------------------------------------------

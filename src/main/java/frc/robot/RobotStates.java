@@ -1,12 +1,10 @@
 package frc.robot;
 
-import static frc.robot.RobotStates.algae;
 import static frc.robot.auton.Auton.*;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
@@ -18,6 +16,7 @@ import frc.robot.shoulder.ShoulderStates;
 import frc.robot.swerve.Swerve;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
+import frc.spectrumLib.util.Util;
 
 public class RobotStates {
     private static final Pilot pilot = Robot.getPilot();
@@ -37,14 +36,12 @@ public class RobotStates {
     public static final SpectrumState leftScore = new SpectrumState("leftScore");
     public static final SpectrumState rightScore = new SpectrumState("rightScore");
     public static final SpectrumState reverse = new SpectrumState("reverse");
-    public static final SpectrumState preScore = new SpectrumState("preScore");
-    public static final SpectrumState actionState = new SpectrumState("scoring");
+    public static final SpectrumState actionPrepState = new SpectrumState("actionPrepState");
+    public static final SpectrumState actionState = new SpectrumState("actionState");
     public static final SpectrumState homeAll = new SpectrumState("homeAll");
     public static final SpectrumState intaking = new SpectrumState("intaking");
     public static final SpectrumState climbIntake = new SpectrumState("climbIntake");
-    public static final SpectrumState stationIntake = new SpectrumState("stationIntake");
     public static final SpectrumState floorIntake = new SpectrumState("floorIntake");
-    public static final SpectrumState extended = new SpectrumState("extended");
 
     /**
      * Define Robot States here and how they can be triggered States should be triggers that command
@@ -80,11 +77,9 @@ public class RobotStates {
 
     // Intake Triggers
     public static final Trigger stationIntaking = pilot.stationIntake_LT.or(autonSourceIntake);
+    public static final Trigger stationExtenededIntaking = pilot.stationIntakeExtended_LT_RB;
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
     public static final Trigger groundCoral = Trigger.kFalse;
-
-    // score Triggers
-    public static final Trigger actionPrepState = pilot.actionReady.or(pilot.testActionReady);
 
     // climb Triggers
     public static final Trigger climbPrep = operator.climbPrep_start;
@@ -101,7 +96,7 @@ public class RobotStates {
     public static final Trigger L2Coral = l2.and(coral);
     public static final Trigger L3Coral = l3.and(coral);
     public static final Trigger L4Coral = (l4.and(coral)).or(autonLeftL4, autonRightL4);
-    public static final Trigger branch = L2Coral.and(L3Coral, L4Coral);
+    public static final Trigger branch = L2Coral.or(L3Coral, L4Coral);
     public static final Trigger stagedCoral = L1Coral.or(L2Coral, L3Coral, L4Coral);
 
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
@@ -129,23 +124,26 @@ public class RobotStates {
 
     // Setup any binding to set states
     public static void setupStates() {
+        Util.disabled.whileTrue(clearStates().repeatedly());
+
         pilot.coastOn_dB.or(operator.coastOn_dB).onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA
                 .or(operator.coastOff_dA)
                 .onTrue(coastMode.setFalse().ignoringDisable(true));
 
         // Intaking States
-        pilot.stationIntake_LT.onTrue(stationIntake.setTrue(), coral.setTrue(), algae.setFalse());
-        pilot.stationIntakeExtended_LT_RB.whileTrue(
-                stationIntake.setTrue(), extended.setTrue(), coral.setTrue(), algae.setFalse());
-        pilot.groundAlgae_RT.onTrue(floorIntake.setTrue(), algae.setTrue(), coral.setFalse());
-        stationIntake.or(floorIntake).onTrue(intaking.setTrue());
-        stationIntake.not().and(floorIntake.not()).onTrue(intaking.setFalse());
+        stationIntaking.or(stationExtenededIntaking).whileTrue(coral.setTrue(), algae.setFalse());
+        stationIntaking.onChangeToFalse(homeAll.setTrue());
+
+        groundAlgae.whileTrue(floorIntake.setTrue(), algae.setTrue(), coral.setFalse());
+        stationIntaking.or(floorIntake).onTrue(intaking.setTrue());
+        stationIntaking.not().and(floorIntake.not()).onTrue(intaking.setFalse());
 
         // Staging and Scoring
         coral.not()
-                .and(algae.not(), actionState.not(), preScore.not())
+                .and(algae.not(), actionState.not(), actionPrepState.not())
                 .onTrue(clearStaged()); // Clear if we aren't scoring, holding, or staged
+
         actionState
                 .not()
                 .and(operator.coralStage.not())
@@ -167,10 +165,12 @@ public class RobotStates {
 
         (pilot.actionReady.and(coral.or(algae)))
                 .or(autonPreScore)
-                .onTrue(preScore.setTrue(), actionState.setFalse());
-        (pilot.actionReady.not().and(coral.or(algae)))
-                .or(autonScore)
-                .onTrue(actionState.setTrue(), preScore.setFalse());
+                .onTrue(actionPrepState.setTrue(), actionState.setFalse());
+
+        // TODO: This currently set actionState true when intaking which is bad
+        // (pilot.actionReady.not().and(coral.or(algae)))
+        //         .or(autonScore)
+        //         .onTrue(actionState.setTrue(), actionPrepState.setFalse());
 
         // Set Levels
         operator.L1
@@ -192,11 +192,14 @@ public class RobotStates {
         autonLeftL4.onTrue(leftScore.setTrue(), rightScore.setFalse());
         autonRightL4.onTrue(rightScore.setTrue(), leftScore.setFalse());
 
+        pilot.actionReady.onTrue(actionPrepState.setTrue());
+        pilot.actionReady.onFalse(actionPrepState.setFalse());
+
         actionPrepState.onTrue(actionState.setFalse());
         actionPrepState.onChangeToFalse(
                 actionState
                         .setTrue()
-                        .alongWith(new WaitCommand(5))
+                        .alongWith(new WaitCommand(2))
                         .andThen(actionState.setFalse()));
         operator.algaeStage.or(operator.coralStage).onTrue(actionState.setFalse());
 
@@ -304,8 +307,6 @@ public class RobotStates {
         // bottomRightZone
         //         .and(reefPosition)
         //         .onTrue(backwardMode.setFalse().onlyIf(() -> swerve.frontClosestToAngle(-120)));
-
-        pilot.testTune_tY.onTrue(backwardMode.toggle());
     }
 
     private RobotStates() {
@@ -313,16 +314,26 @@ public class RobotStates {
     }
 
     private static Command clearStaged() {
-        return new RunCommand(
-                () -> {
-                    l1.setFalse();
-                    l2.setFalse();
-                    l3.setFalse();
-                    l4.setFalse();
-                    leftScore.setFalse();
-                    rightScore.setFalse();
-                    coral.setFalse();
-                    algae.setFalse();
-                });
+        return l1.setFalse()
+                .alongWith(
+                        l2.setFalse(),
+                        l3.setFalse(),
+                        l4.setFalse(),
+                        leftScore.setFalse(),
+                        rightScore.setFalse(),
+                        coral.setFalse(),
+                        algae.setFalse());
+    }
+
+    private static Command clearStates() {
+        return clearStaged()
+                .alongWith(
+                        reverse.setFalse(),
+                        actionPrepState.setFalse(),
+                        actionState.setFalse(),
+                        homeAll.setFalse(),
+                        intaking.setFalse(),
+                        climbIntake.setFalse(),
+                        floorIntake.setFalse());
     }
 }

@@ -11,7 +11,7 @@ public class PhotonCoralIntakeConfig extends CoralIntakeConfig {
     @Getter @Setter private double coralIntakeSupplyCurrent = 12.0;
     @Getter @Setter private double coralIntakeTorqueCurrent = 60.0;
 
-    @Getter @Setter private double coralScoreVoltage = -6;
+    @Getter @Setter private double coralScoreVoltage = -6.0;
     @Getter @Setter private double coralScoreSupplyCurrent = 12;
     @Getter @Setter private double coralScoreTorqueCurrent = 60;
 
@@ -24,7 +24,7 @@ public class PhotonCoralIntakeConfig extends CoralIntakeConfig {
     @Getter private double torqueCurrentLimit = 100;
     @Getter private double velocityKp = 12; // 0.156152;
     @Getter private double velocityKv = 0.2; // 0.12;
-    @Getter private double velocityKs = 14;
+    @Getter private double velocityKs = 0;
 
     public PhotonCoralIntakeConfig() {
         super();
@@ -42,7 +42,7 @@ public class PhotonCoralIntakeConfig extends CoralIntakeConfig {
         configFeedForwardGains(velocityKs, velocityKv, 0, 0);
         configGearRatio(1);
         configSupplyCurrentLimit(currentLimit, true);
-        configStatorCurrentLimit(120, true);
+        configStatorCurrentLimit(torqueCurrentLimit, true);
         configForwardTorqueCurrentLimit(torqueCurrentLimit);
         configReverseTorqueCurrentLimit(torqueCurrentLimit);
         configNeutralBrakeMode(true);
