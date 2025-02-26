@@ -42,27 +42,27 @@ public class ElevatorStates {
 
         stationIntaking.whileTrue(setPosition(config::getStationIntake));
 
+        L1Coral.and(actionPrepState).whileTrue(setPosition(config::getL1Coral));
+        L1Coral.and(actionState).whileTrue(setPosition(config::getL1CoralScore));
         L2Coral.and(actionPrepState).whileTrue(setPosition(config::getL2Coral));
-        L2Coral.and(scoring)
-                .whileTrue(setPosition(() -> config.getL2Coral() - config.getScoreDrop()));
+        L2Coral.and(actionState).whileTrue(setPosition(config::getL2CoralScore));
         L3Coral.and(actionPrepState).whileTrue(setPosition(config::getL3Coral));
-        L3Coral.and(scoring)
-                .whileTrue(setPosition(() -> config.getL3Coral() - config.getScoreDrop()));
+        L3Coral.and(actionState).whileTrue(setPosition(config::getL3CoralScore));
         L4Coral.and(actionPrepState).whileTrue(setPosition(config::getL4Coral));
+        L4Coral.and(actionState).whileTrue(setPosition(config::getL4CoralScore));
 
         processorAlgae.and(actionPrepState).whileTrue(setPosition(config::getL1Algae));
+        processorAlgae.and(actionState).whileTrue(setPosition(config::getL1AlgaeScore));
         L2Algae.and(actionPrepState).whileTrue(setPosition(config::getL2Algae));
+        L2Algae.and(actionState).whileTrue(setPosition(config::getL2AlgaeScore));
         L3Algae.and(actionPrepState).whileTrue(setPosition(config::getL3Algae));
+        L3Algae.and(actionState).whileTrue(setPosition(config::getL3AlgaeScore));
         netAlgae.and(actionPrepState).whileTrue(setPosition(config::getL4Algae));
+        netAlgae.and(actionState).whileTrue(setPosition(config::getL4AlgaeScore));
 
         Robot.getPilot()
                 .reZero_start
                 .onTrue(elevator.resetToInitialPos()); // TODO: check if this works
-
-        Robot.getPhotonPilot()
-                .testTune_tA
-                .whileTrue(elevator.setPosition(config::getStationIntake));
-        Robot.getPhotonPilot().testTune_tB.whileTrue(elevator.setPosition(config::getHome));
     }
 
     private static Command runElevator(DoubleSupplier speed) {

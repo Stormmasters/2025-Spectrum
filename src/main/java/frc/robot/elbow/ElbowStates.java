@@ -38,10 +38,10 @@ public class ElbowStates {
 
         // stages elbow
         stagedCoral
-                .and(backwardMode.not(), scoring.not())
+                .and(backwardMode.not(), actionState.not())
                 .whileTrue(elbow.moveToDegrees(config::getStage));
         stagedCoral
-                .and(backwardMode, scoring.not())
+                .and(backwardMode, actionState.not())
                 .whileTrue(
                         elbow.moveToDegrees(
                                 () -> -config.getStage())); // TODO: change back to command
@@ -53,8 +53,8 @@ public class ElbowStates {
                         elbow.moveToDegrees(
                                 () -> -config.getL2Coral())); // TODO: change back to command
         // when reversed fixed
-        L2Coral.and(backwardMode.not(), scoring).whileTrue(score2());
-        L2Coral.and(backwardMode, scoring)
+        L2Coral.and(backwardMode.not(), actionState).whileTrue(score2());
+        L2Coral.and(backwardMode, actionState)
                 .whileTrue(
                         elbow.moveToDegrees(
                                 () ->
@@ -69,8 +69,8 @@ public class ElbowStates {
                         elbow.moveToDegrees(
                                 () -> -config.getL3Coral())); // TODO: change back to command
 
-        L3Coral.and(backwardMode.not(), scoring).whileTrue(score3());
-        L3Coral.and(backwardMode, scoring)
+        L3Coral.and(backwardMode.not(), actionState).whileTrue(score3());
+        L3Coral.and(backwardMode, actionState)
                 .whileTrue(
                         elbow.moveToDegrees(
                                 () -> -config.getL3Coral() + 15)); // TODO: change back to command
@@ -82,8 +82,8 @@ public class ElbowStates {
                         elbow.moveToDegrees(
                                 () -> -config.getL4Coral())); // TODO: change back to command
 
-        L4Coral.and(backwardMode.not(), scoring).whileTrue(score4());
-        L4Coral.and(backwardMode, scoring)
+        L4Coral.and(backwardMode.not(), actionState).whileTrue(score4());
+        L4Coral.and(backwardMode, actionState)
                 .whileTrue(
                         elbow.moveToDegrees(
                                 () -> -config.getL4Coral() + 15)); // TODO: change back to command

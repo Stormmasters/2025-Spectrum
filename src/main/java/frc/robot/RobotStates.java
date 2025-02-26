@@ -13,8 +13,6 @@ import frc.reefscape.Field;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
-import frc.robot.operator.PhotonOperator;
-import frc.robot.pilot.PhotonPilot;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
 import frc.robot.swerve.Swerve;
@@ -23,9 +21,7 @@ import frc.spectrumLib.SpectrumState;
 
 public class RobotStates {
     private static final Pilot pilot = Robot.getPilot();
-    private static final PhotonPilot photonPilot = Robot.getPhotonPilot();
     private static final Operator operator = Robot.getOperator();
-    private static final PhotonOperator photonOperator = Robot.getPhotonOperator();
     private static final Swerve swerve = Robot.getSwerve();
 
     // Robot States
@@ -42,7 +38,7 @@ public class RobotStates {
     public static final SpectrumState rightScore = new SpectrumState("rightScore");
     public static final SpectrumState reverse = new SpectrumState("reverse");
     public static final SpectrumState preScore = new SpectrumState("preScore");
-    public static final SpectrumState scoring = new SpectrumState("scoring");
+    public static final SpectrumState actionState = new SpectrumState("scoring");
     public static final SpectrumState homeAll = new SpectrumState("homeAll");
     public static final SpectrumState intaking = new SpectrumState("intaking");
     public static final SpectrumState climbIntake = new SpectrumState("climbIntake");
@@ -127,17 +123,15 @@ public class RobotStates {
     public static final Trigger hasCoral = new Trigger(Robot.getCoralIntake()::hasIntakeCoral);
     public static final Trigger hasAlgae = new Trigger(Robot.getCoralIntake()::hasIntakeAlgae);
 
-    public static final Trigger homeAllStopIntake = operator.nothingStaged.and(scoring);
+    public static final Trigger homeAllStopIntake = operator.nothingStaged.and(actionState);
 
     public static final SpectrumState backwardMode = new SpectrumState("backward");
 
     // Setup any binding to set states
     public static void setupStates() {
-        pilot.coastOn_dB
-                .or(operator.coastOn_dB, photonPilot.coastOn_dB, photonOperator.coastOn_dB)
-                .onTrue(coastMode.setTrue().ignoringDisable(true));
+        pilot.coastOn_dB.or(operator.coastOn_dB).onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA
-                .or(operator.coastOff_dA, photonPilot.coastOff_dA, photonOperator.coastOff_dA)
+                .or(operator.coastOff_dA)
                 .onTrue(coastMode.setFalse().ignoringDisable(true));
 
         // Intaking States
@@ -150,13 +144,15 @@ public class RobotStates {
 
         // Staging and Scoring
         coral.not()
-                .and(algae.not(), scoring.not(), preScore.not())
+                .and(algae.not(), actionState.not(), preScore.not())
                 .onTrue(clearStaged()); // Clear if we aren't scoring, holding, or staged
-        scoring.not()
+        actionState
+                .not()
                 .and(operator.coralStage.not())
                 .onTrue(coral.setFalse()); // When we change to not scoring and not coral stage
         // we turn off coral
-        scoring.not()
+        actionState
+                .not()
                 .and(operator.algaeStage.not())
                 .onTrue(algae.setFalse()); // When we change to not scoring and not algae stage
         // we turn off algae
@@ -171,10 +167,10 @@ public class RobotStates {
 
         (pilot.actionReady.and(coral.or(algae)))
                 .or(autonPreScore)
-                .onTrue(preScore.setTrue(), scoring.setFalse());
+                .onTrue(preScore.setTrue(), actionState.setFalse());
         (pilot.actionReady.not().and(coral.or(algae)))
                 .or(autonScore)
-                .onTrue(scoring.setTrue(), preScore.setFalse());
+                .onTrue(actionState.setTrue(), preScore.setFalse());
 
         // Set Levels
         operator.L1
@@ -196,10 +192,13 @@ public class RobotStates {
         autonLeftL4.onTrue(leftScore.setTrue(), rightScore.setFalse());
         autonRightL4.onTrue(rightScore.setTrue(), leftScore.setFalse());
 
-        actionPrepState.onTrue(scoring.setFalse());
+        actionPrepState.onTrue(actionState.setFalse());
         actionPrepState.onChangeToFalse(
-                scoring.setTrue().alongWith(new WaitCommand(5)).andThen(scoring.setFalse()));
-        operator.algaeStage.or(operator.coralStage).onTrue(scoring.setFalse());
+                actionState
+                        .setTrue()
+                        .alongWith(new WaitCommand(5))
+                        .andThen(actionState.setFalse()));
+        operator.algaeStage.or(operator.coralStage).onTrue(actionState.setFalse());
 
         // Home if we aren't doing coral, algae, or intaking
         (coral.not().and(algae.not(), intaking.not()))

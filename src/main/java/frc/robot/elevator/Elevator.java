@@ -28,36 +28,31 @@ public class Elevator extends Mechanism {
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
-        @Getter @Setter private double home = 0.3;
+        @Getter @Setter private double home = 0;
 
-        @Getter @Setter private double algaeLollipop = 0.3; // TODO: find real value
-        @Getter @Setter private double coralLollipop = 0.3; // TODO: find real value
-
-        @Getter @Setter private double clawGroundAlgaeIntake = 0.3; // TODO: find real value
-        @Getter @Setter private double clawGroundCoralIntake = 0.3; // TODO: find real value
+        @Getter @Setter private double clawGroundAlgaeIntake = 0;
+        @Getter @Setter private double clawGroundCoralIntake = 0;
 
         @Getter @Setter private double stationIntake = 2.7;
         @Getter @Setter private double stationExtendedIntake = 6.5;
 
-        @Getter @Setter private double photonStationIntake = 9.67; // 10.67
-        @Getter @Setter private double photonStationExtendedIntake = 9.67;
-
-        @Getter @Setter private double handOff = 5.5; // TODO: check if this works
-
         @Getter @Setter private double l1Algae = 0.3;
+        @Getter @Setter private double l1AlgaeScore = l1Algae;
         @Getter @Setter private double l2Algae = 0.3;
+        @Getter @Setter private double l2AlgaeScore = l2Algae;
         @Getter @Setter private double l3Algae = 12.5;
+        @Getter @Setter private double l3AlgaeScore = l3Algae;
         @Getter @Setter private double l4Algae = fullExtend;
+        @Getter @Setter private double l4AlgaeScore = l4Algae;
 
         @Getter @Setter private double l1Coral = 0.3;
+        @Getter @Setter private double l1CoralScore = l1Coral;
         @Getter @Setter private double l2Coral = 7.15;
+        @Getter @Setter private double l2CoralScore = l2Coral - 2;
         @Getter @Setter private double l3Coral = 17.5;
+        @Getter @Setter private double l3CoralScore = l3Coral - 2;
         @Getter @Setter private double l4Coral = 18.86;
-        @Getter @Setter private double scoreDrop = 2;
-
-        @Getter @Setter private double photonL2Coral = 0;
-        @Getter @Setter private double photonL3Coral = 10.333008;
-        @Getter @Setter private double photonL4Coral = 20.929199;
+        @Getter @Setter private double l4CoralScore = l4Coral;
 
         @Getter @Setter private double barge = 20;
 

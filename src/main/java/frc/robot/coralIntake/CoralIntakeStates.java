@@ -16,62 +16,23 @@ public class CoralIntakeStates {
     }
 
     public static void setStates() {
-        // TODO: Fix this after testing
-        // stationIntaking.onTrue(coralIntake.coralIntake()); // log(coralIntake()));
-        // stationExtendedIntake.whileTrue(coralEject()); // log(coralIntake()));
+        homeAllStopIntake.onTrue(coralIntake.getDefaultCommand());
 
-        L2Coral.and(scoring.not()).onTrue(coralIntake.coralIntake());
-        L2Coral.and(scoring).whileTrue(coralIntake.coralScore());
-        L3Coral.and(scoring.not()).onTrue(coralIntake.coralIntake());
-        L3Coral.and(scoring).whileTrue(coralIntake.coralScore());
-        L4Coral.and(scoring.not()).onTrue(coralIntake.coralIntake());
-        L4Coral.and(scoring).whileTrue(coralIntake.coralScore());
+        stationIntaking.onTrue(coralIntake.coralIntake());
+        intaking.and(algae).onTrue(coralIntake.algaeIntake());
 
-        // homeAllStopIntake.onTrue(coralIntake.runStop());
+        L1Coral.and(actionState).whileTrue(coralIntake.coralL1Score());
+        L2Coral.and(actionState).whileTrue(coralIntake.coralScore());
+        L3Coral.and(actionState).whileTrue(coralIntake.coralScore());
+        L4Coral.and(actionState).whileTrue(coralIntake.coralScore());
 
-        // scoreState.and(barge.not()).onTrue(log(coralScore()));
-        // scoreState.and(barge).onTrue(log(barge()));
-
-        // processorLollipopScore.whileTrue(log(coralIntake()));
-
-        // passiveCoral.whileTrue(coralIntake.coralIntake()); // TODO: delete?
-        // passiveAlgae.whileTrue(coralIntake.algaeIntake());
-        // hasAlgae.whileTrue(log(algaeIntake()));
-
-        // algaeHandoff.onTrue(log(algaeHandOff()));
-        // coralHandoff.onTrue(log(coralHandOff()));
+        processorAlgae.and(actionState).whileTrue(coralIntake.algaeScore());
+        L2Algae.and(actionState).whileTrue(coralIntake.algaeIntake());
+        L3Algae.and(actionState).whileTrue(coralIntake.algaeIntake());
+        netAlgae.and(actionState).whileTrue(coralIntake.algaeScore());
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-    }
-
-    // private static Command algaeHandOff() {
-    //     return coralIntake
-    //             .runStop()
-    //             .withName("coralIntake.algaeHandOffWait")
-    //             .until(() -> ElbowStates.getPosition().getAsDouble() > 95.0)
-    //             .andThen(algaeIntake())
-    //             .withName("coralIntake.algaeHandOff");
-    // }
-
-    private static Command barge() {
-        return coralIntake
-                .runVelocityTcFocRpm(config::getBarge)
-                .withName("coralIntake.barge")
-                .until(() -> (!coralIntake.hasIntakeAlgae()))
-                .withName("coralIntake.bargeScoreDone");
-    }
-
-    private static Command algaeIntake() {
-        return coralIntake
-                .runVelocityTcFocRpm(config::getEject)
-                .withName("coralIntake.algaeIntake");
-    }
-
-    private static Command algaeEject() {
-        return coralIntake
-                .runVelocityTcFocRpm(config::getIntake)
-                .withName("coralIntake.algaeEject");
     }
 
     private static Command coastMode() {

@@ -31,14 +31,8 @@ import frc.robot.leds.LedFull;
 import frc.robot.leds.LedFull.LedFullConfig;
 import frc.robot.operator.Operator;
 import frc.robot.operator.Operator.OperatorConfig;
-import frc.robot.operator.PhotonOperator;
-import frc.robot.operator.PhotonOperator.PhotonOperatorConfig;
-import frc.robot.pilot.PhotonPilot;
-import frc.robot.pilot.PhotonPilot.PhotonPilotConfig;
 import frc.robot.pilot.Pilot;
 import frc.robot.pilot.Pilot.PilotConfig;
-import frc.robot.shoulder.PhotonShoulder;
-import frc.robot.shoulder.PhotonShoulder.PhotonShoulderConfig;
 import frc.robot.shoulder.Shoulder;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.robot.swerve.Swerve;
@@ -78,10 +72,6 @@ public class Robot extends SpectrumRobot {
         public ElevatorConfig elevator = new ElevatorConfig();
         public ShoulderConfig shoulder = new ShoulderConfig();
 
-        public PhotonPilotConfig photonPilot = new PhotonPilotConfig();
-        public PhotonOperatorConfig photonOperator = new PhotonOperatorConfig();
-        public PhotonShoulderConfig photonShoulder = new PhotonShoulderConfig();
-
         public GroundIntakeConfig groundIntake = new GroundIntakeConfig();
         public CoralIntakeConfig coralIntake = new CoralIntakeConfig();
         public LedFullConfig leds = new LedFullConfig();
@@ -96,10 +86,7 @@ public class Robot extends SpectrumRobot {
     @Getter private static CoralIntake coralIntake;
     @Getter private static LedFull leds;
     @Getter private static Operator operator;
-    @Getter private static PhotonOperator photonOperator;
     @Getter private static Pilot pilot;
-    @Getter private static PhotonPilot photonPilot;
-    @Getter private static PhotonShoulder photonShoulder;
     @Getter private static VisionSystem visionSystem;
     @Getter private static Vision vision;
     @Getter private static Auton auton;
@@ -144,10 +131,7 @@ public class Robot extends SpectrumRobot {
 
             leds = new LedFull(config.leds);
             operator = new Operator(config.operator);
-            photonOperator = new PhotonOperator(config.photonOperator);
             pilot = new Pilot(config.pilot);
-            photonPilot = new PhotonPilot(config.photonPilot);
-            photonShoulder = new PhotonShoulder(config.photonShoulder);
             swerve = new Swerve(config.swerve);
             Timer.delay(canInitDelay);
             elevator = new Elevator(config.elevator);
