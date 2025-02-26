@@ -18,17 +18,17 @@ public class CoralIntakeStates {
 
     public static void setStates() {
         // TODO: Fix this after testing
-        stationIntaking.onTrue(coralIntake.coralIntake()); // log(coralIntake()));
+        //stationIntaking.onTrue(coralIntake.coralIntake()); // log(coralIntake()));
         // stationExtendedIntake.whileTrue(coralEject()); // log(coralIntake()));
 
-        L2Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
-        L2Coral.and(scoreState).whileTrue(coralIntake.coralScore());
-        L3Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
-        L3Coral.and(scoreState).whileTrue(coralIntake.coralScore());
-        L4Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
-        L4Coral.and(scoreState).whileTrue(coralIntake.coralScore());
+        // L2Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
+        // L2Coral.and(scoreState).whileTrue(coralIntake.coralScore());
+        // L3Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
+        // L3Coral.and(scoreState).whileTrue(coralIntake.coralScore());
+        // L4Coral.and(scoreState.not()).onTrue(coralIntake.coralIntake());
+        // L4Coral.and(scoreState).whileTrue(coralIntake.coralScore());
 
-        homeAllStopIntake.onTrue(coralIntake.runStop());
+        // homeAllStopIntake.onTrue(coralIntake.runStop());
 
         // scoreState.and(barge.not()).onTrue(log(coralScore()));
         // scoreState.and(barge).onTrue(log(barge()));
@@ -45,16 +45,18 @@ public class CoralIntakeStates {
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        Robot.getPilot().testTune_tA.whileTrue(coralIntake.coralIntake());
-        // Robot.getPilot().testTune_tB.whileTrue(coralIntake.algaeIntake());
-        Robot.getPilot().testTune_tX.whileTrue(coralIntake.coralIntake());
-        // Robot.getPilot().testTune_tY.whileTrue(coralIntake.coralScore());
-        // Robot.getPilot().tuneShoulder_tB.whileTrue(coralIntake.coralScore());
-        // Robot.getOperator().test_tA.whileTrue(coralIntake.coralIntake());
-        // Robot.getPilot().testTune_RB.whileTrue(coralIntake.algaeScore());
-        Robot.getOperator().test_X.whileTrue(coralIntake.algaeIntake());
-        Robot.getOperator().test_A.whileTrue(coralIntake.algaeIntake());
-        Robot.getOperator().test_B.whileTrue(coralIntake.algaeIntake());
+        // Robot.getPilot().testTune_tA.whileTrue(coralIntake.coralIntake());
+        // // Robot.getPilot().testTune_tB.whileTrue(coralIntake.algaeIntake());
+        // Robot.getPilot().testTune_tX.whileTrue(coralIntake.coralIntake());
+        // // Robot.getPilot().testTune_tY.whileTrue(coralIntake.coralScore());
+        // // Robot.getPilot().tuneShoulder_tB.whileTrue(coralIntake.coralScore());
+        // // Robot.getOperator().test_tA.whileTrue(coralIntake.coralIntake());
+        // // Robot.getPilot().testTune_RB.whileTrue(coralIntake.algaeScore());
+        // Robot.getOperator().test_X.whileTrue(coralIntake.algaeIntake());
+        // Robot.getOperator().test_A.whileTrue(coralIntake.algaeIntake());
+        // Robot.getOperator().test_B.whileTrue(coralIntake.algaeIntake());
+
+        Robot.getPhotonPilot().testTune_tA.whileTrue(coralIntake.coralIntake());
     }
 
     private static Command algaeHandOff() {

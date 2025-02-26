@@ -10,6 +10,7 @@ import frc.reefscape.Field;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
+import frc.robot.pilot.PhotonPilot;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
 import frc.robot.swerve.Swerve;
@@ -18,6 +19,7 @@ import frc.spectrumLib.SpectrumState;
 
 public class RobotStates {
     private static final Pilot pilot = Robot.getPilot();
+    private static final PhotonPilot photonPilot = Robot.getPhotonPilot();
     private static final Operator operator = Robot.getOperator();
     private static final Swerve swerve = Robot.getSwerve();
 
@@ -103,6 +105,7 @@ public class RobotStates {
     // These are states that aren't directly tied to hardware or buttons, etc.
     // If they should be set by multiple Triggers do that in SetupStates()
     public static final SpectrumState coastMode = new SpectrumState("coast");
+    public static final SpectrumState photonCoastMode = new SpectrumState("photonCoast");
     public static final SpectrumState leftScore = new SpectrumState("leftScore");
     public static final SpectrumState rightScore = new SpectrumState("rightScore");
     public static final SpectrumState scoreState = new SpectrumState("scoreState");
@@ -111,7 +114,7 @@ public class RobotStates {
     // public static final SpectrumState passiveCoral = new SpectrumState("passiveCoralIntake");
     // public static final SpectrumState passiveAlgae = new SpectrumState("passiveAlgaeIntake");
 
-    public static final Trigger coastOn = pilot.coastOn_dB;
+    public static final Trigger coastOn = pilot.coastOn_dB; // TODO: delete this?
 
     public static final Trigger reefPosition =
             L2Algae.or(L3Algae, L1Coral, L2Coral, L3Coral, L4Coral);
@@ -132,6 +135,8 @@ public class RobotStates {
     public static void setupStates() {
         pilot.coastOn_dB.onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA.onTrue(coastMode.setFalse().ignoringDisable(true));
+        photonPilot.coastOn_dB.onTrue(photonCoastMode.setTrue().ignoringDisable(true));
+        photonPilot.coastOff_dA.onTrue(photonCoastMode.setFalse().ignoringDisable(true));
 
         actionPrepState.onTrue(scoreState.setFalse());
         actionPrepState.onChangeToFalse(

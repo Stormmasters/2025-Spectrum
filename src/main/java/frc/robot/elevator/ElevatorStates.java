@@ -49,7 +49,7 @@ public class ElevatorStates {
         // coralHandoff.whileTrue(handOff());
 
         // stationIntaking.whileTrue(stationIntake());
-        stationIntaking.whileTrue(elevator.setElevatorMMPositionFOC((config::getStationIntake)));
+        // stationIntaking.whileTrue(elevator.setElevatorMMPositionFOC((config::getStationIntake)));
         // stationExtendedIntake.whileTrue(stationExtendedIntake());
         // L2Algae.whileTrue(l1());
         // L3Algae.whileTrue(l1());
@@ -57,18 +57,18 @@ public class ElevatorStates {
 
         // L1Coral.whileTrue(l1());
         // L2Coral.whileTrue(l1());
-        L2Coral.and(actionPrepState)
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
-        L2Coral.and(scoreState)
-                .whileTrue(elevator.setElevatorMMPositionFOC(() -> config.getL2Coral() - 2));
+        // L2Coral.and(actionPrepState)
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
+        // L2Coral.and(scoreState)
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(() -> config.getL2Coral() - 2));
 
-        L3Coral.and(actionPrepState)
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Coral));
-        L3Coral.and(scoreState)
-                .whileTrue(elevator.setElevatorMMPositionFOC(() -> config.getL3Coral() - 2));
+        // L3Coral.and(actionPrepState)
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Coral));
+        // L3Coral.and(scoreState)
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(() -> config.getL3Coral() - 2));
 
-        L4Coral.and(actionPrepState)
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL4Coral));
+        // L4Coral.and(actionPrepState)
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL4Coral));
         // L4Coral.and(scoreState)
         //         .whileTrue(elevator.setElevatorMMPositionFOC(() -> config.getL4Coral() - 2));
         // L3Coral.whileTrue(l1());
@@ -89,36 +89,44 @@ public class ElevatorStates {
         // homeElevator.whileTrue(zero());
 
         // // TODO: For Testing
-        Robot.getPilot()
-                .testTune_tA
-                .whileTrue(elevator.setElevatorMMPositionFOC((config::getStationIntake)));
         // Robot.getPilot()
-        //         .testTune_tB
-        //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Algae));
+        //         .testTune_tA
+        //         .whileTrue(elevator.setElevatorMMPositionFOC((config::getStationIntake)));
+        // // Robot.getPilot()
+        // //         .testTune_tB
+        // //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Algae));
+        // //
         // Robot.getPilot().testTune_tX.whileTrue(elevator.setElevatorMMPositionFOC(config::getHome));
-        // Robot.getPilot()
-        //         .testTune_tY
+        // // Robot.getPilot()
+        // //         .testTune_tY
+        // //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
+        // Robot.getPilot().reZero_start.onTrue(elevator.resetToInitialPos());
+        // // Robot.getPilot()
+        // //         .testTriggersTrigger
+        // //         .whileTrue(runElevator(() -> Robot.getPilot().getTestTriggersAxis()));
+        // Robot.getOperator()
+        //         .test_tA
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL1Coral));
+        // Robot.getOperator()
+        //         .test_tB
         //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
-        Robot.getPilot().reZero_start.onTrue(elevator.resetToInitialPos());
-        // Robot.getPilot()
-        //         .testTriggersTrigger
-        //         .whileTrue(runElevator(() -> Robot.getPilot().getTestTriggersAxis()));
-        Robot.getOperator()
-                .test_tA
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL1Coral));
-        Robot.getOperator()
-                .test_tB
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Coral));
-        Robot.getOperator()
-                .test_tX
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Coral));
-        Robot.getOperator()
-                .test_tY
-                .whileTrue(elevator.setElevatorMMPositionFOC(config::getL4Coral));
-        Robot.getOperator().test_X.whileTrue(elevator.setElevatorMMPositionFOC(config::getBarge));
-        Robot.getOperator().test_A.whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Algae));
-        Robot.getOperator().test_B.whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Algae));
-        homeAll.whileTrue(home());
+        // Robot.getOperator()
+        //         .test_tX
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Coral));
+        // Robot.getOperator()
+        //         .test_tY
+        //         .whileTrue(elevator.setElevatorMMPositionFOC(config::getL4Coral));
+        // Robot.getOperator().test_X.whileTrue(elevator.setElevatorMMPositionFOC(config::getBarge));
+        // Robot.getOperator().test_A.whileTrue(elevator.setElevatorMMPositionFOC(config::getL2Algae));
+        // Robot.getOperator().test_B.whileTrue(elevator.setElevatorMMPositionFOC(config::getL3Algae));
+        // homeAll.whileTrue(home());
+
+        Robot.getPhotonPilot()
+                .testTune_tA
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getPhotonStationIntake));
+        Robot.getPhotonPilot()
+                .testTune_tB
+                .whileTrue(elevator.setElevatorMMPositionFOC(config::getHome));
     }
 
     private static Command runElevator(DoubleSupplier speed) {

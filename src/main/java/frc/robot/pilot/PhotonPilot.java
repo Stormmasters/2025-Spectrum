@@ -36,7 +36,13 @@ public class PhotonPilot extends Gamepad {
     public final Trigger coastOff_dA = disabled.and(A);
 
     // TEST TRIGGERS
-    public final Trigger tuneElevator_tB = testMode.and(B);
+    public final Trigger testTune_tB = testMode.and(B);
+    public final Trigger testTune_tA = testMode.and(A);
+    public final Trigger testTune_tX = testMode.and(X);
+    public final Trigger testTune_tY = testMode.and(Y);
+    public final Trigger testTune_RB = testMode.and(rightBumper);
+    public final Trigger testTune_LB = testMode.and(leftBumper);
+    public final Trigger testTriggersTrigger = testMode.and(leftTrigger.or(rightTrigger));
 
     public static class PhotonPilotConfig extends Config {
 
@@ -132,8 +138,7 @@ public class PhotonPilot extends Gamepad {
         return -1 * ccwPositive; // invert the value
     }
 
-    // ELEVATOR METHODS
-    public double getElevatorManualAxis() {
-        return getLeftY();
+    public double getTestTriggersAxis() { // TODO: Remove after Testing
+        return getRightTriggerAxis() - getLeftTriggerAxis();
     }
 }

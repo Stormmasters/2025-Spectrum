@@ -39,6 +39,9 @@ public class Elevator extends Mechanism {
         @Getter private final double stationIntake = 2.7;
         @Getter private final double stationExtendedIntake = 6.5;
 
+        @Getter private final double photonStationIntake = 9.67; // 10.67
+        @Getter private final double photonStationExtendedIntake = 9.67;
+
         @Getter private final double handOff = 5.5; // TODO: check if this works
 
         @Getter private final double l2Algae = 0.3;
@@ -48,6 +51,10 @@ public class Elevator extends Mechanism {
         @Getter private final double l2Coral = 7.15;
         @Getter private final double l3Coral = 17.5;
         @Getter private final double l4Coral = 18.86;
+
+        @Getter private final double photonL2Coral = 0;
+        @Getter private final double photonL3Coral = 10.333008;
+        @Getter private final double photonL4Coral = 20.929199;
 
         @Getter private final double barge = 20;
 

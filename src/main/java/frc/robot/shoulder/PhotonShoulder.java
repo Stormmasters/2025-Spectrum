@@ -2,7 +2,6 @@ package frc.robot.shoulder;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -11,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
-import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
@@ -31,13 +29,15 @@ public class PhotonShoulder extends Mechanism {
 
         /* PhotonShoulder positions in percentage of max rotation || 0 is vertical down || positions should be towards front of robot */
         // TODO: Find photonShoulder positions
-        @Getter private final double l2Coral = -40;
-        @Getter private final double l3Coral = -40;
-        @Getter private final double l4Coral = -88.9;
+        @Getter private final double stationIntake = 36.03515625;
+
+        @Getter private final double l2Coral = 232.3828125;
+        @Getter private final double l3Coral = 233.4;
+        @Getter private final double l4Coral = 203.927734375;
         @Getter @Setter private double tunePhotonShoulder = 0;
 
         @Getter private final double tolerance = 0.95;
-        
+
         @Getter private final double offset = -90;
         @Getter private final double initPosition = 0;
 
@@ -70,13 +70,13 @@ public class PhotonShoulder extends Mechanism {
 
         @Getter private double length = 0.3;
 
-        //TODO: get correct configs
+        // TODO: get correct configs
         public PhotonShoulderConfig() {
             super("PhotonShoulder", 42, Rio.CANIVORE);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk); // 147000, 161000, 0);
-            configGearRatio(102.857); 
+            configGearRatio(102.857);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(-torqueCurrentLimit);
@@ -87,7 +87,7 @@ public class PhotonShoulder extends Mechanism {
             if (Robot.isSimulation()) {
                 configCounterClockwise_Positive();
             } else {
-                configClockwise_Positive();
+                configCounterClockwise_Positive();
             }
             configGravityType(true);
             setSimRatio(102.857);
@@ -119,6 +119,7 @@ public class PhotonShoulder extends Mechanism {
                             .setOffset(config.getCANcoderOffset())
                             .setAttached(false);
             setInitialPosition();
+        }
 
         simulationInit();
         telemetryInit();
@@ -150,7 +151,9 @@ public class PhotonShoulder extends Mechanism {
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
             builder.addDoubleProperty(
-                    "#Tune Position Percent", config::getTunePhotonShoulder, config::setTunePhotonShoulder);
+                    "#Tune Position Percent",
+                    config::getTunePhotonShoulder,
+                    config::setTunePhotonShoulder);
         }
     }
 
@@ -249,7 +252,7 @@ public class PhotonShoulder extends Mechanism {
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            //sim = new PhotonShoulderSim(motor.getSimState(), RobotSim.leftView);
+            // sim = new PhotonShoulderSim(motor.getSimState(), RobotSim.leftView);
 
             // m_CANcoder.setPosition(0);
         }
@@ -258,7 +261,7 @@ public class PhotonShoulder extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            //sim.simulationPeriodic();
+            // sim.simulationPeriodic();
             // m_CANcoder.getSimState().setRawPosition(sim.getAngleRads() / 0.202);
         }
     }

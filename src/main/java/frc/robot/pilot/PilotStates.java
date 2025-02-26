@@ -32,7 +32,8 @@ public class PilotStates {
      * methods, we don't want these to require the pilot subsystem arm
      */
     public static Command slowMode() {
-        return Commands.startEnd(() -> pilot.getSlowMode().setTrue(), () -> pilot.getSlowMode().setFalse())
+        return Commands.startEnd(
+                        () -> pilot.getSlowMode().setTrue(), () -> pilot.getSlowMode().setFalse())
                 .withName("Pilot.setSlowMode");
     }
 
@@ -41,7 +42,8 @@ public class PilotStates {
      * want these to require the pilot subsystem
      */
     public static Command turboMode() {
-        return Commands.startEnd(() -> pilot.getTurboMode().setTrue(), () -> pilot.getTurboMode().setFalse())
+        return Commands.startEnd(
+                        () -> pilot.getTurboMode().setTrue(), () -> pilot.getTurboMode().setFalse())
                 .withName("Pilot.setTurboMode");
     }
 
