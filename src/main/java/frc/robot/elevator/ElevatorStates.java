@@ -61,7 +61,7 @@ public class ElevatorStates {
 
         Robot.getPhotonPilot()
                 .testTune_tA
-                .whileTrue(elevator.setPosition(config::getPhotonStationIntake));
+                .whileTrue(elevator.setPosition(config::getStationIntake));
         Robot.getPhotonPilot().testTune_tB.whileTrue(elevator.setPosition(config::getHome));
     }
 

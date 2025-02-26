@@ -19,46 +19,45 @@ public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
         /* Elevator constants in rotations */
-        @Getter private double maxRotations = 20.5; // TODO: Reset to 21.1;
+        @Getter @Setter private double maxRotations = 20.5;
 
-        @Getter
-        private double minRotations = 0.3; // This is to prevent it from driving to zero too hard
+        @Getter @Setter private double minRotations = 0.3;
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
-        @Getter private double home = 0.3;
+        @Getter @Setter private double home = 0.3;
 
-        @Getter private final double algaeLollipop = 0.3; // TODO: find real value
-        @Getter private final double coralLollipop = 0.3; // TODO: find real value
+        @Getter @Setter private double algaeLollipop = 0.3; // TODO: find real value
+        @Getter @Setter private double coralLollipop = 0.3; // TODO: find real value
 
-        @Getter private final double clawGroundAlgaeIntake = 0.3; // TODO: find real value
-        @Getter private final double clawGroundCoralIntake = 0.3; // TODO: find real value
+        @Getter @Setter private double clawGroundAlgaeIntake = 0.3; // TODO: find real value
+        @Getter @Setter private double clawGroundCoralIntake = 0.3; // TODO: find real value
 
-        @Getter private final double stationIntake = 2.7;
-        @Getter private final double stationExtendedIntake = 6.5;
+        @Getter @Setter private double stationIntake = 2.7;
+        @Getter @Setter private double stationExtendedIntake = 6.5;
 
-        @Getter private final double photonStationIntake = 9.67; // 10.67
-        @Getter private final double photonStationExtendedIntake = 9.67;
+        @Getter @Setter private double photonStationIntake = 9.67; // 10.67
+        @Getter @Setter private double photonStationExtendedIntake = 9.67;
 
-        @Getter private final double handOff = 5.5; // TODO: check if this works
+        @Getter @Setter private double handOff = 5.5; // TODO: check if this works
 
-        @Getter private final double l1Algae = 0.3;
-        @Getter private final double l2Algae = 0.3;
-        @Getter private final double l3Algae = 12.5;
-        @Getter private final double l4Algae = fullExtend;
+        @Getter @Setter private double l1Algae = 0.3;
+        @Getter @Setter private double l2Algae = 0.3;
+        @Getter @Setter private double l3Algae = 12.5;
+        @Getter @Setter private double l4Algae = fullExtend;
 
-        @Getter private final double l1Coral = 0.3;
-        @Getter private final double l2Coral = 7.15;
-        @Getter private final double l3Coral = 17.5;
-        @Getter private final double l4Coral = 18.86;
-        @Getter private final double scoreDrop = 2;
+        @Getter @Setter private double l1Coral = 0.3;
+        @Getter @Setter private double l2Coral = 7.15;
+        @Getter @Setter private double l3Coral = 17.5;
+        @Getter @Setter private double l4Coral = 18.86;
+        @Getter @Setter private double scoreDrop = 2;
 
-        @Getter private final double photonL2Coral = 0;
-        @Getter private final double photonL3Coral = 10.333008;
-        @Getter private final double photonL4Coral = 20.929199;
+        @Getter @Setter private double photonL2Coral = 0;
+        @Getter @Setter private double photonL3Coral = 10.333008;
+        @Getter @Setter private double photonL4Coral = 20.929199;
 
-        @Getter private final double barge = 20;
+        @Getter @Setter private double barge = 20;
 
         @Getter private double triggerTolerance = 0.95;
         @Getter private double elevatorIsUpHeight = 5;
