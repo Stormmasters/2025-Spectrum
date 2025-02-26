@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
-import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
@@ -20,50 +19,33 @@ import frc.spectrumLib.sim.ArmSim;
 import java.util.function.DoubleSupplier;
 import lombok.*;
 
-public class Shoulder extends Mechanism {
+public class PhotonShoulder extends Mechanism {
 
-    public static class ShoulderConfig extends Config {
+    public static class PhotonShoulderConfig extends Config {
         @Getter @Setter private boolean reversed = false;
 
-        // Positions set as degrees of rotation || 0 is vertical down
-        @Getter private final int initializedPosition = 0;
+        // Positions set as percentage of photonShoulder
+        @Getter private final int initializedPosition = 20;
 
-        /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
-        // TODO: Find shoulder positions
-        @Getter private final double score = 117;
-        @Getter private final double climbHome = 180;
-        @Getter private final double handAlgae = -144; // TODO: find this value
-        @Getter private final double home = 0;
+        /* PhotonShoulder positions in percentage of max rotation || 0 is vertical down || positions should be towards front of robot */
+        // TODO: Find photonShoulder positions
+        @Getter private final double stationIntake = 36.03515625;
 
-        @Getter private final double algaeLollipop = 0;
-        @Getter private final double coralLollipop = -157; // TODO: find this value
-        @Getter private final double stationIntake = 0;
-        @Getter private final double stationExtendedIntake = 172; // TODO: find this value
-        @Getter private final double clawGroundAlgaeIntake = -164; // TODO: find this value
-        @Getter private final double clawGroundCoralIntake = -164; // TODO: find this value
-        @Getter private final double handOff = 180;
-
-        @Getter private final double l2Algae = 43.07;
-        @Getter private final double l3Algae = 43.07;
-
-        @Getter private final double l1Coral = 14;
-        @Getter private final double l2Coral = 34;
-        @Getter private final double l3Coral = 34;
-        @Getter private final double l4Coral = -210;
-
-        @Getter private final double barge = 180; // TODO: find this value
-        @Getter @Setter private double tuneShoulder = 0;
+        @Getter private final double l2Coral = 232.3828125;
+        @Getter private final double l3Coral = 233.4;
+        @Getter private final double l4Coral = 203.927734375;
+        @Getter @Setter private double tunePhotonShoulder = 0;
 
         @Getter private final double tolerance = 0.95;
 
         @Getter private final double offset = -90;
         @Getter private final double initPosition = 0;
 
-        /* Shoulder config settings */
+        /* PhotonShoulder config settings */
         @Getter private final double zeroSpeed = -0.1;
         @Getter private final double holdMaxSpeedRPM = 18;
 
-        @Getter private final double currentLimit = 20;
+        @Getter private final double currentLimit = 30;
         @Getter private final double torqueCurrentLimit = 100;
         @Getter private final double positionKp = 1500;
         @Getter private final double positionKd = 140;
@@ -81,36 +63,37 @@ public class Shoulder extends Mechanism {
         @Getter private boolean isCANcoderAttached = false;
 
         /* Sim properties */
-        @Getter private double shoulderX = 0.8;
-        @Getter private double shoulderY = 1.1;
+        @Getter private double photonShoulderX = 0.8;
+        @Getter private double photonShoulderY = 1.1;
 
         @Getter @Setter private double simRatio = 1;
 
         @Getter private double length = 0.3;
 
-        public ShoulderConfig() {
-            super("Shoulder", 42, Rio.CANIVORE);
+        // TODO: get correct configs
+        public PhotonShoulderConfig() {
+            super("PhotonShoulder", 42, Rio.CANIVORE);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
-            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
+            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk); // 147000, 161000, 0);
             configGearRatio(102.857);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
-            configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
-            configMinMaxRotations(-1, 0.5);
-            configReverseSoftLimit(-1, true);
-            configForwardSoftLimit(0.5, true);
+            configReverseTorqueCurrentLimit(-torqueCurrentLimit);
+            configMinMaxRotations(-0.25, 0.75);
+            configReverseSoftLimit(getMinRotations(), true);
+            configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
             if (Robot.isSimulation()) {
                 configCounterClockwise_Positive();
             } else {
-                configClockwise_Positive();
+                configCounterClockwise_Positive();
             }
             configGravityType(true);
             setSimRatio(102.857);
         }
 
-        public ShoulderConfig modifyMotorConfig(TalonFX motor) {
+        public PhotonShoulderConfig modifyMotorConfig(TalonFX motor) {
             TalonFXConfigurator configurator = motor.getConfigurator();
             TalonFXConfiguration talonConfigMod = getTalonConfig();
 
@@ -120,12 +103,12 @@ public class Shoulder extends Mechanism {
         }
     }
 
-    private ShoulderConfig config;
+    private PhotonShoulderConfig config;
     private SpectrumCANcoder canCoder;
-    @Getter private ShoulderSim sim;
+    @Getter private PhotonShoulderSim sim;
     CANcoderSimState canCoderSim;
 
-    public Shoulder(ShoulderConfig config) {
+    public PhotonShoulder(PhotonShoulderConfig config) {
         super(config);
         this.config = config;
 
@@ -161,13 +144,16 @@ public class Shoulder extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
+            builder.addDoubleProperty("Position Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty(
                     "Position Degrees", () -> (this.getPositionDegrees() - config.offset), null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
             builder.addDoubleProperty(
-                    "#Tune Position Percent", config::getTuneShoulder, config::setTuneShoulder);
+                    "#Tune Position Percent",
+                    config::getTunePhotonShoulder,
+                    config::setTunePhotonShoulder);
         }
     }
 
@@ -189,7 +175,7 @@ public class Shoulder extends Mechanism {
     // Custom Commands
     // --------------------------------------------------------------------------------
 
-    public Command zeroShoulderRoutine() {
+    public Command zeroPhotonShoulderRoutine() {
         return new FunctionalCommand(
                         () -> toggleReverseSoftLimit(false), // init
                         () -> setPercentOutput(config::getZeroSpeed), // execute
@@ -199,18 +185,18 @@ public class Shoulder extends Mechanism {
                         },
                         () -> false, // isFinished
                         this) // requirement
-                .withName("Shoulder.zeroShoulderRoutine");
+                .withName("PhotonShoulder.zeroPhotonShoulderRoutine");
     }
 
-    /** Holds the position of the Shoulder. */
-    public Command runHoldShoulder() {
+    /** Holds the position of the PhotonShoulder. */
+    public Command runHoldPhotonShoulder() {
         return new Command() {
             double holdPosition = 0; // rotations
 
             // constructor
             {
-                setName("Shoulder.holdPosition");
-                addRequirements(Robot.getShoulder());
+                setName("PhotonShoulder.holdPosition");
+                addRequirements(PhotonShoulder.this);
             }
 
             @Override
@@ -245,19 +231,11 @@ public class Shoulder extends Mechanism {
         };
     }
 
-    public boolean ShoulderHasError() {
+    public boolean PhotonShoulderHasError() {
         if (isAttached()) {
             return getPositionRotations() > config.getMaxRotations();
         }
         return false;
-    }
-
-    public double checkReversed(DoubleSupplier position) {
-        if (!config.isReversed()) {
-            return position.getAsDouble();
-        }
-
-        return position.getAsDouble() * -1;
     }
 
     @Override
@@ -269,16 +247,13 @@ public class Shoulder extends Mechanism {
         return () -> (position.getAsDouble() + config.getOffset());
     }
 
-    public Command moveToDegreesAndCheckReversed(DoubleSupplier degrees) {
-        return moveToDegrees(() -> checkReversed(degrees));
-    }
-
     // --------------------------------------------------------------------------------
     // Simulation
     // --------------------------------------------------------------------------------
     private void simulationInit() {
         if (isAttached()) {
-            sim = new ShoulderSim(motor.getSimState(), RobotSim.leftView);
+            // sim = new PhotonShoulderSim(motor.getSimState(), RobotSim.leftView);
+
             // m_CANcoder.setPosition(0);
         }
     }
@@ -286,17 +261,17 @@ public class Shoulder extends Mechanism {
     @Override
     public void simulationPeriodic() {
         if (isAttached()) {
-            sim.simulationPeriodic();
+            // sim.simulationPeriodic();
             // m_CANcoder.getSimState().setRawPosition(sim.getAngleRads() / 0.202);
         }
     }
 
-    class ShoulderSim extends ArmSim {
-        public ShoulderSim(TalonFXSimState shoulderMotorSim, Mechanism2d mech) {
+    class PhotonShoulderSim extends ArmSim {
+        public PhotonShoulderSim(TalonFXSimState photonShoulderMotorSim, Mechanism2d mech) {
             super(
                     new ArmConfig(
-                                    config.shoulderX,
-                                    config.shoulderY,
+                                    config.photonShoulderX,
+                                    config.photonShoulderY,
                                     config.simRatio,
                                     config.length,
                                     -270,
@@ -304,7 +279,7 @@ public class Shoulder extends Mechanism {
                                     -90)
                             .setMount(Robot.getElevator().getSim(), true),
                     mech,
-                    shoulderMotorSim,
+                    photonShoulderMotorSim,
                     "2" + config.getName()); // added 2 to the name to create it second
         }
     }

@@ -58,6 +58,15 @@ public class ElevatorStates {
         Robot.getPilot()
                 .reZero_start
                 .onTrue(elevator.resetToInitialPos()); // TODO: check if this works
+
+        Robot.getPhotonPilot()
+                .testTune_tA
+                .whileTrue(elevator.setPosition(config::getPhotonStationIntake));
+        Robot.getPhotonPilot().testTune_tB.whileTrue(elevator.setPosition(config::getHome));
+    }
+
+    private static Command runElevator(DoubleSupplier speed) {
+        return elevator.runPercentage(speed).withName("Elevator.runElevator");
     }
 
     public static DoubleSupplier getPosition() {

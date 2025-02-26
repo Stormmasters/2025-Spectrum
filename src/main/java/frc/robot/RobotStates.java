@@ -13,6 +13,8 @@ import frc.reefscape.Field;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
+import frc.robot.operator.PhotonOperator;
+import frc.robot.pilot.PhotonPilot;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
 import frc.robot.swerve.Swerve;
@@ -21,7 +23,9 @@ import frc.spectrumLib.SpectrumState;
 
 public class RobotStates {
     private static final Pilot pilot = Robot.getPilot();
+    private static final PhotonPilot photonPilot = Robot.getPhotonPilot();
     private static final Operator operator = Robot.getOperator();
+    private static final PhotonOperator photonOperator = Robot.getPhotonOperator();
     private static final Swerve swerve = Robot.getSwerve();
 
     // Robot States
@@ -129,9 +133,9 @@ public class RobotStates {
 
     // Setup any binding to set states
     public static void setupStates() {
-        pilot.coastOn_dB.or(operator.coastOn_dB).onTrue(coastMode.setTrue().ignoringDisable(true));
+        pilot.coastOn_dB.or(operator.coastOn_dB, photonPilot.coastOn_dB, photonOperator.coastOn_dB).onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA
-                .or(operator.coastOff_dA)
+                .or(operator.coastOff_dA, photonPilot.coastOff_dA, photonOperator.coastOff_dA)
                 .onTrue(coastMode.setFalse().ignoringDisable(true));
 
         // Intaking States

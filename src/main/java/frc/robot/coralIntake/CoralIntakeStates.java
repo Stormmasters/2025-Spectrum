@@ -17,7 +17,7 @@ public class CoralIntakeStates {
 
     public static void setStates() {
         // TODO: Fix this after testing
-        stationIntaking.onTrue(coralIntake.coralIntake()); // log(coralIntake()));
+        // stationIntaking.onTrue(coralIntake.coralIntake()); // log(coralIntake()));
         // stationExtendedIntake.whileTrue(coralEject()); // log(coralIntake()));
 
         L2Coral.and(scoring.not()).onTrue(coralIntake.coralIntake());
@@ -27,7 +27,7 @@ public class CoralIntakeStates {
         L4Coral.and(scoring.not()).onTrue(coralIntake.coralIntake());
         L4Coral.and(scoring).whileTrue(coralIntake.coralScore());
 
-        homeAllStopIntake.onTrue(coralIntake.runStop());
+        // homeAllStopIntake.onTrue(coralIntake.runStop());
 
         // scoreState.and(barge.not()).onTrue(log(coralScore()));
         // scoreState.and(barge).onTrue(log(barge()));
