@@ -17,6 +17,9 @@ public class PhotonPilot extends Gamepad {
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
 
+    public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
+    public final Trigger score = rightBumper.and(teleop);
+
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);
     public final Trigger leftReorient = leftDpad.and(fn, teleop);

@@ -10,6 +10,7 @@ import frc.reefscape.Field;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
+import frc.robot.operator.PhotonOperator;
 import frc.robot.pilot.PhotonPilot;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
@@ -21,6 +22,7 @@ public class RobotStates {
     private static final Pilot pilot = Robot.getPilot();
     private static final PhotonPilot photonPilot = Robot.getPhotonPilot();
     private static final Operator operator = Robot.getOperator();
+    private static final PhotonOperator photonOperator = Robot.getPhotonOperator();
     private static final Swerve swerve = Robot.getSwerve();
 
     /**
@@ -65,7 +67,7 @@ public class RobotStates {
             pilot.stationExtendedIntake_LB_LT; // TODO: add zone
     // public static final Trigger groundAlgae = pilot.groundAlgae_RT; //TODO: Uncomment
     // public static final Trigger groundCoral = pilot.groundCoral_LB_RT; //TODO: uncomment
-    public static final Trigger stationIntaking = pilot.stationIntake_LT; // Trigger.kFalse;
+    public static final Trigger stationIntaking = pilot.stationIntake_LT.or(photonPilot.stationIntake_LT);; // Trigger.kFalse;
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
     public static final Trigger groundCoral = Trigger.kFalse;
 
@@ -87,9 +89,9 @@ public class RobotStates {
     public static final Trigger barge = operator.barge_Y.and(bargeZone);
 
     public static final Trigger L1Coral = operator.L1Coral_A;
-    public static final Trigger L2Coral = operator.L2Coral_B;
-    public static final Trigger L3Coral = operator.L3Coral_X;
-    public static final Trigger L4Coral = operator.L4Coral_Y;
+    public static final Trigger L2Coral = operator.L2Coral_B.or(photonOperator.L2Coral_B);
+    public static final Trigger L3Coral = operator.L3Coral_X.or(photonOperator.L3Coral_X);
+    public static final Trigger L4Coral = operator.L4Coral_Y.or(photonOperator.L4Coral_Y);
 
     public static final Trigger algaeHandoff = operator.algaeHandoff_X;
     public static final Trigger coralHandoff = operator.coralHandoff_Y;

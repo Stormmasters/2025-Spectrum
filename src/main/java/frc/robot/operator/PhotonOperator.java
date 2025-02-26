@@ -12,9 +12,26 @@ public class PhotonOperator extends Gamepad {
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
 
+    public final Trigger leftScore_Dpad = leftDpad.and(noFn, teleop);
+    public final Trigger rightScore_Dpad = rightDpad.and(noFn, teleop);
+
+    public final Trigger climbPrep_start = start.and(noFn, teleop);
+
+    // public final Trigger operatorCoralStage = leftBumper.and(teleop);
+    // public final Trigger operatorAlgaeStage = rightBumper.and(teleop);
+    // public final Trigger notStage = operatorCoralStage.not().and(operatorAlgaeStage.not());
+
+    // public final Trigger L1Coral_A = A.and(teleop);
+    public final Trigger L2Coral_B = B.and(teleop);
+    public final Trigger L3Coral_X = X.and(teleop);
+    public final Trigger L4Coral_Y = Y.and(teleop);
+
+    // public final Trigger homeElevator_A = A.and(notStage, teleop);
+    // public final Trigger homeInClimb_B = B.and(notStage, teleop);
+
     // DISABLED TRIGGERS
-    public final Trigger coastOn_dB = disabled.and(B);
-    public final Trigger coastOff_dA = disabled.and(A);
+    public final Trigger coastOn_dB = disabled.and(B); // not being used right now
+    public final Trigger coastOff_dA = disabled.and(A); // not being used right now
 
     // TEST TRIGGERS
 

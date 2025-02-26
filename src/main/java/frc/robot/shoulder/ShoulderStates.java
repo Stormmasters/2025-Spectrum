@@ -111,7 +111,7 @@ public class ShoulderStates {
         // // Robot.getPilot()
         // //         .testTune_tY
         // //         .whileTrue(shoulder.moveToDegrees(() -> (config.getL4Coral() - 6)));
-        // Robot.getPilot().reZero_start.onTrue(shoulder.resetToIntialPos());
+        // Robot.getPilot().reZero_start.onTrue(shoulder.resetToInitialPos());
         // // Robot.getPilot()
         // //         .testTriggersTrigger
         // //         .whileTrue(
