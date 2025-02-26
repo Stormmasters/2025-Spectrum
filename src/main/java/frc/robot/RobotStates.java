@@ -133,7 +133,9 @@ public class RobotStates {
 
     // Setup any binding to set states
     public static void setupStates() {
-        pilot.coastOn_dB.or(operator.coastOn_dB, photonPilot.coastOn_dB, photonOperator.coastOn_dB).onTrue(coastMode.setTrue().ignoringDisable(true));
+        pilot.coastOn_dB
+                .or(operator.coastOn_dB, photonPilot.coastOn_dB, photonOperator.coastOn_dB)
+                .onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA
                 .or(operator.coastOff_dA, photonPilot.coastOff_dA, photonOperator.coastOff_dA)
                 .onTrue(coastMode.setFalse().ignoringDisable(true));

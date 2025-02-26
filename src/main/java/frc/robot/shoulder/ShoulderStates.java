@@ -4,10 +4,8 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
-import frc.robot.elbow.ElbowStates;
 import frc.robot.shoulder.PhotonShoulder.PhotonShoulderConfig;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.spectrumLib.Telemetry;
@@ -31,33 +29,34 @@ public class ShoulderStates {
         homeAll.whileTrue(home());
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
-        photonCoastMode.onTrue(photonShoulder.coastMode().ignoringDisable(true));
-        photonCoastMode.onFalse(photonShoulder.ensureBrakeMode());
-       
-        L3Coral.and(backwardMode.not(), scoring).whileTrue(score3());
-        L3Coral.and(backwardMode, scoring)
-                .whileTrue(
-                        shoulder.moveToDegrees(
-                                () ->
-                                        -config.getL3Coral()
-                                                + 15)); // TODO: change back to command when
 
-        // L4Coral.and(backwardMode.not(), actionPrepState).whileTrue(l4Coral());
-        // L4Coral.and(backwardMode, actionPrepState)
-        //         .whileTrue(
-        //                 shoulder.moveToDegrees(
-        //                         () -> -config.getL4Coral())); // TODO: change back to command
+        L1Coral.and(preScore.or(preScore))
+                .whileTrue(moveToDegrees(config::getL1Coral, "Shoulder.L1Coral"));
+        L2Coral.and(preScore)
+                .whileTrue(moveToDegrees(config::getL2Coral, "Shoulder.L2Coral.prescore"));
+        L2Coral.and(scoring)
+                .whileTrue(moveToDegrees(config::getL2CoralScore, "Shoulder.L2Coral.score"));
+        L3Coral.and(preScore)
+                .whileTrue(moveToDegrees(config::getL3Coral, "Shoulder.L3Coral.prescore"));
+        L3Coral.and(scoring)
+                .whileTrue(moveToDegrees(config::getL3CoralScore, "Shoulder.L3Coral.score"));
+        L4Coral.and(preScore)
+                .whileTrue(moveToDegrees(config::getL4Coral, "Shoulder.L4Coral.prescore"));
+        L4Coral.and(scoring)
+                .whileTrue(moveToDegrees(config::getL4CoralScore, "Shoulder.L4Coral.score"));
 
-        L4Coral.and(backwardMode.not(), scoring).whileTrue(score4());
-        L4Coral.and(backwardMode, scoring, ElbowStates.atTarget)
-                .whileTrue(
-                        shoulder.moveToDegrees(
-                                () ->
-                                        -config.getL4Coral()
-                                                + 15)); // TODO: change back to command when
+        processorAlgae
+                .and(preScore.or(scoring))
+                .whileTrue(moveToDegrees(config::getProcessorAlgae, "Shoulder.processorAlgae"));
+        L2Algae.and(preScore.or(scoring))
+                .whileTrue(moveToDegrees(config::getL2Algae, "Shoulder.L2Algae"));
+        L3Algae.and(preScore.or(scoring))
+                .whileTrue(moveToDegrees(config::getL3Algae, "Shoulder.L3Algae"));
+        netAlgae.and(preScore.or(scoring))
+                .whileTrue(moveToDegrees(config::getNetAlgae, "Shoulder.netAlgae"));
 
         Robot.getPilot().reZero_start.onTrue(shoulder.resetToIntialPos());
-       
+
         Robot.getPhotonPilot().testTune_tX.whileTrue(photonShoulder.moveToDegrees(() -> 90));
         Robot.getPhotonPilot().testTune_tB.whileTrue(photonShoulder.moveToDegrees(() -> 0));
         Robot.getPhotonPilot()
@@ -81,80 +80,8 @@ public class ShoulderStates {
         return () -> (shoulder.getPositionDegrees() + 90);
     }
 
-    public static Command climbHome() {
-        return shoulder.moveToDegrees(config::getClimbHome).withName("Shoulder.climbHome");
-    }
-
-    public static Command handOffAlgae() {
-        return shoulder.moveToDegrees(config::getHandAlgae).withName("Elbow.handOffAlgae");
-    }
-
-    /* Scoring positions */
-
-    public static Command score2() {
-        double newPos = config.getL2Coral() - 15;
-        return shoulder.moveToDegreesAndCheckReversed(() -> newPos).withName("Shoulder.score2");
-        // return elbow.moveToRelativePosition(() -> -15).withName("Elbow.score2");
-    }
-
-    public static Command score3() {
-        double newPos = -15 + config.getL3Coral();
-        return shoulder.moveToDegreesAndCheckReversed(() -> newPos).withName("Shoulder.score3");
-    }
-
-    public static Command score4() {
-        double newPos = 50 + config.getL4Coral();
-        return new WaitCommand(0.2)
-                .andThen(shoulder.moveToDegreesAndCheckReversed(() -> newPos))
-                .withName("Shoulder.score3");
-    }
-
-    public static Command l2Algae() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getL2Algae)
-                .withName("Shoulder.l2Algae");
-    }
-
-    public static Command l3Algae() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getL3Algae)
-                .withName("Shoulder.l3Algae");
-    }
-
-    public static Command l1Coral() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getL1Coral).withName("Twist.L1Coral");
-    }
-
-    public static Command l2Coral() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getL2Coral)
-                .withName("Shoulder.l2Coral");
-    }
-
-    public static Command l3Coral() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getL3Coral)
-                .withName("Shoulder.l3Coral");
-    }
-
-    public static Command l4Coral() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getL4Coral)
-                .withName("Shoulder.l4Coral");
-    }
-
-    public static Command barge() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getBarge).withName("Shoulder.barge");
-    }
-
-    public static Command floorIntake() {
-        return shoulder.moveToDegrees(config::getClawGroundAlgaeIntake)
-                .withName("Shoulder.floorIntake");
-    }
-
-    public static Command stationIntake() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getStationIntake)
-                .withName("Shoulder.coralIntake");
-    }
-
-    public static Command stationExtendedIntake() {
-        return shoulder.moveToDegreesAndCheckReversed(config::getStationExtendedIntake)
-                .withName("Shoulder.coralExtendedIntake");
+    public static Command moveToDegrees(DoubleSupplier position, String name) {
+        return shoulder.moveToDegrees(position).withName(name);
     }
 
     public static Command coastMode() {
@@ -167,13 +94,6 @@ public class ShoulderStates {
 
     public static Command ensureBrakeMode() {
         return shoulder.ensureBrakeMode().withName("Shoulder.BrakeMode");
-    }
-
-    // Tune value command
-    public static Command tuneShoulder() {
-        // return shoulder.moveToDegrees(new TuneValue("Tune Shoulder", 0).getSupplier())
-        //         .withName("Shoulder.Tune");
-        return shoulder.moveToDegrees(config::getTuneShoulder);
     }
 
     // Log Command
