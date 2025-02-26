@@ -18,6 +18,8 @@ import lombok.*;
 public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
+        @Getter @Setter private boolean isPhoton = false;
+
         /* Elevator constants in rotations */
         @Getter @Setter private double maxRotations = 20.5;
 

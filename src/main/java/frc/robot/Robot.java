@@ -72,18 +72,21 @@ public class Robot extends SpectrumRobot {
 
     public static class Config {
         public SwerveConfig swerve = new SwerveConfig();
+
+        public PilotConfig pilot = new PilotConfig();
+        public OperatorConfig operator = new OperatorConfig();
+        public ElevatorConfig elevator = new ElevatorConfig();
+        public ShoulderConfig shoulder = new ShoulderConfig();
+
+        public PhotonPilotConfig photonPilot = new PhotonPilotConfig();
+        public PhotonOperatorConfig photonOperator = new PhotonOperatorConfig();
+        public PhotonShoulderConfig photonShoulder = new PhotonShoulderConfig();
+
         public GroundIntakeConfig groundIntake = new GroundIntakeConfig();
         public CoralIntakeConfig coralIntake = new CoralIntakeConfig();
-        public ElevatorConfig elevator = new ElevatorConfig();
         public LedFullConfig leds = new LedFullConfig();
-        public PilotConfig pilot = new PilotConfig();
-        public PhotonPilotConfig photonPilot = new PhotonPilotConfig();
-        public OperatorConfig operator = new OperatorConfig();
-        public PhotonOperatorConfig photonOperator = new PhotonOperatorConfig();
         public InClimbConfig inClimb = new InClimbConfig();
         public ElbowConfig elbow = new ElbowConfig();
-        public PhotonShoulderConfig photonShoulder = new PhotonShoulderConfig();
-        public ShoulderConfig shoulder = new ShoulderConfig();
         public TwistConfig twist = new TwistConfig();
     }
 

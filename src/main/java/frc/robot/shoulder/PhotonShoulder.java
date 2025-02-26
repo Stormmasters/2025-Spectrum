@@ -20,24 +20,20 @@ import lombok.*;
 public class PhotonShoulder extends Shoulder {
 
     public static class PhotonShoulderConfig extends ShoulderConfig {
-        @Getter @Setter private boolean reversed = false;
-
         // Positions set as percentage of photonShoulder
         @Getter private final int initializedPosition = 20;
-
-        /* PhotonShoulder positions in percentage of max rotation || 0 is vertical down || positions should be towards front of robot */
-        // TODO: Find photonShoulder positions
-        @Getter private final double stationIntake = 36.03515625;
-
-        @Getter private final double l2Coral = 232.3828125;
-        @Getter private final double l3Coral = 233.4;
-        @Getter private final double l4Coral = 203.927734375;
-        @Getter @Setter private double tunePhotonShoulder = 0;
 
         @Getter private final double tolerance = 0.95;
 
         @Getter private final double offset = -90;
         @Getter private final double initPosition = 0;
+
+        @Getter private final double stationIntake = 36.03515625;
+
+        @Getter private final double l1Coral = 36;
+        @Getter private final double l2Coral = 232.3828125;
+        @Getter private final double l3Coral = 233.4;
+        @Getter private final double l4Coral = 203.927734375;
 
         /* PhotonShoulder config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -70,6 +66,17 @@ public class PhotonShoulder extends Shoulder {
 
         public PhotonShoulderConfig() {
             super();
+            setPhoton(true);
+            setInitPosition(initPosition);
+            setStationIntake(stationIntake);
+            setStationExtendedIntake(stationIntake);
+            setL1Coral(l1Coral);
+            setL2Coral(l2Coral);
+            setL2CoralScore(l2Coral);
+            setL3Coral(l3Coral);
+            setL3CoralScore(l3Coral);
+            setL4Coral(l4Coral);
+            setL4CoralScore(l4Coral);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
@@ -136,10 +143,6 @@ public class PhotonShoulder extends Shoulder {
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
-            builder.addDoubleProperty(
-                    "#Tune Position Percent",
-                    config::getTunePhotonShoulder,
-                    config::setTunePhotonShoulder);
         }
     }
 

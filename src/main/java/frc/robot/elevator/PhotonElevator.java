@@ -3,7 +3,7 @@ package frc.robot.elevator;
 import frc.spectrumLib.Rio;
 import lombok.Getter;
 
-public class PhotonElevator extends Elevator{
+public class PhotonElevator extends Elevator {
     public static class PhotonElevatorConfig extends ElevatorConfig {
         /* Elevator constants in rotations */
         @Getter private double maxRotations = 20.5;
@@ -11,7 +11,7 @@ public class PhotonElevator extends Elevator{
         @Getter private double minRotations = 0.3;
 
         @Getter private final double stationIntake = 9.67;
-        @Getter private final double photonStationExtendedIntake = 9.67;
+        @Getter private final double stationExtendedIntake = 9.67;
 
         @Getter private final double L1Coral = 0;
         @Getter private final double L2Coral = 0;
@@ -32,11 +32,11 @@ public class PhotonElevator extends Elevator{
         @Getter private final double mmAcceleration = 50;
         @Getter private final double mmJerk = 0;
 
-         public PhotonElevatorConfig() {
+        public PhotonElevatorConfig() {
             super();
             setPhoton(true);
             setStationIntake(stationIntake);
-            setStationExtendedIntake(photonStationExtendedIntake);
+            setStationExtendedIntake(stationExtendedIntake);
             setL1Coral(L1Coral);
             setL2Coral(L2Coral);
             setL3Coral(L3Coral);
@@ -57,6 +57,7 @@ public class PhotonElevator extends Elevator{
         }
     }
 
-
-    
+    public PhotonElevator(PhotonElevatorConfig config) {
+        super(config);
+    }
 }
