@@ -13,8 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auton.Auton;
-import frc.robot.configs.AM2025;
-import frc.robot.configs.FM20235;
+import frc.robot.configs.PHOTON2025;
 import frc.robot.configs.PM2025;
 import frc.robot.coralIntake.CoralIntake;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
@@ -65,15 +64,17 @@ public class Robot extends SpectrumRobot {
 
     public static class Config {
         public SwerveConfig swerve = new SwerveConfig();
-        public GroundIntakeConfig groundIntake = new GroundIntakeConfig();
-        public CoralIntakeConfig coralIntake = new CoralIntakeConfig();
-        public ElevatorConfig elevator = new ElevatorConfig();
-        public LedFullConfig leds = new LedFullConfig();
+
         public PilotConfig pilot = new PilotConfig();
         public OperatorConfig operator = new OperatorConfig();
+        public ElevatorConfig elevator = new ElevatorConfig();
+        public ShoulderConfig shoulder = new ShoulderConfig();
+
+        public GroundIntakeConfig groundIntake = new GroundIntakeConfig();
+        public CoralIntakeConfig coralIntake = new CoralIntakeConfig();
+        public LedFullConfig leds = new LedFullConfig();
         public InClimbConfig inClimb = new InClimbConfig();
         public ElbowConfig elbow = new ElbowConfig();
-        public ShoulderConfig shoulder = new ShoulderConfig();
         public TwistConfig twist = new TwistConfig();
     }
 
@@ -102,11 +103,8 @@ public class Robot extends SpectrumRobot {
 
             /** Set up the config */
             switch (Rio.id) {
-                case AM_2025:
-                    config = new AM2025();
-                    break;
-                case FM_20235:
-                    config = new FM20235();
+                case PHOTON_2025:
+                    config = new PHOTON2025();
                     break;
                 case PM_2025:
                     config = new PM2025();

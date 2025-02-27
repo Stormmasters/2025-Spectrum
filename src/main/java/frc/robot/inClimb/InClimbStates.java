@@ -23,13 +23,12 @@ public class InClimbStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        //groundAlgae.whileTrue(log(algaeFloorIntake()));
-        //groundCoral.whileTrue(log(coralFloorIntake()));
+        // groundAlgae.whileTrue(log(algaeFloorIntake()));
+        // groundCoral.whileTrue(log(coralFloorIntake()));
 
         climbPrep.whileTrue(log(climbPrep()).alongWith(openLatch()));
         climbFinish.whileTrue(log(climbFinish()).alongWith(closeLatch()));
         homeAll.whileTrue(log(home()));
-        processorLollipopScore.whileTrue(log(processorLollipopScore()));
 
         homeInClimb.whileTrue(log(zero()));
 

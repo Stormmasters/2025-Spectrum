@@ -11,40 +11,35 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.RollerConfig;
 import frc.spectrumLib.sim.RollerSim;
+import java.util.function.DoubleSupplier;
 import lombok.Getter;
+import lombok.Setter;
 
 public class CoralIntake extends Mechanism {
 
     public static class CoralIntakeConfig extends Config {
 
         // Algae Voltages and Current
-        @Getter private double algaeIntakeVoltage = -8.0;
-        @Getter private double algaeIntakeSupplyCurrent = 15.0;
-        @Getter private double algaeIntakeTorqueCurrent = 90.0;
+        @Getter @Setter private double algaeIntakeVoltage = -8.0;
+        @Getter @Setter private double algaeIntakeSupplyCurrent = 15.0;
+        @Getter @Setter private double algaeIntakeTorqueCurrent = 90.0;
 
-        @Getter private double algaeScoreVoltage = 12.0;
-        @Getter private double algaeScoreSupplyCurrent = 30;
-        @Getter private double algaeScoreTorqueCurrent = 180;
+        @Getter @Setter private double algaeScoreVoltage = 12.0;
+        @Getter @Setter private double algaeScoreSupplyCurrent = 30;
+        @Getter @Setter private double algaeScoreTorqueCurrent = 180;
 
         // Coral Voltages and Current
-        @Getter private double coralIntakeVoltage = 9.0;
-        @Getter private double coralIntakeSupplyCurrent = 12.0;
-        @Getter private double coralIntakeTorqueCurrent = 27.0;
+        @Getter @Setter private double coralIntakeVoltage = 9.0;
+        @Getter @Setter private double coralIntakeSupplyCurrent = 12.0;
+        @Getter @Setter private double coralIntakeTorqueCurrent = 27.0;
 
-        @Getter private double coralScoreVoltage = -0.5;
-        @Getter private double coralScoreSupplyCurrent = 12;
-        @Getter private double coralScoreTorqueCurrent = 27;
+        @Getter @Setter private double coralScoreVoltage = -0.5;
+        @Getter @Setter private double coralScoreSupplyCurrent = 12;
+        @Getter @Setter private double coralScoreTorqueCurrent = 27;
 
-        /* Revolutions per min Intake Output */
-        @Getter private double maxSpeed = 5000;
-        @Getter private double intake = 5000;
-        @Getter private double eject = -2000;
-        @Getter private double slowEject = 100;
-        @Getter private double slowIntake = -1000;
-        @Getter private double barge = -100;
-
-        /* Percentage Intake Output */
-        @Getter private double slowIntakePercentage = 0.06;
+        @Getter @Setter private double coralL1ScoreVoltage = -8;
+        @Getter @Setter private double coralL1ScoreSupplyCurrent = 15;
+        @Getter @Setter private double coralL1ScoreTorqueCurrent = 60;
 
         /* Intake config values */
         @Getter private double currentLimit = 15;
@@ -64,12 +59,11 @@ public class CoralIntake extends Mechanism {
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(1);
             configSupplyCurrentLimit(currentLimit, true);
-            configStatorCurrentLimit(120, true);
+            configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configNeutralBrakeMode(true);
-            configCounterClockwise_Positive(); // might be different on actual robot
-            configMotionMagic(51, 205, 0);
+            configCounterClockwise_Positive();
         }
     }
 
@@ -107,6 +101,7 @@ public class CoralIntake extends Mechanism {
             builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty("Velocity RPM", this::getVelocityRPM, null);
             builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
+            builder.addDoubleProperty("Coral Score Config", config::getCoralScoreVoltage, null);
         }
     }
 
@@ -128,36 +123,9 @@ public class CoralIntake extends Mechanism {
         return (Math.abs(motorOutput) < 120);
     }
 
-    public Command algaeIntake() {
-        return runVoltage(() -> config.algaeIntakeVoltage)
-                .alongWith(
-                        setCurrentLimits(
-                                () -> config.algaeIntakeSupplyCurrent,
-                                () -> config.algaeIntakeTorqueCurrent));
-    }
-
-    public Command algaeScore() {
-        return runVoltage(() -> config.algaeScoreVoltage)
-                .alongWith(
-                        setCurrentLimits(
-                                () -> config.algaeScoreSupplyCurrent,
-                                () -> config.algaeScoreTorqueCurrent));
-    }
-
-    public Command coralIntake() {
-        return runVoltage(() -> config.coralIntakeVoltage)
-                .alongWith(
-                        setCurrentLimits(
-                                () -> config.coralIntakeSupplyCurrent,
-                                () -> config.coralIntakeTorqueCurrent));
-    }
-
-    public Command coralScore() {
-        return runVoltage(() -> config.coralScoreVoltage)
-                .alongWith(
-                        setCurrentLimits(
-                                () -> config.coralScoreSupplyCurrent,
-                                () -> config.coralScoreTorqueCurrent));
+    public Command runVoltageCurrentLimits(
+            DoubleSupplier voltage, DoubleSupplier supplyCurrent, DoubleSupplier torqueCurrent) {
+        return runVoltage(voltage).alongWith(setCurrentLimits(supplyCurrent, torqueCurrent));
     }
 
     // --------------------------------------------------------------------------------

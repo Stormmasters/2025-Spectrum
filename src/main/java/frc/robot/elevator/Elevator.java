@@ -6,7 +6,6 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotSim;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
@@ -19,43 +18,49 @@ import lombok.*;
 public class Elevator extends Mechanism {
 
     public static class ElevatorConfig extends Config {
-        /* Elevator constants in rotations */
-        @Getter private double maxRotations = 20.5; // TODO: Reset to 21.1;
+        @Getter @Setter private boolean isPhoton = false;
 
-        @Getter
-        private double minRotations = 0.3; // This is to prevent it from driving to zero too hard
+        /* Elevator constants in rotations */
+        @Getter @Setter private double maxRotations = 20.5;
+
+        @Getter @Setter private double minRotations = 0.3;
 
         /* Elevator positions in rotations */
         // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
-        @Getter private double home = 0.3;
+        @Getter @Setter private double home = 0;
 
-        @Getter private final double algaeLollipop = 0.3; // TODO: find real value
-        @Getter private final double coralLollipop = 0.3; // TODO: find real value
+        @Getter @Setter private double clawGroundAlgaeIntake = 0;
+        @Getter @Setter private double clawGroundCoralIntake = 0;
 
-        @Getter private final double clawGroundAlgaeIntake = 0.3; // TODO: find real value
-        @Getter private final double clawGroundCoralIntake = 0.3; // TODO: find real value
+        @Getter @Setter private double stationIntake = 2.7;
+        @Getter @Setter private double stationExtendedIntake = 6.5;
 
-        @Getter private final double stationIntake = 2.7;
-        @Getter private final double stationExtendedIntake = 6.5;
+        @Getter @Setter private double l1Algae = 0.3;
+        @Getter @Setter private double l1AlgaeScore = l1Algae;
+        @Getter @Setter private double l2Algae = 0.3;
+        @Getter @Setter private double l2AlgaeScore = l2Algae;
+        @Getter @Setter private double l3Algae = 12.5;
+        @Getter @Setter private double l3AlgaeScore = l3Algae;
+        @Getter @Setter private double l4Algae = fullExtend;
+        @Getter @Setter private double l4AlgaeScore = l4Algae;
 
-        @Getter private final double handOff = 5.5; // TODO: check if this works
+        @Getter @Setter private double l1Coral = 0.3;
+        @Getter @Setter private double l1CoralScore = l1Coral;
+        @Getter @Setter private double l2Coral = 7.15;
+        @Getter @Setter private double l2CoralScore = l2Coral - 2;
+        @Getter @Setter private double l3Coral = 17.5;
+        @Getter @Setter private double l3CoralScore = l3Coral - 2;
+        @Getter @Setter private double l4Coral = 18.86;
+        @Getter @Setter private double l4CoralScore = l4Coral;
 
-        @Getter private final double l2Algae = 0.3;
-        @Getter private final double l3Algae = 12.5;
-
-        @Getter private final double l1Coral = 0.3;
-        @Getter private final double l2Coral = 7.15;
-        @Getter private final double l3Coral = 17.5;
-        @Getter private final double l4Coral = 18.86;
-
-        @Getter private final double barge = 20;
+        @Getter @Setter private double barge = 20;
 
         @Getter private double triggerTolerance = 0.95;
         @Getter private double elevatorIsUpHeight = 5;
         @Getter private double elevatorIsHighHeight = 10;
         @Getter private double initPosition = 0;
-        @Getter private double holdMaxSpeedRPM = 10000;
+        @Getter private double holdMaxSpeedRPM = 1000;
 
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
@@ -212,29 +217,9 @@ public class Elevator extends Mechanism {
                 .withName("Elevator.zeroElevatorRoutine");
     }
 
-    public Command moveToRotations(DoubleSupplier rotations) {
-        return run(() -> stop())
-                .withName("Elevator.waitForElbow")
-                .until(
-                        () ->
-                                (ElevatorStates.getElbowShoulderPos().getAsDouble() < 50.0)
-                                        || ElevatorStates.getPosition().getAsDouble()
-                                                < rotations.getAsDouble()
-                                        || ElevatorStates.getPosition().getAsDouble()
-                                                > config.getL2Coral())
-                .andThen(
-                        run(() -> setMMPositionFoc(rotations))
-                                .withName("Elevator.moveToRotations"));
-    }
-
-    // TODO: remove after testing
-    public Command setElevatorMMPositionFOC(DoubleSupplier rotations) {
+    public Command setPosition(DoubleSupplier rotations) {
+        // TODO: Add checks for reversal and check for elbow pointing down
         return run(() -> setMMPositionFoc(rotations)).withName("Elevator Set MM Position");
-    }
-
-    public Command moveToRelativePosition(DoubleSupplier position) {
-        return new InstantCommand(
-                () -> setMMPositionFoc(() -> getPositionRotations() + position.getAsDouble()));
     }
 
     // --------------------------------------------------------------------------------

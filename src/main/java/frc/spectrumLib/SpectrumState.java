@@ -41,11 +41,12 @@ public class SpectrumState extends Trigger {
 
     public Command set(boolean value) {
         return Commands.runOnce(
-                () -> {
-                    this.value = value;
-                    alert.set(value);
-                    setCondition(name, value);
-                });
+                        () -> {
+                            this.value = value;
+                            alert.set(value);
+                            setCondition(name, value);
+                        })
+                .ignoringDisable(true);
     }
 
     public Command setTrue() {
@@ -58,10 +59,11 @@ public class SpectrumState extends Trigger {
 
     public Command toggle() {
         return Commands.runOnce(
-                () -> {
-                    this.value = !this.value;
-                    setCondition(name, value);
-                });
+                        () -> {
+                            this.value = !this.value;
+                            setCondition(name, value);
+                        })
+                .ignoringDisable(true);
     }
 
     /**

@@ -28,6 +28,7 @@ public class Auton {
     public static final EventTrigger autonSourceIntake = new EventTrigger("sourceIntake");
     public static final EventTrigger autonLowAlgae = new EventTrigger("lowAlgae");
     public static final EventTrigger autonHighAlgae = new EventTrigger("highAlgae");
+    public static final EventTrigger autonPreScore = new EventTrigger("prescore");
     public static final EventTrigger autonScore = new EventTrigger("score");
     public static final EventTrigger autonLeftL4 = new EventTrigger("leftL4");
     public static final EventTrigger autonRightL4 = new EventTrigger("rightL4");

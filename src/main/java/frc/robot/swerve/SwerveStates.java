@@ -49,8 +49,7 @@ public class SwerveStates {
                 .and(pilot.steer.not())
                 .onTrue(log(lockToClosest45degDrive().withName("Swerve.45headingLock")));
 
-        pilot.fpv_rs.whileTrue(log(fpvDrive()));
-        pilot.snapSteer.whileTrue(log(snapSteerDrive()));
+        pilot.fpv_RS.whileTrue(log(fpvDrive()));
 
         pilot.upReorient.onTrue(log(reorientForward()));
         pilot.leftReorient.onTrue(log(reorientLeft()));

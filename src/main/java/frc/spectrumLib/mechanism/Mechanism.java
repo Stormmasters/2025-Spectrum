@@ -114,14 +114,25 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         builder.setSmartDashboardType(getName());
     }
 
+    public Trigger runningDefaultCommand() {
+        return new Trigger(this::isRunningDefaultCommand);
+    }
+
+    private boolean isRunningDefaultCommand() {
+        return this.getCurrentCommand() == this.getDefaultCommand();
+    }
+
     // Return the closed loop target we have sent to the motor.
     public double getTarget() {
         return target;
     }
 
     public Trigger atTargetPosition(DoubleSupplier tolerance) {
-        return new Trigger(
-                () -> Math.abs(cachedRotations.getAsDouble() - target) < tolerance.getAsDouble());
+        return new Trigger(() -> isAtTargetPosition(tolerance));
+    }
+
+    private boolean isAtTargetPosition(DoubleSupplier tolerance) {
+        return Math.abs(cachedRotations.getAsDouble() - target) < tolerance.getAsDouble();
     }
 
     public Trigger atRotations(DoubleSupplier target, DoubleSupplier tolerance) {

@@ -19,61 +19,14 @@ public class TwistStates {
     }
 
     public static void setStates() {
-        // stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
-        // stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-        stationIntaking.whileTrue(twist.moveToDegrees((config::getStationIntake)));
-        // stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
-        // stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
+        coastMode.onTrue(log(coastMode()));
+        coastMode.onFalse(log(ensureBrakeMode()));
 
-        // L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
-        // L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
-        // L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
-        // L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
-
-        // coralReefPosition.and(backwardMode.not()).and(leftScore).whileTrue(log(leftCoral()));
-        // coralReefPosition.and(backwardMode).and(leftScore).whileTrue(log(reverse(leftCoral())));
-        // coralReefPosition.and(backwardMode.not()).and(rightScore).whileTrue(log(rightCoral()));
-        // coralReefPosition.and(backwardMode).and(rightScore).whileTrue(log(reverse(rightCoral())));
-        coralStage.whileTrue(rightCoral());
-        // coralReefPosition.and(backwardMode.not()).whileTrue(twist.moveToDegrees(() ->
-        // -config.getRightCoral()));
-
-        // barge.and(backwardMode.not()).whileTrue(log(barge()));
-        // barge.and(backwardMode).whileTrue(log(reverse(barge())));
-
-        // homeAll.whileTrue(log(home()));
         homeAllStopIntake.and(ElevatorStates.isHome).onTrue(home());
-
-        // algaeHandoff.whileTrue(log(handOffAlgae()));
-        // coralHandoff.whileTrue(log(handOffCoral()));
-
-        // coastMode.onTrue(log(coastMode()));
-        // coastMode.onFalse(log(ensureBrakeMode()));
-
-        // TODO: for testing
-        Robot.getPilot().testTune_tA.whileTrue(twist.moveToDegrees(() -> 179));
-        // Robot.getPilot().testTune_tB.whileTrue(twist.moveToDegrees(config::getL2Algae));
-        //  Robot.getPilot().testTune_tX.whileTrue(twist.moveToDegrees(() -> 0));
-        //    Robot.getOperator()
-        //             .test_tX
-        //             .and(backwardMode.not())
-        //             .whileTrue(twist.moveToDegreesAndCheckReversed(() -> 0));
-        //     Robot.getOperator()
-        //             .test_tX
-        //             .and(backwardMode)
-        //             .whileTrue(reverse(elbow.moveToDegreesAndCheckReversed(config::getL3Coral)));
         Robot.getPilot().reZero_start.onTrue(twist.resetToIntialPos());
-        // Robot.getPilot()
-        //         .testTriggersTrigger
-        //         .whileTrue(runTwist(() -> Robot.getPilot().getTestTriggersAxis()));
-        Robot.getOperator().test_tA.whileTrue(twist.moveToDegrees(config::getL1Coral));
-        Robot.getOperator().test_tB.whileTrue(twist.moveToDegrees(config::getL2Coral));
-        Robot.getOperator().test_tX.whileTrue(twist.moveToDegrees(config::getL3Coral));
-        Robot.getOperator().test_tY.whileTrue(twist.moveToDegrees(config::getL4Coral));
-        Robot.getOperator().test_A.whileTrue(twist.moveToDegrees(config::getL2Algae));
-        Robot.getOperator().test_B.whileTrue(twist.moveToDegrees(config::getL3Algae));
-        Robot.getOperator().test_X.whileTrue(twist.moveToDegrees(config::getBarge));
-        // homeAll.whileTrue(home());
+        stationIntaking.whileTrue(twist.moveToDegrees((config::getStationIntake)));
+
+        branch.whileTrue(rightCoral()); // TODO: Make this flip based on left, right and reversal
     }
 
     public static DoubleSupplier switchSigns(DoubleSupplier supplier) {

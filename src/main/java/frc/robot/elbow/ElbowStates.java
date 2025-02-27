@@ -34,44 +34,17 @@ public class ElbowStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        // TODO: Uncomment after Testing
-        // stationIntaking.and(backwardMode.not()).whileTrue(log(stationIntake()));
-        // stationIntaking.and(backwardMode).whileTrue(log(reverse(stationIntake())));
-        stationIntaking.whileTrue(elbow.moveToDegrees((config::getStationIntake)));
-        // stationExtendedIntake.and(backwardMode.not()).whileTrue(log(stationExtendedIntake()));
-        // stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(stationExtendedIntake())));
-
-        // scoreState.and(L2Coral).and(backwardMode.not()).onTrue(log(score2()));
-        // scoreState.and(L2Coral).and(backwardMode).onTrue(log(reverse(score2())));
-        // scoreState.and(L3Coral).and(backwardMode.not()).onTrue(log(score3()));
-        // scoreState.and(L3Coral).and(backwardMode).onTrue(log(reverse(score3())));
-        // scoreState.and(L4Coral).and(backwardMode.not()).onTrue(log(score4()));
-        // scoreState.and(L4Coral).and(backwardMode).onTrue(log(reverse(score4())));
-
-        // L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
-        // L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
-        // L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
-        // L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
-
-        // L1Coral.and(backwardMode.not()).whileTrue(log(l1Coral()));
-        // L1Coral.and(backwardMode).whileTrue(log(reverse(l1Coral())));
+        homeAll.whileTrue(home());
 
         // stages elbow
-        coralStage
-                .and(backwardMode.not(), scoreState.not())
+        stagedCoral
+                .and(backwardMode.not(), actionState.not())
                 .whileTrue(elbow.moveToDegrees(config::getStage));
-        coralStage
-                .and(backwardMode, scoreState.not())
+        stagedCoral
+                .and(backwardMode, actionState.not())
                 .whileTrue(
                         elbow.moveToDegrees(
                                 () -> -config.getStage())); // TODO: change back to command
-
-        // L2Coral.and(backwardMode.not(), scoreState.not())
-        //         .whileTrue(elbow.moveToDegrees(config::getStage));
-        // L2Coral.and(backwardMode, scoreState.not())
-        //         .whileTrue(
-        //                 elbow.moveToDegrees(
-        //                         () -> -config.getStage()));
 
         L2Coral.and(backwardMode.not(), actionPrepState, ElevatorStates.isL2Coral)
                 .whileTrue(l2Coral());
@@ -80,8 +53,8 @@ public class ElbowStates {
                         elbow.moveToDegrees(
                                 () -> -config.getL2Coral())); // TODO: change back to command
         // when reversed fixed
-        L2Coral.and(backwardMode.not(), scoreState).whileTrue(score2());
-        L2Coral.and(backwardMode, scoreState)
+        L2Coral.and(backwardMode.not(), actionState).whileTrue(score2());
+        L2Coral.and(backwardMode, actionState)
                 .whileTrue(
                         elbow.moveToDegrees(
                                 () ->
@@ -96,8 +69,8 @@ public class ElbowStates {
                         elbow.moveToDegrees(
                                 () -> -config.getL3Coral())); // TODO: change back to command
 
-        L3Coral.and(backwardMode.not(), scoreState).whileTrue(score3());
-        L3Coral.and(backwardMode, scoreState)
+        L3Coral.and(backwardMode.not(), actionState).whileTrue(score3());
+        L3Coral.and(backwardMode, actionState)
                 .whileTrue(
                         elbow.moveToDegrees(
                                 () -> -config.getL3Coral() + 15)); // TODO: change back to command
@@ -109,8 +82,8 @@ public class ElbowStates {
                         elbow.moveToDegrees(
                                 () -> -config.getL4Coral())); // TODO: change back to command
 
-        L4Coral.and(backwardMode.not(), scoreState).whileTrue(score4());
-        L4Coral.and(backwardMode, scoreState)
+        L4Coral.and(backwardMode.not(), actionState).whileTrue(score4());
+        L4Coral.and(backwardMode, actionState)
                 .whileTrue(
                         elbow.moveToDegrees(
                                 () -> -config.getL4Coral() + 15)); // TODO: change back to command
@@ -122,102 +95,66 @@ public class ElbowStates {
         // algaeHandoff.whileTrue(log(handOffAlgae()));
         // coralHandoff.whileTrue(log(handOffAlgae()));
 
-        // TODO: for testing
-        Robot.getPilot()
-                .testTune_tA
-                .whileTrue(
-                        elbow.moveToDegrees(
-                                config::getStationIntake)); // (elbow.moveToMotorPosition(() ->
-        // 0.18));
-        // Robot.getPilot().testTune_tB.whileTrue(elbow.moveToDegrees(config::getL3Algae));
-        Robot.getPilot().testTune_tX.whileTrue(elbow.moveToDegrees(config::getHome));
-        // Robot.getPilot().testTune_tY.whileTrue(score4());
-        Robot.getPilot().reZero_start.onTrue(elbow.resetToInitialPos());
-        // Robot.getPilot()
-        //         .testTriggersTrigger
-        //         .whileTrue(runElbow(() -> Robot.getPilot().getTestTriggersAxis()));
-
-        Robot.getOperator().test_tA.whileTrue(elbow.moveToDegrees(config::getL1Coral));
-        Robot.getOperator().test_tB.whileTrue(elbow.moveToDegrees(config::getL2Coral));
-        Robot.getOperator()
-                .test_tX
-                .and(backwardMode.not())
-                .whileTrue(elbow.moveToDegreesAndCheckReversed(config::getL3Coral));
-        Robot.getOperator()
-                .test_tX
-                .and(backwardMode)
-                .whileTrue(
-                        (elbow.moveToDegreesAndCheckReversed(
-                                () -> -config.getL3Coral()))); // TODO: FIX REVERSED
-        Robot.getOperator().test_tY.whileTrue(elbow.moveToDegrees(config::getL4Coral));
-        Robot.getOperator().test_A.whileTrue(elbow.moveToDegrees(config::getL2Algae));
-        Robot.getOperator().test_B.whileTrue(elbow.moveToDegrees(config::getL3Algae));
-        Robot.getOperator().test_X.whileTrue(elbow.moveToDegrees(config::getBarge));
-        homeAll.whileTrue(home());
     }
 
-    public static DoubleSupplier getPosition() {
+    private static DoubleSupplier getPosition() {
         return () -> (elbow.getPositionDegrees() + 90);
     }
 
-    public static Command score() {
+    private static Command score() {
         return elbow.moveToRelativePosition(() -> -15).withName("Elbow.score");
     }
 
-    public static Command score2() {
+    private static Command score2() {
         double newPos = config.getL2Coral() - 15;
         return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score2");
         // return elbow.moveToRelativePosition(() -> -15).withName("Elbow.score2");
     }
 
-    public static Command score3() {
+    private static Command score3() {
         double newPos = -15 + config.getL3Coral();
         return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score3");
     }
 
-    public static Command score4() {
+    private static Command score4() {
         double newPos = -40 + config.getL4Coral();
         return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score4");
     }
 
-    public static Command runElbow(DoubleSupplier speed) {
-        return elbow.runPercentage(speed).withName("Elbow.runElbow");
-    }
-
-    public static Command home() {
+    private static Command home() {
         return elbow.moveToDegrees(config::getHome).withName("Elbow.home");
     }
 
-    public static Command handOffAlgae() {
+    private static Command handOffAlgae() {
         return elbow.moveToDegrees(config::getHandAlgae).withName("Elbow.handOffAlgae");
     }
 
     /* Scoring positions */
-    public static Command l2Algae() {
+    private static Command l2Algae() {
         return elbow.moveToDegreesAndCheckReversed(config::getL2Algae).withName("Elbow.l2Algae");
     }
 
-    public static Command l3Algae() {
+    private static Command l3Algae() {
         return elbow.moveToDegreesAndCheckReversed(config::getL3Algae).withName("Elbow.l3Algae");
     }
 
-    public static Command barge() {
+    private static Command barge() {
         return elbow.moveToDegreesAndCheckReversed(config::getBarge).withName("Elbow.barge");
     }
 
-    public static Command l1Coral() {
+    private static Command l1Coral() {
         return elbow.moveToDegreesAndCheckReversed(config::getL1Coral).withName("Twist.L1Coral");
     }
 
-    public static Command l2Coral() {
+    private static Command l2Coral() {
         return elbow.moveToDegreesAndCheckReversed(config::getL2Coral).withName("Elbow.l2Coral");
     }
 
-    public static Command l3Coral() {
+    private static Command l3Coral() {
         return elbow.moveToDegreesAndCheckReversed(config::getL3Coral).withName("Elbow.l3Coral");
     }
 
-    public static Command l4Coral() {
+    private static Command l4Coral() {
         return elbow.moveToDegreesAndCheckReversed(config::getL4Coral).withName("Elbow.l4Coral");
     }
 
