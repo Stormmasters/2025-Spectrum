@@ -32,7 +32,7 @@ public class Shoulder extends Mechanism {
         /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
         // TODO: Find shoulder positions
 
-        @Getter @Setter private double climbHome = 180; // TODO: Find this value
+        @Getter @Setter private double climbHome = 90; // TODO: Find this value
         @Getter @Setter private double home = 0;
 
         @Getter @Setter private double stationIntake = 0;
@@ -129,20 +129,18 @@ public class Shoulder extends Mechanism {
         super(config);
         this.config = config;
 
-        if (!config.isPhoton) {
-            if (isAttached()) {
-                canCoder =
-                        new SpectrumCANcoder(42, motor, config)
-                                .setGearRatio(config.getCANcoderGearRatio())
-                                .setOffset(config.getCANcoderOffset())
-                                .setAttached(false);
-                setInitialPosition();
-            }
-
-            simulationInit();
-            telemetryInit();
-            Telemetry.print(getName() + " Subsystem Initialized");
+        if (isAttached()) {
+            // canCoder =
+            //         new SpectrumCANcoder(42, motor, config)
+            //                 .setGearRatio(config.getCANcoderGearRatio())
+            //                 .setOffset(config.getCANcoderOffset())
+            //                 .setAttached(false);
+            setInitialPosition();
         }
+
+        simulationInit();
+        telemetryInit();
+        Telemetry.print(getName() + " Subsystem Initialized");
     }
 
     @Override
@@ -172,17 +170,21 @@ public class Shoulder extends Mechanism {
     }
 
     void setInitialPosition() {
-        if (canCoder.isAttached()) {
-            motor.setPosition(
-                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                            * config.getGearRatio());
-        } else {
-            motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
-        }
+        // if (canCoder != null) {
+        //     if (canCoder.isAttached()) {
+        //         motor.setPosition(
+        //                 canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+        //                         * config.getGearRatio());
+        //     }
+        // } else {
+        motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+        // }
     }
 
     public Command resetToIntialPos() {
-        return run(this::setInitialPosition);
+        return runOnce(this::setInitialPosition)
+                .ignoringDisable(true)
+                .withName("Reset to Initial position");
     }
 
     // --------------------------------------------------------------------------------

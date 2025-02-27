@@ -20,17 +20,18 @@ public class PhotonElevatorConfig extends ElevatorConfig {
 
     @Getter private final double zeroSpeed = -0.1;
     @Getter private final double holdMaxSpeedRPM = 18;
-    @Getter private final double currentLimit = 30;
-    @Getter private final double torqueCurrentLimit = 100;
-    @Getter private final double positionKp = 1500;
-    @Getter private final double positionKd = 140;
+    @Getter private final double positionKp = 100;
+    @Getter private final double positionKd = 6;
+    @Getter private final double positionKa = 0.2;
     @Getter private final double positionKv = 0;
-    @Getter private final double positionKs = 0.06;
-    @Getter private final double positionKa = 0.001;
-    @Getter private final double positionKg = 12.5;
-    @Getter private final double mmCruiseVelocity = 10;
-    @Getter private final double mmAcceleration = 50;
-    @Getter private final double mmJerk = 0;
+    @Getter private final double positionKs = 5;
+    @Getter private final double positionKg = 25.3;
+    @Getter private final double mmCruiseVelocity = 40;
+    @Getter private final double mmAcceleration = 280;
+    @Getter private final double mmJerk = 2000;
+
+    @Getter private double currentLimit = 40;
+    @Getter private double torqueCurrentLimit = 160;
 
     public PhotonElevatorConfig() {
         super();

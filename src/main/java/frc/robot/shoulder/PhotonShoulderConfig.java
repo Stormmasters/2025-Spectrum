@@ -12,6 +12,8 @@ public class PhotonShoulderConfig extends ShoulderConfig {
     @Getter private final double offset = -90;
     @Getter private final double initPosition = 0;
 
+    @Getter private final double climbHome = 90;
+
     @Getter private final double stationIntake = 36.03515625;
 
     @Getter private final double l1Coral = 36;
@@ -52,6 +54,7 @@ public class PhotonShoulderConfig extends ShoulderConfig {
         super();
         setPhoton(true);
         setInitPosition(initPosition);
+        setClimbHome(climbHome);
         setStationIntake(stationIntake);
         setStationExtendedIntake(stationIntake);
         setL1Coral(l1Coral);
@@ -68,7 +71,7 @@ public class PhotonShoulderConfig extends ShoulderConfig {
         configSupplyCurrentLimit(currentLimit, true);
         configForwardTorqueCurrentLimit(torqueCurrentLimit);
         configReverseTorqueCurrentLimit(-torqueCurrentLimit);
-        configMinMaxRotations(-0.25, 0.75);
+        configMinMaxRotations(-.25, 0.5);
         configReverseSoftLimit(getMinRotations(), true);
         configForwardSoftLimit(getMaxRotations(), true);
         configNeutralBrakeMode(true);

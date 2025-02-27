@@ -186,8 +186,8 @@ public class Elevator extends Mechanism {
             @Override
             public void execute() {
                 double currentPosition = getPositionRotations();
-                if (Math.abs(holdPosition)
-                        < 0.05) { // Added so it doesn't try to hold when all the way down
+                if (Math.abs(currentPosition)
+                        < 0.3) { // Added so it doesn't try to hold when all the way down
                     stop();
                 } else if (Math.abs(getVelocityRPM()) > config.holdMaxSpeedRPM) {
                     stop(); // Don't hold if moving too fast

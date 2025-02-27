@@ -29,6 +29,9 @@ public class InClimbStates {
         climbPrep.whileTrue(log(climbPrep()).alongWith(openLatch()));
         climbFinish.whileTrue(log(climbFinish()).alongWith(closeLatch()));
         homeAll.whileTrue(log(home()));
+        Robot.getPilot().reZero_start.whileTrue(inClimb.resetToIntialPos());
+        Robot.getPilot().testTune_tA.onTrue(openLatch());
+        Robot.getPilot().testTune_tB.onTrue(closeLatch());
 
         homeInClimb.whileTrue(log(zero()));
 
@@ -38,9 +41,9 @@ public class InClimbStates {
         // Robot.getPilot().testTune_LB.whileTrue(inClimb.openLatch());
         // Robot.getPilot().tuneShoulder_tA.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0.25));
         // Robot.getPilot().testTune_tB.whileTrue(inClimb.setInClimbMMPositionFOC(() -> 0));
-        // Robot.getPilot()
-        //         .testTriggersTrigger
-        //         .whileTrue(runInClimb(() -> Robot.getPilot().getTestTriggersAxis()));
+        Robot.getPilot()
+                .testTriggersTrigger
+                .whileTrue(runInClimb(() -> Robot.getPilot().getTestTriggersAxis()));
     }
 
     public static Command runInClimb(DoubleSupplier speed) {
