@@ -26,8 +26,13 @@ public class InClimbStates {
         // groundAlgae.whileTrue(log(algaeFloorIntake()));
         // groundCoral.whileTrue(log(coralFloorIntake()));
 
-        climbPrep.whileTrue(log(climbPrep()).alongWith(openLatch()));
-        climbFinish.whileTrue(log(climbFinish()).alongWith(closeLatch()));
+        // climbPrep.whileTrue(log(climbPrep()).alongWith(openLatch()));
+        // climbFinish.whileTrue(log(climbFinish()).alongWith(closeLatch()));
+
+        Robot.getOperator().latchOpen_startUp.onTrue(openLatch());
+        Robot.getOperator().latchCloser_startDown.onTrue(closeLatch());
+        climbPrep.whileTrue(runInClimb(() -> Robot.getOperator().getClimberTriggerAxis()));
+
         homeAll.whileTrue(log(home()));
         Robot.getPilot().reZero_start.whileTrue(inClimb.resetToIntialPos());
         Robot.getPilot().testTune_tA.onTrue(openLatch());

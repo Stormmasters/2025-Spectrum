@@ -20,7 +20,9 @@ public class Pilot extends Gamepad {
     public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
     public final Trigger stationIntakeExtended_LT_RB = leftTrigger.and(fn, teleop);
     public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop);
+    public final Trigger photonRemoveL2Algae = groundAlgae_RT;
     public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop);
+    public final Trigger photonRemoveL3Alage = groundCoral_LB_RT;
 
     public final Trigger lollipopProcessor_A = A.and(noFn, teleop);
     public final Trigger algaeRetract_B = B.and(noFn, teleop);
