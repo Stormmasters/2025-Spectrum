@@ -16,6 +16,7 @@ public class Operator extends Gamepad {
     public final Trigger enabled = teleop.or(testMode); // works for both teleop and testMode
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
+    public final Trigger home_select = select;
 
     public final Trigger climbPrep_start = start.and(noFn, enabled);
 
@@ -86,14 +87,6 @@ public class Operator extends Gamepad {
     }
 
     public double getClimberTriggerAxis() {
-        return (getRightTriggerAxis() + getLeftTriggerAxis()) / climberScaler;
-    }
-
-    public double getElevatorOverride() {
-        return getLeftY();
-    }
-
-    public double getClimberOverride() {
-        return getRightY();
+        return (getRightTriggerAxis() - getLeftTriggerAxis()) * climberScaler;
     }
 }

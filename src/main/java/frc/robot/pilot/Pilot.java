@@ -16,6 +16,7 @@ public class Pilot extends Gamepad {
     public final Trigger enabled = teleop.or(testMode); // works for both teleop and testMode
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
+    public final Trigger home_select = select;
 
     public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
     public final Trigger stationIntakeExtended_LT_RB = leftTrigger.and(fn, teleop);

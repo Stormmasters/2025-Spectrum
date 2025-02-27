@@ -21,7 +21,7 @@ public class PHOTON2025 extends Config {
         elevator.setAttached(true);
         shoulder.setAttached(true);
         coralIntake.setAttached(true);
-        inClimb.setAttached(false);
+        inClimb.setAttached(true);
         groundIntake.setAttached(false);
 
         // Always false for Photon

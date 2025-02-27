@@ -20,6 +20,10 @@ public class CoralIntakeStates {
 
     public static void setStates() {
         homeAllStopIntake.onTrue(coralIntake.getDefaultCommand());
+        Robot.getPilot()
+                .home_select
+                .or(Robot.getOperator().home_select)
+                .onTrue(coralIntake.getDefaultCommand());
 
         Trigger photonAlageRemoval =
                 Robot.getPilot().photonRemoveL2Algae.or(Robot.getPilot().photonRemoveL3Alage);

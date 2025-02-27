@@ -31,7 +31,9 @@ public class InClimbStates {
 
         Robot.getOperator().latchOpen_startUp.onTrue(openLatch());
         Robot.getOperator().latchCloser_startDown.onTrue(closeLatch());
-        climbPrep.whileTrue(runInClimb(() -> Robot.getOperator().getClimberTriggerAxis()));
+        Robot.getOperator()
+                .climbPrep_start
+                .whileTrue(runInClimb(() -> Robot.getOperator().getClimberTriggerAxis()));
 
         homeAll.whileTrue(log(home()));
         Robot.getPilot().reZero_start.whileTrue(inClimb.resetToIntialPos());
