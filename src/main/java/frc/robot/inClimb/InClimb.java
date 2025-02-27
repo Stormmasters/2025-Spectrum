@@ -66,7 +66,8 @@ public class InClimb extends Mechanism {
         @Getter private double InClimbY = 0.55;
 
         @Getter @Setter
-        private double simRatio = 99.5555555555; // TODO: Set to number of rotations per mech revolution
+        private double simRatio =
+                99.5555555555; // TODO: Set to number of rotations per mech revolution
 
         @Getter private double length = 0.4;
 
