@@ -12,12 +12,18 @@ public class PhotonShoulderConfig extends ShoulderConfig {
     @Getter private final double offset = -90;
     @Getter private final double initPosition = 0;
 
-    @Getter private final double stationIntake = 36.03515625;
+    @Getter private final double climbHome = 90;
 
-    @Getter private final double l1Coral = 36;
-    @Getter private final double l2Coral = 232.3828125;
+    @Getter private final double stationIntake = 36.03515625;
+    @Getter private final double stationIntakeExtended = 36;
+
+    @Getter private final double l1Coral = 33;
+    @Getter private final double l2Coral = 10;
     @Getter private final double l3Coral = 233.4;
     @Getter private final double l4Coral = 203.927734375;
+
+    @Getter private final double l2Algae = 43;
+    @Getter private final double l3Alage = l2Algae;
 
     /* PhotonShoulder config settings */
     @Getter private final double zeroSpeed = -0.1;
@@ -52,8 +58,9 @@ public class PhotonShoulderConfig extends ShoulderConfig {
         super();
         setPhoton(true);
         setInitPosition(initPosition);
+        setClimbHome(climbHome);
         setStationIntake(stationIntake);
-        setStationExtendedIntake(stationIntake);
+        setStationExtendedIntake(stationIntakeExtended);
         setL1Coral(l1Coral);
         setL2Coral(l2Coral);
         setL2CoralScore(l2Coral);
@@ -61,6 +68,8 @@ public class PhotonShoulderConfig extends ShoulderConfig {
         setL3CoralScore(l3Coral);
         setL4Coral(l4Coral);
         setL4CoralScore(l4Coral);
+        setL2Algae(l2Algae);
+        setL3Algae(l3Alage);
         configPIDGains(0, positionKp, 0, positionKd);
         configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
         configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
@@ -68,7 +77,7 @@ public class PhotonShoulderConfig extends ShoulderConfig {
         configSupplyCurrentLimit(currentLimit, true);
         configForwardTorqueCurrentLimit(torqueCurrentLimit);
         configReverseTorqueCurrentLimit(-torqueCurrentLimit);
-        configMinMaxRotations(-0.25, 0.75);
+        configMinMaxRotations(-.25, 0.5);
         configReverseSoftLimit(getMinRotations(), true);
         configForwardSoftLimit(getMaxRotations(), true);
         configNeutralBrakeMode(true);

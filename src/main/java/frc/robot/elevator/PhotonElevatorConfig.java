@@ -7,30 +7,34 @@ import lombok.Getter;
 
 public class PhotonElevatorConfig extends ElevatorConfig {
     /* Elevator constants in rotations */
-    @Getter private double maxRotations = 21.0;
+    @Getter private double maxRotations = 21;
     @Getter private double minRotations = 0.3;
 
     @Getter private final double stationIntake = 9.67;
-    @Getter private final double stationExtendedIntake = 9.67;
+    @Getter private final double stationExtendedIntake = 8.5;
 
     @Getter private final double L1Coral = 0;
-    @Getter private final double L2Coral = 0;
-    @Getter private final double L3Coral = 10.333008;
-    @Getter private final double L4Coral = 20.929199;
+    @Getter private final double L2Coral = 10;
+    @Getter private final double L3Coral = 8;
+    @Getter private final double L4Coral = 19.5;
+
+    @Getter private final double L2Alage = 9.8;
+    @Getter private final double L3Alage = 19.5;
 
     @Getter private final double zeroSpeed = -0.1;
     @Getter private final double holdMaxSpeedRPM = 18;
-    @Getter private final double currentLimit = 30;
-    @Getter private final double torqueCurrentLimit = 100;
-    @Getter private final double positionKp = 1500;
-    @Getter private final double positionKd = 140;
+    @Getter private final double positionKp = 100;
+    @Getter private final double positionKd = 6;
+    @Getter private final double positionKa = 0.2;
     @Getter private final double positionKv = 0;
-    @Getter private final double positionKs = 0.06;
-    @Getter private final double positionKa = 0.001;
-    @Getter private final double positionKg = 12.5;
-    @Getter private final double mmCruiseVelocity = 10;
-    @Getter private final double mmAcceleration = 50;
-    @Getter private final double mmJerk = 0;
+    @Getter private final double positionKs = 5;
+    @Getter private final double positionKg = 25.3;
+    @Getter private final double mmCruiseVelocity = 40;
+    @Getter private final double mmAcceleration = 280;
+    @Getter private final double mmJerk = 2000;
+
+    @Getter private double currentLimit = 40;
+    @Getter private double torqueCurrentLimit = 160;
 
     public PhotonElevatorConfig() {
         super();
@@ -47,10 +51,10 @@ public class PhotonElevatorConfig extends ElevatorConfig {
         setL4CoralScore(L4Coral);
         setL1Algae(0);
         setL1AlgaeScore(0);
-        setL2Algae(0);
-        setL2AlgaeScore(0);
-        setL3Algae(0);
-        setL3AlgaeScore(0);
+        setL2Algae(L2Alage);
+        setL2AlgaeScore(L2Alage);
+        setL3Algae(L3Alage);
+        setL3AlgaeScore(L3Alage);
         setL4Algae(0);
         setL4AlgaeScore(0);
         configMinMaxRotations(minRotations, maxRotations);

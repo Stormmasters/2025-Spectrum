@@ -31,6 +31,18 @@ public class ShoulderStates {
                 moveToDegrees(config::getStationIntake, "Shoulder.stationIntake"));
         stationExtenededIntaking.whileTrue(
                 moveToDegrees(config::getStationExtendedIntake, "Shoulder.stationExtendedIntake"));
+        stationIntaking.or(stationExtenededIntaking).onFalse(home());
+
+        Robot.getPilot()
+                .photonRemoveL2Algae
+                .whileTrue(moveToDegrees(config::getL2Algae, "Shoulder.L2Algae"));
+        Robot.getPilot()
+                .photonRemoveL3Alage
+                .whileTrue(moveToDegrees(config::getL3Algae, "Shoulder.L3Algae"));
+        Robot.getPilot()
+                .photonRemoveL2Algae
+                .or(Robot.getPilot().photonRemoveL3Alage)
+                .onFalse(home());
 
         L1Coral.and(actionState.or(actionPrepState))
                 .whileTrue(moveToDegrees(config::getL1Coral, "Shoulder.L1Coral"));

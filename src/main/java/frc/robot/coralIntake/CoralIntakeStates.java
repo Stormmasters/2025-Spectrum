@@ -3,6 +3,7 @@ package frc.robot.coralIntake;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
 import frc.spectrumLib.Telemetry;
@@ -19,12 +20,23 @@ public class CoralIntakeStates {
 
     public static void setStates() {
         homeAllStopIntake.onTrue(coralIntake.getDefaultCommand());
+        Robot.getPilot()
+                .home_select
+                .or(Robot.getOperator().home_select)
+                .onTrue(coralIntake.getDefaultCommand());
 
-        stationIntaking.onTrue(
-                runVoltageCurrentLimits(
-                        config::getCoralIntakeVoltage,
-                        config::getCoralIntakeSupplyCurrent,
-                        config::getCoralIntakeTorqueCurrent));
+        Trigger photonAlageRemoval =
+                Robot.getPilot().photonRemoveL2Algae.or(Robot.getPilot().photonRemoveL3Alage);
+        photonAlageRemoval.or(stationExtenededIntaking).onFalse(coralIntake.getDefaultCommand());
+
+        stationIntaking
+                .or(photonAlageRemoval, stationExtenededIntaking)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getCoralIntakeVoltage,
+                                config::getCoralIntakeSupplyCurrent,
+                                config::getCoralIntakeTorqueCurrent));
+
         intaking.and(algae)
                 .onTrue(
                         runVoltageCurrentLimits(

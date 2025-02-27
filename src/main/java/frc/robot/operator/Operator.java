@@ -6,6 +6,9 @@ import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
 
 public class Operator extends Gamepad {
+
+    private static double climberScaler = 0.25;
+
     // Triggers, these would be robot states such as intake, visionAim, etc.
     // If triggers need any of the config values set them in the constructor
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
@@ -13,6 +16,7 @@ public class Operator extends Gamepad {
     public final Trigger enabled = teleop.or(testMode); // works for both teleop and testMode
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
+    public final Trigger home_select = select;
 
     public final Trigger climbPrep_start = start.and(noFn, enabled);
 
@@ -29,15 +33,8 @@ public class Operator extends Gamepad {
     public final Trigger leftScore = leftDpad.and(staged);
     public final Trigger rightScore = rightDpad.and(staged);
 
-    // Removing to replace with above combinations
-    // public final Trigger L1Coral_A = A.and(coralStage);
-    // public final Trigger L2Coral_B = B.and(coralStage);
-    // public final Trigger L3Coral_X = X.and(coralStage);
-    // public final Trigger L4Coral_Y = Y.and(coralStage);
-
-    // public final Trigger L2Algae_B = B.and(algaeStage);
-    // public final Trigger L3Algae_X = X.and(algaeStage);
-    // public final Trigger barge_Y = Y.and(algaeStage);
+    public final Trigger latchOpen_startUp = climbPrep_start.and(upDpad);
+    public final Trigger latchCloser_startDown = climbPrep_start.and(downDpad);
 
     public final Trigger homeElevator_A = A.and(nothingStaged, teleop);
     public final Trigger homeInClimb_B = B.and(nothingStaged, teleop);
@@ -89,11 +86,7 @@ public class Operator extends Gamepad {
         OperatorStates.setupDefaultCommand();
     }
 
-    public double getElevatorOverride() {
-        return getLeftY();
-    }
-
-    public double getClimberOverride() {
-        return getRightY();
+    public double getClimberTriggerAxis() {
+        return (getRightTriggerAxis() - getLeftTriggerAxis()) * climberScaler;
     }
 }

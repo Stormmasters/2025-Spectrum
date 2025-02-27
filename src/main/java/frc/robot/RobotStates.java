@@ -126,6 +126,9 @@ public class RobotStates {
     public static void setupStates() {
         Util.disabled.whileTrue(clearStates().repeatedly());
 
+        pilot.home_select.or(operator.home_select).whileTrue(homeAll.setTrue());
+        pilot.home_select.or(operator.home_select).onFalse(homeAll.setFalse());
+
         pilot.coastOn_dB.or(operator.coastOn_dB).onTrue(coastMode.setTrue().ignoringDisable(true));
         pilot.coastOff_dA
                 .or(operator.coastOff_dA)

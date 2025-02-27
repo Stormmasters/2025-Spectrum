@@ -25,7 +25,7 @@ public class InClimb extends Mechanism {
 
     public static class InClimbConfig extends Config {
 
-        @Getter private final double maxRotations = 0.26; // TODO: find max rotations
+        @Getter private final double maxRotations = 0.4; // TODO: find max rotations
         @Getter private final double minRotations = -0.085;
         /* InClimb positions in degrees || 0 is horizontal */
         @Getter private final double home = 90;
@@ -36,8 +36,8 @@ public class InClimb extends Mechanism {
         @Getter private final double finishClimb = 100;
         @Getter private final double coralFloorIntake = -10;
         @Getter private final double processorScore = 60;
-        @Getter private final double latchOpen = 0;
-        @Getter private final double latchClosed = 1;
+        @Getter private final double latchOpen = 1;
+        @Getter private final double latchClosed = 0;
 
         @Getter private final double offsetConstant = -90;
 
@@ -45,8 +45,8 @@ public class InClimb extends Mechanism {
         @Getter private final double zeroSpeed = -0.1;
         @Getter private final double holdMaxSpeedRPM = 18;
 
-        @Getter private final double currentLimit = 30;
-        @Getter private final double torqueCurrentLimit = 120;
+        @Getter private final double currentLimit = 60;
+        @Getter private final double torqueCurrentLimit = 180;
         @Getter private final double positionKp = 190;
         @Getter private final double positionKd = 40;
         @Getter private final double positionKv = 0;
@@ -66,7 +66,8 @@ public class InClimb extends Mechanism {
         @Getter private double InClimbY = 0.55;
 
         @Getter @Setter
-        private double simRatio = 14; // TODO: Set to number of rotations per mech revolution
+        private double simRatio =
+                99.5555555555; // TODO: Set to number of rotations per mech revolution
 
         @Getter private double length = 0.4;
 
@@ -164,7 +165,9 @@ public class InClimb extends Mechanism {
     // --------------------------------------------------------------------------------
 
     public Command resetToIntialPos() {
-        return run(() -> setIntialPosition());
+        return runOnce(() -> setIntialPosition())
+                .ignoringDisable(true)
+                .withName("InClimb.ResetToInitialPos");
     }
 
     public Command runHoldInClimb() {
