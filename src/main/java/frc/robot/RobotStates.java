@@ -77,7 +77,7 @@ public class RobotStates {
 
     // Intake Triggers
     public static final Trigger stationIntaking = pilot.stationIntake_LT.or(autonSourceIntake);
-    public static final Trigger stationExtenededIntaking = pilot.stationIntakeExtended_LT_RB;
+    public static final Trigger stationExtendedIntaking = pilot.stationIntakeExtended_LT_RB;
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
     public static final Trigger groundCoral = Trigger.kFalse;
 
@@ -135,7 +135,7 @@ public class RobotStates {
                 .onTrue(coastMode.setFalse().ignoringDisable(true));
 
         // Intaking States
-        stationIntaking.or(stationExtenededIntaking).whileTrue(coral.setTrue(), algae.setFalse());
+        stationIntaking.or(stationExtendedIntaking).whileTrue(coral.setTrue(), algae.setFalse());
         stationIntaking.onChangeToFalse(homeAll.setTrue());
 
         groundAlgae.whileTrue(floorIntake.setTrue(), algae.setTrue(), coral.setFalse());

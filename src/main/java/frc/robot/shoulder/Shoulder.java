@@ -32,7 +32,7 @@ public class Shoulder extends Mechanism {
         /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
         // TODO: Find shoulder positions
 
-        @Getter @Setter private double climbHome = 90; // TODO: Find this value
+        @Getter @Setter private double climbPrep = 0;
         @Getter @Setter private double home = 0;
 
         @Getter @Setter private double stationIntake = 0;

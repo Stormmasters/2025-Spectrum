@@ -41,8 +41,8 @@ public class ElevatorStates {
         // coralHandoff.whileTrue(handOff());
 
         stationIntaking.whileTrue(setPosition(config::getStationIntake));
-        stationExtenededIntaking.whileTrue(setPosition(config::getStationExtendedIntake));
-        stationIntaking.or(stationExtenededIntaking).onFalse(home());
+        stationExtendedIntaking.whileTrue(setPosition(config::getStationExtendedIntake));
+        stationIntaking.or(stationExtendedIntaking).onFalse(home());
 
         Robot.getPilot().photonRemoveL2Algae.whileTrue(setPosition(config::getL2Algae));
         Robot.getPilot().photonRemoveL3Alage.whileTrue(setPosition(config::getL3Algae));
