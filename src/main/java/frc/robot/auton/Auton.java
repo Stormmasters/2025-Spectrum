@@ -47,22 +47,24 @@ public class Auton {
 
         pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
 
-        pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
-        pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
-        pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
+        // pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
+        // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
+        // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption("Source 3 Test", SpectrumAuton("Source 3", false));
+        // pathChooser.addOption("Source 3 Test", SpectrumAuton("Source 3", false));
 
-        pathChooser.addOption("3847 | Left - Source", SpectrumAuton("Blue Left - Source", false));
-        pathChooser.addOption("3847 | Right - Source", SpectrumAuton("Blue Left - Source", true));
+        // pathChooser.addOption("3847 | Left - Source", SpectrumAuton("Blue Left - Source", false));
+        // pathChooser.addOption("3847 | Right - Source", SpectrumAuton("Blue Left - Source", true));
 
         // pathChooser.addOption("Left - Preplace", SpectrumAuton("Blue Left - Preplace", false));
         // pathChooser.addOption("Right - Preplace", SpectrumAuton("Blue Left - Preplace", true));
 
         // pathChooser.addOption("Center - Algae", SpectrumAuton("Blue Center Algae Rush", false));
 
+        pathChooser.addOption("8515 | Drive Forward", SpectrumAuton("Drive Forward", false));
         pathChooser.addOption("8515 | Center - Photon", SpectrumAuton("Photon Blue Center", false));
         pathChooser.addOption("8515 | Left - Photon", SpectrumAuton("Photon Blue Left", false));
+        pathChooser.addOption("8515 | Right - Photon", SpectrumAuton("Photon Blue Left", true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
