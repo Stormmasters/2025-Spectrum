@@ -92,7 +92,7 @@ public class RobotStates {
     public static final Trigger netAlgae = (l4.and(algae)).or(autonNet);
     public static final Trigger stagedAlgae = processorAlgae.or(L2Algae, L3Algae, netAlgae);
 
-    public static final Trigger L1Coral = l1.and(coral);
+    public static final Trigger L1Coral = l1.and(coral).or(autonL1);
     public static final Trigger L2Coral = l2.and(coral);
     public static final Trigger L3Coral = l3.and(coral);
     public static final Trigger L4Coral = (l4.and(coral)).or(autonLeftL4, autonRightL4);
@@ -170,6 +170,8 @@ public class RobotStates {
                 .or(autonPreScore)
                 .onTrue(actionPrepState.setTrue(), actionState.setFalse());
 
+        autonScore.onTrue(actionState.setTrue(), actionPrepState.setFalse());
+
         // TODO: This currently set actionState true when intaking which is bad
         // (pilot.actionReady.not().and(coral.or(algae)))
         //         .or(autonScore)
@@ -199,11 +201,13 @@ public class RobotStates {
         pilot.actionReady.onFalse(actionPrepState.setFalse());
 
         actionPrepState.onTrue(actionState.setFalse());
-        actionPrepState.onChangeToFalse(
-                actionState
-                        .setTrue()
-                        .alongWith(new WaitCommand(2))
-                        .andThen(actionState.setFalse()));
+        actionPrepState
+                .or(autonPreScore)
+                .onChangeToFalse(
+                        actionState
+                                .setTrue()
+                                .alongWith(new WaitCommand(2))
+                                .andThen(actionState.setFalse()));
         operator.algaeStage.or(operator.coralStage).onTrue(actionState.setFalse());
 
         // Home if we aren't doing coral, algae, or intaking

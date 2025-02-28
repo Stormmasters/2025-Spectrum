@@ -32,6 +32,7 @@ public class Auton {
     public static final EventTrigger autonScore = new EventTrigger("score");
     public static final EventTrigger autonLeftL4 = new EventTrigger("leftL4");
     public static final EventTrigger autonRightL4 = new EventTrigger("rightL4");
+    public static final EventTrigger autonL1 = new EventTrigger("L1");
     public static final EventTrigger autonNet = new EventTrigger("net");
     public static final EventTrigger autonProcessor = new EventTrigger("processor");
 
@@ -53,8 +54,10 @@ public class Auton {
 
         // pathChooser.addOption("Source 3 Test", SpectrumAuton("Source 3", false));
 
-        // pathChooser.addOption("3847 | Left - Source", SpectrumAuton("Blue Left - Source", false));
-        // pathChooser.addOption("3847 | Right - Source", SpectrumAuton("Blue Left - Source", true));
+        // pathChooser.addOption("3847 | Left - Source", SpectrumAuton("Blue Left - Source",
+        // false));
+        // pathChooser.addOption("3847 | Right - Source", SpectrumAuton("Blue Left - Source",
+        // true));
 
         // pathChooser.addOption("Left - Preplace", SpectrumAuton("Blue Left - Preplace", false));
         // pathChooser.addOption("Right - Preplace", SpectrumAuton("Blue Left - Preplace", true));
@@ -62,9 +65,12 @@ public class Auton {
         // pathChooser.addOption("Center - Algae", SpectrumAuton("Blue Center Algae Rush", false));
 
         pathChooser.addOption("8515 | Drive Forward", SpectrumAuton("Drive Forward", false));
-        pathChooser.addOption("8515 | Center - Photon", SpectrumAuton("Photon Blue Center", false));
-        pathChooser.addOption("8515 | Left - Photon", SpectrumAuton("Photon Blue Left", false));
-        pathChooser.addOption("8515 | Right - Photon", SpectrumAuton("Photon Blue Left", true));
+        pathChooser.addOption("8515 | L1 Leave", SpectrumAuton("L1 Leave", false));
+
+        // pathChooser.addOption("8515 | Center - Photon", SpectrumAuton("Photon Blue Center",
+        // false));
+        // pathChooser.addOption("8515 | Left - Photon", SpectrumAuton("Photon Blue Left", false));
+        // pathChooser.addOption("8515 | Right - Photon", SpectrumAuton("Photon Blue Left", true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
