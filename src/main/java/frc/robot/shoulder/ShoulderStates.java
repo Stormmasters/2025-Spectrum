@@ -29,9 +29,9 @@ public class ShoulderStates {
 
         stationIntaking.whileTrue(
                 moveToDegrees(config::getStationIntake, "Shoulder.stationIntake"));
-        stationExtenededIntaking.whileTrue(
+        stationExtendedIntaking.whileTrue(
                 moveToDegrees(config::getStationExtendedIntake, "Shoulder.stationExtendedIntake"));
-        stationIntaking.or(stationExtenededIntaking).onFalse(home());
+        stationIntaking.or(stationExtendedIntaking).onFalse(home());
 
         Robot.getPilot()
                 .photonRemoveL2Algae
@@ -70,6 +70,9 @@ public class ShoulderStates {
                 .whileTrue(moveToDegrees(config::getNetAlgae, "Shoulder.netAlgae"));
 
         Robot.getPilot().reZero_start.onTrue(shoulder.resetToIntialPos());
+        Robot.getOperator()
+                .climbPrep_start
+                .whileTrue(moveToDegrees(config::getClimbPrep, "Shoulder.startClimb"));
     }
 
     public static Command runShoulder(DoubleSupplier speed) {

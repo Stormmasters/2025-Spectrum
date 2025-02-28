@@ -9,6 +9,7 @@ public class PHOTON2025 extends Config {
     public PHOTON2025() {
         super();
         swerve.configEncoderOffsets(0.205078, -0.416260, -0.163330, 0.027832);
+        leds.setPort(8);
 
         elevator = new PhotonElevatorConfig();
         shoulder = new PhotonShoulderConfig();

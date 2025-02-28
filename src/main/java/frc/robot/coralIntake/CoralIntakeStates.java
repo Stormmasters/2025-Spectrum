@@ -27,10 +27,10 @@ public class CoralIntakeStates {
 
         Trigger photonAlageRemoval =
                 Robot.getPilot().photonRemoveL2Algae.or(Robot.getPilot().photonRemoveL3Alage);
-        photonAlageRemoval.or(stationExtenededIntaking).onFalse(coralIntake.getDefaultCommand());
+        photonAlageRemoval.or(stationExtendedIntaking).onFalse(coralIntake.getDefaultCommand());
 
         stationIntaking
-                .or(photonAlageRemoval, stationExtenededIntaking)
+                .or(photonAlageRemoval, stationExtendedIntaking)
                 .whileTrue(
                         runVoltageCurrentLimits(
                                 config::getCoralIntakeVoltage,

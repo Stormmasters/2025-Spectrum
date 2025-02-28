@@ -12,7 +12,7 @@ public class PhotonShoulderConfig extends ShoulderConfig {
     @Getter private final double offset = -90;
     @Getter private final double initPosition = 0;
 
-    @Getter private final double climbHome = 90;
+    @Getter private final double climbPrep = 60;
 
     @Getter private final double stationIntake = 36.03515625;
     @Getter private final double stationIntakeExtended = 36;
@@ -58,7 +58,7 @@ public class PhotonShoulderConfig extends ShoulderConfig {
         super();
         setPhoton(true);
         setInitPosition(initPosition);
-        setClimbHome(climbHome);
+        setClimbPrep(climbPrep);
         setStationIntake(stationIntake);
         setStationExtendedIntake(stationIntakeExtended);
         setL1Coral(l1Coral);
