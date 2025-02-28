@@ -8,8 +8,7 @@ import frc.robot.shoulder.PhotonShoulderConfig;
 public class PHOTON2025 extends Config {
     public PHOTON2025() {
         super();
-
-        swerve.configEncoderOffsets(0.180908, -0.409912, -0.145508, 0.033691);
+        swerve.configEncoderOffsets(0.205078, -0.416260, -0.163330, 0.027832);
 
         elevator = new PhotonElevatorConfig();
         shoulder = new PhotonShoulderConfig();
