@@ -87,6 +87,6 @@ public class Operator extends Gamepad {
     }
 
     public double getClimberTriggerAxis() {
-        return (getRightTriggerAxis() - getLeftTriggerAxis() * climberScaler);
+        return ((getRightTriggerAxis() * 0.5) - (getLeftTriggerAxis() * climberScaler));
     }
 }

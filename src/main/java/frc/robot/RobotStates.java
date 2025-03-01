@@ -198,7 +198,7 @@ public class RobotStates {
         pilot.actionReady.onTrue(actionPrepState.setTrue());
         pilot.actionReady.onFalse(actionPrepState.setFalse());
 
-        actionPrepState.onTrue(actionState.setFalse());
+        actionPrepState.or(autonPreScore).onTrue(actionState.setFalse());
         actionPrepState
                 .or(autonPreScore)
                 .onChangeToFalse(
@@ -206,6 +206,12 @@ public class RobotStates {
                                 .setTrue()
                                 .alongWith(new WaitCommand(2))
                                 .andThen(actionState.setFalse()));
+        // autonScore.onTrue(
+        //         actionState
+        //                 .setTrue()
+        //                 .alongWith(new WaitCommand(2))
+        //                 .andThen(actionState.setFalse())
+        //                 .withName("Auton.autonScore"));
         operator.algaeStage.or(operator.coralStage).onTrue(actionState.setFalse());
 
         // Home if we aren't doing coral, algae, or intaking

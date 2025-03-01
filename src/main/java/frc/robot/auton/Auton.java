@@ -30,6 +30,7 @@ public class Auton {
     public static final EventTrigger autonHighAlgae = new EventTrigger("highAlgae");
     public static final EventTrigger autonPreScore = new EventTrigger("prescore");
     public static final EventTrigger autonScore = new EventTrigger("score");
+    public static final EventTrigger autonEject = new EventTrigger("eject");
     public static final EventTrigger autonLeftL4 = new EventTrigger("leftL4");
     public static final EventTrigger autonRightL4 = new EventTrigger("rightL4");
     public static final EventTrigger autonL1 = new EventTrigger("L1");
@@ -66,6 +67,7 @@ public class Auton {
 
         pathChooser.addOption("8515 | Drive Forward", SpectrumAuton("Drive Forward", false));
         pathChooser.addOption("8515 | L1 Leave", SpectrumAuton("L1 Leave", false));
+        pathChooser.addOption("8515 | L4 Leave", SpectrumAuton("L4 Leave", false));
 
         // pathChooser.addOption("8515 | Center - Photon", SpectrumAuton("Photon Blue Center",
         // false));

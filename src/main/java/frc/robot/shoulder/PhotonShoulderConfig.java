@@ -12,7 +12,7 @@ public class PhotonShoulderConfig extends ShoulderConfig {
     @Getter private final double offset = -90;
     @Getter private final double initPosition = 0;
 
-    @Getter private final double climbPrep = 60;
+    @Getter private final double climbPrep = 90;
 
     @Getter private final double stationIntake = 36.03515625;
     @Getter private final double stationIntakeExtended = 36;
