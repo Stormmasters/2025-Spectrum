@@ -35,12 +35,12 @@ public class InClimbStates {
                 .climbPrep_start
                 .whileTrue(runInClimb(() -> Robot.getOperator().getClimberTriggerAxis()));
 
-        homeAll.whileTrue(log(home()));
+        // homeAll.whileTrue(log(home()));
         Robot.getPilot().reZero_start.whileTrue(inClimb.resetToIntialPos());
-        Robot.getPilot().testTune_tA.onTrue(openLatch());
-        Robot.getPilot().testTune_tB.onTrue(closeLatch());
+        // Robot.getPilot().testTune_tA.onTrue(openLatch());
+        // Robot.getPilot().testTune_tB.onTrue(closeLatch());
 
-        homeInClimb.whileTrue(log(zero()));
+        // homeInClimb.whileTrue(log(zero()));
 
         // TODO: for testing
         // Robot.getPilot().reZero_start.onTrue(inClimb.resetToInitialPos());

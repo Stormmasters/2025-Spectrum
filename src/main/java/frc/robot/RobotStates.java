@@ -170,8 +170,6 @@ public class RobotStates {
                 .or(autonPreScore)
                 .onTrue(actionPrepState.setTrue(), actionState.setFalse());
 
-        autonScore.onTrue(actionState.setTrue(), actionPrepState.setFalse());
-
         // TODO: This currently set actionState true when intaking which is bad
         // (pilot.actionReady.not().and(coral.or(algae)))
         //         .or(autonScore)

@@ -25,7 +25,7 @@ public class InClimb extends Mechanism {
 
     public static class InClimbConfig extends Config {
 
-        @Getter private final double maxRotations = 0.4; // TODO: find max rotations
+        @Getter private final double maxRotations = 0.37; // TODO: find max rotations
         @Getter private final double minRotations = -0.085;
         /* InClimb positions in degrees || 0 is horizontal */
         @Getter private final double home = 90;
@@ -45,8 +45,8 @@ public class InClimb extends Mechanism {
         @Getter private final double zeroSpeed = -0.1;
         @Getter private final double holdMaxSpeedRPM = 18;
 
-        @Getter private final double currentLimit = 60;
-        @Getter private final double torqueCurrentLimit = 180;
+        @Getter private final double currentLimit = 60; // 60
+        @Getter private final double torqueCurrentLimit = 180; // 180
         @Getter private final double positionKp = 190;
         @Getter private final double positionKd = 40;
         @Getter private final double positionKv = 0;

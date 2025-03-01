@@ -35,7 +35,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         @Getter @Setter private AddressableLEDBufferView view;
         @Getter @Setter private int startingIndex = 0;
         @Getter @Setter private int endingIndex = 0;
-        @Getter @Setter private int port = 0;
+        @Getter @Setter private int port = 8;
         @Getter @Setter private int length;
         // LED strip density
         @Getter @Setter private Distance ledSpacing = Meters.of(1 / 120.0);

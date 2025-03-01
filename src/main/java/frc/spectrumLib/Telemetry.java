@@ -52,7 +52,7 @@ public class Telemetry extends DogLog implements Subsystem {
         Telemetry.setOptions(
                 new DogLogOptions()
                         .withNtPublish(ntPublish)
-                        .withCaptureDs(false)
+                        .withCaptureDs(true)
                         .withCaptureNt(captureNt)
                         .withCaptureConsole(false)
                         .withLogExtras(false));
