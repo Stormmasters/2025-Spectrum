@@ -2,9 +2,9 @@ package frc.robot.pilot;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
-import frc.spectrumLib.util.Util;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,20 +13,28 @@ public class Pilot extends Gamepad {
     // Triggers, these would be robot states such as ampReady, intake, visionAim, etc.
     // If triggers need any of the config values set them in the constructor
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
+    public final Trigger enabled = teleop.or(testMode); // works for both teleop and testMode
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
+    public final Trigger home_select = select;
 
     public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
-    public final Trigger stationExtendedIntake_LB_LT = leftTrigger.and(fn, teleop);
+    public final Trigger stationIntakeExtended_LT_RB = leftTrigger.and(fn, teleop);
     public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop);
+    public final Trigger photonRemoveL2Algae = groundAlgae_RT;
     public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop);
+    public final Trigger photonRemoveL3Alage = groundCoral_LB_RT;
 
     public final Trigger lollipopProcessor_A = A.and(noFn, teleop);
     public final Trigger algaeRetract_B = B.and(noFn, teleop);
 
+    public final Trigger coralIntake_X = X.and(noFn, teleop);
+    public final Trigger coralEject_Y = Y.and(noFn, teleop);
+
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
 
     public final Trigger actionReady = rightBumper.and(teleop);
+    public final Trigger score = actionReady.not().and(teleop);
 
     // vision Drive
     public final Trigger visionAim = Y.and(noFn, teleop);
@@ -37,19 +45,26 @@ public class Pilot extends Gamepad {
     public final Trigger rightReorient = rightDpad.and(fn, teleop);
 
     /* Use the right stick to set a cardinal direction to aim at */
-    public final Trigger driving;
-    public final Trigger steer;
+    public final Trigger driving = enabled.and(leftStickX.or(leftStickY));
+    public final Trigger steer = enabled.and(rightStickX.or(rightStickY));
 
-    public final Trigger snapSteer = Trigger.kFalse;
-
-    public final Trigger fpv_rs = rightStickClick.and(teleop); // Remapped to Right back button
+    public final Trigger fpv_RS = rightStickClick.and(enabled); // Remapped to Right back button
 
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);
     public final Trigger coastOff_dA = disabled.and(A);
+    public final Trigger reZero_start = disabled.and(leftBumper, rightBumper, start);
 
     // TEST TRIGGERS
-    public final Trigger tuneElevator_tB = testMode.and(B);
+    public final Trigger testTune_tB = testMode.and(B);
+    public final Trigger testTune_tA = testMode.and(A);
+    public final Trigger testTune_tX = testMode.and(X);
+    public final Trigger testTune_tY = testMode.and(Y);
+    public final Trigger testTune_RB = testMode.and(rightBumper);
+    public final Trigger testTune_LB = testMode.and(leftBumper);
+    public final Trigger testTriggersTrigger = testMode.and(leftTrigger.or(rightTrigger));
+
+    public final Trigger testActionReady = rightBumper.and(testMode);
 
     public static class PilotConfig extends Config {
 
@@ -77,20 +92,14 @@ public class Pilot extends Gamepad {
 
     private PilotConfig config;
 
-    @Getter @Setter
-    private boolean isSlowMode = false; // TODO: change slow and turbo to SpectrumStates
-
-    @Getter @Setter private boolean isTurboMode = false;
+    private @Getter @Setter SpectrumState slowMode = new SpectrumState("SlowMode");
+    @Getter @Setter SpectrumState turboMode = new SpectrumState("TurboMode");
 
     /** Create a new Pilot with the default name and port. */
     public Pilot(PilotConfig config) {
         super(config);
         this.config = config;
         Robot.add(this);
-
-        driving = Util.teleop.and(leftStickX.or(leftStickY));
-        steer = Util.teleop.and(rightStickX.or(rightStickY));
-
         Telemetry.print("Pilot Subsystem Initialized: ");
     }
 
@@ -116,7 +125,7 @@ public class Pilot extends Gamepad {
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveFwdPositive() {
         double fwdPositive = leftStickCurve.calculate(-1 * getLeftY());
-        if (isSlowMode) {
+        if (slowMode.getAsBoolean()) {
             fwdPositive *= Math.abs(config.getSlowModeScalor());
         }
         return fwdPositive;
@@ -126,7 +135,7 @@ public class Pilot extends Gamepad {
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveLeftPositive() {
         double leftPositive = -1 * leftStickCurve.calculate(getLeftX());
-        if (isSlowMode) {
+        if (slowMode.getAsBoolean()) {
             leftPositive *= Math.abs(config.getSlowModeScalor());
         }
         return leftPositive;
@@ -135,10 +144,10 @@ public class Pilot extends Gamepad {
     // Positive is counter-clockwise, left Trigger is positive
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveCCWPositive() {
-        double ccwPositive = rightStickCurve.calculate(getRightX());
-        if (isSlowMode) {
+        double ccwPositive = -1 * rightStickCurve.calculate(getRightX());
+        if (slowMode.getAsBoolean()) {
             ccwPositive *= Math.abs(config.getSlowModeScalor());
-        } else if (isTurboMode) {
+        } else if (turboMode.getAsBoolean()) {
             ccwPositive *= Math.abs(config.getTurboModeScalor());
         } else {
             ccwPositive *= Math.abs(config.getDefaultTurnScalor());
@@ -146,8 +155,7 @@ public class Pilot extends Gamepad {
         return -1 * ccwPositive; // invert the value
     }
 
-    // ELEVATOR METHODS
-    public double getElevatorManualAxis() {
-        return getLeftY();
+    public double getTestTriggersAxis() { // TODO: Remove after Testing
+        return getRightTriggerAxis() - getLeftTriggerAxis();
     }
 }

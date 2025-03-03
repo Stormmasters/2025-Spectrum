@@ -28,13 +28,11 @@
   "Window": {
     "###/SmartDashboard/Alerts": {
       "Collapsed": "0",
-      "Pos": "3,32",
-      "Size": "300,150"
+      "Pos": "5,25",
+      "Size": "335,150"
     },
     "###/SmartDashboard/Auto Chooser": {
       "Collapsed": "0",
-      "Pos": "308,263",
-      "Size": "361,66"
     },
     "###/SmartDashboard/Auto Visualizer": {
       "Collapsed": "0",
@@ -43,13 +41,18 @@
     },
     "###/SmartDashboard/LeftView": {
       "Collapsed": "0",
-      "Pos": "1693,662",
+      "Pos": "1720,643",
       "Size": "544,547"
     },
     "###/SmartDashboard/Scheduler": {
       "Collapsed": "0",
-      "Pos": "924,652",
+      "Pos": "957,646",
       "Size": "372,548"
+    },
+    "###/SmartDashboard/States": {
+      "Collapsed": "0",
+      "Pos": "952,1200",
+      "Size": "378,150"
     },
     "###/SmartDashboard/Swerve Field": {
       "Collapsed": "0",
@@ -63,23 +66,11 @@
     },
     "###/SmartDashboard/frontView": {
       "Collapsed": "0",
-      "Pos": "1307,653",
+      "Pos": "1345,647",
       "Size": "373,555"
     },
     "###Addressable LEDs": {
       "Collapsed": "0",
-      "Pos": "308,34",
-      "Size": "475,246"
-    },
-    "###FMS": {
-      "Collapsed": "0",
-      "Pos": "720,36",
-      "Size": "235,244"
-    },
-    "###Joysticks": {
-      "Collapsed": "0",
-      "Pos": "4,382",
-      "Size": "1156,287"
     },
     "###Keyboard 0 Settings": {
       "Collapsed": "0",
@@ -121,8 +112,6 @@
     },
     "###System Joysticks": {
       "Collapsed": "0",
-      "Pos": "683,638",
-      "Size": "273,290"
     },
     "###Timing": {
       "Collapsed": "0",
@@ -136,8 +125,6 @@
     },
     "Robot State": {
       "Collapsed": "0",
-      "Pos": "180,189",
-      "Size": "137,152"
     }
   }
 }

@@ -1,5 +1,7 @@
 package frc.spectrumLib;
 
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -12,6 +14,7 @@ public class SpectrumState extends Trigger {
     private static final HashMap<String, Boolean> stateConditions = new HashMap<>();
     private String name;
     private boolean value = false;
+    private Alert alert;
 
     /**
      * Create a new EventTrigger. This will run on the EventScheduler's event loop, which will be
@@ -22,6 +25,7 @@ public class SpectrumState extends Trigger {
     public SpectrumState(String name) {
         super(pollCondition(name));
         this.name = name;
+        alert = new Alert("States", name, AlertType.kInfo);
     }
 
     /**
@@ -37,10 +41,12 @@ public class SpectrumState extends Trigger {
 
     public Command set(boolean value) {
         return Commands.runOnce(
-                () -> {
-                    this.value = value;
-                    setCondition(name, value);
-                });
+                        () -> {
+                            this.value = value;
+                            alert.set(value);
+                            setCondition(name, value);
+                        })
+                .ignoringDisable(true);
     }
 
     public Command setTrue() {
@@ -53,10 +59,11 @@ public class SpectrumState extends Trigger {
 
     public Command toggle() {
         return Commands.runOnce(
-                () -> {
-                    this.value = !this.value;
-                    setCondition(name, value);
-                });
+                        () -> {
+                            this.value = !this.value;
+                            setCondition(name, value);
+                        })
+                .ignoringDisable(true);
     }
 
     /**

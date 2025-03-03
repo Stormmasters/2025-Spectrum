@@ -65,13 +65,14 @@
         }
       ],
       "axisCount": 2,
-      "buttonCount": 5,
+      "buttonCount": 6,
       "buttonKeys": [
         49,
         50,
         51,
         52,
-        53
+        53,
+        54
       ],
       "povCount": 0
     },
@@ -109,7 +110,8 @@
       "guid": "Keyboard0"
     },
     {
-      "guid": "Keyboard1"
+      "guid": "78696e70757401000000000000000000",
+      "useGamepad": true
     }
   ],
   "useEnableDisableHotkeys": true

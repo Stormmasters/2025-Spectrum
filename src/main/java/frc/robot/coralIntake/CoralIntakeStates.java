@@ -1,12 +1,15 @@
 package frc.robot.coralIntake;
 
 import static frc.robot.RobotStates.*;
+import static frc.robot.auton.Auton.autonScore;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
-import frc.robot.elbow.ElbowStates;
 import frc.spectrumLib.Telemetry;
+import java.util.function.DoubleSupplier;
 
 public class CoralIntakeStates {
     private static CoralIntake coralIntake = Robot.getCoralIntake();
@@ -14,90 +17,74 @@ public class CoralIntakeStates {
 
     public static void setupDefaultCommand() {
         coralIntake.setDefaultCommand(
-                log(coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default")));
+                coralIntake.runStop().ignoringDisable(true).withName("coralIntake.default"));
     }
 
     public static void setStates() {
-        stationIntaking.whileTrue(log(coralIntake()));
-        stationExtendedIntake.whileTrue(log(coralIntake()));
+        homeAllStopIntake.onTrue(coralIntake.getDefaultCommand());
+        Robot.getPilot()
+                .home_select
+                .or(Robot.getOperator().home_select)
+                .onTrue(coralIntake.getDefaultCommand());
 
-        scoreState.and(barge.not()).onTrue(log(coralScore()));
-        scoreState.and(barge).onTrue(log(barge()));
+        Trigger photonAlageRemoval =
+                Robot.getPilot().photonRemoveL2Algae.or(Robot.getPilot().photonRemoveL3Alage);
+        photonAlageRemoval.or(stationExtendedIntaking).onFalse(coralIntake.getDefaultCommand());
 
-        processorLollipopScore.whileTrue(log(coralIntake()));
+        netAlgae.and(actionState)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getAlgaeScoreVoltage,
+                                config::getAlgaeScoreSupplyCurrent,
+                                config::getAlgaeScoreTorqueCurrent));
 
-        algaeHandoff.onTrue(log(algaeHandOff()));
-        coralHandoff.onTrue(log(coralHandOff()));
+        stationIntaking
+                .or(photonAlageRemoval, stationExtendedIntaking)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getCoralIntakeVoltage,
+                                config::getCoralIntakeSupplyCurrent,
+                                config::getCoralIntakeTorqueCurrent));
+
+        intaking.and(algae)
+                .onTrue(
+                        runVoltageCurrentLimits(
+                                config::getAlgaeIntakeVoltage,
+                                config::getAlgaeIntakeSupplyCurrent,
+                                config::getAlgaeIntakeTorqueCurrent));
+
+        L1Coral.and(actionState)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getCoralL1ScoreVoltage,
+                                config::getCoralL1ScoreSupplyCurrent,
+                                config::getCoralL1ScoreTorqueCurrent));
+        branch.and(actionState)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getCoralScoreVoltage,
+                                config::getCoralScoreSupplyCurrent,
+                                config::getCoralScoreTorqueCurrent));
+
+        stagedAlgae
+                .and(actionState)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getAlgaeIntakeVoltage,
+                                config::getAlgaeIntakeSupplyCurrent,
+                                config::getAlgaeIntakeTorqueCurrent));
+
+        autonScore.onTrue(
+                new WaitCommand(2.0)
+                        .andThen(
+                                runVoltageCurrentLimits(
+                                                config::getCoralScoreVoltage,
+                                                config::getCoralScoreSupplyCurrent,
+                                                config::getCoralScoreTorqueCurrent)
+                                        .repeatedly()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-    }
-
-    private static Command coralHandOff() {
-        coralIntake.setDefaultCommand(
-                coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default"));
-        return coralIntake
-                .runStop()
-                .withName("coralIntake.coralHandOffWait")
-                .until(() -> ElbowStates.getPosition().getAsDouble() > 95.0)
-                .andThen(coralIntake())
-                .withName("coralIntake.coralHandOff");
-    }
-
-    private static Command algaeHandOff() {
-        coralIntake.setDefaultCommand(
-                coralIntake.runVelocityTcFocRpm(() -> 500).withName("coralIntake.default"));
-        return coralIntake
-                .runStop()
-                .withName("coralIntake.algaeHandOffWait")
-                .until(() -> ElbowStates.getPosition().getAsDouble() > 95.0)
-                .andThen(algaeIntake())
-                .withName("coralIntake.algaeHandOff");
-    }
-
-    private static Command coralScore() {
-        return slowEject()
-                .withName("coralIntake.score")
-                .until(() -> (!coralIntake.hasIntakeCoral()))
-                .withName("coralIntake.scoreDone");
-    }
-
-    private static Command barge() {
-        return coralIntake
-                .runVelocityTcFocRpm(config::getBarge)
-                .withName("coralIntake.barge")
-                .until(() -> (!coralIntake.hasIntakeAlgae()))
-                .withName("coralIntake.bargeScoreDone");
-    }
-
-    private static Command coralIntake() {
-        coralIntake.setDefaultCommand(
-                coralIntake.runVelocityTcFocRpm(() -> -500).withName("coralIntake.default"));
-        return coralIntake.runVelocityTcFocRpm(config::getIntake).withName("coralIntake.intake");
-    }
-
-    private static Command coralEject() {
-        return coralIntake.runVelocityTcFocRpm(config::getEject).withName("coralIntake.eject");
-    }
-
-    private static Command algaeIntake() {
-        coralIntake.setDefaultCommand(
-                coralIntake.runVelocityTcFocRpm(() -> 500).withName("coralIntake.default"));
-        return coralIntake
-                .runVelocityTcFocRpm(config::getEject)
-                .withName("coralIntake.algaeIntake");
-    }
-
-    private static Command algaeEject() {
-        return coralIntake
-                .runVelocityTcFocRpm(config::getIntake)
-                .withName("coralIntake.algaeEject");
-    }
-
-    private static Command slowEject() {
-        return coralIntake
-                .runVelocityTcFocRpm(config::getSlowEject)
-                .withName("coralIntake.slowEject");
     }
 
     private static Command coastMode() {
@@ -106,6 +93,11 @@ public class CoralIntakeStates {
 
     private static Command ensureBrakeMode() {
         return coralIntake.ensureBrakeMode();
+    }
+
+    private static Command runVoltageCurrentLimits(
+            DoubleSupplier voltage, DoubleSupplier supplyCurrent, DoubleSupplier torqueCurrent) {
+        return coralIntake.runVoltageCurrentLimits(voltage, supplyCurrent, torqueCurrent);
     }
 
     // Log Command

@@ -26,8 +26,8 @@ public class GroundIntake extends Mechanism {
         @Getter private double slowIntakePercentage = 0.06;
 
         /* Intake config values */
-        @Getter private double currentLimit = 40;
-        @Getter private double torqueCurrentLimit = 120;
+        @Getter private double currentLimit = 15;
+        @Getter private double torqueCurrentLimit = 100;
         @Getter private double velocityKp = 12; // 0.156152;
         @Getter private double velocityKv = 0.2; // 0.12;
         @Getter private double velocityKs = 14;
@@ -38,10 +38,10 @@ public class GroundIntake extends Mechanism {
         @Getter private double wheelDiameter = 5.0;
 
         public GroundIntakeConfig() {
-            super("GroundIntake", 56, Rio.RIO_CANBUS);
+            super("GroundIntake", 57, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
-            configGearRatio(12.0 / 30.0);
+            configGearRatio(1);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(120, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);

@@ -59,7 +59,7 @@ public class VisionSystem extends SubsystemBase {
         try {
             AprilTagFieldLayout tagLayout =
                     AprilTagFieldLayout.loadFromResource(
-                            AprilTagFields.k2025Reefscape.m_resourceFile);
+                            AprilTagFields.k2025ReefscapeAndyMark.m_resourceFile);
             visionSim.addAprilTags(tagLayout);
         } catch (IOException e) {
             System.err.println(e);
