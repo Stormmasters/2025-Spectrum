@@ -505,7 +505,11 @@ public class Vision extends SubsystemBase {
             }
         }
 
+<<<<<<< Updated upstream
         SmartDashboard.putNumber("GetDistanceSeenReefFace", seenReefFaces[0]);
+=======
+        SmartDashboard.putNumber("GetDistanceToReef", seenReefFaces[0]);
+>>>>>>> Stashed changes
         return seenReefFaces;
     }
 
