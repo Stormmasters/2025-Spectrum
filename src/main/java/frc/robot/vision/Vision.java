@@ -77,21 +77,21 @@ public class Vision extends SubsystemBase {
     public final Limelight backLL =
             new Limelight(
                     VisionConfig.BACK_LL, VisionConfig.backTagPipeline, VisionConfig.BACK_CONFIG);
-    
-    public final VisionLogger backLLLogger = new VisionLogger("back", backLL)
+
+    public final VisionLogger backLLLogger = new VisionLogger("back", backLL);
 
     public final Limelight[] allLimelights = {frontLL, backLL};
 
-    public final VisionLogger[] allLimelightLoggers = {frontLLLogger, backLLLogger}; 
+    public final VisionLogger[] allLimelightLoggers = {frontLLLogger, backLLLogger};
 
     private final DecimalFormat df = new DecimalFormat();
 
-    @Getter @Setter boolean isIntegrating = false;
+    @Getter @Setter private boolean isIntegrating = false;
 
     public ArrayList<Trio<Pose3d, Pose2d, Double>> autonPoses =
             new ArrayList<Trio<Pose3d, Pose2d, Double>>();
 
-    @Getter boolean isAiming = false;
+    @Getter private boolean isAiming = false;
 
     public Vision() {
         setName("vision");
@@ -245,11 +245,13 @@ public class Vision extends SubsystemBase {
 
     public VisionLogger getBestVisionLogger(Limelight limelight) {
         String name = limelight.getCameraName();
-        for(VisionLogger logger : allLimelightLoggers) {
-            if(logger.getName() == name) {
-                return logger;
+        VisionLogger Logger = backLLLogger;
+        for (VisionLogger logger : allLimelightLoggers) {
+            if (logger.getName() == name) {
+                Logger = logger;
             }
         }
+        return Logger;
     }
 
     /**
@@ -341,7 +343,6 @@ public class Vision extends SubsystemBase {
             limelight.setLimelightPipeline(pipeline);
         }
     }
-
 
     // ------------------------------------------------------------------------------
     // Config
@@ -505,11 +506,8 @@ public class Vision extends SubsystemBase {
             }
         }
 
-<<<<<<< Updated upstream
         SmartDashboard.putNumber("GetDistanceSeenReefFace", seenReefFaces[0]);
-=======
         SmartDashboard.putNumber("GetDistanceToReef", seenReefFaces[0]);
->>>>>>> Stashed changes
         return seenReefFaces;
     }
 
@@ -524,9 +522,10 @@ public class Vision extends SubsystemBase {
         int reefID = closestReefFace(); // must call closestReefFace before this method gets passed
         Pose2d[] reefFaces = Field.Reef.getCenterFaces();
         double NORM_FUDGE = 0.075;
-        double tunableNoteVelocity = 1;
-        double tunableNormFudge = 0;
-        double tunableStrafeFudge = 1;
+        // double tunableNoteVelocity = 1;
+        // double tunableNormFudge = 0;
+        // double tunableStrafeFudge = 1;
+        // TODO: fudges may be subject to removal
         double tunableReefYFudge = 0.0;
         double tunableReefXFudge = 0.0;
 

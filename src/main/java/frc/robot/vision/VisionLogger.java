@@ -6,8 +6,9 @@ import frc.spectrumLib.vision.Limelight;
 import lombok.Getter;
 
 public class VisionLogger {
-     /** Tracks position with Limelight using current logger (DogLog) to record data */
+    /** Tracks position with Limelight using current logger (DogLog) to record data */
     private final Limelight limelight;
+
     @Getter private String name;
 
     public VisionLogger(String name, Limelight limelight) {
@@ -64,5 +65,4 @@ public class VisionLogger {
         Telemetry.log("Vision " + name + " TargetSize", limelight.getTargetSize());
         return limelight.getTargetSize();
     }
-    
 }
