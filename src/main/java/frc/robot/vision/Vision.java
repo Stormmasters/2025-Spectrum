@@ -46,7 +46,7 @@ public class Vision extends SubsystemBase {
 
         /* Pipeline configs */
         public static final int frontTagPipeline = 0;
-        public static final int backTagPipeline = 1;
+        public static final int backTagPipeline = 0;
 
         /* Pose Estimation Constants */
 
@@ -131,15 +131,15 @@ public class Vision extends SubsystemBase {
                 for (Limelight limelight : allLimelights) {
                     if (limelight.getCameraName() == bestLimelight.getCameraName()) {
                         addFilteredVisionInput(bestLimelight);
-                        limelightLogger.getCameraConnection();
+                        // limelightLogger.getCameraConnection();
                         limelightLogger.getPose();
-                        limelightLogger.getMegaPose();
+                        // limelightLogger.getMegaPose();
+                        getDistanceToReefFromRobot();
                     } else {
                         limelight.sendInvalidStatus("not best rejection");
                     }
                     isIntegrating |= limelight.isIntegrating();
                 }
-                getDistanceToReefFromRobot();
             }
 
         } catch (Exception e) {
@@ -481,7 +481,8 @@ public class Vision extends SubsystemBase {
     /** Returns the distance from the reef in meters, adjusted for the robot's movement. */
     public double[] getDistanceToReefFromRobot() {
         RawFiducial[] frontTags = frontLL.getRawFiducial();
-        RawFiducial[] rightTags = backLL.getRawFiducial();
+        RawFiducial[] backTags = backLL.getRawFiducial();
+        double seenTag = 1;
 
         ArrayList<Integer> ValidReefFaceIDsRed = new ArrayList<Integer>();
         for (int i = 6; i < 12; i++) {
@@ -497,15 +498,18 @@ public class Vision extends SubsystemBase {
         for (RawFiducial tag : frontTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
                 seenReefFaces[0] = tag.distToCamera;
+                seenTag = tag.id;
             }
         }
 
-        for (RawFiducial tag : rightTags) {
+        for (RawFiducial tag : backTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
                 // seenReefFaces.add(tag.distToCamera);
             }
         }
 
+        SmartDashboard.putNumber("SeenTag", seenTag);
+        SmartDashboard.putNumber("RawFiducialTag", frontTags[0].id);
         SmartDashboard.putNumber("GetDistanceSeenReefFace", seenReefFaces[0]);
         SmartDashboard.putNumber("GetDistanceToReef", seenReefFaces[0]);
         return seenReefFaces;
