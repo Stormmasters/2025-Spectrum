@@ -4,6 +4,7 @@ import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
+import frc.robot.elevator.ElevatorStates;
 import frc.robot.twist.Twist.TwistConfig;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
@@ -13,36 +14,22 @@ public class TwistStates {
     private static TwistConfig config = Robot.getConfig().twist;
 
     public static void setupDefaultCommand() {
-        twist.setDefaultCommand(
-                log(twist.runHoldTwist().ignoringDisable(true).withName("Twist.default")));
+        twist.setDefaultCommand(log(twist.runHoldTwist().withName("Twist.default")));
+        // twist.runStop());
     }
 
     public static void setStates() {
-        stationIntaking.and(backwardMode.not()).whileTrue(log(coralIntake()));
-        stationIntaking.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-        stationExtendedIntake.and(backwardMode.not()).whileTrue(log(coralIntake()));
-        stationExtendedIntake.and(backwardMode).whileTrue(log(reverse(coralIntake())));
-
-        L2Algae.and(backwardMode.not()).whileTrue(log(l2Algae()));
-        L2Algae.and(backwardMode).whileTrue(log(reverse(l2Algae())));
-        L3Algae.and(backwardMode.not()).whileTrue(log(l3Algae()));
-        L3Algae.and(backwardMode).whileTrue(log(reverse(l3Algae())));
-
-        coralReefPosition.and(backwardMode.not()).and(leftScore).whileTrue(log(leftCoral()));
-        coralReefPosition.and(backwardMode).and(leftScore).whileTrue(log(reverse(leftCoral())));
-        coralReefPosition.and(backwardMode.not()).and(rightScore).whileTrue(log(rightCoral()));
-        coralReefPosition.and(backwardMode).and(rightScore).whileTrue(log(reverse(rightCoral())));
-
-        barge.and(backwardMode.not()).whileTrue(log(barge()));
-        barge.and(backwardMode).whileTrue(log(reverse(barge())));
-
-        homeAll.whileTrue(log(home()));
-
-        algaeHandoff.whileTrue(log(handOffAlgae()));
-        coralHandoff.whileTrue(log(handOffCoral()));
-
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+
+        homeAllStopIntake.and(ElevatorStates.isHome).onTrue(home());
+        Robot.getPilot().reZero_start.onTrue(twist.resetToIntialPos());
+        stationIntaking.whileTrue(twist.moveToDegrees((config::getStationIntake)));
+        L1Coral.whileTrue(twist.moveToDegrees(config::getL1Coral));
+        L2Algae.or(L3Algae).whileTrue(twist.moveToDegrees(config::getL2Algae));
+        netAlgae.whileTrue(twist.moveToDegrees(config::getBarge));
+
+        branch.whileTrue(rightCoral()); // TODO: Make this flip based on left, right and reversal
     }
 
     public static DoubleSupplier switchSigns(DoubleSupplier supplier) {
@@ -54,7 +41,7 @@ public class TwistStates {
     }
 
     public static Command home() {
-        return twist.moveToPercentage(config::getHome).withName("Twist.home");
+        return twist.moveToDegrees(config::getHome).withName("Twist.home");
     }
 
     public static Command moveToPercentage(DoubleSupplier percent) {
@@ -64,29 +51,29 @@ public class TwistStates {
     /* Scoring positions */
 
     public static Command l2Algae() {
-        return twist.moveToPercentage(config::getL2Algae).withName("Twist.l2Algae");
+        return twist.moveToDegrees(config::getL2Algae).withName("Twist.l2Algae");
     }
 
     public static Command l3Algae() {
-        return twist.moveToPercentage(config::getL3Algae).withName("Twist.l3Algae");
+        return twist.moveToDegrees(config::getL3Algae).withName("Twist.l3Algae");
     }
 
     public static Command leftCoral() {
-        return twist.moveToPercentage(() -> twist.checkReversed(config::getLeftCoral))
+        return twist.moveToDegrees(() -> twist.checkReversed(config::getLeftCoral))
                 .withName("Twist.leftCoral");
     }
 
     public static Command rightCoral() {
-        return twist.moveToPercentage(() -> twist.checkReversed(config::getRightCoral))
+        return twist.moveToDegrees(() -> twist.checkReversed(config::getRightCoral))
                 .withName("Twist.rightCoral");
     }
 
     public static Command floorIntake() {
-        return twist.moveToPercentage(config::getFloorIntake).withName("Twist.floorIntake");
+        return twist.moveToDegrees(config::getClawGroundAlgaeIntake).withName("Twist.floorIntake");
     }
 
     public static Command coralIntake() {
-        return twist.moveToPercentage(() -> twist.checkReversed(config::getCoralIntake))
+        return twist.moveToDegrees(() -> twist.checkReversed(config::getStationIntake))
                 .withName("Twist.coralIntake");
     }
 
@@ -103,21 +90,21 @@ public class TwistStates {
     }
 
     public static Command barge() {
-        return twist.moveToPercentage(() -> twist.checkReversed(config::getBarge))
+        return twist.moveToDegrees(() -> twist.checkReversed(config::getBarge))
                 .withName("Twist.barge");
     }
 
     public static Command handOffAlgae() {
-        return twist.moveToPercentage(config::getHandAlgae).withName("Twist.handOffAlgae");
+        return twist.moveToDegrees(config::getHandAlgae).withName("Twist.handOffAlgae");
     }
 
     public static Command handOffCoral() {
-        return twist.moveToPercentage(config::getHandCoral).withName("Twist.handOffCoral");
+        return twist.moveToDegrees(config::getHandCoral).withName("Twist.handOffCoral");
     }
 
     // Tune value command
     public static Command tuneTwist() {
-        return twist.moveToPercentage(config::getTuneTwist).withName("Twist.tune");
+        return twist.moveToDegrees(config::getTuneTwist).withName("Twist.tune");
     }
 
     // Log Command

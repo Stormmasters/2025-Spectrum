@@ -100,7 +100,7 @@
                     }
                   }
                 ],
-                "game": "2025 Field",
+                "game": "2025 Field (Welded)",
                 "bumpers": "blue",
                 "origin": "auto",
                 "orientation": 0,
@@ -121,7 +121,7 @@
                     "logType": "NumberArray",
                     "visible": true,
                     "options": {
-                      "model": "KitBot",
+                      "model": "3847 - Gamma Ray",
                       "format": "Pose2d",
                       "units": "degrees"
                     }
@@ -140,7 +140,7 @@
                     "type": "mechanism",
                     "logKey": "NT:/SmartDashboard/LeftView",
                     "logType": "Mechanism2d",
-                    "visible": true,
+                    "visible": false,
                     "options": {}
                   },
                   {
@@ -164,7 +164,7 @@
                     }
                   }
                 ],
-                "game": "2025 Field",
+                "game": "2025 Field (Welded)",
                 "origin": "red"
               },
               "controllerUUID": "5doh3nen1ru6zra5lfgswjzmviuetb2u",
@@ -172,17 +172,17 @@
                 "cameraIndex": -2,
                 "orbitFov": 50,
                 "cameraPosition": [
-                  -0.5683805775262524,
-                  1.08572103773984,
-                  2.140998455169898
+                  -1.0505929361849533,
+                  1.5150320979385863,
+                  -1.522342273997086
                 ],
                 "cameraTarget": [
-                  0,
-                  0.5,
-                  0
+                  -0.12576531394218352,
+                  0.447414866857175,
+                  0.02199145851749889
                 ]
               },
-              "controlsHeight": 200
+              "controlsHeight": 197
             },
             {
               "type": 9,
@@ -247,5 +247,5 @@
     }
   ],
   "satellites": [],
-  "version": "4.1.1"
+  "version": "4.1.2"
 }

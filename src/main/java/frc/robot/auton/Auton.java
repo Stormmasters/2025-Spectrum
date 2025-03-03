@@ -28,8 +28,12 @@ public class Auton {
     public static final EventTrigger autonSourceIntake = new EventTrigger("sourceIntake");
     public static final EventTrigger autonLowAlgae = new EventTrigger("lowAlgae");
     public static final EventTrigger autonHighAlgae = new EventTrigger("highAlgae");
+    public static final EventTrigger autonPreScore = new EventTrigger("prescore");
     public static final EventTrigger autonScore = new EventTrigger("score");
-    public static final EventTrigger autonL4 = new EventTrigger("L4");
+    public static final EventTrigger autonEject = new EventTrigger("eject");
+    public static final EventTrigger autonLeftL4 = new EventTrigger("leftL4");
+    public static final EventTrigger autonRightL4 = new EventTrigger("rightL4");
+    public static final EventTrigger autonL1 = new EventTrigger("L1");
     public static final EventTrigger autonNet = new EventTrigger("net");
     public static final EventTrigger autonProcessor = new EventTrigger("processor");
 
@@ -44,21 +48,31 @@ public class Auton {
     public void setupSelectors() {
 
         pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
-        // autonChooser.addOption("1 Meter", new PathPlannerAuto("1 Meter Auto"));
-        // autonChooser.addOption("3 Meter", new PathPlannerAuto("3 Meter Auto"));
 
-        pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
-        pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
-        pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
+        // pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
+        // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
+        // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption(
-                "Left - Preplace 5High", SpectrumAuton("Clean Side - Preplace 5High", false));
-        pathChooser.addOption(
-                "Right - Preplace 5High", SpectrumAuton("Clean Side - Preplace 5High", true));
-        pathChooser.addOption(
-                "Left - Source 5High", SpectrumAuton("Clean Side - Source 5High", false));
-        pathChooser.addOption(
-                "Right - Source 5High", SpectrumAuton("Clean Side - Source 5High", true));
+        // pathChooser.addOption("Source 3 Test", SpectrumAuton("Source 3", false));
+
+        // pathChooser.addOption("3847 | Left - Source", SpectrumAuton("Blue Left - Source",
+        // false));
+        // pathChooser.addOption("3847 | Right - Source", SpectrumAuton("Blue Left - Source",
+        // true));
+
+        // pathChooser.addOption("Left - Preplace", SpectrumAuton("Blue Left - Preplace", false));
+        // pathChooser.addOption("Right - Preplace", SpectrumAuton("Blue Left - Preplace", true));
+
+        // pathChooser.addOption("Center - Algae", SpectrumAuton("Blue Center Algae Rush", false));
+
+        pathChooser.addOption("8515 | Drive Forward", SpectrumAuton("Drive Forward", false));
+        pathChooser.addOption("8515 | L1 Leave", SpectrumAuton("L1 Leave", false));
+        pathChooser.addOption("8515 | L4 Leave", SpectrumAuton("L4 Leave", false));
+
+        // pathChooser.addOption("8515 | Center - Photon", SpectrumAuton("Photon Blue Center",
+        // false));
+        // pathChooser.addOption("8515 | Left - Photon", SpectrumAuton("Photon Blue Left", false));
+        // pathChooser.addOption("8515 | Right - Photon", SpectrumAuton("Photon Blue Left", true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
