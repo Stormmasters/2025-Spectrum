@@ -42,16 +42,16 @@ public class Elbow extends Mechanism {
         @Getter private final double clawGroundCoralIntake = 75; // TODO: find this value
         @Getter private final double handOff = 0;
 
-        @Getter private final double l2Algae = 123.9;
-        @Getter private final double l3Algae = 123.9;
+        @Getter private final double l2Algae = -123.9;
+        @Getter private final double l3Algae = -123.9;
 
-        @Getter private final double stage = 160;
-        @Getter private final double l1Coral = 125.8;
-        @Getter private final double l2Coral = 126;
-        @Getter private final double l3Coral = 126;
-        @Getter private final double l4Coral = 145;
+        @Getter private final double stage = -160;
+        @Getter private final double l1Coral = -125.8;
+        @Getter private final double l2Coral = -126;
+        @Getter private final double l3Coral = -126;
+        @Getter private final double l4Coral = -145;
 
-        @Getter private final double barge = 170; // TODO: find this value
+        @Getter private final double barge = -170; // TODO: find this value
 
         @Getter @Setter private double tuneElbow = 0;
         @Getter @Setter private boolean leftScore = true;

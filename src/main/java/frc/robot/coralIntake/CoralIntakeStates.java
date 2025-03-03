@@ -31,6 +31,13 @@ public class CoralIntakeStates {
                 Robot.getPilot().photonRemoveL2Algae.or(Robot.getPilot().photonRemoveL3Alage);
         photonAlageRemoval.or(stationExtendedIntaking).onFalse(coralIntake.getDefaultCommand());
 
+        netAlgae.and(actionState)
+                .whileTrue(
+                        runVoltageCurrentLimits(
+                                config::getAlgaeScoreVoltage,
+                                config::getAlgaeScoreSupplyCurrent,
+                                config::getAlgaeScoreTorqueCurrent));
+
         stationIntaking
                 .or(photonAlageRemoval, stationExtendedIntaking)
                 .whileTrue(
@@ -63,9 +70,9 @@ public class CoralIntakeStates {
                 .and(actionState)
                 .whileTrue(
                         runVoltageCurrentLimits(
-                                config::getAlgaeScoreVoltage,
-                                config::getAlgaeScoreSupplyCurrent,
-                                config::getAlgaeScoreTorqueCurrent));
+                                config::getAlgaeIntakeVoltage,
+                                config::getAlgaeIntakeSupplyCurrent,
+                                config::getAlgaeIntakeTorqueCurrent));
 
         autonScore.onTrue(
                 new WaitCommand(2.0)

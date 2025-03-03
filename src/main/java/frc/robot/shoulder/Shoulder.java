@@ -42,17 +42,17 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double handOff = 180;
 
         @Getter @Setter private double processorAlgae = 0.0;
-        @Getter @Setter private double l2Algae = 43.07;
-        @Getter @Setter private double l3Algae = 43.07;
+        @Getter @Setter private double l2Algae = -43.07;
+        @Getter @Setter private double l3Algae = -43.07;
         @Getter @Setter private double netAlgae = 180;
 
-        @Getter @Setter private double l1Coral = 14;
-        @Getter @Setter private double l2Coral = 34;
-        @Getter @Setter private double l2CoralScore = 34.0 - 15;
-        @Getter @Setter private double l3Coral = 34;
-        @Getter @Setter private double l3CoralScore = 34.0 - 15;
-        @Getter @Setter private double l4Coral = -210;
-        @Getter @Setter private double l4CoralScore = -210.0 + 50;
+        @Getter @Setter private double l1Coral = -14;
+        @Getter @Setter private double l2Coral = -34;
+        @Getter @Setter private double l2CoralScore = -34.0 + 15;
+        @Getter @Setter private double l3Coral = -34;
+        @Getter @Setter private double l3CoralScore = -34.0 + 15;
+        @Getter @Setter private double l4Coral = 210;
+        @Getter @Setter private double l4CoralScore = 210.0 - 50;
 
         @Getter @Setter private double tolerance = 0.95;
 

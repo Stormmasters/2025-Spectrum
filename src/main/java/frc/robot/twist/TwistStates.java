@@ -25,6 +25,9 @@ public class TwistStates {
         homeAllStopIntake.and(ElevatorStates.isHome).onTrue(home());
         Robot.getPilot().reZero_start.onTrue(twist.resetToIntialPos());
         stationIntaking.whileTrue(twist.moveToDegrees((config::getStationIntake)));
+        L1Coral.whileTrue(twist.moveToDegrees(config::getL1Coral));
+        L2Algae.or(L3Algae).whileTrue(twist.moveToDegrees(config::getL2Algae));
+        netAlgae.whileTrue(twist.moveToDegrees(config::getBarge));
 
         branch.whileTrue(rightCoral()); // TODO: Make this flip based on left, right and reversal
     }

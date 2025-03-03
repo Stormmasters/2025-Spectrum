@@ -47,13 +47,13 @@ public class Twist extends Mechanism {
         @Getter private final double clawGroundCoralIntake = 0; // TODO: find this
         @Getter private final double leftCoral = -90;
         @Getter private final double rightCoral = 90;
-        @Getter private final double l1Coral = 179;
+        @Getter private final double l1Coral = 0;
         @Getter private final double l2Algae = 0;
         @Getter private final double l3Algae = 0;
         @Getter private final double l2Coral = 90;
         @Getter private final double l3Coral = 90;
         @Getter private final double l4Coral = 90;
-        @Getter private final double barge = 180; // TODO: find this
+        @Getter private final double barge = 0;
         @Getter private final double handAlgae = -180; // TODO: doublecheck
         @Getter private final double handCoral = -90; // TODO: find this
         @Getter @Setter private double tuneTwist = 0;

@@ -36,6 +36,10 @@ public class ElbowStates {
 
         homeAll.whileTrue(home());
 
+        stationIntaking
+                .and(backwardMode.not(), actionState.not())
+                .whileTrue(elbow.moveToDegrees(config::getStationIntake));
+
         // stages elbow
         stagedCoral
                 .and(backwardMode.not(), actionState.not())
@@ -45,6 +49,8 @@ public class ElbowStates {
                 .whileTrue(
                         elbow.moveToDegrees(
                                 () -> -config.getStage())); // TODO: change back to command
+
+        L1Coral.and(backwardMode.not(), actionPrepState).whileTrue(l1Coral());
 
         L2Coral.and(backwardMode.not(), actionPrepState, ElevatorStates.isL2Coral)
                 .whileTrue(l2Coral());
@@ -88,6 +94,13 @@ public class ElbowStates {
                         elbow.moveToDegrees(
                                 () -> -config.getL4Coral() + 15)); // TODO: change back to command
 
+        L2Algae.and(actionState.or(actionPrepState))
+                .whileTrue(elbow.moveToDegrees(config::getL2Algae));
+        L3Algae.and(actionState.or(actionPrepState))
+                .whileTrue(elbow.moveToDegrees(config::getL3Algae));
+
+        netAlgae.whileTrue(elbow.moveToDegrees(config::getBarge));
+
         // barge.and(backwardMode.not()).whileTrue(log(barge()));
         // barge.and(backwardMode).whileTrue(log(reverse(barge())));
         // homeAll.whileTrue(log(home()));
@@ -106,18 +119,18 @@ public class ElbowStates {
     }
 
     private static Command score2() {
-        double newPos = config.getL2Coral() - 15;
+        double newPos = config.getL2Coral() + 15;
         return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score2");
         // return elbow.moveToRelativePosition(() -> -15).withName("Elbow.score2");
     }
 
     private static Command score3() {
-        double newPos = -15 + config.getL3Coral();
+        double newPos = 15 + config.getL3Coral();
         return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score3");
     }
 
     private static Command score4() {
-        double newPos = -40 + config.getL4Coral();
+        double newPos = 40 + config.getL4Coral();
         return elbow.moveToDegreesAndCheckReversed(() -> newPos).withName("Elbow.score4");
     }
 
