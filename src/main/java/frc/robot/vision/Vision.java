@@ -72,13 +72,17 @@ public class Vision extends SubsystemBase {
                     VisionConfig.frontTagPipeline,
                     VisionConfig.FRONT_CONFIG);
 
-    public final LimelightLogger leftLLogger = new LimelightLogger("front", frontLL);
+    public final VisionLogger frontLLLogger = new VisionLogger("front", frontLL);
 
     public final Limelight backLL =
             new Limelight(
                     VisionConfig.BACK_LL, VisionConfig.backTagPipeline, VisionConfig.BACK_CONFIG);
+    
+    public final VisionLogger backLLLogger = new VisionLogger("back", backLL)
 
     public final Limelight[] allLimelights = {frontLL, backLL};
+
+    public final VisionLogger[] allLimelightLoggers = {frontLLLogger, backLLLogger}; 
 
     private final DecimalFormat df = new DecimalFormat();
 
@@ -123,9 +127,13 @@ public class Vision extends SubsystemBase {
 
                 // choose LL with best view of tags and integrate from only that camera
                 Limelight bestLimelight = getBestLimelight();
+                VisionLogger limelightLogger = getBestVisionLogger(bestLimelight);
                 for (Limelight limelight : allLimelights) {
                     if (limelight.getCameraName() == bestLimelight.getCameraName()) {
                         addFilteredVisionInput(bestLimelight);
+                        limelightLogger.getCameraConnection();
+                        limelightLogger.getPose();
+                        limelightLogger.getMegaPose();
                     } else {
                         limelight.sendInvalidStatus("not best rejection");
                     }
@@ -180,59 +188,6 @@ public class Vision extends SubsystemBase {
                     return;
                 }
             }
-            if (Field.poseOutOfField(botpose3D)) {
-                // reject if pose is out of the field
-                ll.sendInvalidStatus("bound rejection");
-                return;
-            } else if (Math.abs(robotSpeed.omegaRadiansPerSecond) >= 1.6) {
-                // reject if we are rotating more than 0.5 rad/s
-                ll.sendInvalidStatus("rotation rejection");
-                return;
-            } else if (Math.abs(botpose3D.getZ()) > 0.25) {
-                // reject if pose is .25 meters in the air
-                ll.sendInvalidStatus("height rejection");
-                return;
-            } else if (Math.abs(botpose3D.getRotation().getX()) > 5
-                    || Math.abs(botpose3D.getRotation().getY()) > 5) {
-                // reject if pose is 5 degrees titled in roll or pitch
-                ll.sendInvalidStatus("roll/pitch rejection");
-                return;
-            } else if (targetSize <= 0.025) {
-                ll.sendInvalidStatus("size rejection");
-                return;
-            }
-            /* integrations */
-            // if almost stationary and extremely close to tag
-            else if (robotSpeed.vxMetersPerSecond + robotSpeed.vyMetersPerSecond <= 0.2
-                    && targetSize > 0.4) {
-                ll.sendValidStatus("Stationary close integration");
-                xyStds = 0.1;
-                degStds = 0.1;
-            } else if (multiTags && targetSize > 0.05) {
-                ll.sendValidStatus("Multi integration");
-                xyStds = 0.25;
-                degStds = 8;
-                if (targetSize > 0.09) {
-                    ll.sendValidStatus("Strong Multi integration");
-                    xyStds = 0.1;
-                    degStds = 0.1;
-                }
-            } else if (targetSize > 0.8 && poseDifference < 0.5) {
-                ll.sendValidStatus("Close integration");
-                xyStds = 0.5;
-                degStds = 16;
-            } else if (targetSize > 0.1 && poseDifference < 0.3) {
-                ll.sendValidStatus("Proximity integration");
-                xyStds = 2.0;
-                degStds = 999999;
-            } else if (highestAmbiguity < 0.25 && targetSize >= 0.03) {
-                ll.sendValidStatus("Stable integration");
-                xyStds = 0.5;
-                degStds = 999999;
-            } else {
-                ll.sendInvalidStatus("catch rejection: " + df.format(poseDifference) + " poseDiff");
-                return;
-            }
 
             // strict with degree std and ambiguity and rotation because this is megatag1
             if (highestAmbiguity > 0.5) {
@@ -286,6 +241,15 @@ public class Vision extends SubsystemBase {
             }
         }
         return bestLimelight;
+    }
+
+    public VisionLogger getBestVisionLogger(Limelight limelight) {
+        String name = limelight.getCameraName();
+        for(VisionLogger logger : allLimelightLoggers) {
+            if(logger.getName() == name) {
+                return logger;
+            }
+        }
     }
 
     /**
@@ -378,70 +342,6 @@ public class Vision extends SubsystemBase {
         }
     }
 
-    // ------------------------------------------------------------------------------
-    // Logging
-    // ------------------------------------------------------------------------------
-
-    /** Tracks position with Limelight using current logger (DogLog) to record data */
-    public static class LimelightLogger {
-        private final Limelight limelight;
-        private String name;
-
-        public LimelightLogger(String name, Limelight limelight) {
-            this.limelight = limelight;
-            this.name = name;
-        }
-
-        public boolean getCameraConnection() {
-            Telemetry.log("Vision " + name + " ConnectionStatus", limelight.isCameraConnected());
-            return limelight.isCameraConnected();
-        }
-
-        public boolean getIntegratingStatus() { // Vision/Integrating
-            Telemetry.log("Vision " + name + " IntegratingStatus", limelight.isIntegrating());
-            return limelight.isIntegrating();
-        }
-
-        public String getLogStatus() {
-            Telemetry.log("Vision " + name + " LogStatus", limelight.getLogStatus());
-            return limelight.getLogStatus();
-        }
-
-        public String getTagStatus() {
-            Telemetry.log("Vision " + name + " TagStatus", limelight.getTagStatus());
-            return limelight.getLogStatus();
-        }
-
-        public Pose2d getPose() {
-            Telemetry.log("Vision " + name + " Pose", limelight.getRawPose3d().toPose2d());
-            return limelight.getRawPose3d().toPose2d();
-        }
-
-        public Pose2d getMegaPose() {
-            Telemetry.log("Vision " + name + " MegaPose", limelight.getMegaPose2d());
-            return limelight.getMegaPose2d();
-        }
-
-        public double getPoseX() {
-            Telemetry.log("Vision " + name + " PoseX", getPose().getX());
-            return getPose().getX();
-        }
-
-        public double getPoseY() {
-            Telemetry.log("Vision " + name + " PoseY", getPose().getY());
-            return getPose().getY();
-        }
-
-        public double getTagCount() {
-            Telemetry.log("Vision " + name + " TagCount", limelight.getTagCountInView());
-            return limelight.getTagCountInView();
-        }
-
-        public double getTargetSize() {
-            Telemetry.log("Vision " + name + " TargetSize", limelight.getTargetSize());
-            return limelight.getTargetSize();
-        }
-    }
 
     // ------------------------------------------------------------------------------
     // Config
