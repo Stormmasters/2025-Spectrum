@@ -142,7 +142,7 @@ public class Pilot extends Gamepad {
     // Positive is counter-clockwise, left Trigger is positive
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveCCWPositive() {
-        double ccwPositive = -1 * rightStickCurve.calculate(getRightX());
+        double ccwPositive = rightStickCurve.calculate(getRightX());
         if (slowMode.getAsBoolean()) {
             ccwPositive *= Math.abs(config.getSlowModeScalor());
         } else if (turboMode.getAsBoolean()) {
