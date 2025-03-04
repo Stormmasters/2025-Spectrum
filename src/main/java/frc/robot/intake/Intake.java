@@ -1,4 +1,4 @@
-package frc.robot.coralIntake;
+package frc.robot.intake;
 
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
+import frc.robot.RobotStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
@@ -15,31 +16,35 @@ import java.util.function.DoubleSupplier;
 import lombok.Getter;
 import lombok.Setter;
 
-public class CoralIntake extends Mechanism {
+public class Intake extends Mechanism {
 
-    public static class CoralIntakeConfig extends Config {
+    public static class IntakeConfig extends Config {
 
         // Algae Voltages and Current
-        @Getter @Setter private double algaeIntakeVoltage = -8.0;
+        @Getter @Setter private double algaeIntakeVoltage = -9.0;
         @Getter @Setter private double algaeIntakeSupplyCurrent = 15.0;
         @Getter @Setter private double algaeIntakeTorqueCurrent = 90.0;
 
         @Getter @Setter private double algaeScoreVoltage = 12.0;
-        @Getter @Setter private double algaeScoreSupplyCurrent = 30;
-        @Getter @Setter private double algaeScoreTorqueCurrent = 180;
+        @Getter @Setter private double algaeScoreSupplyCurrent = 30.0;
+        @Getter @Setter private double algaeScoreTorqueCurrent = 180.0;
 
         // Coral Voltages and Current
         @Getter @Setter private double coralIntakeVoltage = 9.0;
         @Getter @Setter private double coralIntakeSupplyCurrent = 12.0;
         @Getter @Setter private double coralIntakeTorqueCurrent = 27.0;
 
-        @Getter @Setter private double coralScoreVoltage = -0.5;
-        @Getter @Setter private double coralScoreSupplyCurrent = 12;
-        @Getter @Setter private double coralScoreTorqueCurrent = 27;
+        @Getter @Setter private double coralGroundVoltage = 12.0;
+        @Getter @Setter private double coralGroundSupplyCurrent = 15.0;
+        @Getter @Setter private double coralGroundTorqueCurrent = 60.0;
+
+        @Getter @Setter private double coralScoreVoltage = 0;
+        @Getter @Setter private double coralScoreSupplyCurrent = 12.0;
+        @Getter @Setter private double coralScoreTorqueCurrent = 27.0;
 
         @Getter @Setter private double coralL1ScoreVoltage = -8;
-        @Getter @Setter private double coralL1ScoreSupplyCurrent = 15;
-        @Getter @Setter private double coralL1ScoreTorqueCurrent = 60;
+        @Getter @Setter private double coralL1ScoreSupplyCurrent = 15.0;
+        @Getter @Setter private double coralL1ScoreTorqueCurrent = 60.0;
 
         /* Intake config values */
         @Getter private double currentLimit = 15;
@@ -53,8 +58,8 @@ public class CoralIntake extends Mechanism {
         @Getter private double intakeY = 1.3; // relative to elbow at 0 degrees
         @Getter private double wheelDiameter = 5.0;
 
-        public CoralIntakeConfig() {
-            super("CoralIntake", 5, Rio.CANIVORE);
+        public IntakeConfig() {
+            super("Intake", 5, Rio.CANIVORE);
             configPIDGains(0, velocityKp, 0, 0);
             configFeedForwardGains(velocityKs, velocityKv, 0, 0);
             configGearRatio(1);
@@ -67,10 +72,10 @@ public class CoralIntake extends Mechanism {
         }
     }
 
-    private CoralIntakeConfig config;
+    private IntakeConfig config;
     private CoralIntakeSim sim;
 
-    public CoralIntake(CoralIntakeConfig config) {
+    public Intake(IntakeConfig config) {
         super(config);
         this.config = config;
 
@@ -83,11 +88,11 @@ public class CoralIntake extends Mechanism {
     public void periodic() {}
 
     public void setupStates() {
-        CoralIntakeStates.setStates();
+        IntakeStates.setStates();
     }
 
     public void setupDefaultCommand() {
-        CoralIntakeStates.setupDefaultCommand();
+        IntakeStates.setupDefaultCommand();
     }
 
     /*-------------------
@@ -109,17 +114,28 @@ public class CoralIntake extends Mechanism {
     // Custom Commands
     // --------------------------------------------------------------------------------
 
-    // TODO: check if these actually need to be two separate methods
-
-    public boolean hasIntakeCoral() {
-        double motorOutput =
-                Robot.getCoralIntake()
-                        .getVelocityRPM(); // might be better to check with motor voltage
-        return (Math.abs(motorOutput) < 120);
+    public Command defaultHoldOrStop() {
+        return run(
+                () -> {
+                    if (RobotStates.coral.getAsBoolean()) {
+                        runVoltage(() -> config.getCoralIntakeVoltage());
+                        setCurrentLimits(
+                                () -> config.getCoralIntakeSupplyCurrent(),
+                                () -> config.getCoralIntakeTorqueCurrent());
+                    } else if (RobotStates.algae.getAsBoolean()) {
+                        runVoltage(() -> config.getAlgaeIntakeVoltage());
+                        setCurrentLimits(
+                                () -> config.getAlgaeIntakeSupplyCurrent(),
+                                () -> config.getAlgaeIntakeTorqueCurrent());
+                    } else {
+                        runStop();
+                    }
+                });
     }
 
-    public boolean hasIntakeAlgae() {
-        double motorOutput = Robot.getCoralIntake().getVelocityRPM();
+    public boolean hasIntakeGamePiece() {
+        double motorOutput =
+                Robot.getIntake().getVelocityRPM(); // might be better to check with motor voltage
         return (Math.abs(motorOutput) < 120);
     }
 
@@ -131,7 +147,6 @@ public class CoralIntake extends Mechanism {
     // --------------------------------------------------------------------------------
     // Simulation
     // --------------------------------------------------------------------------------
-
     public void simulationInit() {
         if (isAttached()) {
             // Create a new RollerSim with the left view, the motor's sim state, and a 6 in diameter

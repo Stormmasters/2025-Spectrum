@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
+import frc.robot.RobotStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
@@ -27,34 +28,37 @@ public class Elbow extends Mechanism {
     public static class ElbowConfig extends Config {
         @Getter @Setter private boolean reversed = false;
 
-        /* Elbow positions in percentage of max rotation || 0 is vertical up || positions should be towards the front of the robot */
-
-        // TODO: Find elbow positions
         @Getter private final double handAlgae = 0;
         @Getter private final double home = 180;
 
-        @Getter private final double algaeLollipop = 78; // TODO: find this value
-        @Getter private final double coralLollipop = 76; // TODO: find this value
+        @Getter private final double algaeLollipop = -78; // TODO: find this value
+        @Getter private final double coralLollipop = -76; // TODO: find this value
         @Getter private final double stationIntake = 154.4;
         @Getter private final double stationExtendedIntake = 136; // TODO: find this value
-        @Getter private final double floorIntake = 120; // TODO: find this value
-        @Getter private final double clawGroundAlgaeIntake = 75; // TODO: find this value
-        @Getter private final double clawGroundCoralIntake = 75; // TODO: find this value
-        @Getter private final double handOff = 0;
-
-        @Getter private final double l2Algae = -123.9;
-        @Getter private final double l3Algae = -123.9;
+        @Getter private final double groundAlgaeIntake = -75; // TODO: find this value
+        @Getter private final double groundCoralIntake = -75; // TODO: find this value
 
         @Getter private final double stage = -160;
         @Getter private final double l1Coral = -125.8;
         @Getter private final double l2Coral = -126;
+        @Getter private final double l2Score = -126;
         @Getter private final double l3Coral = -126;
+        @Getter private final double l3Score = -126;
         @Getter private final double l4Coral = -145;
+        @Getter private final double l4Score = -145;
 
-        @Getter private final double barge = -170; // TODO: find this value
+        @Getter private final double exL1Coral = -125.8;
+        @Getter private final double exL2Coral = -126;
+        @Getter private final double exL2Score = -126;
+        @Getter private final double exL3Coral = -126;
+        @Getter private final double exL3Score = -126;
+        @Getter private final double exL4Coral = -145;
+        @Getter private final double exL4Score = -145;
 
-        @Getter @Setter private double tuneElbow = 0;
-        @Getter @Setter private boolean leftScore = true;
+        @Getter private final double processorAlgae = -123.9;
+        @Getter private final double l2Algae = -123.9;
+        @Getter private final double l3Algae = -123.9;
+        @Getter private final double net = -170;
 
         @Getter private final double tolerance = 0.95;
 
@@ -78,30 +82,30 @@ public class Elbow extends Mechanism {
         @Getter private final double mmJerk = 0;
 
         /* Cancoder config settings */
-        @Getter private final double CANcoderGearRatio = 30 / 36;
+        @Getter private final double CANcoderGearRatio = 30.0 / 36.0;
         @Getter private double CANcoderOffset = 0;
         @Getter private boolean isCANcoderAttached = false;
 
         /* Sim properties */
-        @Getter private double elbowX = 0.8; // 1.0;
+        @Getter private double elbowX = 0.8;
         @Getter private double elbowY = 0.8;
         @Getter @Setter private double simRatio = 1;
         @Getter private double length = 0.4;
-        @Getter private double startingAngle = 180 - 90;
+        @Getter private double startingAngle = 90.0;
 
         public ElbowConfig() {
             super("Elbow", 43, Rio.CANIVORE);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
-            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk); // 147000, 161000, 0);
+            configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
             configGearRatio(102.857);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
-            configMinMaxRotations(-0.75, 0.5); // calculated to be 51.4285 // TODO: get final minmax
-            configReverseSoftLimit(0, true);
-            configForwardSoftLimit(0.5, true);
+            configMinMaxRotations(0, 0.6);
+            configReverseSoftLimit(getMinRotations(), true);
+            configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
             if (Robot.isSimulation()) {
                 configCounterClockwise_Positive();
@@ -110,7 +114,6 @@ public class Elbow extends Mechanism {
             }
             configGravityType(true);
             setSimRatio(102.857);
-            // TODO: set gravity type to arm cosine
         }
 
         public ElbowConfig modifyMotorConfig(TalonFX motor) {
@@ -170,8 +173,6 @@ public class Elbow extends Mechanism {
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
-            builder.addDoubleProperty(
-                    "#Tune Position Percent", config::getTuneElbow, config::setTuneElbow);
         }
     }
 
@@ -186,7 +187,7 @@ public class Elbow extends Mechanism {
     }
 
     public Command resetToInitialPos() {
-        return run(() -> setInitialPosition());
+        return run(this::setInitialPosition);
     }
 
     // --------------------------------------------------------------------------------
@@ -244,38 +245,28 @@ public class Elbow extends Mechanism {
         };
     }
 
-    public boolean ElbowHasError() {
-        if (isAttached()) {
-            return getPositionRotations() > config.getMaxRotations();
-        }
-        return false;
-    }
-
-    // public Command moveToPercentage(DoubleSupplier percent) {
-    //     return runHoldElbow()
-    //             .until(() -> ((ElevatorStates.allowedPosition()) || percent.getAsDouble() < 90))
-    //             .andThen(
-    //                     run(() -> setMMPositionFoc(() -> percentToRotations(percent)))
-    //                             .withName(getName() + ".runPosePercentage"));
-    // }
-
-    public double checkReversed(DoubleSupplier position) {
-        if (!config.isReversed()) {
-            return position.getAsDouble();
-        }
-
-        return position.getAsDouble() * -1;
-    }
-
     @Override
     public Command moveToDegrees(DoubleSupplier degrees) {
         double newDeg = degrees.getAsDouble();
         if (newDeg < 0) {
             newDeg += 360;
         }
-        final double Deg = newDeg;
-        return super.moveToDegrees(offsetPosition(() -> Deg))
+        final double degree = newDeg;
+        return super.moveToDegrees(offsetPosition(() -> degree))
                 .withName(getName() + ".runPoseDegrees");
+    }
+
+    public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
+        return run(
+                () -> {
+                    // TODO: add a check for reversed and negate values when we do double sided
+                    // scoring.
+                    if (RobotStates.extended.getAsBoolean()) {
+                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(exDegrees)));
+                    } else {
+                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(degrees)));
+                    }
+                });
     }
 
     public Command moveToMotorPosition(DoubleSupplier position) {
@@ -284,16 +275,6 @@ public class Elbow extends Mechanism {
 
     public DoubleSupplier offsetPosition(DoubleSupplier position) {
         return () -> (position.getAsDouble() + config.getOffset());
-    }
-
-    public Command moveToDegreesAndCheckReversed(DoubleSupplier degrees) {
-        return moveToDegrees(() -> checkReversed(degrees));
-    }
-
-    public Command moveToRelativePosition(DoubleSupplier position) {
-        return Robot.getElbow()
-                .moveToDegreesAndCheckReversed(
-                        () -> Robot.getElbow().getPositionDegrees() - position.getAsDouble());
     }
 
     // --------------------------------------------------------------------------------

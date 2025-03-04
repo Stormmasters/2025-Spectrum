@@ -29,55 +29,71 @@ public class ShoulderStates {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        stationIntaking.whileTrue(
-                moveToDegrees(config::getStationIntake, "Shoulder.stationIntake"));
+        stationIntaking.whileTrue(move(config::getStationIntake, "Shoulder.stationIntake"));
         stationExtendedIntaking.whileTrue(
-                moveToDegrees(config::getStationExtendedIntake, "Shoulder.stationExtendedIntake"));
+                move(config::getStationExtendedIntake, "Shoulder.stationExtendedIntake"));
         stationIntaking.or(stationExtendedIntaking).onFalse(home());
 
         Robot.getPilot()
                 .photonRemoveL2Algae
-                .whileTrue(moveToDegrees(config::getL2Algae, "Shoulder.L2Algae"));
+                .whileTrue(move(config::getL2Algae, "Shoulder.L2Algae"));
         Robot.getPilot()
-                .photonRemoveL3Alage
-                .whileTrue(moveToDegrees(config::getL3Algae, "Shoulder.L3Algae"));
+                .photonRemoveL3Algae
+                .whileTrue(move(config::getL3Algae, "Shoulder.L3Algae"));
         Robot.getPilot()
                 .photonRemoveL2Algae
-                .or(Robot.getPilot().photonRemoveL3Alage)
+                .or(Robot.getPilot().photonRemoveL3Algae)
                 .onFalse(home());
 
         L1Coral.and(actionState.or(actionPrepState))
-                .whileTrue(moveToDegrees(config::getL1Coral, "Shoulder.L1Coral"));
+                .whileTrue(move(config::getL1Coral, config::getExl1Coral, "Shoulder.L1Coral"));
         L2Coral.and(actionPrepState)
-                .whileTrue(moveToDegrees(config::getL2Coral, "Shoulder.L2Coral.prescore"));
+                .whileTrue(
+                        move(
+                                config::getL2Coral,
+                                config::getExl2Coral,
+                                "Shoulder.L2Coral.prescore"));
         L2Coral.and(actionState)
-                .whileTrue(moveToDegrees(config::getL2CoralScore, "Shoulder.L2Coral.score"));
+                .whileTrue(
+                        move(config::getL2Score, config::getExl2Score, "Shoulder.L2Coral.score"));
         L3Coral.and(actionPrepState)
-                .whileTrue(moveToDegrees(config::getL3Coral, "Shoulder.L3Coral.prescore"));
+                .whileTrue(
+                        move(
+                                config::getL3Coral,
+                                config::getExl3Coral,
+                                "Shoulder.L3Coral.prescore"));
         L3Coral.and(actionState)
-                .whileTrue(moveToDegrees(config::getL3CoralScore, "Shoulder.L3Coral.score"));
+                .whileTrue(
+                        move(config::getL3Score, config::getExl3Score, "Shoulder.L3Coral.score"));
         L4Coral.and(actionPrepState)
-                .whileTrue(moveToDegrees(config::getL4Coral, "Shoulder.L4Coral.prescore"));
+                .whileTrue(
+                        move(
+                                config::getL4Coral,
+                                config::getExl4Coral,
+                                "Shoulder.L4Coral.prescore"));
         L4Coral.and(actionState)
-                .whileTrue(moveToDegrees(config::getL4CoralScore, "Shoulder.L4Coral.score"));
+                .whileTrue(
+                        move(
+                                config::getL4CoralScore,
+                                config::getExl4Score,
+                                "Shoulder.L4Coral.score"));
 
         processorAlgae
                 .and(actionPrepState.or(actionState))
-                .whileTrue(moveToDegrees(config::getProcessorAlgae, "Shoulder.processorAlgae"));
+                .whileTrue(move(config::getProcessorAlgae, "Shoulder.processorAlgae"));
         L2Algae.and(actionPrepState.or(actionState))
-                .whileTrue(moveToDegrees(config::getL2Algae, "Shoulder.L2Algae"));
+                .whileTrue(move(config::getL2Algae, "Shoulder.L2Algae"));
         L3Algae.and(actionPrepState.or(actionState))
-                .whileTrue(moveToDegrees(config::getL3Algae, "Shoulder.L3Algae"));
+                .whileTrue(move(config::getL3Algae, "Shoulder.L3Algae"));
         netAlgae.and(actionPrepState.or(actionState))
-                .whileTrue(moveToDegrees(config::getNetAlgae, "Shoulder.netAlgae"));
+                .whileTrue(move(config::getNetAlgae, "Shoulder.netAlgae"));
 
         Robot.getPilot().reZero_start.onTrue(shoulder.resetToIntialPos());
         Robot.getOperator()
                 .climbPrep_start
-                .whileTrue(moveToDegrees(config::getClimbPrep, "Shoulder.startClimb"));
+                .whileTrue(move(config::getClimbPrep, "Shoulder.startClimb"));
 
-        autonScore.onTrue(
-                new WaitCommand(4.0).andThen(moveToDegrees(() -> 180, "Shoulder.homeAuto")));
+        autonScore.onTrue(new WaitCommand(4.0).andThen(move(() -> 180, "Shoulder.homeAuto")));
     }
 
     public static Command runShoulder(DoubleSupplier speed) {
@@ -92,8 +108,12 @@ public class ShoulderStates {
         return () -> (shoulder.getPositionDegrees() + 90);
     }
 
-    public static Command moveToDegrees(DoubleSupplier position, String name) {
-        return shoulder.moveToDegrees(position).withName(name);
+    public static Command move(DoubleSupplier degrees, String name) {
+        return shoulder.move(degrees, degrees).withName(name);
+    }
+
+    public static Command move(DoubleSupplier degrees, DoubleSupplier exDegrees, String name) {
+        return shoulder.move(degrees, exDegrees).withName(name);
     }
 
     public static Command coastMode() {

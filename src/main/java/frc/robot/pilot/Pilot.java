@@ -1,5 +1,7 @@
 package frc.robot.pilot;
 
+import static frc.robot.RobotStates.photon;
+
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.spectrumLib.SpectrumState;
@@ -21,9 +23,9 @@ public class Pilot extends Gamepad {
     public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
     public final Trigger stationIntakeExtended_LT_RB = leftTrigger.and(fn, teleop);
     public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop);
-    public final Trigger photonRemoveL2Algae = groundAlgae_RT;
+    public final Trigger photonRemoveL2Algae = groundAlgae_RT.and(photon);
     public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop);
-    public final Trigger photonRemoveL3Alage = groundCoral_LB_RT;
+    public final Trigger photonRemoveL3Algae = groundCoral_LB_RT.and(photon);
 
     public final Trigger lollipopProcessor_A = A.and(noFn, teleop);
     public final Trigger algaeRetract_B = B.and(noFn, teleop);
@@ -142,7 +144,7 @@ public class Pilot extends Gamepad {
     // Positive is counter-clockwise, left Trigger is positive
     // Applies Exponential Curve, Deadzone, and Slow Mode toggle
     public double getDriveCCWPositive() {
-        double ccwPositive = -1 * rightStickCurve.calculate(getRightX());
+        double ccwPositive = rightStickCurve.calculate(getRightX());
         if (slowMode.getAsBoolean()) {
             ccwPositive *= Math.abs(config.getSlowModeScalor());
         } else if (turboMode.getAsBoolean()) {

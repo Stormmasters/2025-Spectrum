@@ -18,8 +18,8 @@ public class PhotonElevatorConfig extends ElevatorConfig {
     @Getter private final double L3Coral = 8;
     @Getter private final double L4Coral = 19.5;
 
-    @Getter private final double L2Alage = 9.8;
-    @Getter private final double L3Alage = 19.5;
+    @Getter private final double L2Algae = 9.8;
+    @Getter private final double L3Algae = 19.5;
 
     @Getter private final double zeroSpeed = -0.1;
     @Getter private final double holdMaxSpeedRPM = 18;
@@ -42,21 +42,16 @@ public class PhotonElevatorConfig extends ElevatorConfig {
         setStationIntake(stationIntake);
         setStationExtendedIntake(stationExtendedIntake);
         setL1Coral(L1Coral);
-        setL1CoralScore(L1Coral);
         setL2Coral(L2Coral);
-        setL2CoralScore(L2Coral);
+        setL2Score(L2Coral);
         setL3Coral(L3Coral);
-        setL3CoralScore(L3Coral);
+        setL3Score(L3Coral);
         setL4Coral(L4Coral);
-        setL4CoralScore(L4Coral);
-        setL1Algae(0);
-        setL1AlgaeScore(0);
-        setL2Algae(L2Alage);
-        setL2AlgaeScore(L2Alage);
-        setL3Algae(L3Alage);
-        setL3AlgaeScore(L3Alage);
-        setL4Algae(0);
-        setL4AlgaeScore(0);
+        setL4Score(L4Coral);
+        setProcessorAlgae(0);
+        setL2Algae(L2Algae);
+        setL3Algae(L3Algae);
+        setNetAlgae(0);
         configMinMaxRotations(minRotations, maxRotations);
         configForwardSoftLimit(maxRotations, true);
         configReverseSoftLimit(minRotations, true);

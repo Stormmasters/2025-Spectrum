@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
+import frc.robot.RobotStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
@@ -48,11 +49,19 @@ public class Shoulder extends Mechanism {
 
         @Getter @Setter private double l1Coral = -14;
         @Getter @Setter private double l2Coral = -34;
-        @Getter @Setter private double l2CoralScore = -34.0 + 15;
+        @Getter @Setter private double l2Score = -34.0 + 15;
         @Getter @Setter private double l3Coral = -34;
-        @Getter @Setter private double l3CoralScore = -34.0 + 15;
+        @Getter @Setter private double l3Score = -34.0 + 15;
         @Getter @Setter private double l4Coral = 210;
         @Getter @Setter private double l4CoralScore = 210.0 - 50;
+
+        @Getter @Setter private double exl1Coral = -14;
+        @Getter @Setter private double exl2Coral = -34;
+        @Getter @Setter private double exl2Score = -34.0 + 15;
+        @Getter @Setter private double exl3Coral = -34;
+        @Getter @Setter private double exl3Score = -34.0 + 15;
+        @Getter @Setter private double exl4Coral = 210;
+        @Getter @Setter private double exl4Score = 210.0 - 50;
 
         @Getter @Setter private double tolerance = 0.95;
 
@@ -247,32 +256,26 @@ public class Shoulder extends Mechanism {
         };
     }
 
-    public boolean ShoulderHasError() {
-        if (isAttached()) {
-            return getPositionRotations() > config.getMaxRotations();
-        }
-        return false;
-    }
-
-    public double checkReversed(DoubleSupplier position) {
-        if (!config.isReversed()) {
-            return position.getAsDouble();
-        }
-
-        return position.getAsDouble() * -1;
-    }
-
     @Override
     public Command moveToDegrees(DoubleSupplier degrees) {
         return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
     }
 
-    public DoubleSupplier offsetPosition(DoubleSupplier position) {
-        return () -> (position.getAsDouble() + config.getOffset());
+    public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
+        return run(
+                () -> {
+                    // TODO: add a check for reversed and negate values when we do double sided
+                    // scoring.
+                    if (RobotStates.extended.getAsBoolean()) {
+                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(exDegrees)));
+                    } else {
+                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(degrees)));
+                    }
+                });
     }
 
-    public Command moveToDegreesAndCheckReversed(DoubleSupplier degrees) {
-        return moveToDegrees(() -> checkReversed(degrees));
+    public DoubleSupplier offsetPosition(DoubleSupplier position) {
+        return () -> (position.getAsDouble() + config.getOffset());
     }
 
     // --------------------------------------------------------------------------------
