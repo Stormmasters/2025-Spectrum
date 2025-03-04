@@ -504,7 +504,7 @@ public class Vision extends SubsystemBase {
 
         for (RawFiducial tag : backTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
-                // seenReefFaces.add(tag.distToCamera);
+                seenReefFaces.add(tag.distToCamera);
             }
         }
 
