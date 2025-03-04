@@ -137,7 +137,6 @@ public class Vision extends SubsystemBase {
                         // limelightLogger.getPose();
                         // limelightLogger.getMegaPose();
                         distance = getDistanceToReefFromRobot();
-                        
                     } // else {
                     //     limelight.sendInvalidStatus("not best rejection");
                     // }
@@ -507,11 +506,7 @@ public class Vision extends SubsystemBase {
 
         for (RawFiducial tag : backTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
-<<<<<<< Updated upstream
-                seenReefFaces.add(tag.distToCamera);
-=======
                 seenReefFaces[0] = tag.distToCamera;
->>>>>>> Stashed changes
             }
         }
 
