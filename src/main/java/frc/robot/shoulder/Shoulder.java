@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.RobotStates;
@@ -25,22 +26,19 @@ public class Shoulder extends Mechanism {
 
     public static class ShoulderConfig extends Config {
         @Getter @Setter private boolean isPhoton = false;
-        @Getter @Setter private boolean reversed = false;
 
         // Positions set as degrees of rotation || 0 is vertical down
         @Getter private final int initializedPosition = 0;
 
         /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
-        // TODO: Find shoulder positions
 
         @Getter @Setter private double climbPrep = 0;
         @Getter @Setter private double home = 0;
 
         @Getter @Setter private double stationIntake = 0;
         @Getter @Setter private double stationExtendedIntake = 172;
-        @Getter @Setter private double clawGroundAlgaeIntake = -164;
-        @Getter @Setter private double clawGroundCoralIntake = -164;
-        @Getter @Setter private double handOff = 180;
+        @Getter @Setter private double groundAlgaeIntake = -164;
+        @Getter @Setter private double groundCoralIntake = -164;
 
         @Getter @Setter private double processorAlgae = 0.0;
         @Getter @Setter private double l2Algae = -43.07;
@@ -194,6 +192,30 @@ public class Shoulder extends Mechanism {
         return runOnce(this::setInitialPosition)
                 .ignoringDisable(true)
                 .withName("Reset to Initial position");
+    }
+
+    @Override
+    public Trigger belowDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        (getPositionDegrees() + config.getOffset())
+                                < (degrees.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    @Override
+    public Trigger aboveDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        (getPositionDegrees() + config.getOffset())
+                                > (degrees.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    @Override
+    public Trigger atDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(getPositionDegrees() + config.getOffset() - degrees.getAsDouble())
+                                < tolerance.getAsDouble());
     }
 
     // --------------------------------------------------------------------------------

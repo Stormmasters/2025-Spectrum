@@ -30,13 +30,17 @@ public class Intake extends Mechanism {
         @Getter @Setter private double algaeScoreTorqueCurrent = 180.0;
 
         // Coral Voltages and Current
-        @Getter @Setter private double coralIntakeVoltage = 9.0;
-        @Getter @Setter private double coralIntakeSupplyCurrent = 12.0;
-        @Getter @Setter private double coralIntakeTorqueCurrent = 27.0;
+        @Getter @Setter private double coralHoldVoltage = 9.0;
+        @Getter @Setter private double coralHoldSupplyCurrent = 12.0;
+        @Getter @Setter private double coralHoldTorqueCurrent = 27.0;
+
+        @Getter @Setter private double coralIntakeVoltage = 12.0;
+        @Getter @Setter private double coralIntakeSupplyCurrent = 40.0;
+        @Getter @Setter private double coralIntakeTorqueCurrent = 180.0;
 
         @Getter @Setter private double coralGroundVoltage = 12.0;
-        @Getter @Setter private double coralGroundSupplyCurrent = 15.0;
-        @Getter @Setter private double coralGroundTorqueCurrent = 60.0;
+        @Getter @Setter private double coralGroundSupplyCurrent = 40.0;
+        @Getter @Setter private double coralGroundTorqueCurrent = 180.0;
 
         @Getter @Setter private double coralScoreVoltage = 0;
         @Getter @Setter private double coralScoreSupplyCurrent = 12.0;
@@ -103,6 +107,7 @@ public class Intake extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
+            builder.addDoubleProperty("Motor Voltage", this::getVoltage, null);
             builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty("Velocity RPM", this::getVelocityRPM, null);
             builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
@@ -118,17 +123,17 @@ public class Intake extends Mechanism {
         return run(
                 () -> {
                     if (RobotStates.coral.getAsBoolean()) {
-                        runVoltage(() -> config.getCoralIntakeVoltage());
+                        setVoltageOutput(() -> config.getCoralHoldVoltage());
                         setCurrentLimits(
-                                () -> config.getCoralIntakeSupplyCurrent(),
-                                () -> config.getCoralIntakeTorqueCurrent());
+                                () -> config.getCoralHoldSupplyCurrent(),
+                                () -> config.getCoralHoldTorqueCurrent());
                     } else if (RobotStates.algae.getAsBoolean()) {
                         runVoltage(() -> config.getAlgaeIntakeVoltage());
                         setCurrentLimits(
                                 () -> config.getAlgaeIntakeSupplyCurrent(),
                                 () -> config.getAlgaeIntakeTorqueCurrent());
                     } else {
-                        runStop();
+                        stop();
                     }
                 });
     }
@@ -141,7 +146,12 @@ public class Intake extends Mechanism {
 
     public Command runVoltageCurrentLimits(
             DoubleSupplier voltage, DoubleSupplier supplyCurrent, DoubleSupplier torqueCurrent) {
-        return runVoltage(voltage).alongWith(setCurrentLimits(supplyCurrent, torqueCurrent));
+        return runVoltage(voltage).alongWith(runCurrentLimits(supplyCurrent, torqueCurrent));
+    }
+
+    public Command runTCcurrentLimits(DoubleSupplier torqueCurrent, DoubleSupplier supplyCurrent) {
+        return runTorqueCurrentFoc(torqueCurrent)
+                .alongWith(runCurrentLimits(supplyCurrent, torqueCurrent));
     }
 
     // --------------------------------------------------------------------------------

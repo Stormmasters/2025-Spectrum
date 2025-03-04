@@ -79,7 +79,7 @@ public class SpectrumState extends Trigger {
      */
     public Command toggleToTrue() {
         return setFalse()
-                .andThen(setTrue())
+                .andThen(new WaitCommand(0.1), setTrue())
                 .ignoringDisable(true)
                 .withName(name + " state: ToggleToTrue");
     }

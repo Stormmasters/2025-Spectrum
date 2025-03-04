@@ -81,6 +81,8 @@ public class RobotStates {
     public static final Trigger stationExtendedIntaking = pilot.stationIntakeExtended_LT_RB;
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
     public static final Trigger groundCoral = pilot.groundCoral_LB_RT;
+    public static final Trigger intaking =
+            stationExtendedIntaking.or(stationIntaking, groundAlgae, groundCoral);
 
     // climb Triggers
     public static final Trigger climbPrep = operator.climbPrep_start;
@@ -127,7 +129,7 @@ public class RobotStates {
         pilot.home_select.or(operator.home_select).onFalse(clearStates());
 
         // Home if we aren't doing coral, or algae
-        (coral.not().and(algae.not())).onChangeToTrue((homeAll.setTrueForTime(() -> 2)));
+        // (coral.not().and(algae.not())).onChangeToTrue((homeAll.setTrueForTime(() -> 2)));
 
         actionState
                 .or(operator.staged)
@@ -158,7 +160,8 @@ public class RobotStates {
         // *********************************
         // Intaking States
         stationIntaking.or(stationExtendedIntaking).whileTrue(coral.setTrue(), algae.setFalse());
-        stationIntaking.onChangeToFalse(homeAll.setTrue());
+        stationIntaking.or(stationExtendedIntaking).onFalse(homeAll.toggleToTrue());
+        // stationIntaking.onChangeToFalse(homeAll.setTrue());
 
         groundCoral.whileTrue(coral.setTrue(), algae.setFalse());
         groundCoral.onChangeToFalse(homeAll.setTrue());

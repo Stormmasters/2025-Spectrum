@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.RobotStates;
@@ -31,13 +32,14 @@ public class Elbow extends Mechanism {
         @Getter private final double handAlgae = 0;
         @Getter private double climbPrep = -60;
         @Getter private final double home = 180;
+        @Getter private final double clearElevator = -125;
 
-        @Getter private final double algaeLollipop = -78; // TODO: find this value
-        @Getter private final double coralLollipop = -76; // TODO: find this value
+        @Getter private final double algaeLollipop = -90; // TODO: find this value
+        @Getter private final double coralLollipop = -90; // TODO: find this value
         @Getter private final double stationIntake = 154.4;
         @Getter private final double stationExtendedIntake = 136; // TODO: find this value
-        @Getter private final double groundAlgaeIntake = -75; // TODO: find this value
-        @Getter private final double groundCoralIntake = -75; // TODO: find this value
+        @Getter private final double groundAlgaeIntake = 90; // TODO: find this value
+        @Getter private final double groundCoralIntake = 79; // TODO: find this value
 
         @Getter private final double stage = -160;
         @Getter private final double l1Coral = -125.8;
@@ -189,6 +191,30 @@ public class Elbow extends Mechanism {
 
     public Command resetToInitialPos() {
         return run(this::setInitialPosition);
+    }
+
+    @Override
+    public Trigger belowDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        (getPositionDegrees() + config.getOffset())
+                                < (degrees.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    @Override
+    public Trigger aboveDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        (getPositionDegrees() + config.getOffset())
+                                > (degrees.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    @Override
+    public Trigger atDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(getPositionDegrees() + config.getOffset() - degrees.getAsDouble())
+                                < tolerance.getAsDouble());
     }
 
     // --------------------------------------------------------------------------------

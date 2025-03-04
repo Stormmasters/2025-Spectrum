@@ -4,7 +4,6 @@ import static frc.robot.RobotStates.*;
 import static frc.robot.auton.Auton.autonScore;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
@@ -131,15 +130,5 @@ public class ShoulderStates {
     // Log Command
     protected static Command log(Command cmd) {
         return Telemetry.log(cmd);
-    }
-
-    // Check robot side command
-    protected static Command reverse(Command cmd) {
-        // return cmd.deadlineFor(
-        //         Commands.startEnd(() -> config.setReversed(true), () ->
-        // config.setReversed(false)));
-        return Commands.runOnce(() -> config.setReversed(true))
-                .andThen(cmd)
-                .andThen(() -> config.setReversed(false));
     }
 }

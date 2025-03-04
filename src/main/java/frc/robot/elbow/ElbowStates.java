@@ -17,8 +17,10 @@ public class ElbowStates {
     public static final Trigger isHome =
             elbow.atDegrees(() -> (config.getHome() + config.getOffset()), config::getTolerance);
     public static final Trigger pastElevator =
-            elbow.aboveDegrees(elbow.offsetPosition(() -> -160 + 360), config::getTolerance)
-                    .and(elbow.belowDegrees(() -> 160, config::getTolerance));
+            elbow.aboveDegrees(() -> (config.getClearElevator() + 360), config::getTolerance)
+                    .or(elbow.belowDegrees(() -> -config.getClearElevator(), config::getTolerance));
+    public static final Trigger aboveFloor =
+            elbow.aboveDegrees(() -> (config.getGroundCoralIntake() + 10), config::getTolerance);
     public static final Trigger scoreL4 =
             elbow.atDegrees(() -> (config.getL4Coral() - 12), config::getTolerance);
 
@@ -41,6 +43,9 @@ public class ElbowStates {
                                 config::getStationIntake,
                                 config::getStationExtendedIntake,
                                 "Elbow.StationIntake"));
+        groundCoral
+                .and(actionState.not())
+                .whileTrue(move(config::getGroundCoralIntake, "Elbow.GroundCoral"));
 
         // stages elbow
         stagedCoral.and(actionState.not()).whileTrue(move(config::getStage, "Elbow.Stage"));

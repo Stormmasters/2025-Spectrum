@@ -101,7 +101,7 @@ public class Twist extends Mechanism {
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
-            configContinuousWrap(true);
+            configContinuousWrap(false);
             configGravityType(true);
             configClockwise_Positive();
         }

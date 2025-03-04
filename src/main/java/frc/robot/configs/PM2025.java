@@ -15,7 +15,7 @@ public class PM2025 extends Config {
         shoulder.setAttached(true);
         elbow.setAttached(true);
         twist.setAttached(true);
-        intake.setAttached(true);
+        intake.setAttached(false);
         climb.setAttached(false);
         groundIntake.setAttached(false);
     }

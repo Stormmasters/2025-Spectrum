@@ -17,10 +17,7 @@ public class IntakeStates {
 
     public static void setupDefaultCommand() {
         coralIntake.setDefaultCommand(
-                coralIntake
-                        .defaultHoldOrStop()
-                        .ignoringDisable(true)
-                        .withName("coralIntake.default"));
+                coralIntake.defaultHoldOrStop().ignoringDisable(true).withName("Intake.default"));
     }
 
     public static void setStates() {
@@ -33,7 +30,9 @@ public class IntakeStates {
         Trigger photonAlgaeRemoval =
                 (Robot.getPilot().photonRemoveL2Algae.or(Robot.getPilot().photonRemoveL3Algae))
                         .and(photon);
-        photonAlgaeRemoval.or(stationExtendedIntaking).onFalse(coralIntake.getDefaultCommand());
+        stationIntaking
+                .or(photonAlgaeRemoval, stationExtendedIntaking)
+                .onFalse(coralIntake.getDefaultCommand());
 
         netAlgae.and(actionState)
                 .whileTrue(
@@ -44,7 +43,11 @@ public class IntakeStates {
 
         stationIntaking
                 .or(photonAlgaeRemoval, stationExtendedIntaking)
-                .whileTrue(CoralIntakeHold());
+                // .whileTrue(runVoltageCurrentLimits(
+                //         config::getCoralIntakeVoltage,
+                //         config::getCoralIntakeSupplyCurrent,
+                //         config::getCoralIntakeTorqueCurrent));
+                .whileTrue(runGroundIntake());
 
         groundCoral.whileTrue(runGroundIntake());
 
@@ -68,31 +71,19 @@ public class IntakeStates {
                                 config::getCoralScoreSupplyCurrent,
                                 config::getCoralScoreTorqueCurrent));
 
-        autonScore.onTrue(
-                new WaitCommand(2.0)
-                        .andThen(
-                                runVoltageCurrentLimits(
-                                                config::getCoralScoreVoltage,
-                                                config::getCoralScoreSupplyCurrent,
-                                                config::getCoralScoreTorqueCurrent)
-                                        .repeatedly()));
+        autonScore
+                .and(photon)
+                .onTrue(
+                        new WaitCommand(2.0)
+                                .andThen(
+                                        runVoltageCurrentLimits(
+                                                        config::getCoralScoreVoltage,
+                                                        config::getCoralScoreSupplyCurrent,
+                                                        config::getCoralScoreTorqueCurrent)
+                                                .repeatedly()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
-    }
-
-    public static Command CoralIntakeHold() {
-        return runVoltageCurrentLimits(
-                config::getCoralIntakeVoltage,
-                config::getCoralIntakeSupplyCurrent,
-                config::getCoralIntakeTorqueCurrent);
-    }
-
-    public static Command AlgaeIntakeHold() {
-        return runVoltageCurrentLimits(
-                config::getAlgaeIntakeVoltage,
-                config::getAlgaeIntakeSupplyCurrent,
-                config::getAlgaeIntakeTorqueCurrent);
     }
 
     private static Command coastMode() {
@@ -109,7 +100,8 @@ public class IntakeStates {
     }
 
     private static Command runGroundIntake() {
-        return coralIntake.runTorqueCurrentFoc(config::getCoralGroundTorqueCurrent);
+        return coralIntake.runTCcurrentLimits(
+                config::getCoralGroundTorqueCurrent, config::getCoralGroundSupplyCurrent);
     }
 
     // Log Command
