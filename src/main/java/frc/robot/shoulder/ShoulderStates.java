@@ -1,11 +1,9 @@
 package frc.robot.shoulder;
 
 import static frc.robot.RobotStates.*;
-import static frc.robot.auton.Auton.autonScore;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
@@ -75,9 +73,6 @@ public class ShoulderStates {
 
         // climbPrep
         //         .whileTrue(moveToDegrees(config::getClimbPrep, "Shoulder.startClimb"));
-
-        autonScore.onTrue(
-                new WaitCommand(4.0).andThen(moveToDegrees(() -> 180, "Shoulder.homeAuto")));
     }
 
     public static Command runShoulder(DoubleSupplier speed) {

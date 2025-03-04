@@ -101,9 +101,9 @@ public class ElbowStates {
 
         netAlgae.whileTrue(elbow.moveToDegrees(config::getBarge));
         // climbPrep
-        //         .whileTrue(elbow.moveToDegrees(config::getClimbPrep).withName("Elbow.startClimb"));
+        //
+        // .whileTrue(elbow.moveToDegrees(config::getClimbPrep).withName("Elbow.startClimb"));
 
-        
         // barge.and(backwardMode.not()).whileTrue(log(barge()));
         // barge.and(backwardMode).whileTrue(log(reverse(barge())));
         // homeAll.whileTrue(log(home()));
