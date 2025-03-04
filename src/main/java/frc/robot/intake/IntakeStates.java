@@ -12,27 +12,30 @@ import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
 
 public class IntakeStates {
-    private static Intake coralIntake = Robot.getIntake();
+    private static Intake intake = Robot.getIntake();
     private static IntakeConfig config = Robot.getConfig().intake;
 
+    private static final Trigger photonAlgaeRemoval =
+            (Robot.getPilot().photonRemoveL2Algae.or(Robot.getPilot().photonRemoveL3Algae))
+                    .and(photon);
+
+    public static final Trigger hasGamePiece = new Trigger(intake::hasIntakeGamePiece);
+
     public static void setupDefaultCommand() {
-        coralIntake.setDefaultCommand(
-                coralIntake.defaultHoldOrStop().ignoringDisable(true).withName("Intake.default"));
+        intake.setDefaultCommand(
+                intake.defaultHoldOrStop().ignoringDisable(true).withName("Intake.default"));
     }
 
     public static void setStates() {
-        intakeRunning.onFalse(coralIntake.getDefaultCommand());
+        intakeRunning.onFalse(intake.getDefaultCommand());
         Robot.getPilot()
                 .home_select
                 .or(Robot.getOperator().home_select)
-                .onTrue(coralIntake.getDefaultCommand());
+                .onTrue(intake.getDefaultCommand());
 
-        Trigger photonAlgaeRemoval =
-                (Robot.getPilot().photonRemoveL2Algae.or(Robot.getPilot().photonRemoveL3Algae))
-                        .and(photon);
         stationIntaking
                 .or(photonAlgaeRemoval, stationExtendedIntaking)
-                .onFalse(coralIntake.getDefaultCommand());
+                .onFalse(intake.getDefaultCommand());
 
         netAlgae.and(actionState)
                 .whileTrue(
@@ -41,17 +44,20 @@ public class IntakeStates {
                                 config::getAlgaeScoreSupplyCurrent,
                                 config::getAlgaeScoreTorqueCurrent));
 
+        hasGamePiece.onTrue(intake.getDefaultCommand());
+
         stationIntaking
                 .or(photonAlgaeRemoval, stationExtendedIntaking)
+                .and(hasGamePiece.not())
                 // .whileTrue(runVoltageCurrentLimits(
                 //         config::getCoralIntakeVoltage,
                 //         config::getCoralIntakeSupplyCurrent,
                 //         config::getCoralIntakeTorqueCurrent));
                 .whileTrue(runGroundIntake());
 
-        groundCoral.whileTrue(runGroundIntake());
+        groundCoral.and(hasGamePiece.not()).whileTrue(runGroundIntake());
 
-        algae.and(photon.not())
+        algae.and(photon.not(), hasGamePiece.not())
                 .onTrue(
                         runVoltageCurrentLimits(
                                 config::getAlgaeIntakeVoltage,
@@ -87,20 +93,20 @@ public class IntakeStates {
     }
 
     private static Command coastMode() {
-        return coralIntake.coastMode();
+        return intake.coastMode();
     }
 
     private static Command ensureBrakeMode() {
-        return coralIntake.ensureBrakeMode();
+        return intake.ensureBrakeMode();
     }
 
     private static Command runVoltageCurrentLimits(
             DoubleSupplier voltage, DoubleSupplier supplyCurrent, DoubleSupplier torqueCurrent) {
-        return coralIntake.runVoltageCurrentLimits(voltage, supplyCurrent, torqueCurrent);
+        return intake.runVoltageCurrentLimits(voltage, supplyCurrent, torqueCurrent);
     }
 
     private static Command runGroundIntake() {
-        return coralIntake.runTCcurrentLimits(
+        return intake.runTCcurrentLimits(
                 config::getCoralGroundTorqueCurrent, config::getCoralGroundSupplyCurrent);
     }
 

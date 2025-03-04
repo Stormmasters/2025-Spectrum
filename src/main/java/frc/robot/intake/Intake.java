@@ -20,6 +20,9 @@ public class Intake extends Mechanism {
 
     public static class IntakeConfig extends Config {
 
+        @Getter private double hasGamePieceVelocity = 50;
+        @Getter private double hasGamePieceCurrent = 50;
+
         // Algae Voltages and Current
         @Getter @Setter private double algaeIntakeVoltage = -9.0;
         @Getter @Setter private double algaeIntakeSupplyCurrent = 15.0;
@@ -31,8 +34,8 @@ public class Intake extends Mechanism {
 
         // Coral Voltages and Current
         @Getter @Setter private double coralHoldVoltage = 9.0;
-        @Getter @Setter private double coralHoldSupplyCurrent = 12.0;
-        @Getter @Setter private double coralHoldTorqueCurrent = 27.0;
+        @Getter @Setter private double coralHoldSupplyCurrent = 3.0;
+        @Getter @Setter private double coralHoldTorqueCurrent = 15.0;
 
         @Getter @Setter private double coralIntakeVoltage = 12.0;
         @Getter @Setter private double coralIntakeSupplyCurrent = 40.0;
@@ -139,9 +142,10 @@ public class Intake extends Mechanism {
     }
 
     public boolean hasIntakeGamePiece() {
-        double motorOutput =
-                Robot.getIntake().getVelocityRPM(); // might be better to check with motor voltage
-        return (Math.abs(motorOutput) < 120);
+        double motorOutput = getVelocityRPM(); // might be better to check with motor voltage
+        double motorCurrent = getCurrent();
+        return (Math.abs(motorOutput) < config.hasGamePieceVelocity
+                && Math.abs(motorCurrent) > config.hasGamePieceCurrent);
     }
 
     public Command runVoltageCurrentLimits(

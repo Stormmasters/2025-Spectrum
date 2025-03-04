@@ -128,9 +128,6 @@ public class RobotStates {
         pilot.home_select.or(operator.home_select).whileTrue(homeAll.toggleToTrue());
         pilot.home_select.or(operator.home_select).onFalse(clearStates());
 
-        // Home if we aren't doing coral, or algae
-        // (coral.not().and(algae.not())).onChangeToTrue((homeAll.setTrueForTime(() -> 2)));
-
         actionState
                 .or(operator.staged)
                 .onChangeToFalse(coral.setFalse().alongWith(algae.setFalse()));
@@ -159,15 +156,16 @@ public class RobotStates {
 
         // *********************************
         // Intaking States
-        stationIntaking.or(stationExtendedIntaking).whileTrue(coral.setTrue(), algae.setFalse());
+        stationIntaking
+                .or(stationExtendedIntaking)
+                .whileTrue(coral.toggleToTrue(), algae.setFalse());
         stationIntaking.or(stationExtendedIntaking).onFalse(homeAll.toggleToTrue());
-        // stationIntaking.onChangeToFalse(homeAll.setTrue());
 
-        groundCoral.whileTrue(coral.setTrue(), algae.setFalse());
-        groundCoral.onChangeToFalse(homeAll.setTrue());
+        groundCoral.whileTrue(coral.toggleToTrue(), algae.setFalse());
+        groundCoral.onChangeToFalse(homeAll.toggleToTrue());
 
-        groundAlgae.whileTrue(algae.setTrue(), coral.setFalse());
-        groundAlgae.onChangeToFalse(homeAll.setTrue());
+        groundAlgae.whileTrue(algae.toggleToTrue(), coral.setFalse());
+        groundAlgae.onChangeToFalse(homeAll.toggleToTrue());
 
         // **********************************
         // Staging and Scoring

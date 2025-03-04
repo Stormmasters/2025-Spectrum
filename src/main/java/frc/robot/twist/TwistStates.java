@@ -20,14 +20,20 @@ public class TwistStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        homeAll.onTrue(home());
+        homeAll.onTrue(twist.twistHome());
         Robot.getPilot().reZero_start.onTrue(twist.resetToIntialPos());
         stationIntaking
                 .or(stationExtendedIntaking)
                 .whileTrue(
                         twist.moveToDegrees((config::getStationIntake))
                                 .withName("Twist.stationIntake"));
-        algae.whileTrue(twist.moveToDegrees(config::getAlgaeIntake).withName("Twist.Algae"));
+        algae.or(groundAlgae, stagedAlgae)
+                .whileTrue(twist.moveToDegrees(config::getAlgaeIntake).withName("Twist.Algae"));
+        Robot.getPilot()
+                .groundAlgae_RT
+                .whileTrue(
+                        twist.moveToDegrees(config::getAlgaeIntake).withName("Twist.AlgaeIntake"));
+
         L1Coral.or(groundCoral)
                 .whileTrue(
                         twist.moveToDegrees(config::getL1Coral).withName("Twist.l1CoralOrGround"));
@@ -37,10 +43,6 @@ public class TwistStates {
                 .whileTrue(twist.moveToDegrees(config::getRightCoral).withName("Twist.rightCoral"));
         branch.and(rightScore.not())
                 .whileTrue(twist.moveToDegrees(config::getLeftCoral).withName("Twist.leftCoral"));
-    }
-
-    public static Command home() {
-        return twist.moveToDegrees(config::getHome).withName("Twist.home");
     }
 
     public static Command coastMode() {

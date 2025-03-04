@@ -31,7 +31,10 @@ public class ShoulderStates {
         stationIntaking.whileTrue(move(config::getStationIntake, "Shoulder.stationIntake"));
         stationExtendedIntaking.whileTrue(
                 move(config::getStationExtendedIntake, "Shoulder.stationExtendedIntake"));
-        stationIntaking.or(stationExtendedIntaking).onFalse(home());
+        stationIntaking.or(stationExtendedIntaking, groundCoral, groundAlgae).onFalse(home());
+
+        groundCoral.whileTrue(move(config::getGroundCoralIntake, "Shoulder.groundCoral"));
+        groundAlgae.whileTrue(move(config::getGroundAlgaeIntake, "Shoulder.groundAlgae"));
 
         Robot.getPilot()
                 .photonRemoveL2Algae

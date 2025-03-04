@@ -1,5 +1,8 @@
 package frc.robot.twist;
 
+import static frc.robot.RobotStates.algae;
+import static frc.robot.RobotStates.coral;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -228,6 +231,23 @@ public class Twist extends Mechanism {
     @Override
     public Command moveToDegrees(DoubleSupplier degrees) {
         return super.moveToDegrees(degrees).withName(getName() + ".runPoseDegrees");
+    }
+
+    private void setDegrees(DoubleSupplier degrees) {
+        setMMPositionFoc(() -> degreesToRotations(degrees));
+    }
+
+    public Command twistHome() {
+        return run(
+                () -> {
+                    if (algae.getAsBoolean()) {
+                        setDegrees(config::getAlgaeIntake);
+                    } else if (coral.getAsBoolean()) {
+                        setDegrees(config::getLeftCoral);
+                    } else {
+                        setDegrees(config::getHome);
+                    }
+                });
     }
 
     // --------------------------------------------------------------------------------

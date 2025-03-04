@@ -38,8 +38,8 @@ public class Elbow extends Mechanism {
         @Getter private final double coralLollipop = -90; // TODO: find this value
         @Getter private final double stationIntake = 154.4;
         @Getter private final double stationExtendedIntake = 136; // TODO: find this value
-        @Getter private final double groundAlgaeIntake = 90; // TODO: find this value
-        @Getter private final double groundCoralIntake = 79; // TODO: find this value
+        @Getter private final double groundAlgaeIntake = -84; // TODO: find this value
+        @Getter private final double groundCoralIntake = -80; // TODO: find this value
 
         @Getter private final double stage = -160;
         @Getter private final double l1Coral = -125.8;
@@ -274,13 +274,16 @@ public class Elbow extends Mechanism {
 
     @Override
     public Command moveToDegrees(DoubleSupplier degrees) {
+        return super.moveToDegrees(offsetPosition(() -> checkNegative(degrees)))
+                .withName(getName() + ".runPoseDegrees");
+    }
+
+    public double checkNegative(DoubleSupplier degrees) {
         double newDeg = degrees.getAsDouble();
         if (newDeg < 0) {
             newDeg += 360;
         }
-        final double degree = newDeg;
-        return super.moveToDegrees(offsetPosition(() -> degree))
-                .withName(getName() + ".runPoseDegrees");
+        return newDeg;
     }
 
     public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
@@ -289,9 +292,15 @@ public class Elbow extends Mechanism {
                     // TODO: add a check for reversed and negate values when we do double sided
                     // scoring.
                     if (RobotStates.extended.getAsBoolean()) {
-                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(exDegrees)));
+                        setMMPositionFoc(
+                                () ->
+                                        degreesToRotations(
+                                                offsetPosition(() -> checkNegative(exDegrees))));
                     } else {
-                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(degrees)));
+                        setMMPositionFoc(
+                                () ->
+                                        degreesToRotations(
+                                                offsetPosition(() -> checkNegative(degrees))));
                     }
                 });
     }

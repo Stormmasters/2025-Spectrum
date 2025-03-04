@@ -47,6 +47,10 @@ public class ElbowStates {
                 .and(actionState.not())
                 .whileTrue(move(config::getGroundCoralIntake, "Elbow.GroundCoral"));
 
+        groundAlgae
+                .and(actionState.not())
+                .whileTrue(move(config::getGroundAlgaeIntake, "Elbow.GroundAlgae"));
+
         // stages elbow
         stagedCoral.and(actionState.not()).whileTrue(move(config::getStage, "Elbow.Stage"));
 
