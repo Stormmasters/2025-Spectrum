@@ -66,19 +66,16 @@ public class ElevatorStates {
                 .whileTrue(move(config::getL2Score, config::getExl2Score, "Elevator.L2CoralScore"));
         L3Coral.and(actionPrepState)
                 .whileTrue(move(config::getL3Coral, config::getExl3Coral, "Elevator.L3Coral"));
-
         L3Coral.and(actionState)
                 .whileTrue(move(config::getL3Score, config::getExl3Score, "Elevator.L3CoralScore"));
         L4Coral.and(actionPrepState)
                 .whileTrue(move(config::getL4Coral, config::getExl4Coral, "Elevator.L4Coral"));
-
         L4Coral.and(actionState)
                 .whileTrue(move(config::getL4Score, config::getExl4Score, "Elevator.L4CoralScore"));
 
         processorAlgae
                 .and(actionPrepState)
                 .whileTrue(move(config::getProcessorAlgae, "Elevator.processorAlgae"));
-
         L2Algae.and(actionPrepState).whileTrue(move(config::getL2Algae, "Elevator.L2Algae"));
         L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Elevator.L3Algae"));
         netAlgae.and(actionPrepState).whileTrue(move(config::getNetAlgae, "Elevator.NetAlgae"));
