@@ -72,7 +72,8 @@ public class ShoulderStates {
                 .whileTrue(moveToDegrees(config::getNetAlgae, "Shoulder.netAlgae"));
 
         Robot.getPilot().reZero_start.onTrue(shoulder.resetToIntialPos());
-        // climbPrep_start
+
+        // climbPrep
         //         .whileTrue(moveToDegrees(config::getClimbPrep, "Shoulder.startClimb"));
 
         autonScore.onTrue(

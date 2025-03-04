@@ -31,7 +31,7 @@ public class Elbow extends Mechanism {
 
         // TODO: Find elbow positions
         @Getter private final double handAlgae = 0;
-        @Getter private double climbPrep = 180;
+        @Getter private double climbPrep = -60;
         @Getter private final double home = 180;
 
         @Getter private final double algaeLollipop = 78; // TODO: find this value
