@@ -128,16 +128,19 @@ public class Vision extends SubsystemBase {
                 // choose LL with best view of tags and integrate from only that camera
                 Limelight bestLimelight = getBestLimelight();
                 VisionLogger limelightLogger = getBestVisionLogger(bestLimelight);
+                double[] distance = new double[2];
                 for (Limelight limelight : allLimelights) {
-                    if (limelight.getCameraName() == bestLimelight.getCameraName()) {
+                    if (limelight.getCameraName()
+                            == bestLimelight.getCameraName()) { // this is not running
                         addFilteredVisionInput(bestLimelight);
                         // limelightLogger.getCameraConnection();
-                        limelightLogger.getPose();
+                        // limelightLogger.getPose();
                         // limelightLogger.getMegaPose();
-                        getDistanceToReefFromRobot();
-                    } else {
-                        limelight.sendInvalidStatus("not best rejection");
-                    }
+                        distance = getDistanceToReefFromRobot();
+                        
+                    } // else {
+                    //     limelight.sendInvalidStatus("not best rejection");
+                    // }
                     isIntegrating |= limelight.isIntegrating();
                 }
             }
@@ -504,7 +507,11 @@ public class Vision extends SubsystemBase {
 
         for (RawFiducial tag : backTags) {
             if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
+<<<<<<< Updated upstream
                 seenReefFaces.add(tag.distToCamera);
+=======
+                seenReefFaces[0] = tag.distToCamera;
+>>>>>>> Stashed changes
             }
         }
 

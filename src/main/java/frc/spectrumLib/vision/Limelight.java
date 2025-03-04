@@ -61,7 +61,7 @@ public class Limelight {
     private final DecimalFormat df = new DecimalFormat();
     private LimelightConfig config;
     @Getter @Setter private boolean isIntegrating = false;
-    @Getter @Setter private String cameraName = "default";
+    @Getter private String cameraName = "default";
     @Getter @Setter private String logStatus = "";
     @Getter @Setter private String tagStatus = "";
 
