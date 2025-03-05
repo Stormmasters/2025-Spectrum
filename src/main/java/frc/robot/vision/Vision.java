@@ -22,23 +22,21 @@ public class Vision extends SubsystemBase {
 
     public static final class VisionConfig {
         /* Limelight Configuration */
-        public static final String LEFT_LL = "limelight-left";
+        public static final String FRONT_LL = "limelight-front";
         public static final LimelightConfig LEFT_Config =
-                new LimelightConfig(LEFT_LL)
-                        .withTranslation(0, 0, 0.5)
-                        .withRotation(0, Math.toRadians(-15), 0);
+                new LimelightConfig(FRONT_LL)
+                        .withTranslation(0.215, 0, 0.188)
+                        .withRotation(0, Math.toRadians(28), 0);
 
-        public static final String RIGHT_LL = "limelight-right";
+        public static final String BACK_LL = "limelight-back";
         public static final LimelightConfig Right_Config =
-                new LimelightConfig(RIGHT_LL)
-                        .withTranslation(0, 0.5, 0.5)
-                        .withRotation(0, Math.toRadians(15), 0);
-
-        // TODO: Limelight config needs to be updated to actual position on robot
+                new LimelightConfig(BACK_LL)
+                        .withTranslation(-0.215, 0.0, 0.188)
+                        .withRotation(0, Math.toRadians(28), Math.toRadians(180));
 
         /* Pipeline configs */
-        public static final int leftTagPipeline = 0;
-        public static final int rightTagPipeline = 1;
+        public static final int frontTagPipeline = 0;
+        public static final int backTagPipeline = 0;
 
         /* Pose Estimation Constants */
 
@@ -59,19 +57,19 @@ public class Vision extends SubsystemBase {
     }
 
     /** Limelights */
-    public final Limelight leftLL =
+    public final Limelight frontLL =
             new Limelight(
-                    VisionConfig.LEFT_LL, VisionConfig.leftTagPipeline, VisionConfig.LEFT_Config);
+                    VisionConfig.FRONT_LL, VisionConfig.frontTagPipeline, VisionConfig.LEFT_Config);
 
-    public final LimelightLogger leftLLogger = new LimelightLogger("left", leftLL);
+    public final LimelightLogger leftLLogger = new LimelightLogger("left", frontLL);
 
-    public final Limelight rightLL =
+    public final Limelight backLL =
             new Limelight(
-                    VisionConfig.RIGHT_LL,
-                    VisionConfig.rightTagPipeline,
+                    VisionConfig.BACK_LL,
+                    VisionConfig.backTagPipeline,
                     VisionConfig.Right_Config);
 
-    public final Limelight[] allLimelights = {leftLL, rightLL};
+    public final Limelight[] allLimelights = {frontLL, backLL};
 
     private final DecimalFormat df = new DecimalFormat();
 
@@ -108,7 +106,7 @@ public class Vision extends SubsystemBase {
     }
 
     public Limelight getBestLimelight() {
-        Limelight bestLimelight = leftLL;
+        Limelight bestLimelight = frontLL;
         double bestScore = 0;
         for (Limelight limelight : allLimelights) {
             double score = 0;
@@ -239,10 +237,10 @@ public class Vision extends SubsystemBase {
     public Command solidLimelight() {
         return startEnd(
                         () -> {
-                            leftLL.setLEDMode(true);
+                            frontLL.setLEDMode(true);
                         },
                         () -> {
-                            leftLL.setLEDMode(false);
+                            frontLL.setLEDMode(false);
                         })
                 .withName("Vision.solidLimelight");
     }
