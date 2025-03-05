@@ -42,6 +42,11 @@ public class SwerveConfig {
     @Getter private double kIHoldController = 0.0;
     @Getter private double kDHoldController = 0.0;
 
+    @Getter private double kPTagCenterController = 11.0;
+    @Getter private double kITagCenterController = 0.0;
+    @Getter private double kDTagController = 0.5;
+    @Getter private double tagCenterTolerance = 0.00; // meters
+
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     @Getter private final Rotation2d blueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */

@@ -43,16 +43,18 @@ public class ElbowStates {
                                 config::getStationIntake,
                                 config::getStationExtendedIntake,
                                 "Elbow.StationIntake"));
-        groundCoral
+        Robot.getPilot()
+                .groundCoral_LB_RT
                 .and(actionState.not())
                 .whileTrue(move(config::getGroundCoralIntake, "Elbow.GroundCoral"));
 
-        groundAlgae
+        Robot.getPilot()
+                .groundAlgae_RT
                 .and(actionState.not())
                 .whileTrue(move(config::getGroundAlgaeIntake, "Elbow.GroundAlgae"));
 
         // stages elbow
-        stagedCoral.and(actionState.not()).whileTrue(move(config::getStage, "Elbow.Stage"));
+        stagedCoral.whileTrue(move(config::getStage, "Elbow.Stage"));
 
         L1Coral.and(actionPrepState)
                 .whileTrue(move(config::getL1Coral, config::getExL1Coral, "Elbow.L1Coral"));

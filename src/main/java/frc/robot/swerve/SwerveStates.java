@@ -1,7 +1,6 @@
 package frc.robot.swerve;
 
 import static edu.wpi.first.units.Units.*;
-import static frc.robot.RobotStates.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -49,7 +48,7 @@ public class SwerveStates {
                 .and(pilot.steer.not())
                 .onTrue(log(lockToClosest45degDrive().withName("Swerve.45headingLock")));
 
-        pilot.fpv_RS.whileTrue(log(fpvDrive()));
+        pilot.fpv_LS.whileTrue(log(fpvDrive()));
 
         pilot.upReorient.onTrue(log(reorientForward()));
         pilot.leftReorient.onTrue(log(reorientLeft()));
@@ -57,7 +56,7 @@ public class SwerveStates {
         pilot.rightReorient.onTrue(log(reorientRight()));
 
         // // vision aim
-        pilot.visionAim.onTrue(log(visionReefDrive()));
+        pilot.visionAim_Y.whileTrue(log(reefAimDrive()));
     }
 
     /** Pilot Commands ************************************************************************ */
@@ -67,6 +66,22 @@ public class SwerveStates {
      *
      * @return
      */
+    protected static Command reefAimDrive() {
+        return fpvAimDrive(
+                        pilot::getDriveFwdPositive,
+                        SwerveStates::getTagTxVelocity,
+                        Robot.getVision()::getReefTagAngle)
+                .withName("Swerve.reefAimDrive");
+    }
+
+    private static double getTagTxVelocity() {
+        if (Robot.getVision().frontLL.targetInView()) {
+            return swerve.calculateTagCenterAlignController(
+                    () -> 0, () -> Robot.getVision().frontLL.getTagTx());
+        }
+        return 0;
+    }
+
     protected static Command snapSteerDrive() {
         return drive(
                         pilot::getDriveFwdPositive,
@@ -92,7 +107,7 @@ public class SwerveStates {
     }
 
     protected static Command visionReefDrive() {
-        return drive(
+        return aimDrive(
                         pilot::getDriveFwdPositive,
                         pilot::getDriveLeftPositive,
                         () -> Robot.getVision().getAdjustedThetaToReefFace())
@@ -121,14 +136,6 @@ public class SwerveStates {
     /** Turn the swerve wheels to an X to prevent the robot from moving */
     protected static Command xBrake() {
         return swerve.applyRequest(SwerveRequest.SwerveDriveBrake::new).withName("Swerve.Xbrake");
-    }
-
-    protected static Command climbDrive() {
-        return fpvDrive(
-                        () -> (0.1 * config.getSpeedAt12Volts().baseUnitMagnitude()),
-                        () -> 0,
-                        () -> 0)
-                .withName("Swerve.climbDrive");
     }
 
     /**
@@ -176,6 +183,17 @@ public class SwerveStates {
                                         .withVelocityY(leftPositive.getAsDouble())
                                         .withRotationalRate(ccwPositive.getAsDouble()))
                 .withName("Swerve.fpvDrive");
+    }
+
+    protected static Command fpvAimDrive(
+            DoubleSupplier velocityX, DoubleSupplier velocityY, DoubleSupplier targetRadians) {
+        return resetTurnController()
+                .andThen(
+                        fpvDrive(
+                                velocityX,
+                                velocityY,
+                                () -> swerve.calculateRotationController(targetRadians)))
+                .withName("Swerve.fpvAimDrive");
     }
 
     /**
@@ -228,7 +246,6 @@ public class SwerveStates {
         return () -> {
             if (Math.abs(velocityX.getAsDouble()) < 0.5
                     && Math.abs(velocityY.getAsDouble()) < 0.5) {
-                // TODO: Possibly Log
                 return 0;
             } else {
                 return swerve.calculateRotationController(heading::getAsDouble);

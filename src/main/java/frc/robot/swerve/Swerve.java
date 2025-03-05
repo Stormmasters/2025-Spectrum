@@ -21,6 +21,7 @@ import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
@@ -50,6 +51,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     private Notifier simNotifier = null;
     private double lastSimTime;
     private RotationController rotationController;
+    private TagCenterAlignController tagCenterAlignController;
 
     @Getter
     protected SwerveModuleState[] setpoints =
@@ -65,6 +67,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
             NetworkTableInstance.getDefault()
                     .getStructArrayTopic("SwerveStates", SwerveModuleState.struct)
                     .publish();
+    StructPublisher<Pose2d> posePublisher =
+            NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose2d.struct).publish();
 
     /**
      * Constructs a new Swerve drive subsystem.
@@ -84,6 +88,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         configurePathPlanner();
 
         rotationController = new RotationController(config);
+        tagCenterAlignController = new TagCenterAlignController(config);
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -107,6 +112,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
      */
     @Override
     public void periodic() {
+        posePublisher.set(getRobotPose());
         setPilotPerspective();
     }
 
@@ -351,6 +357,19 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
 
     double calculateRotationController(DoubleSupplier targetRadians) {
         return rotationController.calculate(targetRadians.getAsDouble(), getRotationRadians());
+    }
+
+    // --------------------------------------------------------------------------------
+    // Tag Center Align Controller
+    // --------------------------------------------------------------------------------
+    void resetTagCenterAlignController(double currentMeters) {
+        tagCenterAlignController.reset(currentMeters);
+    }
+
+    double calculateTagCenterAlignController(
+            DoubleSupplier targetMeters, DoubleSupplier currentMeters) {
+        return tagCenterAlignController.calculate(
+                targetMeters.getAsDouble(), currentMeters.getAsDouble());
     }
 
     // --------------------------------------------------------------------------------
