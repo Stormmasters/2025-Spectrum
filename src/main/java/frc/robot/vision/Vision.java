@@ -483,7 +483,7 @@ public class Vision extends SubsystemBase implements NTSendable {
     }
 
     public double getAdjustedThetaToReefFace() {
-        int closestReefFace = closestReefFace();
+        int closestReefFace = (int) frontLL.getClosestTagID();
         double[][] reefBlueAngles = {
             {17, 60}, {18, 0}, {19, -60}, {20, -120}, {21, 180}, {22, 120}
         }; // values in theta
@@ -517,33 +517,7 @@ public class Vision extends SubsystemBase implements NTSendable {
         return -1; // no reef tag found
     }
 
-    public int closestReefFace() {
-        double[] reefdistance = getDistanceToReefFromRobot();
-        if (reefdistance[0] > -1) {
-            RawFiducial[] tags = frontLL.getRawFiducial();
-            if (Field.isRed()) {
-                int closestReef = tags[0].id;
-                for (RawFiducial tag : tags) {
-                    if (tag.distToRobot < tags[closestReef].distToRobot) {
-                        closestReef = tag.id;
-                    }
-                }
-                Telemetry.print("Closest Reef Face: " + closestReef, PrintPriority.HIGH);
-                return closestReef; // red reef tag
-            } else {
-                int closestReef = tags[0].id;
-                for (RawFiducial tag : tags) {
-                    if (tag.distToRobot < tags[closestReef].distToRobot) {
-                        closestReef = tag.id;
-                    }
-                }
-                Telemetry.print("Closest Reef Face: " + closestReef, PrintPriority.HIGH);
-                return closestReef; // blue reef tag
-            }
-        }
-        Telemetry.print("No reef tag found", PrintPriority.HIGH);
-        return -1; // no reef tag found
-    }
+
 
     /** Returns the distance from the reef in meters, adjusted for the robot's movement. */
     public double[] getDistanceToReefFromRobot() {
@@ -590,7 +564,7 @@ public class Vision extends SubsystemBase implements NTSendable {
      */
     public Translation2d getAdjustedReefPos() {
 
-        int reefID = closestReefFace(); // must call closestReefFace before this method gets passed
+        int reefID = (int) frontLL.getClosestTagID(); // must call closestReefFace before this method gets passed
         Pose2d[] reefFaces = Field.Reef.getCenterFaces();
         double NORM_FUDGE = 0.075;
         // double tunableNoteVelocity = 1;
