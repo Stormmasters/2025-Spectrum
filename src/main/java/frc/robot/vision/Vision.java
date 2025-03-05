@@ -459,14 +459,12 @@ public class Vision extends SubsystemBase {
         for(int i = 0; i < reefBlueAngles.length; i++) {
             if (closestReefFace == reefBlueAngles[i][0]) {
                 fieldReefID = (int) reefBlueAngles[i][0];
-                angleBetweenRobotandReefFace = Math.toRadians(reefBlueAngles[i][1]);
-                angleBetweenRobotandReefFace = MathUtil.angleModulus(reefBlueAngles[i][1]);
+                angleBetweenRobotandReefFace = MathUtil.angleModulus(Math.toRadians(reefBlueAngles[i][1]));
                 return angleBetweenRobotandReefFace;
 
-            } else if(closestReefFace == reefRedAngles[i][0]) {
+            } else if (closestReefFace == reefRedAngles[i][0]) {
                 fieldReefID = (int) reefRedAngles[i][0];
-                angleBetweenRobotandReefFace = Math.toRadians(reefRedAngles[i][1]);
-                angleBetweenRobotandReefFace = MathUtil.angleModulus(reefRedAngles[i][1]);
+                angleBetweenRobotandReefFace = MathUtil.angleModulus(Math.toRadians(reefRedAngles[i][1]));
                 return angleBetweenRobotandReefFace;
             }
         }
