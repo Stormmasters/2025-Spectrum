@@ -33,16 +33,14 @@ public class Vision extends SubsystemBase {
         public static final String FRONT_LL = "limelight-front";
         public static final LimelightConfig FRONT_CONFIG =
                 new LimelightConfig(FRONT_LL)
-                        .withTranslation(0, -27.36, -8.04)
-                        .withRotation(0, Math.toRadians(.5), Math.toRadians(-7.96));
+                        .withTranslation(0.215, 0, 0.188)
+                        .withRotation(0, Math.toRadians(28), 0);
 
         public static final String BACK_LL = "limelight-back";
         public static final LimelightConfig BACK_CONFIG =
                 new LimelightConfig(BACK_LL)
-                        .withTranslation(0, 0.5, 0.5)
-                        .withRotation(0, Math.toRadians(15), 0);
-
-        // TODO: Limelight config needs to be updated to actual position on robot
+                        .withTranslation(-0.215, 0.0, 0.188)
+                        .withRotation(0, Math.toRadians(28), Math.toRadians(180));
 
         /* Pipeline configs */
         public static final int frontTagPipeline = 0;
@@ -557,7 +555,7 @@ public class Vision extends SubsystemBase {
 
         Translation2d robotPos = Robot.getSwerve().getRobotPose().getTranslation();
         Translation2d targetPose =
-                Field.flipXifRed(reefFaces[reefID].getTranslation()); // given reefface
+                Field.flipXifRed(reefFaces[reefID].getTranslation()); // given reef face
         double xDifference = Math.abs(robotPos.getX() - targetPose.getX());
         double spinYFudge =
                 (xDifference < 5.8)
