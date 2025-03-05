@@ -9,7 +9,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.networktables.NTSendable;
+import edu.wpi.first.networktables.NTSendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Vision extends SubsystemBase {
+public class Vision extends SubsystemBase implements NTSendable {
 
     public static final class VisionConfig {
         /* Limelight Configuration */
@@ -100,51 +102,72 @@ public class Vision extends SubsystemBase {
         /* Configure Limelight Settings Here */
         for (Limelight limelight : allLimelights) {
             limelight.setLEDMode(false);
+            limelight.setIMUmode(3);
         }
+
+        SendableRegistry.add(this, getName());
+        SmartDashboard.putData(this);
+        this.register();
     }
 
     @Override
     public void periodic() {
         double yaw = Robot.getSwerve().getRobotPose().getRotation().getDegrees();
+
         for (Limelight limelight : allLimelights) {
             limelight.setRobotOrientation(yaw);
 
-            if (DriverStation.isAutonomousEnabled() && limelight.targetInView()) {
-                Pose3d botpose3D = limelight.getRawPose3d();
-                Pose2d megaPose2d = limelight.getMegaPose2d();
-                double timeStamp = limelight.getRawPoseTimestamp();
-                Pose2d integratablePose =
-                        new Pose2d(megaPose2d.getTranslation(), botpose3D.toPose2d().getRotation());
-                autonPoses.add(Trio.of(botpose3D, integratablePose, timeStamp));
-            }
+            // if (DriverStation.isAutonomousEnabled() && limelight.targetInView()) {
+            //     Pose3d botpose3D = limelight.getRawPose3d();
+            //     Pose2d megaPose2d = limelight.getMegaPose2d();
+            //     double timeStamp = limelight.getRawPoseTimestamp();
+            //     Pose2d integratablePose =
+            //             new Pose2d(megaPose2d.getTranslation(),
+            // botpose3D.toPose2d().getRotation());
+            //     autonPoses.add(Trio.of(botpose3D, integratablePose, timeStamp));
+            // }
         }
-        try {
-            isIntegrating = false;
-            // Will NOT run in auto
-            if (DriverStation.isTeleopEnabled()) {
 
-                // choose LL with best view of tags and integrate from only that camera
-                Limelight bestLimelight = getBestLimelight();
-                VisionLogger limelightLogger = getBestVisionLogger(bestLimelight);
-                double[] distance = new double[2];
-                for (Limelight limelight : allLimelights) {
-                    if (limelight.getCameraName()
-                            == bestLimelight.getCameraName()) { // this is not running
-                        addFilteredVisionInput(bestLimelight);
-                        // limelightLogger.getCameraConnection();
-                        // limelightLogger.getPose();
-                        // limelightLogger.getMegaPose();
-                        distance = getDistanceToReefFromRobot();
-                    } // else {
-                    //     limelight.sendInvalidStatus("not best rejection");
-                    // }
-                    isIntegrating |= limelight.isIntegrating();
-                }
-            }
+        // try {
+        //     isIntegrating = false;
+        //     // Will NOT run in auto
+        //     if (DriverStation.isTeleopEnabled()) {
 
-        } catch (Exception e) {
-            Telemetry.print("Vision pose not present but tried to access it");
-        }
+        //         // choose LL with best view of tags and integrate from only that camera
+        //         Limelight bestLimelight = getBestLimelight();
+        //         VisionLogger limelightLogger = getBestVisionLogger(bestLimelight);
+        //         double[] distance = new double[2];
+        //         for (Limelight limelight : allLimelights) {
+        //             if (limelight.getCameraName()
+        //                     == bestLimelight.getCameraName()) { // this is not running
+        //                 addFilteredVisionInput(bestLimelight);
+        //                 // limelightLogger.getCameraConnection();
+        //                 // limelightLogger.getPose();
+        //                 // limelightLogger.getMegaPose();
+        //                 distance = getDistanceToReefFromRobot();
+        //             } // else {
+        //             //     limelight.sendInvalidStatus("not best rejection");
+        //             // }
+        //             isIntegrating |= limelight.isIntegrating();
+        //         }
+        //     }
+
+        // } catch (Exception e) {
+        //     Telemetry.print("Vision pose not present but tried to access it");
+        // }
+    }
+
+    /*-------------------
+    initSendable
+    Use # to denote items that are settable
+    ------------*/
+
+    @Override
+    public void initSendable(NTSendableBuilder builder) {
+        // builder.setSmartDashboardType("VisionTargetValues");
+        builder.addDoubleProperty("FrontTX", frontLL::getTagTx, null);
+        builder.addDoubleProperty("FrontTY", frontLL::getTagTA, null);
+        builder.addDoubleProperty("FrontRotation", frontLL::getTagRotationDegrees, null);
     }
 
     private void addFilteredVisionInput(Limelight ll) {

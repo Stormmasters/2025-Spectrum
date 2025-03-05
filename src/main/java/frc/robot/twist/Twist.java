@@ -161,14 +161,17 @@ public class Twist extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position", this::getPositionRotations, null);
-            builder.addDoubleProperty(
-                    "Position Percent",
-                    () -> (getPositionRotations() / config.getMaxRotations()) * 100,
-                    null);
+            builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
+            builder.addDoubleProperty("Degrees", this::getPositionDegrees, null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
+            builder.addDoubleProperty("Motor Voltage", this::getVoltage, null);
+            builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
+            builder.addDoubleProperty("Front-TX", Robot.getVision().frontLL::getTagTx, null);
+            builder.addDoubleProperty("Front-TA", Robot.getVision().frontLL::getTagTA, null);
             builder.addDoubleProperty(
-                    "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
+                    "Front-Rotation", Robot.getVision().frontLL::getTagRotationDegrees, null);
+            builder.addDoubleProperty(
+                    "Front-ClosestTag", Robot.getVision().frontLL::getClosestTagID, null);
         }
     }
 

@@ -145,11 +145,11 @@ public class Elevator extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty("Position Percentage", this::getPositionPercentage, null);
+            builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
-            builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
-            builder.addDoubleProperty("#FullExtend", config::getFullExtend, config::setFullExtend);
+            builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
+            builder.addDoubleProperty("MotorVoltage", this::getVoltage, null);
         }
     }
 
