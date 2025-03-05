@@ -55,6 +55,9 @@ public class SwerveStates {
         pilot.leftReorient.onTrue(log(reorientLeft()));
         pilot.downReorient.onTrue(log(reorientBack()));
         pilot.rightReorient.onTrue(log(reorientRight()));
+
+        // // vision aim
+        pilot.visionAim.onTrue(log(visionReefDrive()));
     }
 
     /** Pilot Commands ************************************************************************ */
@@ -86,6 +89,14 @@ public class SwerveStates {
                         pilot::getDriveLeftPositive,
                         pilot::getDriveCCWPositive)
                 .withName("Swerve.PilotFPVDrive");
+    }
+
+    protected static Command visionReefDrive() {
+        return drive(
+                        pilot::getDriveFwdPositive,
+                        pilot::getDriveLeftPositive,
+                        () -> Robot.getVision().getAdjustedThetaToReefFace())
+                .withName("Swerve.VisionDrive");
     }
 
     protected static Command pilotAimDrive(DoubleSupplier targetDegrees) {
