@@ -68,7 +68,7 @@ public class SwerveStates {
      */
     protected static Command reefAimDrive() {
         return fpvAimDrive(
-                        pilot::getDriveFwdPositive,
+                        SwerveStates::getTagDistanceVelocity,
                         SwerveStates::getTagTxVelocity,
                         Robot.getVision()::getReefTagAngle)
                 .withName("Swerve.reefAimDrive");
@@ -78,6 +78,14 @@ public class SwerveStates {
         if (Robot.getVision().frontLL.targetInView()) {
             return swerve.calculateTagCenterAlignController(
                     () -> 0, () -> Robot.getVision().frontLL.getTagTx());
+        }
+        return 0;
+    }
+
+    private static double getTagDistanceVelocity() {
+        if (Robot.getVision().frontLL.targetInView()) {
+            return swerve.calculateTagDistanceAlignController(
+                    () -> 9.258, () -> Robot.getVision().frontLL.getTagTA());
         }
         return 0;
     }

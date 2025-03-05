@@ -52,6 +52,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     private double lastSimTime;
     private RotationController rotationController;
     private TagCenterAlignController tagCenterAlignController;
+    private TagDistanceAlignController tagDistanceAlignController;
 
     @Getter
     protected SwerveModuleState[] setpoints =
@@ -89,6 +90,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
 
         rotationController = new RotationController(config);
         tagCenterAlignController = new TagCenterAlignController(config);
+        tagDistanceAlignController = new TagDistanceAlignController(config);
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -370,6 +372,19 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
             DoubleSupplier targetMeters, DoubleSupplier currentMeters) {
         return tagCenterAlignController.calculate(
                 targetMeters.getAsDouble(), currentMeters.getAsDouble());
+    }
+
+    // --------------------------------------------------------------------------------
+    // Tag Distance Align Controller
+    // --------------------------------------------------------------------------------
+    void resetTagDistanceAlignController(double currentMeters) {
+        tagDistanceAlignController.reset(currentMeters);
+    }
+
+    double calculateTagDistanceAlignController(
+            DoubleSupplier targetArea, DoubleSupplier currentArea) {
+        return tagDistanceAlignController.calculate(
+                targetArea.getAsDouble(), currentArea.getAsDouble());
     }
 
     // --------------------------------------------------------------------------------
