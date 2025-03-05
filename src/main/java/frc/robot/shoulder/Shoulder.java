@@ -30,7 +30,7 @@ public class Shoulder extends Mechanism {
         // Positions set as degrees of rotation || 0 is vertical down
         @Getter private final int initializedPosition = 0;
 
-        @Getter private final double scoreDelay = 0.2;
+        @Getter private final double scoreDelay = 0.3;
 
         /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
 
@@ -47,21 +47,21 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double l3Algae = -32;
         @Getter @Setter private double netAlgae = 180;
 
-        @Getter @Setter private double l1Coral = 45;
-        @Getter @Setter private double l2Coral = -8;
-        @Getter @Setter private double l2Score = 26;
-        @Getter @Setter private double l3Coral = -8;
-        @Getter @Setter private double l3Score = 26;
-        @Getter @Setter private double l4Coral = 158.5;
-        @Getter @Setter private double l4CoralScore = 117;
+        @Getter @Setter private double l1Coral = 51.5;
+        @Getter @Setter private double l2Coral = 14.3;
+        @Getter @Setter private double l2Score = 70; // 26
+        @Getter @Setter private double l3Coral = 9.6; // -8
+        @Getter @Setter private double l3Score = 70; // 26;
+        @Getter @Setter private double l4Coral = 170.5; // 158.5;
+        @Getter @Setter private double l4CoralScore = 128; // 117;
 
-        @Getter @Setter private double exl1Coral = 8.4;
-        @Getter @Setter private double exl2Coral = -27;
+        @Getter @Setter private double exl1Coral = 16.9;
+        @Getter @Setter private double exl2Coral = -12.4; // -27;
         @Getter @Setter private double exl2Score = 30;
-        @Getter @Setter private double exl3Coral = -27;
+        @Getter @Setter private double exl3Coral = -11.8; // -27;
         @Getter @Setter private double exl3Score = 30;
-        @Getter @Setter private double exl4Coral = 179;
-        @Getter @Setter private double exl4Score = 133;
+        @Getter @Setter private double exl4Coral = 199.3; // 179;
+        @Getter @Setter private double exl4Score = 145.8; // 133;
 
         @Getter @Setter private double tolerance = 0.95;
 

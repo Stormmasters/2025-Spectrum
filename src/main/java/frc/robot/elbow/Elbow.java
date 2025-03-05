@@ -34,6 +34,8 @@ public class Elbow extends Mechanism {
         @Getter private final double home = 180;
         @Getter private final double clearElevator = -125;
 
+        @Getter private final double scoreDelay = 0.2;
+
         @Getter private final double algaeLollipop = -90; // TODO: find this value
         @Getter private final double coralLollipop = -90; // TODO: find this value
         @Getter private final double stationIntake = 158.7;
@@ -42,21 +44,21 @@ public class Elbow extends Mechanism {
         @Getter private final double groundCoralIntake = -75; // TODO: find this value
 
         @Getter private final double stage = -160;
-        @Getter private final double l1Coral = -126;
-        @Getter private final double l2Coral = -144.5;
-        @Getter private final double l2Score = -130;
-        @Getter private final double l3Coral = -144.5;
-        @Getter private final double l3Score = -130;
-        @Getter private final double l4Coral = -128;
-        @Getter private final double l4Score = -107.6;
+        @Getter private final double l1Coral = -121.4;
+        @Getter private final double l2Coral = -118;
+        @Getter private final double l2Score = -108;
+        @Getter private final double l3Coral = -124; // -144.5;
+        @Getter private final double l3Score = -109; // -130;
+        @Getter private final double l4Coral = -132; // -128;
+        @Getter private final double l4Score = -104; // -107.6;
 
-        @Getter private final double exL1Coral = -123.8;
-        @Getter private final double exL2Coral = -145;
-        @Getter private final double exL2Score = -127;
-        @Getter private final double exL3Coral = -143;
-        @Getter private final double exL3Score = -127;
-        @Getter private final double exL4Coral = -126;
-        @Getter private final double exL4Score = -104;
+        @Getter private final double exL1Coral = -130.6;
+        @Getter private final double exL2Coral = -118;
+        @Getter private final double exL2Score = -109.6; // -127;
+        @Getter private final double exL3Coral = -115.6; // -143;
+        @Getter private final double exL3Score = -106.4; // -127;
+        @Getter private final double exL4Coral = -131; // -126;
+        @Getter private final double exL4Score = -106.9; // -104;
 
         @Getter private final double processorAlgae = -86;
         @Getter private final double l2Algae = -115;
