@@ -366,66 +366,7 @@ public class Vision extends SubsystemBase implements NTSendable {
             limelight.setLimelightPipeline(pipeline);
         }
     }
-
-    // ------------------------------------------------------------------------------
-    // Config
-    // ------------------------------------------------------------------------------
-
-    /**
-     * CommandConfig used to create a PIDController and for vision commands using other subsystems
-     * (i.e. swerve)
-     */
-    public static class CommandConfig {
-        public double kp;
-        public double tolerance;
-        public double maxOutput;
-        public double error;
-        public int pipelineIndex;
-        public Limelight limelight;
-        /* For Drive-To commands */
-        public CommandConfig alignCommand;
-        public double verticalSetpoint; // numbers get small as the cone gets closer
-        public double verticalMaxView;
-
-        public void configKp(double kp) {
-            this.kp = kp;
-        }
-
-        public void configTolerance(double tolerance) {
-            this.tolerance = tolerance;
-        }
-
-        public void configMaxOutput(double maxOutput) {
-            this.maxOutput = maxOutput;
-        }
-
-        public void configError(double error) {
-            this.error = error;
-        }
-
-        public void configPipelineIndex(int pipelineIndex) {
-            this.pipelineIndex = pipelineIndex;
-        }
-
-        public void configLimelight(Limelight limelight) {
-            this.limelight = limelight;
-        }
-
-        public void configVerticalSetpoint(double verticalSetpoint) {
-            this.verticalSetpoint = verticalSetpoint;
-        }
-
-        public void configVerticalMaxView(double verticalMaxView) {
-            this.verticalMaxView = verticalMaxView;
-        }
-
-        public void configAlignCommand(CommandConfig alignCommand) {
-            this.alignCommand = alignCommand;
-        }
-
-        public CommandConfig() {}
-    }
-
+    
     // ------------------------------------------------------------------------------
     // Calculation Functions
     // ------------------------------------------------------------------------------
