@@ -136,13 +136,13 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             elbow = new Elbow(config.elbow);
             Timer.delay(canInitDelay);
-            twist = new Twist(config.twist);
-            Timer.delay(canInitDelay);
             intake = new Intake(config.intake);
             Timer.delay(canInitDelay);
             auton = new Auton();
             visionSystem = new VisionSystem(swerve::getRobotPose);
             vision = new Vision();
+            Timer.delay(canInitDelay);
+            twist = new Twist(config.twist);
 
             // Setup Default Commands for all subsystems
             setupDefaultCommands();

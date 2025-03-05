@@ -41,7 +41,8 @@ public class Pilot extends Gamepad {
     public final Trigger score = actionReady.not().and(teleop);
 
     // vision Drive
-    public final Trigger visionAim = Y.and(noFn, teleop);
+    public final Trigger visionAim_Y = Y.and(noFn, teleop);
+
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);
     public final Trigger leftReorient = leftDpad.and(fn, teleop);
@@ -52,7 +53,7 @@ public class Pilot extends Gamepad {
     public final Trigger driving = enabled.and(leftStickX.or(leftStickY));
     public final Trigger steer = enabled.and(rightStickX.or(rightStickY));
 
-    public final Trigger fpv_RS = rightStickClick.and(enabled); // Remapped to Right back button
+    public final Trigger fpv_LS = leftStickClick.and(enabled); // Remapped to Right back button
 
     // DISABLED TRIGGERS
     public final Trigger coastOn_dB = disabled.and(B);

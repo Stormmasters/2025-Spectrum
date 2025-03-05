@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.vision.Vision.VisionConfig;
 import frc.spectrumLib.vision.LimelightHelpers.LimelightResults;
 import frc.spectrumLib.vision.LimelightHelpers.RawFiducial;
 import java.text.DecimalFormat;
@@ -301,14 +302,62 @@ public class Limelight {
         if (!isAttached()) {
             return;
         }
-        LimelightHelpers.setRobotOrientation(config.name, degrees, 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(config.name, degrees, 0, 0, 0, 0, 0);
     }
 
     public void setRobotOrientation(double degrees, double angularRate) {
         if (!isAttached()) {
             return;
         }
-        LimelightHelpers.setRobotOrientation(config.name, degrees, angularRate, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(config.name, degrees, angularRate, 0, 0, 0, 0);
+    }
+
+    public void setIMUmode(int mode) {
+        if (!isAttached()) {
+            return;
+        }
+        LimelightHelpers.SetIMUMode(config.name, mode);
+    }
+
+    public double getTagTx() {
+        if (!isAttached()) {
+            return -99999;
+        }
+
+        if (!targetInView()) {
+            return -99999;
+        }
+
+        double tx = LimelightHelpers.getTargetPose3d_RobotSpace(cameraName).getX();
+
+        return tx;
+    }
+
+    public double getTagTA() {
+        if (!isAttached()) {
+            return -99999;
+        }
+        if (!targetInView()) {
+            return -99999;
+        }
+
+        double ta = LimelightHelpers.getTA(cameraName);
+
+        return ta;
+    }
+
+    public double getTagRotationDegrees() {
+        if (!isAttached()) {
+            return -99999;
+        }
+        if (!targetInView()) {
+            return -99999;
+        }
+
+        double rotation =
+                LimelightHelpers.getTargetPose3d_RobotSpace(cameraName).getRotation().getZ();
+
+        return rotation;
     }
 
     /**

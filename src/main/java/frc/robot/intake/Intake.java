@@ -111,11 +111,11 @@ public class Intake extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
+            builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty("Motor Voltage", this::getVoltage, null);
             builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty("Velocity RPM", this::getVelocityRPM, null);
-            builder.addDoubleProperty("StatorCurrent", this::getCurrent, null);
-            builder.addDoubleProperty("Coral Score Config", config::getCoralScoreVoltage, null);
+            builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
         }
     }
 
@@ -144,7 +144,7 @@ public class Intake extends Mechanism {
 
     public boolean hasIntakeGamePiece() {
         double motorOutput = getVelocityRPM(); // might be better to check with motor voltage
-        double motorCurrent = getCurrent();
+        double motorCurrent = getStatorCurrent();
         return (Math.abs(motorOutput) < config.hasGamePieceVelocity
                 && Math.abs(motorCurrent) > config.hasGamePieceCurrent);
     }

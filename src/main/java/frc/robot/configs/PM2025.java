@@ -16,7 +16,7 @@ public class PM2025 extends Config {
         elbow.setAttached(true);
         twist.setAttached(true);
         intake.setAttached(true);
-        climb.setAttached(false);
+        climb.setAttached(true);
         groundIntake.setAttached(false);
     }
 }
