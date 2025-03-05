@@ -9,8 +9,10 @@ import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
+import frc.robot.RobotStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
@@ -24,35 +26,42 @@ public class Shoulder extends Mechanism {
 
     public static class ShoulderConfig extends Config {
         @Getter @Setter private boolean isPhoton = false;
-        @Getter @Setter private boolean reversed = false;
 
         // Positions set as degrees of rotation || 0 is vertical down
         @Getter private final int initializedPosition = 0;
 
+        @Getter private final double scoreDelay = 0.2;
+
         /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
-        // TODO: Find shoulder positions
 
         @Getter @Setter private double climbPrep = 0;
         @Getter @Setter private double home = 0;
 
-        @Getter @Setter private double stationIntake = 0;
-        @Getter @Setter private double stationExtendedIntake = 172;
-        @Getter @Setter private double clawGroundAlgaeIntake = -164;
-        @Getter @Setter private double clawGroundCoralIntake = -164;
-        @Getter @Setter private double handOff = 180;
+        @Getter @Setter private double stationIntake = 9.2;
+        @Getter @Setter private double stationExtendedIntake = 23.6;
+        @Getter @Setter private double groundAlgaeIntake = 0;
+        @Getter @Setter private double groundCoralIntake = -4;
 
-        @Getter @Setter private double processorAlgae = 0.0;
-        @Getter @Setter private double l2Algae = -43.07;
-        @Getter @Setter private double l3Algae = -43.07;
+        @Getter @Setter private double processorAlgae = 55;
+        @Getter @Setter private double l2Algae = -32;
+        @Getter @Setter private double l3Algae = -32;
         @Getter @Setter private double netAlgae = 180;
 
-        @Getter @Setter private double l1Coral = -14;
-        @Getter @Setter private double l2Coral = -34;
-        @Getter @Setter private double l2CoralScore = -34.0 + 15;
-        @Getter @Setter private double l3Coral = -34;
-        @Getter @Setter private double l3CoralScore = -34.0 + 15;
-        @Getter @Setter private double l4Coral = 210;
-        @Getter @Setter private double l4CoralScore = 210.0 - 50;
+        @Getter @Setter private double l1Coral = 45;
+        @Getter @Setter private double l2Coral = -8;
+        @Getter @Setter private double l2Score = 26;
+        @Getter @Setter private double l3Coral = -8;
+        @Getter @Setter private double l3Score = 26;
+        @Getter @Setter private double l4Coral = 158.5;
+        @Getter @Setter private double l4CoralScore = 117;
+
+        @Getter @Setter private double exl1Coral = 8.4;
+        @Getter @Setter private double exl2Coral = -27;
+        @Getter @Setter private double exl2Score = 30;
+        @Getter @Setter private double exl3Coral = -27;
+        @Getter @Setter private double exl3Score = 30;
+        @Getter @Setter private double exl4Coral = 179;
+        @Getter @Setter private double exl4Score = 133;
 
         @Getter @Setter private double tolerance = 0.95;
 
@@ -161,11 +170,12 @@ public class Shoulder extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
+            builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty(
                     "Position Degrees", () -> (this.getPositionDegrees() - config.offset), null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
-            builder.addDoubleProperty(
-                    "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
+            builder.addDoubleProperty("MotorVoltage", this::getVoltage, null);
+            builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
         }
     }
 
@@ -185,6 +195,30 @@ public class Shoulder extends Mechanism {
         return runOnce(this::setInitialPosition)
                 .ignoringDisable(true)
                 .withName("Reset to Initial position");
+    }
+
+    @Override
+    public Trigger belowDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        (getPositionDegrees() + config.getOffset())
+                                < (degrees.getAsDouble() - tolerance.getAsDouble()));
+    }
+
+    @Override
+    public Trigger aboveDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        (getPositionDegrees() + config.getOffset())
+                                > (degrees.getAsDouble() + tolerance.getAsDouble()));
+    }
+
+    @Override
+    public Trigger atDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(getPositionDegrees() + config.getOffset() - degrees.getAsDouble())
+                                < tolerance.getAsDouble());
     }
 
     // --------------------------------------------------------------------------------
@@ -247,32 +281,26 @@ public class Shoulder extends Mechanism {
         };
     }
 
-    public boolean ShoulderHasError() {
-        if (isAttached()) {
-            return getPositionRotations() > config.getMaxRotations();
-        }
-        return false;
-    }
-
-    public double checkReversed(DoubleSupplier position) {
-        if (!config.isReversed()) {
-            return position.getAsDouble();
-        }
-
-        return position.getAsDouble() * -1;
-    }
-
     @Override
     public Command moveToDegrees(DoubleSupplier degrees) {
         return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
     }
 
-    public DoubleSupplier offsetPosition(DoubleSupplier position) {
-        return () -> (position.getAsDouble() + config.getOffset());
+    public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
+        return run(
+                () -> {
+                    // TODO: add a check for reversed and negate values when we do double sided
+                    // scoring.
+                    if (RobotStates.extended.getAsBoolean()) {
+                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(exDegrees)));
+                    } else {
+                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(degrees)));
+                    }
+                });
     }
 
-    public Command moveToDegreesAndCheckReversed(DoubleSupplier degrees) {
-        return moveToDegrees(() -> checkReversed(degrees));
+    public DoubleSupplier offsetPosition(DoubleSupplier position) {
+        return () -> (position.getAsDouble() + config.getOffset());
     }
 
     // --------------------------------------------------------------------------------

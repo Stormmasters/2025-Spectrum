@@ -21,6 +21,7 @@ import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
@@ -50,6 +51,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     private Notifier simNotifier = null;
     private double lastSimTime;
     private RotationController rotationController;
+    private TagCenterAlignController tagCenterAlignController;
+    private TagDistanceAlignController tagDistanceAlignController;
 
     @Getter
     protected SwerveModuleState[] setpoints =
@@ -65,6 +68,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
             NetworkTableInstance.getDefault()
                     .getStructArrayTopic("SwerveStates", SwerveModuleState.struct)
                     .publish();
+    StructPublisher<Pose2d> posePublisher =
+            NetworkTableInstance.getDefault().getStructTopic("MyPose", Pose2d.struct).publish();
 
     /**
      * Constructs a new Swerve drive subsystem.
@@ -84,6 +89,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         configurePathPlanner();
 
         rotationController = new RotationController(config);
+        tagCenterAlignController = new TagCenterAlignController(config);
+        tagDistanceAlignController = new TagDistanceAlignController(config);
 
         if (Utils.isSimulation()) {
             startSimThread();
@@ -107,6 +114,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
      */
     @Override
     public void periodic() {
+        posePublisher.set(getRobotPose());
         setPilotPerspective();
     }
 
@@ -223,7 +231,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         return run(() -> this.setControl(requestSupplier.get())).ignoringDisable(true);
     }
 
-    private ChassisSpeeds getCurrentRobotChassisSpeeds() {
+    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return getKinematics().toChassisSpeeds(getState().ModuleStates);
     }
 
@@ -351,6 +359,32 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
 
     double calculateRotationController(DoubleSupplier targetRadians) {
         return rotationController.calculate(targetRadians.getAsDouble(), getRotationRadians());
+    }
+
+    // --------------------------------------------------------------------------------
+    // Tag Center Align Controller
+    // --------------------------------------------------------------------------------
+    void resetTagCenterAlignController(double currentMeters) {
+        tagCenterAlignController.reset(currentMeters);
+    }
+
+    double calculateTagCenterAlignController(
+            DoubleSupplier targetMeters, DoubleSupplier currentMeters) {
+        return tagCenterAlignController.calculate(
+                targetMeters.getAsDouble(), currentMeters.getAsDouble());
+    }
+
+    // --------------------------------------------------------------------------------
+    // Tag Distance Align Controller
+    // --------------------------------------------------------------------------------
+    void resetTagDistanceAlignController(double currentMeters) {
+        tagDistanceAlignController.reset(currentMeters);
+    }
+
+    double calculateTagDistanceAlignController(
+            DoubleSupplier targetArea, DoubleSupplier currentArea) {
+        return tagDistanceAlignController.calculate(
+                targetArea.getAsDouble(), currentArea.getAsDouble());
     }
 
     // --------------------------------------------------------------------------------

@@ -63,9 +63,9 @@ public class PhotonShoulderConfig extends ShoulderConfig {
         setStationExtendedIntake(stationIntakeExtended);
         setL1Coral(l1Coral);
         setL2Coral(l2Coral);
-        setL2CoralScore(l2Coral);
+        setL2Score(l2Coral);
         setL3Coral(l3Coral);
-        setL3CoralScore(l3Coral);
+        setL3Score(l3Coral);
         setL4Coral(l4Coral);
         setL4CoralScore(l4Coral);
         setL2Algae(l2Algae);

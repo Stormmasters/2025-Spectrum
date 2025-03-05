@@ -1,10 +1,10 @@
-package frc.robot.coralIntake;
+package frc.robot.intake;
 
-import frc.robot.coralIntake.CoralIntake.CoralIntakeConfig;
+import frc.robot.intake.Intake.IntakeConfig;
 import lombok.Getter;
 import lombok.Setter;
 
-public class PhotonCoralIntakeConfig extends CoralIntakeConfig {
+public class PhotonIntakeConfig extends IntakeConfig {
 
     // Coral Voltages and Current
     @Getter @Setter private double coralIntakeVoltage = 9.0;
@@ -26,7 +26,7 @@ public class PhotonCoralIntakeConfig extends CoralIntakeConfig {
     @Getter private double velocityKv = 0.2; // 0.12;
     @Getter private double velocityKs = 0;
 
-    public PhotonCoralIntakeConfig() {
+    public PhotonIntakeConfig() {
         super();
         setCoralIntakeVoltage(coralIntakeVoltage);
         setCoralIntakeSupplyCurrent(coralIntakeSupplyCurrent);

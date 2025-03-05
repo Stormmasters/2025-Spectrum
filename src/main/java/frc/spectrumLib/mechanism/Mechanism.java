@@ -52,6 +52,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     private final CachedDouble cachedRotations;
     private final CachedDouble cachedPercentage;
+    private final CachedDouble cachedVoltage;
     private final CachedDouble cachedDegrees;
     private final CachedDouble cachedVelocity;
     private final CachedDouble cachedCurrent;
@@ -73,6 +74,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         }
 
         cachedCurrent = new CachedDouble(this::updateCurrent);
+        cachedVoltage = new CachedDouble(this::updateVoltage);
         cachedRotations = new CachedDouble(this::updatePositionRotations);
         cachedPercentage = new CachedDouble(this::updatePositionPercentage);
         cachedDegrees = new CachedDouble(this::updatePositionDegrees);
@@ -112,6 +114,15 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         builder.setSmartDashboardType(getName());
+    }
+
+    protected String getCurrentCommandName() {
+        Command currentCommand = this.getCurrentCommand();
+        if (currentCommand != null) {
+            return currentCommand.getName();
+        }
+
+        return "none";
     }
 
     public Trigger runningDefaultCommand() {
@@ -203,15 +214,19 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     public Trigger atCurrent(DoubleSupplier target, DoubleSupplier tolerance) {
         return new Trigger(
-                () -> Math.abs(getCurrent() - target.getAsDouble()) < tolerance.getAsDouble());
+                () ->
+                        Math.abs(getStatorCurrent() - target.getAsDouble())
+                                < tolerance.getAsDouble());
     }
 
     public Trigger belowCurrent(DoubleSupplier target, DoubleSupplier tolerance) {
-        return new Trigger(() -> getCurrent() < (target.getAsDouble() + tolerance.getAsDouble()));
+        return new Trigger(
+                () -> getStatorCurrent() < (target.getAsDouble() + tolerance.getAsDouble()));
     }
 
     public Trigger aboveCurrent(DoubleSupplier target, DoubleSupplier tolerance) {
-        return new Trigger(() -> getCurrent() > (target.getAsDouble() - tolerance.getAsDouble()));
+        return new Trigger(
+                () -> getStatorCurrent() > (target.getAsDouble() - tolerance.getAsDouble()));
     }
 
     /**
@@ -226,8 +241,19 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         return 0;
     }
 
-    public double getCurrent() {
+    public double getStatorCurrent() {
         return cachedCurrent.getAsDouble();
+    }
+
+    public double updateVoltage() {
+        if (config.attached) {
+            return motor.getMotorVoltage().getValueAsDouble();
+        }
+        return 0;
+    }
+
+    public double getVoltage() {
+        return cachedVoltage.getAsDouble();
     }
 
     /**
@@ -420,12 +446,13 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
                 .withName(getName() + ".ensureBrakeMode");
     }
 
-    protected Command setCurrentLimits(DoubleSupplier supplyLimit, DoubleSupplier statorLimit) {
-        return new InstantCommand(
-                () -> {
-                    toggleSupplyCurrentLimit(supplyLimit, true);
-                    toggleTorqueCurrentLimit(statorLimit, true);
-                });
+    protected Command runCurrentLimits(DoubleSupplier supplyLimit, DoubleSupplier statorLimit) {
+        return new InstantCommand(() -> setCurrentLimits(supplyLimit, statorLimit));
+    }
+
+    protected void setCurrentLimits(DoubleSupplier supplyLimit, DoubleSupplier statorLimit) {
+        toggleSupplyCurrentLimit(supplyLimit, true);
+        toggleTorqueCurrentLimit(statorLimit, true);
     }
 
     protected void stop() {
@@ -651,7 +678,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
             @Override
             public void execute() {
-                totalCurrent += getCurrent();
+                totalCurrent += getStatorCurrent();
                 count++;
             }
 
@@ -684,7 +711,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
             @Override
             public void execute() {
-                double current = getCurrent();
+                double current = getStatorCurrent();
                 if (current > maxCurrent) {
                     maxCurrent = current;
                 }
@@ -717,7 +744,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
             @Override
             public void execute() {
-                double current = getCurrent();
+                double current = getStatorCurrent();
                 if (current > maxCurrent) {
                     maxCurrent = current;
                 }

@@ -1,8 +1,8 @@
 package frc.robot.configs;
 
 import frc.robot.Robot.Config;
-import frc.robot.coralIntake.PhotonCoralIntakeConfig;
 import frc.robot.elevator.PhotonElevatorConfig;
+import frc.robot.intake.PhotonIntakeConfig;
 import frc.robot.leds.PhotonLEDsConfig;
 import frc.robot.shoulder.PhotonShoulderConfig;
 
@@ -16,7 +16,7 @@ public class PHOTON2025 extends Config {
 
         elevator = new PhotonElevatorConfig();
         shoulder = new PhotonShoulderConfig();
-        coralIntake = new PhotonCoralIntakeConfig();
+        intake = new PhotonIntakeConfig();
         leds = new PhotonLEDsConfig();
 
         // Attached Mechanisms
@@ -24,8 +24,8 @@ public class PHOTON2025 extends Config {
         operator.setAttached(true);
         elevator.setAttached(true);
         shoulder.setAttached(true);
-        coralIntake.setAttached(true);
-        inClimb.setAttached(true);
+        intake.setAttached(true);
+        climb.setAttached(true);
         groundIntake.setAttached(false);
         leds.setAttached(true);
 
