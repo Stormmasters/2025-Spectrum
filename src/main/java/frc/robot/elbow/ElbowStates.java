@@ -74,10 +74,10 @@ public class ElbowStates {
                 .whileTrue(move(config::getL4Score, config::getExL4Score, "Elbow.l4Score"));
 
         // Algae
-        L2Algae.and(actionState.or(actionPrepState))
-                .whileTrue(move(config::getL2Algae, "Elbow.l2Algae"));
-        L3Algae.and(actionState.or(actionPrepState))
-                .whileTrue(move(config::getL3Algae, "Elbow.l3Algae"));
+        L2Algae.and(actionPrepState).whileTrue(move(config::getL2Algae, "Elbow.l2Algae"));
+        L2Algae.and(actionState).whileTrue(move(config::getHome, "Elbow.l2AlgaeHome"));
+        L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Elbow.l3Algae"));
+        L3Algae.and(actionState).whileTrue(move(config::getHome, "Elbow.l3AlgaeHome"));
 
         netAlgae.whileTrue(move(config::getNet, "Elbow.netAlgae"));
     }

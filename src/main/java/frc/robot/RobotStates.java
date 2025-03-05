@@ -23,7 +23,7 @@ public class RobotStates {
     private static final Operator operator = Robot.getOperator();
     private static final Swerve swerve = Robot.getSwerve();
 
-    @Getter private static double scoreTime = 1.0;
+    @Getter private static double scoreTime = 3.0;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
@@ -179,7 +179,7 @@ public class RobotStates {
         actionState.not().and(operator.coralStage.not()).onTrue(coral.setFalse());
 
         // When we change to not scoring and not algae stage we turn off algae
-        actionState.not().and(operator.algaeStage.not()).onTrue(algae.setFalse());
+        // actionState.not().and(operator.algaeStage.not()).onTrue(algae.setFalse());
 
         // Set coral if we are staging coral
         operator.coralStage.or(autonLeftL4, autonRightL4).onTrue(coral.setTrue(), algae.setFalse());

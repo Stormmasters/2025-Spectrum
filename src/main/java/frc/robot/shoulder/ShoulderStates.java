@@ -28,10 +28,14 @@ public class ShoulderStates {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        stationIntaking.whileTrue(move(config::getStationIntake, "Shoulder.stationIntake"));
-        stationExtendedIntaking.whileTrue(
-                move(config::getStationExtendedIntake, "Shoulder.stationExtendedIntake"));
-        stationIntaking.or(stationExtendedIntaking, groundCoral, groundAlgae).onFalse(home());
+        stationIntaking.whileTrue(
+                move(
+                        config::getStationIntake,
+                        config::getStationExtendedIntake,
+                        "Shoulder.stationIntake"));
+        // stationExtendedIntaking.whileTrue(
+        //         move(config::getStationExtendedIntake, "Shoulder.stationExtendedIntake"));
+        stationIntaking.or(groundCoral, groundAlgae).onFalse(home());
 
         groundCoral.whileTrue(move(config::getGroundCoralIntake, "Shoulder.groundCoral"));
         groundAlgae.whileTrue(move(config::getGroundAlgaeIntake, "Shoulder.groundAlgae"));
@@ -47,6 +51,8 @@ public class ShoulderStates {
                 .or(Robot.getPilot().photonRemoveL3Algae)
                 .onFalse(home());
 
+        stagedCoral.and(actionState.not()).whileTrue(move(config::getHome, "Shoulder.Stage"));
+
         L1Coral.and(actionState.or(actionPrepState))
                 .whileTrue(move(config::getL1Coral, config::getExl1Coral, "Shoulder.L1Coral"));
         L2Coral.and(actionPrepState)
@@ -57,7 +63,11 @@ public class ShoulderStates {
                                 "Shoulder.L2Coral.prescore"));
         L2Coral.and(actionState)
                 .whileTrue(
-                        move(config::getL2Score, config::getExl2Score, "Shoulder.L2Coral.score"));
+                        move(
+                                config::getL2Score,
+                                config::getExl2Score,
+                                config::getScoreDelay,
+                                "Shoulder.L2Coral.score"));
         L3Coral.and(actionPrepState)
                 .whileTrue(
                         move(
@@ -66,7 +76,11 @@ public class ShoulderStates {
                                 "Shoulder.L3Coral.prescore"));
         L3Coral.and(actionState)
                 .whileTrue(
-                        move(config::getL3Score, config::getExl3Score, "Shoulder.L3Coral.score"));
+                        move(
+                                config::getL3Score,
+                                config::getExl3Score,
+                                config::getScoreDelay,
+                                "Shoulder.L3Coral.score"));
         L4Coral.and(actionPrepState)
                 .whileTrue(
                         move(
@@ -78,15 +92,16 @@ public class ShoulderStates {
                         move(
                                 config::getL4CoralScore,
                                 config::getExl4Score,
+                                config::getScoreDelay,
                                 "Shoulder.L4Coral.score"));
 
         processorAlgae
                 .and(actionPrepState.or(actionState))
                 .whileTrue(move(config::getProcessorAlgae, "Shoulder.processorAlgae"));
-        L2Algae.and(actionPrepState.or(actionState))
-                .whileTrue(move(config::getL2Algae, "Shoulder.L2Algae"));
-        L3Algae.and(actionPrepState.or(actionState))
-                .whileTrue(move(config::getL3Algae, "Shoulder.L3Algae"));
+        L2Algae.and(actionPrepState).whileTrue(move(config::getL2Algae, "Shoulder.L2Algae"));
+        L2Algae.and(actionState).whileTrue(move(config::getHome, "Shoulder.L2AlgaeHome"));
+        L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Shoulder.L3Algae"));
+        L3Algae.and(actionState).whileTrue(move(config::getHome, "Shoulder.L3AlgaeHome"));
         netAlgae.and(actionPrepState.or(actionState))
                 .whileTrue(move(config::getNetAlgae, "Shoulder.netAlgae"));
 
@@ -116,6 +131,12 @@ public class ShoulderStates {
 
     public static Command move(DoubleSupplier degrees, DoubleSupplier exDegrees, String name) {
         return shoulder.move(degrees, exDegrees).withName(name);
+    }
+
+    public static Command move(
+            DoubleSupplier degrees, DoubleSupplier exDegrees, DoubleSupplier delay, String name) {
+        return new WaitCommand(delay.getAsDouble())
+                .andThen(move(degrees, exDegrees, name).withName(name));
     }
 
     public static Command coastMode() {

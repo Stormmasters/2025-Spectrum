@@ -27,11 +27,11 @@ public class IntakeStates {
     }
 
     public static void setStates() {
-        intakeRunning.onFalse(intake.getDefaultCommand());
+        // intakeRunning.onFalse(intake.getDefaultCommand());
         Robot.getPilot()
                 .home_select
                 .or(Robot.getOperator().home_select)
-                .onTrue(intake.getDefaultCommand());
+                .onTrue(intake.runVoltage(() -> 0));
 
         stationIntaking
                 .or(photonAlgaeRemoval, stationExtendedIntaking)
@@ -44,25 +44,32 @@ public class IntakeStates {
                                 config::getAlgaeScoreSupplyCurrent,
                                 config::getAlgaeScoreTorqueCurrent));
 
-        hasGamePiece.onTrue(intake.getDefaultCommand());
+        // hasGamePiece.onTrue(intake.getDefaultCommand());
 
         stationIntaking
                 .or(photonAlgaeRemoval, stationExtendedIntaking)
-                .and(hasGamePiece.not())
                 // .whileTrue(runVoltageCurrentLimits(
                 //         config::getCoralIntakeVoltage,
                 //         config::getCoralIntakeSupplyCurrent,
                 //         config::getCoralIntakeTorqueCurrent));
-                .whileTrue(runGroundIntake());
+                .whileTrue(
+                        intake.intakeCoral(
+                                        config::getCoralIntakeTorqueCurrent,
+                                        config::getCoralIntakeSupplyCurrent)
+                                .withName("Intake.StationIntaking"));
 
-        groundCoral.and(hasGamePiece.not()).whileTrue(runGroundIntake());
+        groundCoral.whileTrue(
+                intake.intakeCoral(
+                                config::getCoralGroundTorqueCurrent,
+                                config::getCoralGroundSupplyCurrent)
+                        .withName("Intake.GroundCoral"));
 
-        algae.and(photon.not(), hasGamePiece.not())
-                .onTrue(
-                        runVoltageCurrentLimits(
-                                config::getAlgaeIntakeVoltage,
-                                config::getAlgaeIntakeSupplyCurrent,
-                                config::getAlgaeIntakeTorqueCurrent));
+        algae.and(photon.not())
+                .whileTrue(
+                        intake.intakeAlage(
+                                        config::getAlgaeIntakeTorqueCurrent,
+                                        config::getAlgaeIntakeSupplyCurrent)
+                                .withName("Intake.Algae"));
 
         L1Coral.and(actionState)
                 .whileTrue(

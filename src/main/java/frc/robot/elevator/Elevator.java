@@ -22,7 +22,7 @@ public class Elevator extends Mechanism {
         @Getter @Setter private boolean isPhoton = false;
 
         /* Elevator constants in rotations */
-        @Getter @Setter private double maxRotations = 20.5;
+        @Getter @Setter private double maxRotations = 21.1;
 
         @Getter @Setter private double minRotations = 0.3;
 
@@ -34,28 +34,28 @@ public class Elevator extends Mechanism {
         @Getter @Setter private double clawGroundAlgaeIntake = 0;
         @Getter @Setter private double clawGroundCoralIntake = 0;
 
-        @Getter @Setter private double stationIntake = 2.7;
+        @Getter @Setter private double stationIntake = 0;
         @Getter @Setter private double stationExtendedIntake = 6.5;
 
         @Getter @Setter private double processorAlgae = 0.3;
-        @Getter @Setter private double l2Algae = 0.3;
-        @Getter @Setter private double l3Algae = 12.5;
+        @Getter @Setter private double l2Algae = 1;
+        @Getter @Setter private double l3Algae = 12;
         @Getter @Setter private double netAlgae = fullExtend;
 
-        @Getter @Setter private double l1Coral = 0.3;
-        @Getter @Setter private double l2Coral = 7.15;
-        @Getter @Setter private double l2Score = l2Coral - 2;
-        @Getter @Setter private double l3Coral = 17.5;
-        @Getter @Setter private double l3Score = l3Coral - 2;
-        @Getter @Setter private double l4Coral = 18.86;
+        @Getter @Setter private double l1Coral = 0;
+        @Getter @Setter private double l2Coral = 1; // 0.68;
+        @Getter @Setter private double l2Score = l2Coral;
+        @Getter @Setter private double l3Coral = 12.8; // 10.7;
+        @Getter @Setter private double l3Score = l3Coral - 1;
+        @Getter @Setter private double l4Coral = fullExtend;
         @Getter @Setter private double l4Score = l4Coral;
 
         @Getter @Setter private double exl1Coral = 0.3;
-        @Getter @Setter private double exl2Coral = 7.15;
-        @Getter @Setter private double exl2Score = exl2Coral - 2;
-        @Getter @Setter private double exl3Coral = 17.5;
-        @Getter @Setter private double exl3Score = exl3Coral - 2;
-        @Getter @Setter private double exl4Coral = 18.86;
+        @Getter @Setter private double exl2Coral = 1;
+        @Getter @Setter private double exl2Score = 0.3;
+        @Getter @Setter private double exl3Coral = 12.8;
+        @Getter @Setter private double exl3Score = 11.8;
+        @Getter @Setter private double exl4Coral = fullExtend;
         @Getter @Setter private double exl4Score = exl4Coral;
 
         @Getter private double triggerTolerance = 0.95;

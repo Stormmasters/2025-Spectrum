@@ -4,6 +4,7 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.RobotStates;
@@ -25,7 +26,7 @@ public class Intake extends Mechanism {
 
         // Algae Voltages and Current
         @Getter @Setter private double algaeIntakeVoltage = -9.0;
-        @Getter @Setter private double algaeIntakeSupplyCurrent = 15.0;
+        @Getter @Setter private double algaeIntakeSupplyCurrent = 30.0;
         @Getter @Setter private double algaeIntakeTorqueCurrent = 90.0;
 
         @Getter @Setter private double algaeScoreVoltage = 12.0;
@@ -34,20 +35,20 @@ public class Intake extends Mechanism {
 
         // Coral Voltages and Current
         @Getter @Setter private double coralHoldVoltage = 9.0;
-        @Getter @Setter private double coralHoldSupplyCurrent = 3.0;
+        @Getter @Setter private double coralHoldSupplyCurrent = 30.0;
         @Getter @Setter private double coralHoldTorqueCurrent = 15.0;
 
         @Getter @Setter private double coralIntakeVoltage = 12.0;
-        @Getter @Setter private double coralIntakeSupplyCurrent = 40.0;
+        @Getter @Setter private double coralIntakeSupplyCurrent = 30.0;
         @Getter @Setter private double coralIntakeTorqueCurrent = 180.0;
 
         @Getter @Setter private double coralGroundVoltage = 12.0;
         @Getter @Setter private double coralGroundSupplyCurrent = 40.0;
         @Getter @Setter private double coralGroundTorqueCurrent = 180.0;
 
-        @Getter @Setter private double coralScoreVoltage = 0;
+        @Getter @Setter private double coralScoreVoltage = -1;
         @Getter @Setter private double coralScoreSupplyCurrent = 12.0;
-        @Getter @Setter private double coralScoreTorqueCurrent = 27.0;
+        @Getter @Setter private double coralScoreTorqueCurrent = 40.0;
 
         @Getter @Setter private double coralL1ScoreVoltage = -8;
         @Getter @Setter private double coralL1ScoreSupplyCurrent = 15.0;
@@ -146,6 +147,50 @@ public class Intake extends Mechanism {
         double motorCurrent = getCurrent();
         return (Math.abs(motorOutput) < config.hasGamePieceVelocity
                 && Math.abs(motorCurrent) > config.hasGamePieceCurrent);
+    }
+
+    public Command intakeCoral(DoubleSupplier torque, DoubleSupplier current) {
+        return new FunctionalCommand(
+                () -> setCurrentLimits(current, torque),
+                () -> {
+                    if (hasIntakeGamePiece()) {
+                        setVoltageAndCurrentLimits(
+                                config::getCoralHoldVoltage,
+                                config::getCoralHoldSupplyCurrent,
+                                config::getCoralHoldTorqueCurrent);
+                    } else {
+                        setCurrentLimits(current, torque);
+                        setTorqueCurrentFoc(torque);
+                    }
+                },
+                (b) -> {},
+                () -> false,
+                this);
+    }
+
+    public Command intakeAlage(DoubleSupplier torque, DoubleSupplier current) {
+        return new FunctionalCommand(
+                () -> setCurrentLimits(current, torque),
+                () -> {
+                    if (hasIntakeGamePiece()) {
+                        setVoltageAndCurrentLimits(
+                                config::getAlgaeIntakeVoltage,
+                                config::getAlgaeIntakeSupplyCurrent,
+                                config::getAlgaeIntakeTorqueCurrent);
+                    } else {
+                        setCurrentLimits(current, torque);
+                        setTorqueCurrentFoc(() -> -1 * torque.getAsDouble());
+                    }
+                },
+                (b) -> {},
+                () -> false,
+                this);
+    }
+
+    public void setVoltageAndCurrentLimits(
+            DoubleSupplier voltage, DoubleSupplier supply, DoubleSupplier torque) {
+        setVoltageOutput(voltage);
+        setCurrentLimits(supply, torque);
     }
 
     public Command runVoltageCurrentLimits(

@@ -37,15 +37,12 @@ public class ElevatorStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         homeAll.whileTrue(home());
 
-        // algaeHandoff.whileTrue(handOff());
-        // coralHandoff.whileTrue(handOff());
-
         stationIntaking.whileTrue(
                 move(
                         config::getStationIntake,
                         config::getStationExtendedIntake,
                         "Elevator.stationIntake"));
-        stationIntaking.or(stationExtendedIntaking).onFalse(home());
+        stationIntaking.onFalse(home());
 
         Robot.getPilot()
                 .photonRemoveL2Algae
@@ -57,6 +54,10 @@ public class ElevatorStates {
                 .photonRemoveL2Algae
                 .or(Robot.getPilot().photonRemoveL3Algae)
                 .onFalse(home());
+
+        (stagedCoral.or(stagedAlgae))
+                .and(actionState.not())
+                .whileTrue(move(config::getHome, "Elevator.Stage"));
 
         L1Coral.and(actionPrepState)
                 .whileTrue(move(config::getL1Coral, config::getExl1Coral, "Elevator.L1Coral"));
@@ -77,7 +78,9 @@ public class ElevatorStates {
                 .and(actionPrepState)
                 .whileTrue(move(config::getProcessorAlgae, "Elevator.processorAlgae"));
         L2Algae.and(actionPrepState).whileTrue(move(config::getL2Algae, "Elevator.L2Algae"));
+        L2Algae.and(actionState).whileTrue(move(config::getHome, "Elevator.L2AlgaeHome"));
         L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Elevator.L3Algae"));
+        L3Algae.and(actionState).whileTrue(move(config::getHome, "Elevator.L3AlgaeHome"));
         netAlgae.and(actionPrepState).whileTrue(move(config::getNetAlgae, "Elevator.NetAlgae"));
 
         Robot.getPilot()

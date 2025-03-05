@@ -36,31 +36,31 @@ public class Elbow extends Mechanism {
 
         @Getter private final double algaeLollipop = -90; // TODO: find this value
         @Getter private final double coralLollipop = -90; // TODO: find this value
-        @Getter private final double stationIntake = 154.4;
-        @Getter private final double stationExtendedIntake = 136; // TODO: find this value
-        @Getter private final double groundAlgaeIntake = -84; // TODO: find this value
-        @Getter private final double groundCoralIntake = -80; // TODO: find this value
+        @Getter private final double stationIntake = 158.7;
+        @Getter private final double stationExtendedIntake = 154.4; // TODO: find this value
+        @Getter private final double groundAlgaeIntake = -80; // TODO: find this value
+        @Getter private final double groundCoralIntake = -75; // TODO: find this value
 
         @Getter private final double stage = -160;
-        @Getter private final double l1Coral = -125.8;
-        @Getter private final double l2Coral = -126;
-        @Getter private final double l2Score = -126;
-        @Getter private final double l3Coral = -126;
-        @Getter private final double l3Score = -126;
-        @Getter private final double l4Coral = -145;
-        @Getter private final double l4Score = -145;
+        @Getter private final double l1Coral = -126;
+        @Getter private final double l2Coral = -144.5;
+        @Getter private final double l2Score = -130;
+        @Getter private final double l3Coral = -144.5;
+        @Getter private final double l3Score = -130;
+        @Getter private final double l4Coral = -128;
+        @Getter private final double l4Score = -107.6;
 
-        @Getter private final double exL1Coral = -125.8;
-        @Getter private final double exL2Coral = -126;
-        @Getter private final double exL2Score = -126;
-        @Getter private final double exL3Coral = -126;
-        @Getter private final double exL3Score = -126;
-        @Getter private final double exL4Coral = -145;
-        @Getter private final double exL4Score = -145;
+        @Getter private final double exL1Coral = -123.8;
+        @Getter private final double exL2Coral = -145;
+        @Getter private final double exL2Score = -127;
+        @Getter private final double exL3Coral = -143;
+        @Getter private final double exL3Score = -127;
+        @Getter private final double exL4Coral = -126;
+        @Getter private final double exL4Score = -104;
 
-        @Getter private final double processorAlgae = -123.9;
-        @Getter private final double l2Algae = -123.9;
-        @Getter private final double l3Algae = -123.9;
+        @Getter private final double processorAlgae = -86;
+        @Getter private final double l2Algae = -115;
+        @Getter private final double l3Algae = -115; // -135
         @Getter private final double net = -170;
 
         @Getter private final double tolerance = 0.95;
@@ -171,8 +171,7 @@ public class Elbow extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
-            builder.addDoubleProperty(
-                    "Position Degrees", () -> (this.getPositionDegrees() - config.offset), null);
+            builder.addDoubleProperty("Position Degrees", () -> (getPositionWithNegative()), null);
             builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty(
                     "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
@@ -191,6 +190,15 @@ public class Elbow extends Mechanism {
 
     public Command resetToInitialPos() {
         return run(this::setInitialPosition);
+    }
+
+    public double getPositionWithNegative() {
+        double deg = getPositionDegrees() - config.getOffset();
+        if (deg > 180) {
+            return deg - 360;
+        } else {
+            return deg;
+        }
     }
 
     @Override
