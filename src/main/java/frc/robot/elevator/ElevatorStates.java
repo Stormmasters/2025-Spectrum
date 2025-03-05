@@ -37,67 +37,67 @@ public class ElevatorStates {
         coastMode.onFalse(log(ensureBrakeMode()));
         homeAll.whileTrue(home());
 
-        // algaeHandoff.whileTrue(handOff());
-        // coralHandoff.whileTrue(handOff());
+        stationIntaking.whileTrue(
+                move(
+                        config::getStationIntake,
+                        config::getStationExtendedIntake,
+                        "Elevator.stationIntake"));
+        stationIntaking.onFalse(home());
 
-        stationIntaking.whileTrue(setPosition(config::getStationIntake));
-        stationExtendedIntaking.whileTrue(setPosition(config::getStationExtendedIntake));
-        stationIntaking.or(stationExtendedIntaking).onFalse(home());
-
-        Robot.getPilot().photonRemoveL2Algae.whileTrue(setPosition(config::getL2Algae));
-        Robot.getPilot().photonRemoveL3Alage.whileTrue(setPosition(config::getL3Algae));
         Robot.getPilot()
                 .photonRemoveL2Algae
-                .or(Robot.getPilot().photonRemoveL3Alage)
+                .whileTrue(move(config::getL2Algae, "Elevator.L2Algae"));
+        Robot.getPilot()
+                .photonRemoveL3Algae
+                .whileTrue(move(config::getL3Algae, "Elevator.L3Algae"));
+        Robot.getPilot()
+                .photonRemoveL2Algae
+                .or(Robot.getPilot().photonRemoveL3Algae)
                 .onFalse(home());
 
-        L1Coral.and(actionPrepState).whileTrue(setPosition(config::getL1Coral));
-        L1Coral.and(actionState).whileTrue(setPosition(config::getL1CoralScore));
-        L2Coral.and(actionPrepState).whileTrue(setPosition(config::getL2Coral));
-        L2Coral.and(actionState).whileTrue(setPosition(config::getL2CoralScore));
-        L3Coral.and(actionPrepState).whileTrue(setPosition(config::getL3Coral));
-        L3Coral.and(actionState).whileTrue(setPosition(config::getL3CoralScore));
-        L4Coral.and(actionPrepState).whileTrue(setPosition(config::getL4Coral));
-        L4Coral.and(actionState).whileTrue(setPosition(config::getL4CoralScore));
+        (stagedCoral.or(stagedAlgae))
+                .and(actionState.not())
+                .whileTrue(move(config::getHome, "Elevator.Stage"));
 
-        processorAlgae.and(actionPrepState).whileTrue(setPosition(config::getL1Algae));
-        processorAlgae.and(actionState).whileTrue(setPosition(config::getL1AlgaeScore));
-        L2Algae.and(actionPrepState).whileTrue(setPosition(config::getL2Algae));
-        L2Algae.and(actionState).whileTrue(setPosition(config::getL2AlgaeScore));
-        L3Algae.and(actionPrepState).whileTrue(setPosition(config::getL3Algae));
-        L3Algae.and(actionState).whileTrue(setPosition(config::getL3AlgaeScore));
-        netAlgae.and(actionPrepState).whileTrue(setPosition(config::getL4Algae));
-        netAlgae.and(actionState).whileTrue(setPosition(config::getL4AlgaeScore));
+        L1Coral.and(actionPrepState)
+                .whileTrue(move(config::getL1Coral, config::getExl1Coral, "Elevator.L1Coral"));
+        L2Coral.and(actionPrepState)
+                .whileTrue(move(config::getL2Coral, config::getExl2Coral, "Elevator.L2Coral"));
+        L2Coral.and(actionState)
+                .whileTrue(move(config::getL2Score, config::getExl2Score, "Elevator.L2CoralScore"));
+        L3Coral.and(actionPrepState)
+                .whileTrue(move(config::getL3Coral, config::getExl3Coral, "Elevator.L3Coral"));
+        L3Coral.and(actionState)
+                .whileTrue(move(config::getL3Score, config::getExl3Score, "Elevator.L3CoralScore"));
+        L4Coral.and(actionPrepState)
+                .whileTrue(move(config::getL4Coral, config::getExl4Coral, "Elevator.L4Coral"));
+        L4Coral.and(actionState)
+                .whileTrue(move(config::getL4Score, config::getExl4Score, "Elevator.L4CoralScore"));
+
+        processorAlgae
+                .and(actionPrepState)
+                .whileTrue(move(config::getProcessorAlgae, "Elevator.processorAlgae"));
+        L2Algae.and(actionPrepState).whileTrue(move(config::getL2Algae, "Elevator.L2Algae"));
+        L2Algae.and(actionState).whileTrue(move(config::getHome, "Elevator.L2AlgaeHome"));
+        L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Elevator.L3Algae"));
+        L3Algae.and(actionState).whileTrue(move(config::getHome, "Elevator.L3AlgaeHome"));
+        netAlgae.and(actionPrepState).whileTrue(move(config::getNetAlgae, "Elevator.NetAlgae"));
 
         Robot.getPilot()
                 .reZero_start
                 .onTrue(elevator.resetToInitialPos()); // TODO: check if this works
     }
 
-    private static Command runElevator(DoubleSupplier speed) {
-        return elevator.runPercentage(speed).withName("Elevator.runElevator");
-    }
-
     public static DoubleSupplier getPosition() {
         return () -> elevator.getPositionRotations();
     }
 
-    // TODO: Remake this method
-    // public static DoubleSupplier getElbowShoulderPos() {
-    //     double eToSratio = 2.0; // get actual elbow to shoulder length ratio
-    //     double e = Math.abs(Elbow.getPosition().getAsDouble());
-    //     double s = 100 - Math.abs(ShoulderStates.getPosition().getAsDouble());
-    //     return () -> (eToSratio * e + s) / 3;
-    // }
+    public static Command move(DoubleSupplier rotations, String name) {
+        return elevator.move(rotations, rotations).withName(name);
+    }
 
-    // public static boolean allowedPosition() {
-    //     return ((getPosition().getAsDouble() * 100 / config.getL4Coral() + 10)
-    //                     - getElbowShoulderPos().getAsDouble())
-    //             > 0;
-    // }
-
-    private static Command setPosition(DoubleSupplier position) {
-        return elevator.setPosition(position);
+    public static Command move(DoubleSupplier rotations, DoubleSupplier exRotaitons, String name) {
+        return elevator.move(rotations, exRotaitons).withName(name);
     }
 
     private static Command holdPosition() {
@@ -105,7 +105,7 @@ public class ElevatorStates {
     }
 
     private static Command home() {
-        return elevator.setPosition(config::getHome).withName("Elevator.home");
+        return move(config::getHome, "Elevator.home");
     }
 
     private static Command coastMode() {

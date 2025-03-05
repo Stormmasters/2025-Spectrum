@@ -52,6 +52,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     private final CachedDouble cachedRotations;
     private final CachedDouble cachedPercentage;
+    private final CachedDouble cachedVoltage;
     private final CachedDouble cachedDegrees;
     private final CachedDouble cachedVelocity;
     private final CachedDouble cachedCurrent;
@@ -73,6 +74,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         }
 
         cachedCurrent = new CachedDouble(this::updateCurrent);
+        cachedVoltage = new CachedDouble(this::updateVoltage);
         cachedRotations = new CachedDouble(this::updatePositionRotations);
         cachedPercentage = new CachedDouble(this::updatePositionPercentage);
         cachedDegrees = new CachedDouble(this::updatePositionDegrees);
@@ -228,6 +230,17 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
 
     public double getCurrent() {
         return cachedCurrent.getAsDouble();
+    }
+
+    public double updateVoltage() {
+        if (config.attached) {
+            return motor.getMotorVoltage().getValueAsDouble();
+        }
+        return 0;
+    }
+
+    public double getVoltage() {
+        return cachedVoltage.getAsDouble();
     }
 
     /**
@@ -420,12 +433,13 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
                 .withName(getName() + ".ensureBrakeMode");
     }
 
-    protected Command setCurrentLimits(DoubleSupplier supplyLimit, DoubleSupplier statorLimit) {
-        return new InstantCommand(
-                () -> {
-                    toggleSupplyCurrentLimit(supplyLimit, true);
-                    toggleTorqueCurrentLimit(statorLimit, true);
-                });
+    protected Command runCurrentLimits(DoubleSupplier supplyLimit, DoubleSupplier statorLimit) {
+        return new InstantCommand(() -> setCurrentLimits(supplyLimit, statorLimit));
+    }
+
+    protected void setCurrentLimits(DoubleSupplier supplyLimit, DoubleSupplier statorLimit) {
+        toggleSupplyCurrentLimit(supplyLimit, true);
+        toggleTorqueCurrentLimit(statorLimit, true);
     }
 
     protected void stop() {

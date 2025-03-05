@@ -37,7 +37,7 @@ public class Operator extends Gamepad {
     public final Trigger latchCloser_startDown = climbPrep_start.and(downDpad);
 
     public final Trigger homeElevator_A = A.and(nothingStaged, teleop);
-    public final Trigger homeInClimb_B = B.and(nothingStaged, teleop);
+    public final Trigger homeClimb_B = B.and(nothingStaged, teleop);
 
     // TODO: Removed until we are ready to implement
     // public final Trigger algaeHandoff_X = X.and(nothingStaged, teleop);

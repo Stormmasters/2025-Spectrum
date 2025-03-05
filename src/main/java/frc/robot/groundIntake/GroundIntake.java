@@ -115,13 +115,13 @@ public class GroundIntake extends Mechanism {
     }
 
     class GroundIntakeSim extends RollerSim {
-        public GroundIntakeSim(Mechanism2d mech, TalonFXSimState inClimbRollerMotorSim) {
+        public GroundIntakeSim(Mechanism2d mech, TalonFXSimState climbRollerMotorSim) {
             super(
                     new RollerConfig(config.wheelDiameter)
                             .setPosition(config.intakeX, config.intakeY)
-                            .setMount(Robot.getInClimb().getSim()),
+                            .setMount(Robot.getClimb().getSim()),
                     mech,
-                    inClimbRollerMotorSim,
+                    climbRollerMotorSim,
                     config.getName());
         }
     }

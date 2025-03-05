@@ -1,7 +1,10 @@
 package frc.robot.pilot;
 
+import static frc.robot.RobotStates.photon;
+
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.gamepads.Gamepad;
@@ -14,16 +17,17 @@ public class Pilot extends Gamepad {
     // If triggers need any of the config values set them in the constructor
     /*  A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
     public final Trigger enabled = teleop.or(testMode); // works for both teleop and testMode
+    private final Trigger photon = new Trigger(() -> Rio.id == Rio.PHOTON_2025);
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
     public final Trigger home_select = select;
 
     public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
     public final Trigger stationIntakeExtended_LT_RB = leftTrigger.and(fn, teleop);
-    public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop);
-    public final Trigger photonRemoveL2Algae = groundAlgae_RT;
-    public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop);
-    public final Trigger photonRemoveL3Alage = groundCoral_LB_RT;
+    public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop, photon.not());
+    public final Trigger photonRemoveL2Algae = groundAlgae_RT.and(photon);
+    public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop, photon.not());
+    public final Trigger photonRemoveL3Algae = groundCoral_LB_RT.and(photon);
 
     public final Trigger lollipopProcessor_A = A.and(noFn, teleop);
     public final Trigger algaeRetract_B = B.and(noFn, teleop);
