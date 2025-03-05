@@ -444,12 +444,34 @@ public class Vision extends SubsystemBase {
     // }
 
     public double getAdjustedThetaToReefFace() {
-        Translation2d reefFace = getAdjustedReefPos();
-        Translation2d robot2d = Robot.getSwerve().getRobotPose().getTranslation();
-        double angleBetweenRobotandReefFace =
-                MathUtil.angleModulus(reefFace.minus(robot2d).getAngle().getRadians());
+        int closestReefFace = closestReefFace();
+        double[][] reefBlueAngles = {{17, 60}, {18, 0}, {19, -60} , {20, -120} , {21, 180}, {22, 120}}; //values in theta
+        double[][] reefRedAngles = {{6, 120}, {7, 180}, {8, -120} , {9, -60} , {10, 0}, {11, 60}}; //values in theta
+        double angleBetweenRobotandReefFace = -1;
+        // Translation2d reefFace = getAdjustedReefPos();
+        // Translation2d robot2d = Robot.getSwerve().getRobotPose().getTranslation();
+        // double angleBetweenRobotandReefFace =
+        //         MathUtil.angleModulus(reefFace.minus(robot2d).getAngle().getRadians());
+        if(closestReefFace == -1) {
+            return -1;
+        }
 
-        return angleBetweenRobotandReefFace;
+        for(int i = 0; i < reefBlueAngles.length; i++) {
+            if (closestReefFace == reefBlueAngles[i][0]) {
+                fieldReefID = (int) reefBlueAngles[i][0];
+                angleBetweenRobotandReefFace = Math.toRadians(reefBlueAngles[i][1]);
+                angleBetweenRobotandReefFace = MathUtil.angleModulus(reefBlueAngles[i][1]);
+                return angleBetweenRobotandReefFace;
+
+            } else if(closestReefFace == reefRedAngles[i][0]) {
+                fieldReefID = (int) reefRedAngles[i][0];
+                angleBetweenRobotandReefFace = Math.toRadians(reefRedAngles[i][1]);
+                angleBetweenRobotandReefFace = MathUtil.angleModulus(reefRedAngles[i][1]);
+                return angleBetweenRobotandReefFace;
+            }
+        }
+
+        return -1; // no reef tag found
     }
 
     public int closestReefFace() {
