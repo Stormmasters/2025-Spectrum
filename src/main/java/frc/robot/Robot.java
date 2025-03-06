@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auton.Auton;
 import frc.robot.climb.Climb;
 import frc.robot.climb.Climb.ClimbConfig;
+import frc.robot.configs.FM2025;
 import frc.robot.configs.PHOTON2025;
 import frc.robot.configs.PM2025;
 import frc.robot.elbow.Elbow;
@@ -108,6 +109,9 @@ public class Robot extends SpectrumRobot {
                     break;
                 case PM_2025:
                     config = new PM2025();
+                    break;
+                case FM_2025:
+                    config = new FM2025();
                     break;
                 default: // SIM and UNKNOWN
                     config = new PM2025();

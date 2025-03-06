@@ -2,11 +2,11 @@ package frc.robot.configs;
 
 import frc.robot.Robot.Config;
 
-public class PM2025 extends Config {
+public class FM2025 extends Config {
 
-    public PM2025() {
+    public FM2025() {
         super();
-        swerve.configEncoderOffsets(0.490967, 0.410400, -0.208252, 0.422607);
+        swerve.configEncoderOffsets(-0.395264, 0.11499, 0.061279, 0.385742);
 
         // Attached Mechanisms
         pilot.setAttached(true);
@@ -14,9 +14,9 @@ public class PM2025 extends Config {
         elevator.setAttached(false);
         shoulder.setAttached(false);
         elbow.setAttached(true);
-        twist.setAttached(true);
-        intake.setAttached(true);
-        climb.setAttached(true);
+        twist.setAttached(false);
+        intake.setAttached(false);
+        climb.setAttached(false);
         groundIntake.setAttached(false);
     }
 }

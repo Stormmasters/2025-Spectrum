@@ -97,6 +97,13 @@ public class IntakeStates {
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        Robot.getPilot()
+                .testTune_tA
+                .whileTrue(
+                        intake.intakeCoral(
+                                        config::getCoralIntakeTorqueCurrent,
+                                        config::getCoralIntakeSupplyCurrent)
+                                .withName("Intake.StationIntaking"));
     }
 
     private static Command coastMode() {
