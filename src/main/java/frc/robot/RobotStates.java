@@ -35,6 +35,7 @@ public class RobotStates {
     public static final SpectrumState l2 = new SpectrumState("l2");
     public static final SpectrumState l3 = new SpectrumState("l3");
     public static final SpectrumState l4 = new SpectrumState("l4");
+    public static final SpectrumState extendedState = new SpectrumState("extendedStates");
     public static final SpectrumState rightScore = new SpectrumState("rightScore");
     public static final SpectrumState reverse = new SpectrumState("reverse");
     public static final SpectrumState actionPrepState = new SpectrumState("actionPrepState");
@@ -90,7 +91,7 @@ public class RobotStates {
     public static final Trigger climbFinish = pilot.climbRoutine_start;
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-    public static final Trigger extended = pilot.fn;
+    public static final Trigger extended = pilot.fn.or(extendedState);
     public static final Trigger processorAlgae = (l1.and(algae)).or(autonProcessor);
     public static final Trigger L2Algae = (l2.and(algae)).or(autonLowAlgae);
     public static final Trigger L3Algae = (l3.and(algae)).or(autonHighAlgae);
@@ -142,16 +143,17 @@ public class RobotStates {
 
         // *********************************
         // ActionPrep and ActionState
-        pilot.actionReady.or(autonActionOff).onFalse(actionPrepState.setFalse());
+        pilot.actionReady.onFalse(actionPrepState.setFalse());
+        autonActionOff.onTrue(actionPrepState.setFalse());
 
         (pilot.actionReady.and(coral.or(algae)))
                 .or(autonActionOn)
                 .onTrue(actionPrepState.setTrue(), actionState.setFalse());
 
         actionPrepState.or(autonActionOn).onTrue(actionState.setFalse());
-        actionPrepState
-                .or(autonActionOff.not())
-                .onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
+        actionPrepState.onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
+
+        autonActionOff.onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
 
         operator.algaeStage.or(operator.coralStage).onTrue(actionState.setFalse());
 
@@ -221,7 +223,7 @@ public class RobotStates {
         throw new IllegalStateException("Utility class");
     }
 
-    private static Command clearStaged() {
+    public static Command clearStaged() {
         return l1.setFalse()
                 .alongWith(
                         l2.setFalse(),
@@ -229,10 +231,11 @@ public class RobotStates {
                         l4.setFalse(),
                         rightScore.setFalse(),
                         coral.setFalse(),
-                        algae.setFalse());
+                        algae.setFalse(),
+                        extendedState.setFalse());
     }
 
-    private static Command clearStates() {
+    public static Command clearStates() {
         return clearStaged()
                 .alongWith(
                         reverse.setFalse(),
