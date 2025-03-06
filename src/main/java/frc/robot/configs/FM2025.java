@@ -13,7 +13,7 @@ public class FM2025 extends Config {
         operator.setAttached(true);
         elevator.setAttached(false);
         shoulder.setAttached(false);
-        elbow.setAttached(false);
+        elbow.setAttached(true);
         twist.setAttached(false);
         intake.setAttached(false);
         climb.setAttached(false);
