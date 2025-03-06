@@ -11,12 +11,12 @@ public class FM2025 extends Config {
         // Attached Mechanisms
         pilot.setAttached(true);
         operator.setAttached(true);
-        elevator.setAttached(false);
-        shoulder.setAttached(false);
+        elevator.setAttached(true);
+        shoulder.setAttached(true);
         elbow.setAttached(true);
-        twist.setAttached(false);
-        intake.setAttached(false);
-        climb.setAttached(false);
+        twist.setAttached(true);
+        intake.setAttached(true);
+        climb.setAttached(true);
         groundIntake.setAttached(false);
     }
 }
