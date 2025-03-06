@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.9613061797752808,
-        "y": 6.9007022471910116
+        "x": 1.5939606741573034,
+        "y": 7.319733146067415
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2212750027691084,
-        "y": 6.708771546915522
+        "x": 1.853929497151131,
+        "y": 7.127802445791926
       },
       "isLocked": false,
       "linkedName": "feeder"
     },
     {
       "anchor": {
-        "x": 3.7055477528089886,
-        "y": 5.09311797752809
+        "x": 3.574087078651685,
+        "y": 5.545014044943819
       },
       "prevControl": {
-        "x": 3.4986812209188676,
-        "y": 5.263209583878772
+        "x": 3.367220546761564,
+        "y": 5.715105651294501
       },
       "nextControl": null,
       "isLocked": false,
@@ -61,24 +61,6 @@
     {
       "name": "sourceIntakeOff",
       "waypointRelativePos": 0.20086139389192625,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "L1",
-      "waypointRelativePos": 0.22435395458104876,
-      "endWaypointRelativePos": 1.0,
-      "command": null
-    },
-    {
-      "name": "autonActionOn",
-      "waypointRelativePos": 0.5015661707126086,
-      "endWaypointRelativePos": 0.9620203602192681,
-      "command": null
-    },
-    {
-      "name": "autonActionOff",
-      "waypointRelativePos": 0.9588880187940421,
       "endWaypointRelativePos": null,
       "command": null
     }

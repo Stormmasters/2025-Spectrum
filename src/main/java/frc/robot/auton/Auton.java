@@ -135,8 +135,11 @@ public class Auton {
     public Command beltonAuton(boolean mirrored) {
         return SpectrumAuton("L4-SideStart", mirrored)
                 .withTimeout(2)
-                .andThen(SwerveStates.reefAimDrive().withTimeout(1.4).alongWith(l4score()));
-        // SpectrumAuton("TroughRush", mirrored));
+                .andThen(aimL4score(), SpectrumAuton("TroughRush", mirrored), aimL4score());
+    }
+
+    public Command aimL4score() {
+        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l4score());
     }
 
     public Command l4score() {
@@ -151,7 +154,7 @@ public class Auton {
                                 .andThen(
                                         Commands.waitSeconds(0.05),
                                         RobotStates.actionPrepState.setTrue(),
-                                        Commands.waitSeconds(1.3),
+                                        Commands.waitSeconds(1.1),
                                         RobotStates.actionPrepState.setFalse(),
                                         Commands.waitSeconds(0.5),
                                         RobotStates.clearStates(),

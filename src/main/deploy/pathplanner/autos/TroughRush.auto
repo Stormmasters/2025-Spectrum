@@ -21,18 +21,6 @@
           "data": {
             "pathName": "3 - L4 Trough Rush"
           }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4 - L4 Trough Rush"
-          }
         }
       ]
     }
