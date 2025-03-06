@@ -147,7 +147,7 @@ public class RobotStates {
                 .or(autonPreScore)
                 .onTrue(actionPrepState.setTrue(), actionState.setFalse());
 
-        actionPrepState.or(autonPreScore).onTrue(actionState.setFalse());
+        actionPrepState.onTrue(actionState.setFalse());
         actionPrepState
                 .or(autonPreScore)
                 .onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));

@@ -4,8 +4,11 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Robot;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
@@ -66,6 +69,21 @@ public class SwerveStates {
      *
      * @return
      */
+    public static Command autonSwerveAlign(double alignTime) {
+        return (new RunCommand(
+                                () -> {
+                                    PPHolonomicDriveController.overrideXFeedback(
+                                            SwerveStates::getTagDistanceVelocity);
+                                    PPHolonomicDriveController.overrideYFeedback(
+                                            SwerveStates::getTagTxVelocity);
+                                })
+                        .withTimeout(alignTime)
+                        .andThen(
+                                new InstantCommand(
+                                        () -> PPHolonomicDriveController.clearFeedbackOverrides())))
+                .withName("autonAlign");
+    }
+
     protected static Command reefAimDrive() {
         return fpvAimDrive(
                         SwerveStates::getTagDistanceVelocity,

@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "autonScoreAlign"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "2 Alt - L4 Trough Rush"

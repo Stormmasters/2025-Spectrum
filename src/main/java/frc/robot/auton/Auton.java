@@ -1,6 +1,12 @@
 package frc.robot.auton;
 
+import static frc.robot.RobotStates.actionPrepState;
+import static frc.robot.RobotStates.actionState;
+import static frc.robot.RobotStates.coral;
+import static frc.robot.RobotStates.l4;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathConstraints;
@@ -16,6 +22,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.RobotStates;
+import frc.robot.swerve.SwerveStates;
 import frc.spectrumLib.Telemetry;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
@@ -49,7 +58,7 @@ public class Auton {
         pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
 
         // pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
-        // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
+        pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
         pathChooser.addOption(
@@ -75,7 +84,27 @@ public class Auton {
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
 
+    public static void setupNamedCommands() {
+        NamedCommands.registerCommand("autonScoreAlign", log(autonScoreAlign()));
+        NamedCommands.registerCommand("autonAlign", SwerveStates.autonSwerveAlign(2));
+    }
+
+    private static Command autonScoreAlign() {
+        return l4.setTrue()
+                .andThen(coral.setTrue())
+                .andThen(actionPrepState.setTrue())
+                .andThen(new WaitCommand(1))
+                .andThen(actionState.setTrueForTime(RobotStates::getScoreTime))
+                .andThen(new WaitCommand(1))
+                .andThen(actionPrepState.setFalse())
+                .andThen(actionState.setFalse())
+                .withName("autonScoreAlign");
+        // return SwerveStates.autonSwerveAlign(1.5).andThen(actionPrepState.setTrueForTime(() ->
+        // 1));
+    }
+
     public Auton() {
+        setupNamedCommands();
         setupSelectors(); // runs the command to start the chooser for auto on shuffleboard
         Telemetry.print("Auton Subsystem Initialized: ");
     }
@@ -192,5 +221,9 @@ public class Auton {
                         );
 
         return pathfindingCommand;
+    }
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }
