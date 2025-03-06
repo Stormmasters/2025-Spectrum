@@ -16,7 +16,7 @@ public class Operator extends Gamepad {
     public final Trigger enabled = teleop.or(testMode); // works for both teleop and testMode
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
-    public final Trigger home_select = select;
+    public final Trigger home_select = select.or(leftStickClick);
 
     public final Trigger climbPrep_start = start.and(noFn, enabled);
 
@@ -37,7 +37,6 @@ public class Operator extends Gamepad {
     public final Trigger latchCloser_startDown = climbPrep_start.and(downDpad);
 
     public final Trigger homeElevator_A = A.and(nothingStaged, teleop);
-    public final Trigger homeClimb_B = B.and(nothingStaged, teleop);
 
     // TODO: Removed until we are ready to implement
     // public final Trigger algaeHandoff_X = X.and(nothingStaged, teleop);

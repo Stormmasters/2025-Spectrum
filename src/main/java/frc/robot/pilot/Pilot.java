@@ -22,26 +22,21 @@ public class Pilot extends Gamepad {
     public final Trigger noFn = fn.not();
     public final Trigger home_select = select;
 
-    public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
-    public final Trigger stationIntakeExtended_LT_RB = leftTrigger.and(fn, teleop);
+    public final Trigger stationIntake_LT = leftTrigger.and(teleop);
     public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop, photon.not());
     public final Trigger photonRemoveL2Algae = groundAlgae_RT.and(photon);
     public final Trigger groundCoral_LB_RT = rightTrigger.and(fn, teleop, photon.not());
+
+    public final Trigger l2AlgaeRemoval = X.and(teleop);
+    public final Trigger l3AlgaeRemoval = Y.and(teleop);
     public final Trigger photonRemoveL3Algae = groundCoral_LB_RT.and(photon);
-
-    public final Trigger lollipopProcessor_A = A.and(noFn, teleop);
-    public final Trigger algaeRetract_B = B.and(noFn, teleop);
-
-    public final Trigger coralIntake_X = X.and(noFn, teleop);
-    public final Trigger coralEject_Y = Y.and(noFn, teleop);
 
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
 
     public final Trigger actionReady = rightBumper.and(teleop);
-    public final Trigger score = actionReady.not().and(teleop);
 
     // vision Drive
-    public final Trigger visionAim_Y = Y.and(noFn, teleop);
+    public final Trigger visionAim_A = A.and(teleop);
 
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);
@@ -74,7 +69,7 @@ public class Pilot extends Gamepad {
     public static class PilotConfig extends Config {
 
         @Getter @Setter private double slowModeScalor = 0.45;
-        @Getter @Setter private double defaultTurnScalor = 0.75;
+        @Getter @Setter private double defaultTurnScalor = 0.6;
         @Getter @Setter private double turboModeScalor = 1;
         private double deadzone = 0.001;
 
@@ -82,12 +77,12 @@ public class Pilot extends Gamepad {
             super("Pilot", 0);
 
             setLeftStickDeadzone(deadzone);
-            setLeftStickExp(2.0);
-            setLeftStickScalor(6);
+            setLeftStickExp(3);
+            setLeftStickScalor(4.572);
 
             setRightStickDeadzone(deadzone);
-            setRightStickExp(2.0);
-            setRightStickScalor(12);
+            setRightStickExp(3.0);
+            setRightStickScalor(3 * Math.PI);
 
             setTriggersDeadzone(deadzone);
             setTriggersExp(1);

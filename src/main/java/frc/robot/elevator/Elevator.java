@@ -35,11 +35,11 @@ public class Elevator extends Mechanism {
         @Getter @Setter private double clawGroundCoralIntake = 0;
 
         @Getter @Setter private double stationIntake = 0;
-        @Getter @Setter private double stationExtendedIntake = 6.5;
+        @Getter @Setter private double stationExtendedIntake = 0;
 
         @Getter @Setter private double processorAlgae = 0.3;
         @Getter @Setter private double l2Algae = 1;
-        @Getter @Setter private double l3Algae = 12;
+        @Getter @Setter private double l3Algae = 14;
         @Getter @Setter private double netAlgae = fullExtend;
 
         @Getter @Setter private double l1Coral = 0;
@@ -147,7 +147,7 @@ public class Elevator extends Mechanism {
         if (isAttached()) {
             builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
-            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
+            // builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
             builder.addDoubleProperty("MotorVoltage", this::getVoltage, null);
         }
@@ -177,6 +177,11 @@ public class Elevator extends Mechanism {
             {
                 setName("Elevator.holdPosition");
                 addRequirements(Elevator.this);
+            }
+
+            @Override
+            public boolean runsWhenDisabled() {
+                return true;
             }
 
             @Override

@@ -176,6 +176,7 @@ public class Robot extends SpectrumRobot {
         // Bind Triggers for all subsystems
         setupStates();
         RobotStates.setupStates();
+        RobotStates.clearStates().schedule();
     }
 
     public void clearCommandsAndButtons() {
@@ -185,6 +186,7 @@ public class Robot extends SpectrumRobot {
         // Bind Triggers for all subsystems
         setupStates();
         RobotStates.setupStates();
+        RobotStates.clearStates().schedule();
     }
 
     public void setupAutoVisualizer() {

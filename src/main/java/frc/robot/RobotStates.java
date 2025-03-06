@@ -80,11 +80,10 @@ public class RobotStates {
     // Intake Triggers
     public static final Trigger intakeRunning = coral.or(algae);
     public static final Trigger stationIntaking = pilot.stationIntake_LT.or(autonStationIntake);
-    public static final Trigger stationExtendedIntaking = pilot.stationIntakeExtended_LT_RB;
+    // public static final Trigger stationExtendedIntaking = pilot.stationIntakeExtended_LT_RB;
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
     public static final Trigger groundCoral = pilot.groundCoral_LB_RT;
-    public static final Trigger intaking =
-            stationExtendedIntaking.or(stationIntaking, groundAlgae, groundCoral);
+    public static final Trigger intaking = stationIntaking.or(groundAlgae, groundCoral);
 
     // climb Triggers
     public static final Trigger climbPrep = operator.climbPrep_start;
@@ -159,16 +158,22 @@ public class RobotStates {
 
         // *********************************
         // Intaking States
-        stationIntaking
-                .or(stationExtendedIntaking)
-                .whileTrue(coral.toggleToTrue(), algae.setFalse());
-        stationIntaking.or(stationExtendedIntaking).onFalse(homeAll.toggleToTrue());
+        stationIntaking.whileTrue(coral.toggleToTrue(), algae.setFalse());
+        stationIntaking.onFalse(homeAll.toggleToTrue());
 
         groundCoral.whileTrue(coral.toggleToTrue(), algae.setFalse());
         groundCoral.onChangeToFalse(homeAll.toggleToTrue());
 
         groundAlgae.whileTrue(algae.toggleToTrue(), coral.setFalse());
         groundAlgae.onChangeToFalse(homeAll.toggleToTrue());
+
+        pilot.l2AlgaeRemoval.onTrue(
+                algae.setTrue(), coral.setFalse(), l2.setTrue(), actionPrepState.setTrue());
+        pilot.l2AlgaeRemoval.onFalse(l2.setFalse(), actionPrepState.setFalse());
+
+        pilot.l3AlgaeRemoval.onTrue(
+                algae.setTrue(), coral.setFalse(), l3.setTrue(), actionPrepState.setTrue());
+        pilot.l3AlgaeRemoval.onFalse(l3.setFalse(), actionPrepState.setFalse());
 
         // **********************************
         // Staging and Scoring
@@ -232,7 +237,8 @@ public class RobotStates {
                         rightScore.setFalse(),
                         coral.setFalse(),
                         algae.setFalse(),
-                        extendedState.setFalse());
+                        extendedState.setFalse())
+                .withName("Clear Staged");
     }
 
     public static Command clearStates() {
@@ -241,6 +247,7 @@ public class RobotStates {
                         reverse.setFalse(),
                         actionPrepState.setFalse(),
                         actionState.setFalse(),
-                        homeAll.setFalse());
+                        homeAll.setFalse())
+                .withName("Clear States");
     }
 }
