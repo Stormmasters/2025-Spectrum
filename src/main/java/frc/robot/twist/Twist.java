@@ -163,15 +163,15 @@ public class Twist extends Mechanism {
         if (isAttached()) {
             builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty("Degrees", this::getPositionDegrees, null);
-            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
+            // builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("Motor Voltage", this::getVoltage, null);
             builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
-            builder.addDoubleProperty("Front-TX", Robot.getVision().frontLL::getTagTx, null);
-            builder.addDoubleProperty("Front-TA", Robot.getVision().frontLL::getTagTA, null);
-            builder.addDoubleProperty(
-                    "Front-Rotation", Robot.getVision().frontLL::getTagRotationDegrees, null);
-            builder.addDoubleProperty(
-                    "Front-ClosestTag", Robot.getVision().frontLL::getClosestTagID, null);
+            // builder.addDoubleProperty("Front-TX", Robot.getVision().frontLL::getTagTx, null);
+            // builder.addDoubleProperty("Front-TA", Robot.getVision().frontLL::getTagTA, null);
+            // builder.addDoubleProperty(
+            //        "Front-Rotation", Robot.getVision().frontLL::getTagRotationDegrees, null);
+            // builder.addDoubleProperty(
+            //        "Front-ClosestTag", Robot.getVision().frontLL::getClosestTagID, null);
         }
     }
 
@@ -185,7 +185,7 @@ public class Twist extends Mechanism {
         }
     }
 
-    public Command resetToIntialPos() {
+    public Command resetToInitialPos() {
         return run(this::setInitialPosition);
     }
 
@@ -202,6 +202,11 @@ public class Twist extends Mechanism {
             {
                 setName("Twist.holdPosition");
                 addRequirements(Twist.this);
+            }
+
+            @Override
+            public boolean runsWhenDisabled() {
+                return true;
             }
 
             @Override

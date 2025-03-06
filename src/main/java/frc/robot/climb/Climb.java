@@ -70,7 +70,7 @@ public class Climb extends Mechanism {
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
-            configGearRatio(99.5555555555);
+            configGearRatio(74.6666666667); // 9t = 99.5555555555); 12t - 74.6666666667;
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
@@ -130,10 +130,11 @@ public class Climb extends Mechanism {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
+            builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty("Position Degrees", () -> (this.getPositionDegrees()), null);
-            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
-            builder.addDoubleProperty(
-                    "Motor Voltage", this.motor.getSimState()::getMotorVoltage, null);
+            // builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
+            builder.addDoubleProperty("Motor Voltage", this::getVoltage, null);
+            builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
         }
     }
 

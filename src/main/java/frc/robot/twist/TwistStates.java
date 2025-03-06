@@ -21,14 +21,15 @@ public class TwistStates {
         coastMode.onFalse(log(ensureBrakeMode()));
 
         homeAll.onTrue(twist.twistHome());
-        Robot.getPilot().reZero_start.onTrue(twist.resetToIntialPos());
-        stationIntaking
-                .or(stationExtendedIntaking)
-                .whileTrue(
-                        twist.moveToDegrees((config::getStationIntake))
-                                .withName("Twist.stationIntake"));
+
+        // Robot.getPilot().reZero_start.onTrue(twist.resetToInitialPos());
+
+        stationIntaking.whileTrue(
+                twist.moveToDegrees((config::getStationIntake)).withName("Twist.stationIntake"));
+
         algae.or(groundAlgae, stagedAlgae)
                 .whileTrue(twist.moveToDegrees(config::getAlgaeIntake).withName("Twist.Algae"));
+
         Robot.getPilot()
                 .groundAlgae_RT
                 .whileTrue(
@@ -37,6 +38,7 @@ public class TwistStates {
         L1Coral.or(groundCoral)
                 .whileTrue(
                         twist.moveToDegrees(config::getL1Coral).withName("Twist.l1CoralOrGround"));
+
         netAlgae.whileTrue(twist.moveToDegrees(config::getNet).withName("Twist.Net"));
 
         branch.and(rightScore)

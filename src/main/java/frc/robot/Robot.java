@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auton.Auton;
 import frc.robot.climb.Climb;
 import frc.robot.climb.Climb.ClimbConfig;
+import frc.robot.configs.FM2025;
 import frc.robot.configs.PHOTON2025;
 import frc.robot.configs.PM2025;
 import frc.robot.elbow.Elbow;
@@ -109,8 +110,11 @@ public class Robot extends SpectrumRobot {
                 case PM_2025:
                     config = new PM2025();
                     break;
+                case FM_2025:
+                    config = new FM2025();
+                    break;
                 default: // SIM and UNKNOWN
-                    config = new PM2025();
+                    config = new FM2025();
                     break;
             }
 
@@ -138,11 +142,11 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             intake = new Intake(config.intake);
             Timer.delay(canInitDelay);
-            auton = new Auton();
-            visionSystem = new VisionSystem(swerve::getRobotPose);
             vision = new Vision();
+            visionSystem = new VisionSystem(swerve::getRobotPose);
             Timer.delay(canInitDelay);
             twist = new Twist(config.twist);
+            auton = new Auton();
 
             // Setup Default Commands for all subsystems
             setupDefaultCommands();
@@ -172,6 +176,7 @@ public class Robot extends SpectrumRobot {
         // Bind Triggers for all subsystems
         setupStates();
         RobotStates.setupStates();
+        RobotStates.clearStates().schedule();
     }
 
     public void clearCommandsAndButtons() {
@@ -181,6 +186,7 @@ public class Robot extends SpectrumRobot {
         // Bind Triggers for all subsystems
         setupStates();
         RobotStates.setupStates();
+        RobotStates.clearStates().schedule();
     }
 
     public void setupAutoVisualizer() {

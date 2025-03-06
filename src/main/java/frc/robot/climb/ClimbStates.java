@@ -24,7 +24,7 @@ public class ClimbStates {
         // groundCoral.whileTrue(log(coralFloorIntake()));
 
         // climbPrep.whileTrue(log(climbPrep()).alongWith(openLatch()));
-        // climbFinish.whileTrue(log(climbFinish()).alongWith(closeLatch()));
+        // .whileTrue(log(climbFinish()).alongWith(closeLatch()));
 
         Robot.getOperator().latchOpen_startUp.onTrue(openLatch());
         Robot.getOperator().latchCloser_startDown.onTrue(closeLatch());
@@ -33,7 +33,7 @@ public class ClimbStates {
                 .whileTrue(runClimb(() -> Robot.getOperator().getClimberTriggerAxis()));
 
         homeAll.and(climb.getLatched().not()).whileTrue(log(home()));
-        Robot.getPilot().reZero_start.whileTrue(climb.resetToInitialPos());
+        // Robot.getPilot().reZero_start.whileTrue(climb.resetToInitialPos());
     }
 
     public static Command runClimb(DoubleSupplier speed) {

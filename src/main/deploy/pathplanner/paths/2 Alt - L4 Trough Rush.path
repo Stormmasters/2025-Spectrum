@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.24,
-        "y": 7.05
+        "x": 5.315941011235955,
+        "y": 5.44
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7442415730337073,
-        "y": 6.818539325842696
+        "x": 4.907435777683204,
+        "y": 5.718000370983683
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.85,
-        "y": 4.02
+        "x": 1.5939606741573034,
+        "y": 7.319733146067415
       },
       "prevControl": {
-        "x": 2.47310393258427,
-        "y": 4.411165730337078
+        "x": 2.117934879901652,
+        "y": 6.995504352159149
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "feeder"
     }
   ],
   "rotationTargets": [],
@@ -33,14 +33,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "leftL4",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.0,
+      "name": "clearStates",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.042678151918557256,
       "command": null
     },
     {
-      "name": "score",
-      "waypointRelativePos": 0.09906029757243778,
+      "name": "home",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.39976507439309655,
+      "command": null
+    },
+    {
+      "name": "sourceIntakeOn",
+      "waypointRelativePos": 0.39663273296789026,
       "endWaypointRelativePos": 1.0,
       "command": null
     }
@@ -55,13 +61,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -53.5
   },
   "reversed": false,
-  "folder": "Blue Left Source",
+  "folder": "Blue Left L4 Trough Rush",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 126.5
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

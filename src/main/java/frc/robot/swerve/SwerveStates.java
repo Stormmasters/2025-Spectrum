@@ -4,8 +4,12 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
@@ -17,7 +21,8 @@ public class SwerveStates {
     static SwerveConfig config = Robot.getConfig().swerve;
     static Pilot pilot = Robot.getPilot();
 
-    static Command pilotSteerCommand = log(pilotDrive().withName("SwerveCommands.pilotSteer"));
+    static Command pilotSteerCommand =
+            log(pilotDrive().withName("SwerveCommands.pilotSteer").ignoringDisable(true));
     static SpectrumState steeringLock = new SpectrumState("SteeringLock");
 
     protected static void setupDefaultCommand() {
@@ -37,7 +42,8 @@ public class SwerveStates {
 
     protected static void setStates() {
 
-        pilot.steer.whileTrue(pilotSteerCommand); // Force back to manual steering when we steer
+        pilot.steer.whileTrue(
+                swerve.getDefaultCommand()); // Force back to manual steering when we steer
 
         // When driving and have never steered, it doesn't lock
         // When driving, and we stop steering it locks
@@ -56,7 +62,7 @@ public class SwerveStates {
         pilot.rightReorient.onTrue(log(reorientRight()));
 
         // // vision aim
-        pilot.visionAim_Y.whileTrue(log(reefAimDrive()));
+        pilot.visionAim_A.whileTrue(log(reefAimDrive()));
     }
 
     /** Pilot Commands ************************************************************************ */
@@ -66,7 +72,26 @@ public class SwerveStates {
      *
      * @return
      */
-    protected static Command reefAimDrive() {
+    public static Command autonSwerveAlign(double alignTime) {
+        return (new PrintCommand("! starting align !")
+                        .andThen(
+                                new InstantCommand(
+                                        () -> {
+                                            PPHolonomicDriveController.overrideXFeedback(
+                                                    SwerveStates::getTagDistanceVelocity);
+                                            PPHolonomicDriveController.overrideYFeedback(
+                                                    SwerveStates::getTagTxVelocity);
+                                        }),
+                                new PrintCommand("! clearing align !"),
+                                new WaitCommand(alignTime),
+                                new InstantCommand(
+                                        () -> PPHolonomicDriveController.clearFeedbackOverrides()),
+                                new PrintCommand("! cleared align !")))
+                .withName("autonAlign")
+                .alongWith(new PrintCommand("!! autonAlign Ran !!"));
+    }
+
+    public static Command reefAimDrive() {
         return fpvAimDrive(
                         SwerveStates::getTagDistanceVelocity,
                         SwerveStates::getTagTxVelocity,

@@ -43,8 +43,8 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double groundCoralIntake = -4;
 
         @Getter @Setter private double processorAlgae = 55;
-        @Getter @Setter private double l2Algae = -32;
-        @Getter @Setter private double l3Algae = -32;
+        @Getter @Setter private double l2Algae = 160; // -32;
+        @Getter @Setter private double l3Algae = 160; // -32;
         @Getter @Setter private double netAlgae = 180;
 
         @Getter @Setter private double l1Coral = 51.5;
@@ -173,7 +173,7 @@ public class Shoulder extends Mechanism {
             builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty(
                     "Position Degrees", () -> (this.getPositionDegrees() - config.offset), null);
-            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
+            // builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("MotorVoltage", this::getVoltage, null);
             builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
         }
@@ -247,6 +247,11 @@ public class Shoulder extends Mechanism {
             {
                 setName("Shoulder.holdPosition");
                 addRequirements(Robot.getShoulder());
+            }
+
+            @Override
+            public boolean runsWhenDisabled() {
+                return true;
             }
 
             @Override

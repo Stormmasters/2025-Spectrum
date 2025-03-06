@@ -24,7 +24,8 @@
       "/SmartDashboard/Scheduler": "Scheduler",
       "/SmartDashboard/States": "Alerts",
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",
-      "/SmartDashboard/frontView": "Mechanism2d"
+      "/SmartDashboard/frontView": "Mechanism2d",
+      "/SmartDashboard/vision": "Subsystem"
     },
     "windows": {
       "/SmartDashboard/Alerts": {

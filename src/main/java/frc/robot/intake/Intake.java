@@ -113,7 +113,7 @@ public class Intake extends Mechanism {
         if (isAttached()) {
             builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty("Motor Voltage", this::getVoltage, null);
-            builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
+            // builder.addDoubleProperty("Rotations", this::getPositionRotations, null);
             builder.addDoubleProperty("Velocity RPM", this::getVelocityRPM, null);
             builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
         }

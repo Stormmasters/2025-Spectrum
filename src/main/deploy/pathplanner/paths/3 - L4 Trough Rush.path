@@ -3,40 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.315941011235955,
-        "y": 5.44
+        "x": 1.5939606741573034,
+        "y": 7.319733146067415
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.707189662112448,
-        "y": 5.412677397838539
+        "x": 1.853929497151131,
+        "y": 7.127802445791926
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "feeder"
     },
     {
       "anchor": {
-        "x": 7.452999999999999,
-        "y": 5.0
+        "x": 3.574087078651685,
+        "y": 5.545014044943819
       },
       "prevControl": {
-        "x": 6.355703403145669,
-        "y": 5.207939134050429
+        "x": 3.367220546761564,
+        "y": 5.715105651294501
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "trough"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.13978073610023342,
+      "minWaypointRelativePos": 0.598668754894279,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 6.0,
+        "maxVelocity": 3.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,9 +47,21 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "net",
-      "waypointRelativePos": 0.4,
-      "endWaypointRelativePos": 1.0,
+      "name": "clearStates",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "coral",
+      "waypointRelativePos": 0.19929522317932777,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "sourceIntakeOff",
+      "waypointRelativePos": 0.20086139389192625,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
@@ -63,13 +75,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "Blue Left Source",
+  "folder": "Blue Left L4 Trough Rush",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -53.5
   },
   "useDefaultConstraints": true
 }

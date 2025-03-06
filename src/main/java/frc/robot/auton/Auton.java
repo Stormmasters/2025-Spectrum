@@ -1,6 +1,7 @@
 package frc.robot.auton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathConstraints;
@@ -16,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.RobotStates;
+import frc.robot.swerve.SwerveStates;
 import frc.spectrumLib.Telemetry;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
@@ -25,17 +28,22 @@ public class Auton {
     // Setup EventTriggers
     // Should all be public static final
     public static final EventTrigger autonGroundIntake = new EventTrigger("groundIntake");
-    public static final EventTrigger autonSourceIntake = new EventTrigger("sourceIntake");
+    public static final EventTrigger autonSourceIntakeOn = new EventTrigger("sourceIntakeOn");
+    public static final EventTrigger autonSourceIntakeOff = new EventTrigger("sourceIntakeOff");
     public static final EventTrigger autonLowAlgae = new EventTrigger("lowAlgae");
     public static final EventTrigger autonHighAlgae = new EventTrigger("highAlgae");
     public static final EventTrigger autonPreScore = new EventTrigger("prescore");
     public static final EventTrigger autonScore = new EventTrigger("score");
-    public static final EventTrigger autonEject = new EventTrigger("eject");
     public static final EventTrigger autonLeftL4 = new EventTrigger("leftL4");
     public static final EventTrigger autonRightL4 = new EventTrigger("rightL4");
     public static final EventTrigger autonL1 = new EventTrigger("L1");
     public static final EventTrigger autonNet = new EventTrigger("net");
     public static final EventTrigger autonProcessor = new EventTrigger("processor");
+    public static final EventTrigger autonClearStates = new EventTrigger("clearStates");
+    public static final EventTrigger autonCoral = new EventTrigger("coral");
+    public static final EventTrigger autonHome = new EventTrigger("home");
+    public static final EventTrigger autonActionOn = new EventTrigger("actionOn");
+    public static final EventTrigger autonActionOff = new EventTrigger("actionOff");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;
@@ -53,21 +61,22 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        // pathChooser.addOption("Source 3 Test", SpectrumAuton("Source 3", false));
+        pathChooser.addOption("BeltonAuto", beltonAuton(false));
 
-        // pathChooser.addOption("3847 | Left - Source", SpectrumAuton("Blue Left - Source",
-        // false));
-        // pathChooser.addOption("3847 | Right - Source", SpectrumAuton("Blue Left - Source",
-        // true));
+        pathChooser.addOption(
+                "3847 | Left | L4 Trough Rush", SpectrumAuton("Blue Left - L4 Trough Rush", false));
+        pathChooser.addOption(
+                "3847 | Right | L4 Trough Rush", SpectrumAuton("Blue Left - L4 Trough Rush", true));
+        pathChooser.addOption(
+                "3847 | Center | L4 Trough Rush",
+                SpectrumAuton("Blue Center - L4 Trough Rush", false));
 
-        // pathChooser.addOption("Left - Preplace", SpectrumAuton("Blue Left - Preplace", false));
-        // pathChooser.addOption("Right - Preplace", SpectrumAuton("Blue Left - Preplace", true));
-
-        // pathChooser.addOption("Center - Algae", SpectrumAuton("Blue Center Algae Rush", false));
-
-        pathChooser.addOption("8515 | Drive Forward", SpectrumAuton("Drive Forward", false));
-        pathChooser.addOption("8515 | L1 Leave", SpectrumAuton("L1 Leave", false));
-        pathChooser.addOption("8515 | L4 Leave", SpectrumAuton("L4 Leave", false));
+        pathChooser.addOption(
+                "3847 | Left | L4 Leave", SpectrumAuton("Blue Left - L4 Leave", false));
+        pathChooser.addOption(
+                "3847 | Right | L4 Leave", SpectrumAuton("Blue Left - L4 Leave", true));
+        pathChooser.addOption(
+                "3847 | Center | L4 Leave", SpectrumAuton("Blue Center - L4 Leave", false));
 
         // pathChooser.addOption("8515 | Center - Photon", SpectrumAuton("Photon Blue Center",
         // false));
@@ -77,7 +86,12 @@ public class Auton {
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
 
+    public static void setupNamedCommands() {
+        NamedCommands.registerCommand("autonAlign", SwerveStates.autonSwerveAlign(2));
+    }
+
     public Auton() {
+        setupNamedCommands();
         setupSelectors(); // runs the command to start the chooser for auto on shuffleboard
         Telemetry.print("Auton Subsystem Initialized: ");
     }
@@ -95,6 +109,35 @@ public class Auton {
 
     public void exit() {
         printAutoDuration();
+    }
+
+    public Command beltonAuton(boolean mirrored) {
+        return SpectrumAuton("L4-SideStart", mirrored)
+                .withTimeout(2)
+                .andThen(aimL4score(), SpectrumAuton("TroughRush", mirrored), aimL4score());
+    }
+
+    public Command aimL4score() {
+        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l4score());
+    }
+
+    public Command l4score() {
+        return Commands.waitSeconds(0.05)
+                .andThen(
+                        RobotStates.coral
+                                .setTrue()
+                                .alongWith(
+                                        RobotStates.l4.setTrue(),
+                                        RobotStates.extendedState.setTrue(),
+                                        RobotStates.homeAll.setFalse())
+                                .andThen(
+                                        Commands.waitSeconds(0.05),
+                                        RobotStates.actionPrepState.setTrue(),
+                                        Commands.waitSeconds(1.1),
+                                        RobotStates.actionPrepState.setFalse(),
+                                        Commands.waitSeconds(0.5),
+                                        RobotStates.clearStates(),
+                                        RobotStates.homeAll.setTrue()));
     }
 
     /**
@@ -194,5 +237,9 @@ public class Auton {
                         );
 
         return pathfindingCommand;
+    }
+    // Log Command
+    protected static Command log(Command cmd) {
+        return Telemetry.log(cmd);
     }
 }

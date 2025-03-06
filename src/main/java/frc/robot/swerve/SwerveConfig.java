@@ -42,7 +42,7 @@ public class SwerveConfig {
     @Getter private double kIHoldController = 0.0;
     @Getter private double kDHoldController = 0.0;
 
-    @Getter private double kPTagCenterController = 3.5;
+    @Getter private double kPTagCenterController = 3.2;
     @Getter private double kITagCenterController = 0.0;
     @Getter private double kDTagController = 0.0;
     @Getter private double tagCenterTolerance = 0.00001; // meters
@@ -105,7 +105,7 @@ public class SwerveConfig {
     // This needs to be tuned to your individual robot
     @Getter @Setter
     private LinearVelocity speedAt12Volts =
-            MetersPerSecond.of(4.70); // TODO: put on blocks and find max rps from phoenix tuner
+            MetersPerSecond.of(4.572); // TODO: put on blocks and find max rps from phoenix tuner
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot

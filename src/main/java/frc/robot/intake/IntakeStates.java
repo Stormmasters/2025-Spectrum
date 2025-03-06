@@ -33,9 +33,7 @@ public class IntakeStates {
                 .or(Robot.getOperator().home_select)
                 .onTrue(intake.runVoltage(() -> 0));
 
-        stationIntaking
-                .or(photonAlgaeRemoval, stationExtendedIntaking)
-                .onFalse(intake.getDefaultCommand());
+        stationIntaking.or(photonAlgaeRemoval).onFalse(intake.getDefaultCommand());
 
         netAlgae.and(actionState)
                 .whileTrue(
@@ -47,7 +45,7 @@ public class IntakeStates {
         // hasGamePiece.onTrue(intake.getDefaultCommand());
 
         stationIntaking
-                .or(photonAlgaeRemoval, stationExtendedIntaking)
+                .or(photonAlgaeRemoval)
                 // .whileTrue(runVoltageCurrentLimits(
                 //         config::getCoralIntakeVoltage,
                 //         config::getCoralIntakeSupplyCurrent,
@@ -97,6 +95,13 @@ public class IntakeStates {
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
+        Robot.getPilot()
+                .testTune_tA
+                .whileTrue(
+                        intake.intakeCoral(
+                                        config::getCoralIntakeTorqueCurrent,
+                                        config::getCoralIntakeSupplyCurrent)
+                                .withName("Intake.StationIntaking"));
     }
 
     private static Command coastMode() {

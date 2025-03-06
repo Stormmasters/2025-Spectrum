@@ -36,12 +36,10 @@ public class Elbow extends Mechanism {
 
         @Getter private final double scoreDelay = 0.2;
 
-        @Getter private final double algaeLollipop = -90; // TODO: find this value
-        @Getter private final double coralLollipop = -90; // TODO: find this value
         @Getter private final double stationIntake = 158.7;
-        @Getter private final double stationExtendedIntake = 154.4; // TODO: find this value
-        @Getter private final double groundAlgaeIntake = -80; // TODO: find this value
-        @Getter private final double groundCoralIntake = -75; // TODO: find this value
+        @Getter private final double stationExtendedIntake = 154.4;
+        @Getter private final double groundAlgaeIntake = -80;
+        @Getter private final double groundCoralIntake = -75;
 
         @Getter private final double stage = -160;
         @Getter private final double l1Coral = -121.4;
@@ -61,8 +59,8 @@ public class Elbow extends Mechanism {
         @Getter private final double exL4Score = -106.9; // -104;
 
         @Getter private final double processorAlgae = -86;
-        @Getter private final double l2Algae = -115;
-        @Getter private final double l3Algae = -115; // -135
+        @Getter private final double l2Algae = -86;
+        @Getter private final double l3Algae = -86;
         @Getter private final double net = -170;
 
         @Getter private final double tolerance = 0.95;
@@ -175,7 +173,7 @@ public class Elbow extends Mechanism {
         if (isAttached()) {
             builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty("Position Degrees", () -> (getPositionWithNegative()), null);
-            builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
+            // builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("MotorVoltage", this::getVoltage, null);
             builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
         }
@@ -260,6 +258,11 @@ public class Elbow extends Mechanism {
             public void initialize() {
                 holdPosition = getPositionRotations();
                 stop();
+            }
+
+            @Override
+            public boolean runsWhenDisabled() {
+                return true;
             }
 
             @Override

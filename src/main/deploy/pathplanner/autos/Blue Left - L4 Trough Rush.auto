@@ -7,55 +7,61 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 - Source Only"
+            "pathName": "1 Alt - L4 Trough Rush"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.2
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2 - Source Only"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
+            "name": "autonScoreAlign"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3 - Source Only"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
+            "pathName": "2 Alt - L4 Trough Rush"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4 - Source Only"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "3 - L4 Trough Rush"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "5 - Source Only"
+            "pathName": "4 - L4 Trough Rush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3 - L4 Trough Rush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 - L4 Trough Rush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3 - L4 Trough Rush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 - L4 Trough Rush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3 - L4 Trough Rush"
           }
         }
       ]
