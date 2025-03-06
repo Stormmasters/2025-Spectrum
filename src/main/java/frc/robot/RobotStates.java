@@ -40,6 +40,7 @@ public class RobotStates {
     public static final SpectrumState actionPrepState = new SpectrumState("actionPrepState");
     public static final SpectrumState actionState = new SpectrumState("actionState");
     public static final SpectrumState homeAll = new SpectrumState("homeAll");
+    public static final SpectrumState autonStationIntake = new SpectrumState("autonStationIntake");
 
     /**
      * Define Robot States here and how they can be triggered States should be triggers that command
@@ -77,7 +78,7 @@ public class RobotStates {
 
     // Intake Triggers
     public static final Trigger intakeRunning = coral.or(algae);
-    public static final Trigger stationIntaking = pilot.stationIntake_LT.or(autonSourceIntake);
+    public static final Trigger stationIntaking = pilot.stationIntake_LT.or(autonStationIntake);
     public static final Trigger stationExtendedIntaking = pilot.stationIntakeExtended_LT_RB;
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
     public static final Trigger groundCoral = pilot.groundCoral_LB_RT;
@@ -96,7 +97,7 @@ public class RobotStates {
     public static final Trigger netAlgae = (l4.and(algae)).or(autonNet);
     public static final Trigger stagedAlgae = processorAlgae.or(L2Algae, L3Algae, netAlgae);
 
-    public static final Trigger L1Coral = l1.and(coral).or(autonL1);
+    public static final Trigger L1Coral = (l1.and(coral)).or(autonL1);
     public static final Trigger L2Coral = l2.and(coral);
     public static final Trigger L3Coral = l3.and(coral);
     public static final Trigger L4Coral = (l4.and(coral)).or(autonLeftL4, autonRightL4);
@@ -125,8 +126,9 @@ public class RobotStates {
 
         // *********************************
         // HOME Commands and States
-        pilot.home_select.or(operator.home_select).whileTrue(homeAll.toggleToTrue());
+        pilot.home_select.or(operator.home_select, autonHome).whileTrue(homeAll.toggleToTrue());
         pilot.home_select.or(operator.home_select).onFalse(clearStates());
+        autonClearStates.whileTrue(clearStates());
 
         actionState
                 .or(operator.staged)
@@ -140,16 +142,15 @@ public class RobotStates {
 
         // *********************************
         // ActionPrep and ActionState
-        pilot.actionReady.onTrue(actionPrepState.setTrue());
-        pilot.actionReady.onFalse(actionPrepState.setFalse());
+        pilot.actionReady.or(autonActionOff).onFalse(actionPrepState.setFalse());
 
         (pilot.actionReady.and(coral.or(algae)))
-                .or(autonPreScore)
+                .or(autonActionOn)
                 .onTrue(actionPrepState.setTrue(), actionState.setFalse());
 
-        actionPrepState.onTrue(actionState.setFalse());
+        actionPrepState.or(autonActionOn).onTrue(actionState.setFalse());
         actionPrepState
-                .or(autonPreScore)
+                .or(autonActionOff.not())
                 .onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
 
         operator.algaeStage.or(operator.coralStage).onTrue(actionState.setFalse());
@@ -182,7 +183,7 @@ public class RobotStates {
         // actionState.not().and(operator.algaeStage.not()).onTrue(algae.setFalse());
 
         // Set coral if we are staging coral
-        operator.coralStage.or(autonLeftL4, autonRightL4).onTrue(coral.setTrue(), algae.setFalse());
+        operator.coralStage.or(autonCoral).onTrue(coral.setTrue(), algae.setFalse());
 
         // Set algae if we are staging algae
         operator.algaeStage
@@ -190,8 +191,8 @@ public class RobotStates {
                 .onTrue(algae.setTrue(), coral.setFalse());
 
         // Set Levels
-        operator.L1
-                .and(operator.staged)
+        (operator.L1.and(operator.staged))
+                .or(autonL1)
                 .onTrue(l1.setTrue(), l2.setFalse(), l3.setFalse(), l4.setFalse());
         operator.L2
                 .and(operator.staged)
@@ -206,6 +207,11 @@ public class RobotStates {
         // Set left or right score
         operator.leftScore.and(operator.staged).onTrue(rightScore.setFalse());
         operator.rightScore.and(operator.staged).onTrue(rightScore.setTrue());
+
+        // Auton States
+
+        autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
+        autonSourceIntakeOff.onTrue(autonStationIntake.setFalse());
 
         autonLeftL4.onTrue(rightScore.setFalse());
         autonRightL4.onTrue(rightScore.setTrue());

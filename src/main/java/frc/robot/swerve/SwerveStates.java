@@ -21,7 +21,8 @@ public class SwerveStates {
     static SwerveConfig config = Robot.getConfig().swerve;
     static Pilot pilot = Robot.getPilot();
 
-    static Command pilotSteerCommand = log(pilotDrive().withName("SwerveCommands.pilotSteer"));
+    static Command pilotSteerCommand =
+            log(pilotDrive().withName("SwerveCommands.pilotSteer").ignoringDisable(true));
     static SpectrumState steeringLock = new SpectrumState("SteeringLock");
 
     protected static void setupDefaultCommand() {
@@ -41,7 +42,8 @@ public class SwerveStates {
 
     protected static void setStates() {
 
-        pilot.steer.whileTrue(pilotSteerCommand); // Force back to manual steering when we steer
+        pilot.steer.whileTrue(
+                swerve.getDefaultCommand()); // Force back to manual steering when we steer
 
         // When driving and have never steered, it doesn't lock
         // When driving, and we stop steering it locks

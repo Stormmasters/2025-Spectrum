@@ -34,7 +34,8 @@ public class Auton {
     // Setup EventTriggers
     // Should all be public static final
     public static final EventTrigger autonGroundIntake = new EventTrigger("groundIntake");
-    public static final EventTrigger autonSourceIntake = new EventTrigger("sourceIntake");
+    public static final EventTrigger autonSourceIntakeOn = new EventTrigger("sourceIntakeOn");
+    public static final EventTrigger autonSourceIntakeOff = new EventTrigger("sourceIntakeOff");
     public static final EventTrigger autonLowAlgae = new EventTrigger("lowAlgae");
     public static final EventTrigger autonHighAlgae = new EventTrigger("highAlgae");
     public static final EventTrigger autonPreScore = new EventTrigger("prescore");
@@ -44,6 +45,11 @@ public class Auton {
     public static final EventTrigger autonL1 = new EventTrigger("L1");
     public static final EventTrigger autonNet = new EventTrigger("net");
     public static final EventTrigger autonProcessor = new EventTrigger("processor");
+    public static final EventTrigger autonClearStates = new EventTrigger("clearStates");
+    public static final EventTrigger autonCoral = new EventTrigger("coral");
+    public static final EventTrigger autonHome = new EventTrigger("home");
+    public static final EventTrigger autonActionOn = new EventTrigger("actionOn");
+    public static final EventTrigger autonActionOff = new EventTrigger("actionOff");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;
@@ -129,7 +135,9 @@ public class Auton {
     public Command beltonAuton(boolean mirrored) {
         return SpectrumAuton("L4-SideStart", mirrored)
                 .withTimeout(2)
-                .andThen(SwerveStates.reefAimDrive().withTimeout(2));
+                .andThen(
+                        SwerveStates.reefAimDrive().withTimeout(2),
+                        SpectrumAuton("TroughRush", mirrored));
     }
 
     /**

@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.43,
-        "y": 7.19
+        "x": 0.9613061797752808,
+        "y": 6.9007022471910116
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6899688229938274,
-        "y": 6.998069299724511
+        "x": 1.2212750027691084,
+        "y": 6.708771546915522
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "feeder"
     },
     {
       "anchor": {
-        "x": 3.82,
-        "y": 5.18
+        "x": 3.7055477528089886,
+        "y": 5.09311797752809
       },
       "prevControl": {
-        "x": 3.6131334681098792,
-        "y": 5.350091606350682
+        "x": 3.4986812209188676,
+        "y": 5.263209583878772
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "trough"
     }
   ],
   "rotationTargets": [],
@@ -47,20 +47,38 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L1",
+      "name": "clearStates",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
-      "command": null
-    },
-    {
-      "name": "prescore",
-      "waypointRelativePos": 0.5015661707126086,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "score",
-      "waypointRelativePos": 0.9338292873923258,
+      "name": "coral",
+      "waypointRelativePos": 0.19929522317932777,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "sourceIntakeOff",
+      "waypointRelativePos": 0.20086139389192625,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "L1",
+      "waypointRelativePos": 0.22435395458104876,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "autonActionOn",
+      "waypointRelativePos": 0.5015661707126086,
+      "endWaypointRelativePos": 0.9620203602192681,
+      "command": null
+    },
+    {
+      "name": "autonActionOff",
+      "waypointRelativePos": 0.9588880187940421,
       "endWaypointRelativePos": null,
       "command": null
     }

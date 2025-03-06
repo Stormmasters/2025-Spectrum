@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.43,
-        "y": 7.19
+        "x": 0.9613061797752808,
+        "y": 6.9007022471910116
       },
       "prevControl": {
-        "x": 1.95397420574435,
-        "y": 6.865771206091734
+        "x": 1.4852803855196306,
+        "y": 6.576473453282746
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "feeder"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,19 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "sourceIntake",
+      "name": "clearStates",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.042678151918557256,
+      "command": null
+    },
+    {
+      "name": "home",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.39976507439309655,
+      "command": null
+    },
+    {
+      "name": "sourceIntakeOn",
       "waypointRelativePos": 0.39663273296789026,
       "endWaypointRelativePos": 1.0,
       "command": null

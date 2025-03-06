@@ -42,7 +42,7 @@ public class SwerveConfig {
     @Getter private double kIHoldController = 0.0;
     @Getter private double kDHoldController = 0.0;
 
-    @Getter private double kPTagCenterController = 3.5;
+    @Getter private double kPTagCenterController = 3.2;
     @Getter private double kITagCenterController = 0.0;
     @Getter private double kDTagController = 0.0;
     @Getter private double tagCenterTolerance = 0.00001; // meters

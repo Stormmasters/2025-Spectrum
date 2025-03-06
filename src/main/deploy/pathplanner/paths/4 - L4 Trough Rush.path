@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.82,
-        "y": 5.18
+        "x": 3.7055477528089886,
+        "y": 5.09311797752809
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.210771400159458,
-        "y": 5.639605667106438
+        "x": 3.0963191529684466,
+        "y": 5.552723644634528
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "trough"
     },
     {
       "anchor": {
-        "x": 1.43,
-        "y": 7.19
+        "x": 0.9613061797752808,
+        "y": 6.9007022471910116
       },
       "prevControl": {
-        "x": 2.0302457472549795,
-        "y": 6.76014846206107
+        "x": 1.5615519270302607,
+        "y": 6.4708507092520815
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "feeder"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "sourceIntake",
-      "waypointRelativePos": 0.495301487862187,
+      "name": "clearStates",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.04894283476898714,
+      "command": null
+    },
+    {
+      "name": "home",
+      "waypointRelativePos": 0.04894283476898937,
+      "endWaypointRelativePos": 0.4984338292873802,
+      "command": null
+    },
+    {
+      "name": "sourceIntakeOn",
+      "waypointRelativePos": 0.40133124510571744,
       "endWaypointRelativePos": 1.0,
       "command": null
     }
