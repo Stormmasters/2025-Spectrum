@@ -58,8 +58,10 @@ public class Auton {
         pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
 
         // pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
-        pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
+        // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
+
+        pathChooser.addOption("BeltonAuto", beltonAuton(false));
 
         pathChooser.addOption(
                 "3847 | Left | L4 Trough Rush", SpectrumAuton("Blue Left - L4 Trough Rush", false));
@@ -122,6 +124,12 @@ public class Auton {
 
     public void exit() {
         printAutoDuration();
+    }
+
+    public Command beltonAuton(boolean mirrored) {
+        return SpectrumAuton("L4-SideStart", mirrored)
+                .withTimeout(2)
+                .andThen(SwerveStates.reefAimDrive().withTimeout(2));
     }
 
     /**
