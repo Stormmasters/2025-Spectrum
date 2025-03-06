@@ -149,9 +149,7 @@ public class RobotStates {
                 .onTrue(actionPrepState.setTrue(), actionState.setFalse());
 
         actionPrepState.or(autonActionOn).onTrue(actionState.setFalse());
-        actionPrepState
-                .or(autonActionOff.not())
-                .onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
+        actionPrepState.onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
 
         operator.algaeStage.or(operator.coralStage).onTrue(actionState.setFalse());
 
