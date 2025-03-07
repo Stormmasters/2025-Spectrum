@@ -21,7 +21,8 @@ import lombok.Setter;
 
 public class SwerveConfig {
 
-    @Getter private final double llAimTAgoal = 8.6;
+        //Make this number smaller to move further from reef, make it bigger to move closer
+    @Getter private final double llAimTAgoal = 8.1;
 
     @Getter private final double simLoopPeriod = 0.005; // 5 ms
     @Getter @Setter private double robotWidth = Units.inchesToMeters(29.5);
