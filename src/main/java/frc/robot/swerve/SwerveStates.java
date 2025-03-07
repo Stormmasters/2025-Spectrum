@@ -52,7 +52,7 @@ public class SwerveStates {
         pilot.driving.onFalse(steeringLock.setFalse());
         steeringLock
                 .and(pilot.steer.not())
-                .onTrue(log(lockToClosest45degDrive().withName("Swerve.45headingLock")));
+                .onTrue(log(lockToClosestFieldAngleDrive().withName("Swerve.FieldAngleLock")));
 
         pilot.fpv_LS.whileTrue(log(fpvDrive()));
 
@@ -166,6 +166,11 @@ public class SwerveStates {
                 .withName("Swerve.PilotLockTo45degDrive");
     }
 
+    protected static Command lockToClosestFieldAngleDrive() {
+        return lockToClosestFieldAngle(pilot::getDriveFwdPositive, pilot::getDriveLeftPositive)
+                .withName("Swerve.PilotLockToFieldAngleDrive");
+    }
+
     /** Turn the swerve wheels to an X to prevent the robot from moving */
     protected static Command xBrake() {
         return swerve.applyRequest(SwerveRequest.SwerveDriveBrake::new).withName("Swerve.Xbrake");
@@ -272,6 +277,19 @@ public class SwerveStates {
                                 rotateToHeadingWhenMoving(
                                         velocityX, velocityY, () -> swerve.getClosest45())))
                 .withName("Swerve.LockTo45deg");
+    }
+
+    protected static Command lockToClosestFieldAngle(
+            DoubleSupplier velocityX, DoubleSupplier velocityY) {
+        return resetTurnController()
+                .andThen(
+                        setTargetHeading(() -> swerve.getClosestFieldAngle()),
+                        drive(
+                                velocityX,
+                                velocityY,
+                                rotateToHeadingWhenMoving(
+                                        velocityX, velocityY, () -> swerve.getClosestFieldAngle())))
+                .withName("Swerve.LockToFieldAngle");
     }
 
     private static DoubleSupplier rotateToHeadingWhenMoving(
