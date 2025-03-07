@@ -21,6 +21,8 @@ import lombok.Setter;
 
 public class SwerveConfig {
 
+    @Getter private final double llAimTAgoal = 8.6;
+
     @Getter private final double simLoopPeriod = 0.005; // 5 ms
     @Getter @Setter private double robotWidth = Units.inchesToMeters(29.5);
     @Getter @Setter private double robotLength = Units.inchesToMeters(29.5);
@@ -42,12 +44,12 @@ public class SwerveConfig {
     @Getter private double kIHoldController = 0.0;
     @Getter private double kDHoldController = 0.0;
 
-    @Getter private double kPTagCenterController = 3.2;
+    @Getter private double kPTagCenterController = 3.3;
     @Getter private double kITagCenterController = 0.0;
     @Getter private double kDTagController = 0.0;
     @Getter private double tagCenterTolerance = 0.00001; // meters
 
-    @Getter private double kPTagDistanceController = 0.1;
+    @Getter private double kPTagDistanceController = 0.15;
     @Getter private double kITagDistanceController = 0.0;
     @Getter private double kDTagDistanceController = 0.0;
     @Getter private double tagDistanceTolerance = 0.2; // meters

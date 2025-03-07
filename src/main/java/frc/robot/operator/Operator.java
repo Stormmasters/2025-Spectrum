@@ -7,7 +7,8 @@ import frc.spectrumLib.gamepads.Gamepad;
 
 public class Operator extends Gamepad {
 
-    private static double climberScaler = 0.15;
+    private static double climberScalerDown = 0.15;
+    private static double climberScalerUp = 0.35;
 
     // Triggers, these would be robot states such as intake, visionAim, etc.
     // If triggers need any of the config values set them in the constructor
@@ -16,7 +17,7 @@ public class Operator extends Gamepad {
     public final Trigger enabled = teleop.or(testMode); // works for both teleop and testMode
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
-    public final Trigger home_select = select.or(leftStickClick, downDpad);
+    public final Trigger home_select = select.or(leftStickClick);
 
     public final Trigger climbPrep_start = start.and(noFn, enabled);
 
@@ -86,6 +87,7 @@ public class Operator extends Gamepad {
     }
 
     public double getClimberTriggerAxis() {
-        return ((getRightTriggerAxis() * 0.5) - (getLeftTriggerAxis() * climberScaler));
+        return ((getRightTriggerAxis() * climberScalerUp)
+                - (getLeftTriggerAxis() * climberScalerDown));
     }
 }

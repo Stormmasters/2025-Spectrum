@@ -26,7 +26,7 @@ public class Climb extends Mechanism {
 
     public static class ClimbConfig extends Config {
 
-        @Getter private final double maxRotations = 0.36; // TODO: find max rotations
+        @Getter private final double maxRotations = 0.34; // 0.36;
         @Getter private final double minRotations = -0.085;
         /* Climb positions in degrees || 0 is horizontal */
         @Getter private final double home = 90;
@@ -66,7 +66,7 @@ public class Climb extends Mechanism {
         @Getter private double length = 0.4;
 
         public ClimbConfig() {
-            super("climbTop", 55, Rio.CANIVORE);
+            super("ClimbTop", 55, Rio.CANIVORE);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
@@ -82,7 +82,7 @@ public class Climb extends Mechanism {
             configCounterClockwise_Positive();
             configGravityType(true);
             setSimRatio(simRatio);
-            setFollowerConfigs(new FollowerConfig("climbBottom", 56, Rio.CANIVORE, false));
+            setFollowerConfigs(new FollowerConfig("ClimbBottom", 56, Rio.CANIVORE, false));
         }
 
         public ClimbConfig modifyMotorConfig(TalonFX motor) {
@@ -131,6 +131,8 @@ public class Climb extends Mechanism {
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
             builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
+            builder.addDoubleProperty(
+                    "Position Rotations", () -> (this.getPositionRotations()), null);
             builder.addDoubleProperty("Position Degrees", () -> (this.getPositionDegrees()), null);
             // builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("Motor Voltage", this::getVoltage, null);

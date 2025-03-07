@@ -61,8 +61,11 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption("Left | 2-L4 Belton Auto", beltonAuton(false));
-        pathChooser.addOption("Right | 2-L4 Belton Auto", beltonAuton(true));
+        pathChooser.addOption("Left | Belton L4", beltonAuton(false));
+        pathChooser.addOption("Right | Belton L4", beltonAuton(true));
+
+        pathChooser.addOption("Left | Belton L1", beltonAutonL1(false));
+        pathChooser.addOption("Right | Belton L1", beltonAutonL1(true));
 
         // pathChooser.addOption("Left | 2.5-L4 Belton Auto", beltonAuton2(false));
         // pathChooser.addOption("Right | 2.5-L4 Belton Auto", beltonAuton2(true));
@@ -101,6 +104,12 @@ public class Auton {
                 .andThen(aimL4score(), SpectrumAuton("TroughRush", mirrored), aimL4score());
     }
 
+    public Command beltonAutonL1(boolean mirrored) {
+        return SpectrumAuton("L4-SideStart", mirrored)
+                .withTimeout(2)
+                .andThen(aimL4score(), SpectrumAuton("TroughRush", mirrored), aimL1score());
+    }
+
     public Command beltonAuton2(boolean mirrored) {
         return SpectrumAuton("L4-SideStart", mirrored)
                 .withTimeout(2)
@@ -116,6 +125,10 @@ public class Auton {
         return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l4score());
     }
 
+    public Command aimL1score() {
+        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l1score());
+    }
+
     public Command l4score() {
         return Commands.waitSeconds(0.05)
                 .andThen(
@@ -123,6 +136,25 @@ public class Auton {
                                 .setTrue()
                                 .alongWith(
                                         RobotStates.l4.setTrue(),
+                                        RobotStates.extendedState.setTrue(),
+                                        RobotStates.homeAll.setFalse())
+                                .andThen(
+                                        Commands.waitSeconds(0.05),
+                                        RobotStates.actionPrepState.setTrue(),
+                                        Commands.waitSeconds(1.1),
+                                        RobotStates.actionPrepState.setFalse(),
+                                        Commands.waitSeconds(0.5),
+                                        RobotStates.clearStates(),
+                                        RobotStates.homeAll.setTrue()));
+    }
+
+    public Command l1score() {
+        return Commands.waitSeconds(0.05)
+                .andThen(
+                        RobotStates.coral
+                                .setTrue()
+                                .alongWith(
+                                        RobotStates.l1.setTrue(),
                                         RobotStates.extendedState.setTrue(),
                                         RobotStates.homeAll.setFalse())
                                 .andThen(
