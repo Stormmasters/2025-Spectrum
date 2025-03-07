@@ -61,27 +61,11 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption("BeltonAuto", beltonAuton(false));
+        pathChooser.addOption("Left | 2-L4 Belton Auto", beltonAuton(false));
+        pathChooser.addOption("Right | 2-L4 Belton Auto", beltonAuton(true));
 
-        pathChooser.addOption(
-                "3847 | Left | L4 Trough Rush", SpectrumAuton("Blue Left - L4 Trough Rush", false));
-        pathChooser.addOption(
-                "3847 | Right | L4 Trough Rush", SpectrumAuton("Blue Left - L4 Trough Rush", true));
-        pathChooser.addOption(
-                "3847 | Center | L4 Trough Rush",
-                SpectrumAuton("Blue Center - L4 Trough Rush", false));
-
-        pathChooser.addOption(
-                "3847 | Left | L4 Leave", SpectrumAuton("Blue Left - L4 Leave", false));
-        pathChooser.addOption(
-                "3847 | Right | L4 Leave", SpectrumAuton("Blue Left - L4 Leave", true));
-        pathChooser.addOption(
-                "3847 | Center | L4 Leave", SpectrumAuton("Blue Center - L4 Leave", false));
-
-        // pathChooser.addOption("8515 | Center - Photon", SpectrumAuton("Photon Blue Center",
-        // false));
-        // pathChooser.addOption("8515 | Left - Photon", SpectrumAuton("Photon Blue Left", false));
-        // pathChooser.addOption("8515 | Right - Photon", SpectrumAuton("Photon Blue Left", true));
+        // pathChooser.addOption("Left | 2.5-L4 Belton Auto", beltonAuton2(false));
+        // pathChooser.addOption("Right | 2.5-L4 Belton Auto", beltonAuton2(true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
@@ -115,6 +99,17 @@ public class Auton {
         return SpectrumAuton("L4-SideStart", mirrored)
                 .withTimeout(2)
                 .andThen(aimL4score(), SpectrumAuton("TroughRush", mirrored), aimL4score());
+    }
+
+    public Command beltonAuton2(boolean mirrored) {
+        return SpectrumAuton("L4-SideStart", mirrored)
+                .withTimeout(2)
+                .andThen(
+                        aimL4score(),
+                        SpectrumAuton("TroughRush", mirrored),
+                        aimL4score(),
+                        SpectrumAuton("TroughRush2", mirrored),
+                        aimL4score());
     }
 
     public Command aimL4score() {
