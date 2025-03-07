@@ -86,6 +86,8 @@ public class ElevatorStates {
         Robot.getPilot()
                 .reZero_start
                 .onTrue(elevator.resetToInitialPos()); // TODO: check if this works
+        // Robot.getOperator().climbPrep_start.whileTrue(move(config::getClimbPrep,
+        // "Elbow.climbPrep"));
     }
 
     public static DoubleSupplier getPosition() {
