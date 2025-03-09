@@ -5,12 +5,15 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.climb.Climb.ClimbConfig;
+import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
 
 public class ClimbStates {
     private static Climb climb = Robot.getClimb();
     private static ClimbConfig config = Robot.getConfig().climb;
+
+    public static final SpectrumState isLatched = climb.getLatched();
 
     public static void setupDefaultCommand() {
         climb.setDefaultCommand(log(climb.runHoldClimb().withName("Climb.default")));
@@ -40,7 +43,7 @@ public class ClimbStates {
                                 .andThen(closeLatch())
                                 .withName("Climb.prepClimber"));
 
-        homeAll.and(climb.getLatched().not()).whileTrue(log(home()));
+        homeAll.and(climb.getLatched().not(), climbPrep.not()).whileTrue(log(home()));
         // Robot.getPilot().reZero_start.whileTrue(climb.resetToInitialPos());
     }
 
