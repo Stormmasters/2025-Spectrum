@@ -30,9 +30,9 @@ public class Elbow extends Mechanism {
         @Getter @Setter private boolean reversed = false;
 
         @Getter private final double handAlgae = 0;
-        @Getter private double climbPrep = -60;
         @Getter private final double home = 180;
         @Getter private final double clearElevator = -125;
+        @Getter private final double climbPrep = 67;
 
         @Getter private final double scoreDelay = 0.2;
 
@@ -47,7 +47,7 @@ public class Elbow extends Mechanism {
         @Getter private final double l2Score = -108;
         @Getter private final double l3Coral = -124; // -144.5;
         @Getter private final double l3Score = -109; // -130;
-        @Getter private final double l4Coral = -132; // -128;
+        @Getter private final double l4Coral = -133; // -128;
         @Getter private final double l4Score = -104; // -107.6;
 
         @Getter private final double exL1Coral = -130.6;
@@ -55,7 +55,7 @@ public class Elbow extends Mechanism {
         @Getter private final double exL2Score = -109.6; // -127;
         @Getter private final double exL3Coral = -115.6; // -143;
         @Getter private final double exL3Score = -106.4; // -127;
-        @Getter private final double exL4Coral = -131; // -126;
+        @Getter private final double exL4Coral = -132; // -126;
         @Getter private final double exL4Score = -106.9; // -104;
 
         @Getter private final double processorAlgae = -86;

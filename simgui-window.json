@@ -33,7 +33,7 @@
     },
     "###/SmartDashboard/Auto Chooser": {
       "Collapsed": "0",
-      "Pos": "339,243",
+      "Pos": "321,252",
       "Size": "307,60"
     },
     "###/SmartDashboard/Auto Visualizer": {
@@ -83,7 +83,7 @@
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "1,385",
+      "Pos": "3,385",
       "Size": "976,252"
     },
     "###Keyboard 0 Settings": {
@@ -141,7 +141,7 @@
     },
     "Robot State": {
       "Collapsed": "0",
-      "Pos": "187,186",
+      "Pos": "186,189",
       "Size": "118,134"
     }
   }

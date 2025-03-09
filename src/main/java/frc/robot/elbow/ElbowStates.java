@@ -82,6 +82,8 @@ public class ElbowStates {
         L3Algae.and(actionState).whileTrue(move(config::getHome, "Elbow.l3AlgaeHome"));
 
         netAlgae.whileTrue(move(config::getNet, "Elbow.netAlgae"));
+
+        climbPrep.whileTrue(move(config::getClimbPrep, "Elbow.climbPrep"));
     }
 
     private static Command home() {

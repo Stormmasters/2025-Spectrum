@@ -26,13 +26,13 @@ public class Climb extends Mechanism {
 
     public static class ClimbConfig extends Config {
 
-        @Getter private final double maxRotations = 0.36; // TODO: find max rotations
+        @Getter private final double maxRotations = 0.34; // 0.36;
         @Getter private final double minRotations = -0.085;
         /* Climb positions in degrees || 0 is horizontal */
         @Getter private final double home = 90;
         @Getter private final double intake = 0;
         @Getter private final double algaeFloorIntake = 30;
-        @Getter private final double prepClimber = -10;
+        @Getter private final double prepClimber = 0;
         @Getter private final double finishClimb = 100;
         @Getter private final double coralFloorIntake = -10;
         @Getter private final double processorScore = 60;
@@ -53,8 +53,8 @@ public class Climb extends Mechanism {
         @Getter private final double positionKs = 0.3;
         @Getter private final double positionKa = 0.001;
         @Getter private final double positionKg = 2.9;
-        @Getter private final double mmCruiseVelocity = 4;
-        @Getter private final double mmAcceleration = 40;
+        @Getter private final double mmCruiseVelocity = 1;
+        @Getter private final double mmAcceleration = 10;
         @Getter private final double mmJerk = 0;
 
         /* Sim properties */
@@ -66,7 +66,7 @@ public class Climb extends Mechanism {
         @Getter private double length = 0.4;
 
         public ClimbConfig() {
-            super("climbTop", 55, Rio.CANIVORE);
+            super("ClimbTop", 55, Rio.CANIVORE);
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
@@ -82,7 +82,7 @@ public class Climb extends Mechanism {
             configCounterClockwise_Positive();
             configGravityType(true);
             setSimRatio(simRatio);
-            setFollowerConfigs(new FollowerConfig("climbBottom", 56, Rio.CANIVORE, false));
+            setFollowerConfigs(new FollowerConfig("ClimbBottom", 56, Rio.CANIVORE, false));
         }
 
         public ClimbConfig modifyMotorConfig(TalonFX motor) {
@@ -131,6 +131,8 @@ public class Climb extends Mechanism {
     public void initSendable(NTSendableBuilder builder) {
         if (isAttached()) {
             builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
+            builder.addDoubleProperty(
+                    "Position Rotations", () -> (this.getPositionRotations()), null);
             builder.addDoubleProperty("Position Degrees", () -> (this.getPositionDegrees()), null);
             // builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("Motor Voltage", this::getVoltage, null);
@@ -260,7 +262,7 @@ public class Climb extends Mechanism {
                                     config.length,
                                     -30,
                                     180,
-                                    180)
+                                    0)
                             .setColor(new Color8Bit(Color.kBrown)),
                     mech,
                     climbMotorSim,

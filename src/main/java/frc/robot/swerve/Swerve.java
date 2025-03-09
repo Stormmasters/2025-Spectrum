@@ -301,6 +301,38 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         return Rotation2d.fromDegrees(closest45Degrees).getRadians();
     }
 
+    protected double getClosestFieldAngle() {
+        // Step 1: Read the angle in radians
+        double angleRadians = getRotation().getRadians();
+
+        // Step 2: Convert the angle from radians to degrees
+        double angleDegrees = Math.toDegrees(angleRadians);
+
+        // Step 3: Define a table of angles in degrees
+        double[] angleTable = {0, 180, 126, -126, 54, -54, 60, -60, 120, -120, 90, -90};
+
+        // Step 4: Find the nearest angle from the table
+        double closestAngle = angleTable[0];
+        double minDifference = getAngleDifference(angleDegrees, closestAngle);
+
+        for (double angle : angleTable) {
+            double difference = getAngleDifference(angleDegrees, angle);
+            if (difference < minDifference) {
+                minDifference = difference;
+                closestAngle = angle;
+            }
+        }
+
+        // Step 5: Return the nearest angle in Radians
+        return Math.toRadians(closestAngle);
+    }
+
+    // Helper method to calculate the shortest angle difference
+    private double getAngleDifference(double angle1, double angle2) {
+        double diff = Math.abs(angle1 - angle2) % 360;
+        return diff > 180 ? 360 - diff : diff;
+    }
+
     protected Command cardinalReorient() {
         return runOnce(
                 () -> {

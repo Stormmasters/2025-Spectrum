@@ -52,7 +52,7 @@ public class SwerveStates {
         pilot.driving.onFalse(steeringLock.setFalse());
         steeringLock
                 .and(pilot.steer.not())
-                .onTrue(log(lockToClosest45degDrive().withName("Swerve.45headingLock")));
+                .onTrue(log(lockToClosestFieldAngleDrive().withName("Swerve.FieldAngleLock")));
 
         pilot.fpv_LS.whileTrue(log(fpvDrive()));
 
@@ -110,7 +110,7 @@ public class SwerveStates {
     private static double getTagDistanceVelocity() {
         if (Robot.getVision().frontLL.targetInView()) {
             return swerve.calculateTagDistanceAlignController(
-                    () -> 9.258, () -> Robot.getVision().frontLL.getTagTA());
+                    () -> config.getHomeLlAimTAgoal(), () -> Robot.getVision().frontLL.getTagTA());
         }
         return 0;
     }
@@ -164,6 +164,11 @@ public class SwerveStates {
     protected static Command lockToClosest45degDrive() {
         return lockToClosest45deg(pilot::getDriveFwdPositive, pilot::getDriveLeftPositive)
                 .withName("Swerve.PilotLockTo45degDrive");
+    }
+
+    protected static Command lockToClosestFieldAngleDrive() {
+        return lockToClosestFieldAngle(pilot::getDriveFwdPositive, pilot::getDriveLeftPositive)
+                .withName("Swerve.PilotLockToFieldAngleDrive");
     }
 
     /** Turn the swerve wheels to an X to prevent the robot from moving */
@@ -272,6 +277,19 @@ public class SwerveStates {
                                 rotateToHeadingWhenMoving(
                                         velocityX, velocityY, () -> swerve.getClosest45())))
                 .withName("Swerve.LockTo45deg");
+    }
+
+    protected static Command lockToClosestFieldAngle(
+            DoubleSupplier velocityX, DoubleSupplier velocityY) {
+        return resetTurnController()
+                .andThen(
+                        setTargetHeading(() -> swerve.getClosestFieldAngle()),
+                        drive(
+                                velocityX,
+                                velocityY,
+                                rotateToHeadingWhenMoving(
+                                        velocityX, velocityY, () -> swerve.getClosestFieldAngle())))
+                .withName("Swerve.LockToFieldAngle");
     }
 
     private static DoubleSupplier rotateToHeadingWhenMoving(

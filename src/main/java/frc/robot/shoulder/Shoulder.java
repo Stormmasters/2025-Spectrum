@@ -34,7 +34,7 @@ public class Shoulder extends Mechanism {
 
         /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
 
-        @Getter @Setter private double climbPrep = -90;
+        @Getter @Setter private double climbPrep = -56.7;;
         @Getter @Setter private double home = 0;
 
         @Getter @Setter private double stationIntake = 9.2;
@@ -48,17 +48,17 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double netAlgae = 180;
 
         @Getter @Setter private double l1Coral = 51.5;
-        @Getter @Setter private double l2Coral = 14.3;
+        @Getter @Setter private double l2Coral = 15.3;
         @Getter @Setter private double l2Score = 70; // 26
-        @Getter @Setter private double l3Coral = 9.6; // -8
+        @Getter @Setter private double l3Coral = 11.1; // -8
         @Getter @Setter private double l3Score = 70; // 26;
-        @Getter @Setter private double l4Coral = 170.5; // 158.5;
+        @Getter @Setter private double l4Coral = 170; // 158.5;
         @Getter @Setter private double l4CoralScore = 128; // 117;
 
         @Getter @Setter private double exl1Coral = 16.9;
-        @Getter @Setter private double exl2Coral = -12.4; // -27;
+        @Getter @Setter private double exl2Coral = -13.4; // -27;
         @Getter @Setter private double exl2Score = 30;
-        @Getter @Setter private double exl3Coral = -11.8; // -27;
+        @Getter @Setter private double exl3Coral = -12.8; // -27;
         @Getter @Setter private double exl3Score = 30;
         @Getter @Setter private double exl4Coral = 199.3; // 179;
         @Getter @Setter private double exl4Score = 145.8; // 133;
