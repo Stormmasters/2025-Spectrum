@@ -34,7 +34,6 @@ public class Operator extends Gamepad {
     public final Trigger leftScore = leftDpad.and(staged);
     public final Trigger rightScore = rightDpad.and(staged);
 
-    public final Trigger triggersPressed = leftTrigger.or(rightTrigger);
     public final Trigger latchOpen_startUp = climbPrep_start.and(upDpad);
     public final Trigger latchCloser_startDown = climbPrep_start.and(downDpad);
 

@@ -26,15 +26,20 @@ public class ClimbStates {
         // groundAlgae.whileTrue(log(algaeFloorIntake()));
         // groundCoral.whileTrue(log(coralFloorIntake()));
 
-        // climbPrep.whileTrue(log(climbPrep()).alongWith(openLatch()));
-        // .whileTrue(log(climbFinish()).alongWith(closeLatch()));
-
         Robot.getOperator().latchOpen_startUp.onTrue(openLatch());
         Robot.getOperator().latchCloser_startDown.onTrue(closeLatch());
         Robot.getOperator()
                 .climbPrep_start
-                .and(Robot.getOperator().triggersPressed)
+                .and(Robot.getOperator().noTriggers.not())
                 .whileTrue(runClimb(() -> Robot.getOperator().getClimberTriggerAxis()));
+        Robot.getOperator()
+                .climbPrep_start
+                .and(Robot.getOperator().leftTriggerOnly)
+                .onTrue(openLatch());
+        Robot.getOperator()
+                .climbPrep_start
+                .and(Robot.getOperator().rightTriggerOnly)
+                .onTrue(closeLatch());
         Robot.getOperator()
                 .climbPrep_start
                 .onTrue(

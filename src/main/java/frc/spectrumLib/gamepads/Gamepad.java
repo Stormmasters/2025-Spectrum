@@ -47,16 +47,16 @@ public abstract class Gamepad implements SpectrumSubsystem {
     protected Trigger rightStickY = kFalse;
     protected Trigger rightStickX = kFalse;
 
-    // Setup function bumper and trigger buttons
-    public Trigger noBumpers = rightBumper.negate().and(leftBumper.negate());
-    public Trigger leftBumperOnly = leftBumper.and(rightBumper.negate());
-    public Trigger rightBumperOnly = rightBumper.and(leftBumper.negate());
-    public Trigger bothBumpers = rightBumper.and(leftBumper);
-    public Trigger noTriggers = leftTrigger.negate().and(rightTrigger.negate());
-    public Trigger leftTriggerOnly = leftTrigger.and(rightTrigger.negate());
-    public Trigger rightTriggerOnly = rightTrigger.and(leftTrigger.negate());
-    public Trigger bothTriggers = leftTrigger.and(rightTrigger);
-    public Trigger noModifiers = noBumpers.and(noTriggers);
+    // Function bumper and trigger buttons
+    public Trigger noBumpers;
+    public Trigger leftBumperOnly;
+    public Trigger rightBumperOnly;
+    public Trigger bothBumpers;
+    public Trigger noTriggers;
+    public Trigger leftTriggerOnly;
+    public Trigger rightTriggerOnly;
+    public Trigger bothTriggers;
+    public Trigger noModifiers;
 
     private Rotation2d storedLeftStickDirection = new Rotation2d();
     private Rotation2d storedRightStickDirection = new Rotation2d();
@@ -165,6 +165,17 @@ public abstract class Gamepad implements SpectrumSubsystem {
             leftStickX = leftXTrigger(Threshold.ABS_GREATER, config.leftStickDeadzone);
             rightStickY = rightYTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
             rightStickX = rightXTrigger(Threshold.ABS_GREATER, config.rightStickDeadzone);
+
+            // Setup function bumper and trigger buttons
+            noBumpers = rightBumper.negate().and(leftBumper.negate());
+            leftBumperOnly = leftBumper.and(rightBumper.negate());
+            rightBumperOnly = rightBumper.and(leftBumper.negate());
+            bothBumpers = rightBumper.and(leftBumper);
+            noTriggers = leftTrigger.negate().and(rightTrigger.negate());
+            leftTriggerOnly = leftTrigger.and(rightTrigger.negate());
+            rightTriggerOnly = rightTrigger.and(leftTrigger.negate());
+            bothTriggers = leftTrigger.and(rightTrigger);
+            noModifiers = noBumpers.and(noTriggers);
         }
 
         CommandScheduler.getInstance().registerSubsystem(this);
