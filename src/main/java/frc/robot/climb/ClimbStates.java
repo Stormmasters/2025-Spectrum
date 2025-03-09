@@ -30,7 +30,15 @@ public class ClimbStates {
         Robot.getOperator().latchCloser_startDown.onTrue(closeLatch());
         Robot.getOperator()
                 .climbPrep_start
+                .and(Robot.getOperator().triggersPressed)
                 .whileTrue(runClimb(() -> Robot.getOperator().getClimberTriggerAxis()));
+        Robot.getOperator()
+                .climbPrep_start
+                .onTrue(
+                        climb.moveToRotations(config::getMinRotations)
+                                .withTimeout(1.5)
+                                .andThen(closeLatch())
+                                .withName("Climb.prepClimber"));
 
         homeAll.and(climb.getLatched().not()).whileTrue(log(home()));
         // Robot.getPilot().reZero_start.whileTrue(climb.resetToInitialPos());
@@ -44,10 +52,12 @@ public class ClimbStates {
         return climb.moveToDegrees(config::getHome).withName("Climb.home");
     }
 
+    // TODO: delete?
     public static Command climbPrep() {
         return climb.moveToDegrees(config::getPrepClimber).withName("Climb.prepClimber");
     }
 
+    // TODO: delete?
     public static Command climbFinish() {
         return climb.moveToDegrees(config::getFinishClimb).withName("Climb.finishClimb");
     }

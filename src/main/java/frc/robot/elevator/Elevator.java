@@ -39,7 +39,7 @@ public class Elevator extends Mechanism {
 
         @Getter @Setter private double processorAlgae = 0.3;
         @Getter @Setter private double l2Algae = 1;
-        @Getter @Setter private double l3Algae = 14;
+        @Getter @Setter private double l3Algae = 12;
         @Getter @Setter private double netAlgae = fullExtend;
 
         @Getter @Setter private double l1Coral = 0;

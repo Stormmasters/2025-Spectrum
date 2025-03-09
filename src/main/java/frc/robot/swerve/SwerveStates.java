@@ -110,7 +110,7 @@ public class SwerveStates {
     private static double getTagDistanceVelocity() {
         if (Robot.getVision().frontLL.targetInView()) {
             return swerve.calculateTagDistanceAlignController(
-                    () -> config.getLlAimTAgoal(), () -> Robot.getVision().frontLL.getTagTA());
+                    () -> config.getHomeLlAimTAgoal(), () -> Robot.getVision().frontLL.getTagTA());
         }
         return 0;
     }

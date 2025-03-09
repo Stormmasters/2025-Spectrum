@@ -32,7 +32,7 @@ public class Climb extends Mechanism {
         @Getter private final double home = 90;
         @Getter private final double intake = 0;
         @Getter private final double algaeFloorIntake = 30;
-        @Getter private final double prepClimber = -10;
+        @Getter private final double prepClimber = 0;
         @Getter private final double finishClimb = 100;
         @Getter private final double coralFloorIntake = -10;
         @Getter private final double processorScore = 60;
@@ -53,8 +53,8 @@ public class Climb extends Mechanism {
         @Getter private final double positionKs = 0.3;
         @Getter private final double positionKa = 0.001;
         @Getter private final double positionKg = 2.9;
-        @Getter private final double mmCruiseVelocity = 4;
-        @Getter private final double mmAcceleration = 40;
+        @Getter private final double mmCruiseVelocity = 1;
+        @Getter private final double mmAcceleration = 10;
         @Getter private final double mmJerk = 0;
 
         /* Sim properties */
@@ -262,7 +262,7 @@ public class Climb extends Mechanism {
                                     config.length,
                                     -30,
                                     180,
-                                    180)
+                                    0)
                             .setColor(new Color8Bit(Color.kBrown)),
                     mech,
                     climbMotorSim,
