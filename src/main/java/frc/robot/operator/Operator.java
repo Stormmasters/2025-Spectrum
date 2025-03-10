@@ -39,6 +39,9 @@ public class Operator extends Gamepad {
 
     public final Trigger homeElevator_A = A.and(nothingStaged, teleop);
 
+    public final Trigger reverseDisabled = leftDpad.and(staged.not(), teleop);
+    public final Trigger reverseEnabled = rightDpad.and(staged.not(), teleop);
+
     // TODO: Removed until we are ready to implement
     // public final Trigger algaeHandoff_X = X.and(nothingStaged, teleop);
     // public final Trigger coralHandoff_Y = Y.and(nothingStaged, teleop);
