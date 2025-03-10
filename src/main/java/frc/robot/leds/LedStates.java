@@ -24,8 +24,8 @@ public class LedStates {
         testModePattern(Util.testMode.and(Util.dsAttached));
 
         // Coral and Algae Led Commands
-        coralLED(RobotStates.coral, 6);
-        algaeLED(RobotStates.algae, 6);
+        coralModeLED(RobotStates.coral, 6);
+        algaeModeLED(RobotStates.algae, 6);
 
         // Elevator Led Commands
         elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
@@ -76,14 +76,14 @@ public class LedStates {
         ledCommand("left.ElevatorUp", left, left.blink(Color.kBlue, 0.25), priority, trigger);
     }
 
-    static void coralLED(Trigger trigger, int priority) {
-        ledCommand("right.CoralIntake", right, right.solid(Color.kWhite), priority, trigger);
-        ledCommand("left.CoralIntake", left, left.solid(Color.kWhite), priority, trigger);
+    static void coralModeLED(Trigger trigger, int priority) {
+        ledCommand("right.CoralMode", right, right.solid(Color.kWhite), priority, trigger);
+        ledCommand("left.CoralMode", left, left.solid(Color.kWhite), priority, trigger);
     }
 
-    static void algaeLED(Trigger trigger, int priority) {
-        ledCommand("right.AlgaeIntake", right, right.solid(Color.kGreen), priority, trigger);
-        ledCommand("left.AlgaeIntake", left, left.solid(Color.kGreen), priority, trigger);
+    static void algaeModeLED(Trigger trigger, int priority) {
+        ledCommand("right.AlgaeMode", right, right.solid(Color.kGreen), priority, trigger);
+        ledCommand("left.AlgaeMode", left, left.solid(Color.kGreen), priority, trigger);
     }
 
     // Log Command

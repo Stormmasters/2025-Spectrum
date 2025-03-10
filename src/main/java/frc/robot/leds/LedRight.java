@@ -28,7 +28,7 @@ public class LedRight extends SpectrumLEDs {
      */
     @Override
     public void setupStates() {
-        LedStates.bindTriggers();
+        // LedStates.bindTriggers();
     }
 
     /**
