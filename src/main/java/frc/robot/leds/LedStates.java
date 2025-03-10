@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
+import frc.robot.climb.ClimbStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.leds.SpectrumLEDs;
@@ -29,6 +30,7 @@ public class LedStates {
 
         // Elevator Led Commands
         elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
+        climbReadyLED(ClimbStates.isLatched.and(RobotStates.climbPrep, Util.teleop), 6);
     }
 
     /** Default LED commands for each mode */
@@ -74,6 +76,11 @@ public class LedStates {
     static void elevatorUpLED(Trigger trigger, int priority) {
         ledCommand("right.ElevatorUp", right, right.blink(Color.kBlue, 0.25), priority, trigger);
         ledCommand("left.ElevatorUp", left, left.blink(Color.kBlue, 0.25), priority, trigger);
+    }
+
+    static void climbReadyLED(Trigger trigger, int priority) {
+        ledCommand("right.ClimbReady", right, right.scrollingRainbow(), priority, trigger);
+        ledCommand("left.ClimbReady", left, left.scrollingRainbow(), priority, trigger);
     }
 
     static void coralModeLED(Trigger trigger, int priority) {
