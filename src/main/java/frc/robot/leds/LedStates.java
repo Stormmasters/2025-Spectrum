@@ -25,8 +25,14 @@ public class LedStates {
         autoPattern(Util.autoMode.and(Util.dsAttached));
         testModePattern(Util.testMode.and(Util.dsAttached));
 
-        // Led Commands
+        // Coral and Algae Led Commands
+        coralModeLED(RobotStates.coral, 6);
+        algaeModeLED(RobotStates.algae, 6);
+
+        // Elevator Led Commands
         elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
+
+        // Climb Led Commands
         climbReadyLED(ClimbStates.isLatched.and(RobotStates.climbPrep, Util.teleop), 6);
         hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 6);
         hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 6);
@@ -80,6 +86,16 @@ public class LedStates {
     static void climbReadyLED(Trigger trigger, int priority) {
         ledCommand("right.ClimbReady", right, right.scrollingRainbow(), priority, trigger);
         ledCommand("left.ClimbReady", left, left.scrollingRainbow(), priority, trigger);
+    }
+
+    static void coralModeLED(Trigger trigger, int priority) {
+        ledCommand("right.CoralMode", right, right.solid(Color.kWhite), priority, trigger);
+        ledCommand("left.CoralMode", left, left.solid(Color.kWhite), priority, trigger);
+    }
+
+    static void algaeModeLED(Trigger trigger, int priority) {
+        ledCommand("right.AlgaeMode", right, right.solid(Color.kGreen), priority, trigger);
+        ledCommand("left.AlgaeMode", left, left.solid(Color.kGreen), priority, trigger);
     }
 
     static void hasCoralLED(Trigger trigger, int priority) {
