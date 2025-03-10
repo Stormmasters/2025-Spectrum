@@ -62,7 +62,9 @@ public class SwerveStates {
         pilot.rightReorient.onTrue(log(reorientRight()));
 
         // // vision aim
-        pilot.visionAim_A.whileTrue(log(reefAimDrive()));
+        pilot.reefAim_A.whileTrue(log(reefAimDrive()));
+        pilot.cageAim_B.whileTrue(log(cageAlignDrive()));
+
     }
 
     /** Pilot Commands ************************************************************************ */
@@ -89,6 +91,11 @@ public class SwerveStates {
                                 new PrintCommand("! cleared align !")))
                 .withName("autonAlign")
                 .alongWith(new PrintCommand("!! autonAlign Ran !!"));
+    }
+
+    public static Command cageAlignDrive() {
+        return fpvAimDrive(null, null, null);
+
     }
 
     public static Command reefAimDrive() {
