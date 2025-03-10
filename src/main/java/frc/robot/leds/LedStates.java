@@ -30,6 +30,8 @@ public class LedStates {
 
         // Elevator Led Commands
         elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
+
+        // Climb Led Commands
         climbReadyLED(ClimbStates.isLatched.and(RobotStates.climbPrep, Util.teleop), 6);
     }
 
