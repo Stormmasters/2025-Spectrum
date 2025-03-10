@@ -28,14 +28,14 @@ public class LedStates {
         // Coral and Algae Led Commands
         coralModeLED(RobotStates.coral, 6);
         algaeModeLED(RobotStates.algae, 6);
+        hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 6);
+        hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 6);
 
         // Elevator Led Commands
         elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
 
         // Climb Led Commands
         climbReadyLED(ClimbStates.isLatched.and(RobotStates.climbPrep, Util.teleop), 6);
-        hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 6);
-        hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 6);
     }
 
     /** Default LED commands for each mode */
