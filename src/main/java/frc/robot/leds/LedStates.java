@@ -26,8 +26,8 @@ public class LedStates {
         testModePattern(Util.testMode.and(Util.dsAttached));
 
         // Coral and Algae Led Commands
-        coralModeLED(RobotStates.coral, 6);
-        algaeModeLED(RobotStates.algae, 6);
+        coralModeLED(RobotStates.coral.and(Util.teleop), 6);
+        algaeModeLED(RobotStates.algae.and(Util.teleop), 6);
         hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 6);
         hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 6);
 
