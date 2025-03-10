@@ -143,7 +143,7 @@ public class Intake extends Mechanism {
     }
 
     public boolean hasIntakeGamePiece() {
-        double motorOutput = getVelocityRPM(); // might be better to check with motor voltage
+        double motorOutput = getVelocityRPM();
         double motorCurrent = getStatorCurrent();
         return (Math.abs(motorOutput) < config.hasGamePieceVelocity
                 && Math.abs(motorCurrent) > config.hasGamePieceCurrent);

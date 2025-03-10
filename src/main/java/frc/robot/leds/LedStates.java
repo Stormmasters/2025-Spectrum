@@ -9,6 +9,7 @@ import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.robot.climb.ClimbStates;
 import frc.robot.elevator.ElevatorStates;
+import frc.robot.intake.IntakeStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.leds.SpectrumLEDs;
 import frc.spectrumLib.util.Util;
@@ -27,6 +28,8 @@ public class LedStates {
         // Led Commands
         elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
         climbReadyLED(ClimbStates.isLatched.and(RobotStates.climbPrep, Util.teleop), 6);
+        hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 6);
+        hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 6);
     }
 
     /** Default LED commands for each mode */
@@ -77,6 +80,18 @@ public class LedStates {
     static void climbReadyLED(Trigger trigger, int priority) {
         ledCommand("right.ClimbReady", right, right.scrollingRainbow(), priority, trigger);
         ledCommand("left.ClimbReady", left, left.scrollingRainbow(), priority, trigger);
+    }
+
+    static void hasCoralLED(Trigger trigger, int priority) {
+        ledCommand(
+                "right.HasCoral", right, right.ombre(Color.kCoral, right.white), priority, trigger);
+        ledCommand("left.HasCoral", left, left.ombre(Color.kCoral, right.white), priority, trigger);
+    }
+
+    static void hasAlgaeLED(Trigger trigger, int priority) {
+        ledCommand(
+                "right.HasAlgae", right, right.ombre(Color.kGreen, right.white), priority, trigger);
+        ledCommand("left.HasAlgae", left, left.ombre(Color.kGreen, right.white), priority, trigger);
     }
 
     // Log Command
