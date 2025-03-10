@@ -126,7 +126,6 @@ public class RobotStates {
 
         // *********************************
         // HOME Commands and States
-        coral.toggleToTrue();
         pilot.home_select.or(operator.home_select, autonHome).whileTrue(homeAll.toggleToTrue());
         pilot.home_select.or(operator.home_select).onFalse(clearStates());
         autonClearStates.whileTrue(clearStates());
