@@ -24,11 +24,14 @@ public class LedStates {
         autoPattern(Util.autoMode.and(Util.dsAttached));
         testModePattern(Util.testMode.and(Util.dsAttached));
 
+        // General Led Commands
+        homeFinishLED(RobotStates.isAtHome.and(RobotStates.homeAll, Util.teleop), 7);
+
         // Coral and Algae Led Commands
         coralModeLED(RobotStates.coral.and(Util.teleop), 6);
         algaeModeLED(RobotStates.algae.and(Util.teleop), 6);
-        hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 6);
-        hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 6);
+        hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 7);
+        hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 7);
 
         // Elevator Led Commands
         // elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
@@ -77,6 +80,11 @@ public class LedStates {
                 .whileTrue(log(sLed.setPattern(pattern, priority).withName(name)));
     }
 
+    static void homeFinishLED(Trigger trigger, int priority) {
+        ledCommand("right.HomeFinish", right, right.solid(right.purple), priority, trigger);
+        ledCommand("left.HomeFinish", left, left.solid(left.purple), priority, trigger);
+    }
+
     static void elevatorUpLED(Trigger trigger, int priority) {
         ledCommand("right.ElevatorUp", right, right.blink(Color.kBlue, 0.25), priority, trigger);
         ledCommand("left.ElevatorUp", left, left.blink(Color.kBlue, 0.25), priority, trigger);
@@ -98,19 +106,19 @@ public class LedStates {
     }
 
     static void hasCoralLED(Trigger trigger, int priority) {
-        ledCommand("right.HasCoral", right, right.chase(Color.kCoral, 0.2, 1), priority, trigger);
-        ledCommand("left.HasCoral", left, left.chase(Color.kCoral, 0.2, 1), priority, trigger);
+        ledCommand("right.HasCoral", right, right.breathe(Color.kWhite, 1), priority, trigger);
+        ledCommand("left.HasCoral", left, left.breathe(Color.kWhite, 1), priority, trigger);
     }
 
     static void hasAlgaeLED(Trigger trigger, int priority) {
         ledCommand(
                 "right.HasAlgae",
                 right,
-                right.chase(Color.kDarkSeaGreen, 0.2, 1),
+                right.breathe(Color.kMediumSeaGreen, 1),
                 priority,
                 trigger);
         ledCommand(
-                "left.HasAlgae", left, left.chase(Color.kDarkSeaGreen, 0.2, 1), priority, trigger);
+                "left.HasAlgae", left, left.breathe(Color.kMediumSeaGreen, 1), priority, trigger);
     }
 
     // Log Command
