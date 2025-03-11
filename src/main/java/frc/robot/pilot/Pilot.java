@@ -78,7 +78,7 @@ public class Pilot extends Gamepad {
 
             setLeftStickDeadzone(deadzone);
             setLeftStickExp(3);
-            setLeftStickScalor(4.572);
+            // setLeftStickScalor(Robot.getConfig().swerve.getSpeedAt12Volts().magnitude());
 
             setRightStickDeadzone(deadzone);
             setRightStickExp(3.0);
@@ -99,6 +99,8 @@ public class Pilot extends Gamepad {
     public Pilot(PilotConfig config) {
         super(config);
         this.config = config;
+        config.setLeftStickScalor(Robot.getConfig().swerve.getSpeedAt12Volts().magnitude());
+        leftStickCurve.setScalar(config.getLeftStickScalor());
         Robot.add(this);
         Telemetry.print("Pilot Subsystem Initialized: ");
     }

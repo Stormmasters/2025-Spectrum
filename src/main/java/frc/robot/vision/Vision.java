@@ -164,7 +164,7 @@ public class Vision extends SubsystemBase implements NTSendable {
 
     @Override
     public void initSendable(NTSendableBuilder builder) {
-        // builder.setSmartDashboardType("VisionTargetValues");
+        builder.setSmartDashboardType("VisionTargetValues");
         builder.addDoubleProperty("FrontTX", frontLL::getTagTx, null);
         builder.addDoubleProperty("FrontTY", frontLL::getTagTA, null);
         builder.addDoubleProperty("FrontRotation", frontLL::getTagRotationDegrees, null);
@@ -179,9 +179,9 @@ public class Vision extends SubsystemBase implements NTSendable {
             boolean multiTags = ll.multipleTagsInView();
             double timeStamp = ll.getRawPoseTimestamp();
             double targetSize = ll.getTargetSize();
-            Pose3d botpose3D = ll.getRawPose3d();
+            Pose3d botpose3D = ll.getMegaTag1_Pose3d();
             Pose2d botpose = botpose3D.toPose2d();
-            Pose2d megaPose2d = ll.getMegaPose2d();
+            Pose2d megaPose2d = ll.getMegaTag2_Pose2d();
             RawFiducial[] tags = ll.getRawFiducial();
             double highestAmbiguity = 2;
             ChassisSpeeds robotSpeed = Robot.getSwerve().getCurrentRobotChassisSpeeds();
@@ -246,7 +246,7 @@ public class Vision extends SubsystemBase implements NTSendable {
     public void resetPoseToVision() {
         Limelight ll = getBestLimelight();
         resetPoseToVision(
-                ll.targetInView(), ll.getRawPose3d(), ll.getMegaPose2d(), ll.getRawPoseTimestamp());
+                ll.targetInView(), ll.getMegaTag1_Pose3d(), ll.getMegaTag2_Pose2d(), ll.getRawPoseTimestamp());
     }
 
     public Limelight getBestLimelight() {
@@ -284,15 +284,25 @@ public class Vision extends SubsystemBase implements NTSendable {
      */
     public boolean resetPoseToVision(
             boolean targetInView, Pose3d botpose3D, Pose2d megaPose, double poseTimestamp) {
+
+        Limelight ll = getBestLimelight();
+
+        Pose3d botpose3D2 = ll.getMegaTag1_Pose3d();
+        boolean targetInView2 = ll.targetInView();
+        Pose2d megaPose2 = ll.getMegaTag2_Pose2d();
+        double poseTimestamp2 = ll.getRawPoseTimestamp();
+
         boolean reject = false;
         if (targetInView) {
             // replace botpose with this.pose
             Pose2d botpose = botpose3D.toPose2d();
             Pose2d pose = Robot.getSwerve().getRobotPose();
+            
+            //Check if the vision pose is bad and don't trust it
             if (Field.poseOutOfField(botpose3D)
                     || Math.abs(botpose3D.getZ()) > 0.25
                     || (Math.abs(botpose3D.getRotation().getX()) > 5
-                            || Math.abs(botpose3D.getRotation().getY()) > 5)) { // when has bad
+                            || Math.abs(botpose3D.getRotation().getY()) > 5)) {
                 Telemetry.log("Pose bad", reject);
                 reject = true;
             }
@@ -366,194 +376,48 @@ public class Vision extends SubsystemBase implements NTSendable {
             limelight.setLimelightPipeline(pipeline);
         }
     }
-    
+
     // ------------------------------------------------------------------------------
     // Calculation Functions
     // ------------------------------------------------------------------------------
 
     /**
-     * REQUIRES ACCURATE POSE ESTIMATION. Uses trigonometric functions to calculate the angle
-     * between the robot heading and the angle required to face coral faces.
-     *
-     * @return angle between robot heading and the closest reef face in degrees
+     * Get the angle the robot should turn to based on the id the limelight is seeing.
+     * @return
      */
-    private int fieldReefID;
-
-    // public double getThetaToReefFace() {
-    //     double closestReefFace = closestReefFace();
-    //     Translation2d robot2d = Robot.getSwerve().getRobotPose().getTranslation();
-    //     fieldReefID = -1;
-    //     for(int i = 18; i<23; i++){
-    //         if(closestReefFace == i){
-    //             fieldReefID = i;
-    //         } else if(closestReefFace == 17 ){
-    //             fieldReefID = 5;
-    //         }
-    //     }
-    //     if (fieldReefID == -1) {
-    //         return -1;
-    //     }
-
-    //     Translation2d reefFace = Field.Reef.centerFaces[fieldReefID].getTranslation();
-
-    //     double angleBetweenRobotandReefFace =
-    //         MathUtil.angleModulus(
-    //             reefFace.minus(robot2d).getAngle().getRadians());
-
-    //     return angleBetweenRobotandReefFace;
-
-    //     //runs closestReefFace to get the closest reef face id
-    // }
-
     public double getReefTagAngle() {
-        double[][] reefAngles = {
+        double[][] reefFrontAngles = {
             {17, 60}, {18, 0}, {19, -60}, {20, -120}, {21, 180}, {22, 120},
             {6, 120}, {7, 180}, {8, -120}, {9, -60}, {10, 0}, {11, 60}
         };
 
-        int closetTag = (int) frontLL.getClosestTagID();
+        int closetFrontTag = (int) frontLL.getClosestTagID();
+        int closetRearTag = (int) backLL.getClosestTagID();
+        int closetTag = closetFrontTag;
+        boolean rearTag = false;
 
-        for (int i = 0; i < reefAngles.length; i++) {
-            if (closetTag == reefAngles[i][0]) {
-                return Math.toRadians(reefAngles[i][1]);
+        if (closetTag == -1){
+            closetTag = closetRearTag;
+            rearTag = true;
+        }
+
+        if (closetTag == -1){        
+            // Return current angle if no tag seen before going throught the array
+            return Robot.getSwerve().getRobotPose().getRotation().getRadians();
+        }
+
+        for (int i = 0; i < reefFrontAngles.length; i++) {
+            if (closetTag == reefFrontAngles[i][0]) {
+                if (rearTag){
+                    return Math.toRadians(reefFrontAngles[i][1] + 180);
+                }
+                return Math.toRadians(reefFrontAngles[i][1]);
             }
         }
 
         // Return current angle if no tag is found
         return Robot.getSwerve().getRobotPose().getRotation().getRadians();
     }
-
-    public double getAdjustedThetaToReefFace() {
-        int closestReefFace = (int) frontLL.getClosestTagID();
-        double[][] reefBlueAngles = {
-            {17, 60}, {18, 0}, {19, -60}, {20, -120}, {21, 180}, {22, 120}
-        }; // values in theta
-        double[][] reefRedAngles = {
-            {6, 120}, {7, 180}, {8, -120}, {9, -60}, {10, 0}, {11, 60}
-        }; // values in theta
-        double angleBetweenRobotandReefFace = -1;
-        // Translation2d reefFace = getAdjustedReefPos();
-        // Translation2d robot2d = Robot.getSwerve().getRobotPose().getTranslation();
-        // double angleBetweenRobotandReefFace =
-        //         MathUtil.angleModulus(reefFace.minus(robot2d).getAngle().getRadians());
-        if (closestReefFace == -1) {
-            return -1;
-        }
-
-        for (int i = 0; i < reefBlueAngles.length; i++) {
-            if (closestReefFace == reefBlueAngles[i][0]) {
-                fieldReefID = (int) reefBlueAngles[i][0];
-                angleBetweenRobotandReefFace =
-                        MathUtil.angleModulus(Math.toRadians(reefBlueAngles[i][1]));
-                return angleBetweenRobotandReefFace;
-
-            } else if (closestReefFace == reefRedAngles[i][0]) {
-                fieldReefID = (int) reefRedAngles[i][0];
-                angleBetweenRobotandReefFace =
-                        MathUtil.angleModulus(Math.toRadians(reefRedAngles[i][1]));
-                return angleBetweenRobotandReefFace;
-            }
-        }
-
-        return -1; // no reef tag found
-    }
-
-
-
-    /** Returns the distance from the reef in meters, adjusted for the robot's movement. */
-    public double[] getDistanceToReefFromRobot() {
-        RawFiducial[] frontTags = frontLL.getRawFiducial();
-        RawFiducial[] backTags = backLL.getRawFiducial();
-        double seenTag = 1;
-
-        ArrayList<Integer> ValidReefFaceIDsRed = new ArrayList<Integer>();
-        for (int i = 6; i < 12; i++) {
-            ValidReefFaceIDsRed.add(i);
-        }
-        ArrayList<Integer> ValidReefFaceIDsBlue = new ArrayList<Integer>();
-        for (int i = 17; i < 22; i++) {
-            ValidReefFaceIDsBlue.add(i);
-        }
-
-        // ArrayList<Double> seenReefFaces = new ArrayList<Double>();
-        double[] seenReefFaces = new double[12];
-        for (RawFiducial tag : frontTags) {
-            if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
-                seenReefFaces[0] = tag.distToCamera;
-                seenTag = tag.id;
-            }
-        }
-
-        for (RawFiducial tag : backTags) {
-            if (ValidReefFaceIDsRed.contains(tag.id) || ValidReefFaceIDsBlue.contains(tag.id)) {
-                seenReefFaces[0] = tag.distToCamera;
-            }
-        }
-
-        SmartDashboard.putNumber("SeenTag", seenTag);
-        SmartDashboard.putNumber("RawFiducialTag", frontTags[0].id);
-        SmartDashboard.putNumber("GetDistanceSeenReefFace", seenReefFaces[0]);
-        SmartDashboard.putNumber("GetDistanceToReef", seenReefFaces[0]);
-        return seenReefFaces;
-    }
-
-    /**
-     * Gets a field-relative position for the score to the reef the robot should align, adjusted for
-     * the robot's movement.
-     *
-     * @return A {@link Translation2d} representing a field relative position in meters.
-     */
-    public Translation2d getAdjustedReefPos() {
-
-        int reefID = (int) frontLL.getClosestTagID(); // must call closestReefFace before this method gets passed
-        Pose2d[] reefFaces = Field.Reef.getCenterFaces();
-        double NORM_FUDGE = 0.075;
-        // double tunableNoteVelocity = 1;
-        // double tunableNormFudge = 0;
-        // double tunableStrafeFudge = 1;
-        // TODO: fudges may be subject to removal
-        double tunableReefYFudge = 0.0;
-        double tunableReefXFudge = 0.0;
-
-        Translation2d robotPos = Robot.getSwerve().getRobotPose().getTranslation();
-        Translation2d targetPose =
-                Field.flipXifRed(reefFaces[reefID].getTranslation()); // given reef face
-        double xDifference = Math.abs(robotPos.getX() - targetPose.getX());
-        double spinYFudge =
-                (xDifference < 5.8)
-                        ? 0.05
-                        : 0.8; // change spin fudge for score distances vs. feed distances
-
-        ChassisSpeeds robotVel =
-                Robot.getSwerve().getCurrentRobotChassisSpeeds(); // get current robot velocity
-
-        double distance = robotPos.getDistance(reefFaces[fieldReefID].getTranslation());
-        double normFactor =
-                Math.hypot(robotVel.vxMetersPerSecond, robotVel.vyMetersPerSecond) < NORM_FUDGE
-                        ? 0.0
-                        : Math.abs(
-                                MathUtil.angleModulus(
-                                                robotPos.minus(targetPose).getAngle().getRadians()
-                                                        - Math.atan2(
-                                                                robotVel.vyMetersPerSecond,
-                                                                robotVel.vxMetersPerSecond))
-                                        / Math.PI);
-
-        double x =
-                reefFaces[fieldReefID].getX()
-                        + (Field.isBlue() ? tunableReefXFudge : -tunableReefXFudge);
-        // - (robotVel.vxMetersPerSecond * (distance / tunableNoteVelocity));
-        //      * (1.0 - (tunableNormFudge * normFactor)));
-        double y =
-                reefFaces[fieldReefID].getY()
-                        + (Field.isBlue() ? -spinYFudge : spinYFudge)
-                        + tunableReefYFudge;
-        // - (robotVel.vyMetersPerSecond * (distance / tunableNoteVelocity));
-        //       * tunableStrafeFudge);
-        return new Translation2d(x, y);
-    }
-
-    // Executes the alignToVisionTarget command
 
     // ------------------------------------------------------------------------------
     // VisionStates Commands
