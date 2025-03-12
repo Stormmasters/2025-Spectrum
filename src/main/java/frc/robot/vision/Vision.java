@@ -20,12 +20,10 @@ import frc.reefscape.Field;
 import frc.robot.Robot;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.Telemetry.PrintPriority;
-import frc.spectrumLib.util.Trio;
 import frc.spectrumLib.vision.Limelight;
 import frc.spectrumLib.vision.Limelight.LimelightConfig;
 import frc.spectrumLib.vision.LimelightHelpers.RawFiducial;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,30 +31,35 @@ public class Vision extends SubsystemBase implements NTSendable {
 
     public static final class VisionConfig {
         /* Limelight Configuration */
-        public static final String FRONT_LL = "limelight-front";
-        public static final LimelightConfig FRONT_CONFIG =
+        @Getter static final String FRONT_LL = "limelight-front";
+
+        @Getter
+        static final LimelightConfig FRONT_CONFIG =
                 new LimelightConfig(FRONT_LL)
                         .withTranslation(0.215, 0, 0.188)
                         .withRotation(0, Math.toRadians(28), 0);
 
-        public static final String BACK_LL = "limelight-back";
-        public static final LimelightConfig BACK_CONFIG =
+        @Getter static final String BACK_LL = "limelight-back";
+
+        @Getter
+        static final LimelightConfig BACK_CONFIG =
                 new LimelightConfig(BACK_LL)
                         .withTranslation(-0.215, 0.0, 0.188)
                         .withRotation(0, Math.toRadians(28), Math.toRadians(180));
 
         /* Pipeline configs */
-        public static final int frontTagPipeline = 0;
-        public static final int backTagPipeline = 0;
+        @Getter static final int frontTagPipeline = 0;
+        @Getter static final int backTagPipeline = 0;
 
         /* Pose Estimation Constants */
 
-        public static double VISION_STD_DEV_X = 0.5;
-        public static double VISION_STD_DEV_Y = 0.5;
-        public static double VISION_STD_DEV_THETA = 0.5;
+        @Getter static double visionStdDevX = 0.5;
+        @Getter static double visionStdDevY = 0.5;
+        @Getter static double visionStdDevTheta = 0.5;
 
-        public static final Matrix<N3, N1> visionStdMatrix =
-                VecBuilder.fill(VISION_STD_DEV_X, VISION_STD_DEV_Y, VISION_STD_DEV_THETA);
+        @Getter
+        static final Matrix<N3, N1> visionStdMatrix =
+                VecBuilder.fill(visionStdDevX, visionStdDevY, visionStdDevTheta);
     }
 
     /** Limelights */
@@ -82,9 +85,6 @@ public class Vision extends SubsystemBase implements NTSendable {
     private final DecimalFormat df = new DecimalFormat();
 
     @Getter @Setter private boolean isIntegrating = false;
-
-    public ArrayList<Trio<Pose3d, Pose2d, Double>> autonPoses =
-            new ArrayList<Trio<Pose3d, Pose2d, Double>>();
 
     @Getter private boolean isAiming = false;
 
@@ -151,14 +151,6 @@ public class Vision extends SubsystemBase implements NTSendable {
                         + Utils.fpgaToCurrentTime(frontLL.getMegaTag1PoseTimestamp())
                         + " FPGA TimeStamp: "
                         + Timer.getFPGATimestamp());
-        // Robot.getSwerve()
-        //         .addVisionMeasurement(
-        //                 new Pose2d(),
-        //                 Utils.getCurrentTimeSeconds(),
-        //                 VecBuilder.fill(
-        //                         VisionConfig.VISION_STD_DEV_X,
-        //                         VisionConfig.VISION_STD_DEV_Y,
-        //                         VisionConfig.VISION_STD_DEV_THETA));
     }
 
     /*-------------------
@@ -298,16 +290,16 @@ public class Vision extends SubsystemBase implements NTSendable {
             }
 
             // track STDs
-            VisionConfig.VISION_STD_DEV_X = xyStds;
-            VisionConfig.VISION_STD_DEV_Y = xyStds;
-            VisionConfig.VISION_STD_DEV_THETA = degStds;
+            VisionConfig.visionStdDevX = xyStds;
+            VisionConfig.visionStdDevY = xyStds;
+            VisionConfig.visionStdDevTheta = degStds;
 
             Robot.getSwerve()
                     .setVisionMeasurementStdDevs(
                             VecBuilder.fill(
-                                    VisionConfig.VISION_STD_DEV_X,
-                                    VisionConfig.VISION_STD_DEV_Y,
-                                    VisionConfig.VISION_STD_DEV_THETA));
+                                    VisionConfig.visionStdDevX,
+                                    VisionConfig.visionStdDevY,
+                                    VisionConfig.visionStdDevTheta));
 
             System.out.println("Trying to integrate vision, XY: " + xyStds + " Deg: " + degStds);
             Pose2d integratedPose =
@@ -393,16 +385,16 @@ public class Vision extends SubsystemBase implements NTSendable {
             }
 
             // track STDs
-            VisionConfig.VISION_STD_DEV_X = xyStds;
-            VisionConfig.VISION_STD_DEV_Y = xyStds;
-            VisionConfig.VISION_STD_DEV_THETA = degStds;
+            VisionConfig.visionStdDevX = xyStds;
+            VisionConfig.visionStdDevY = xyStds;
+            VisionConfig.visionStdDevTheta = degStds;
 
             Robot.getSwerve()
                     .setVisionMeasurementStdDevs(
                             VecBuilder.fill(
-                                    VisionConfig.VISION_STD_DEV_X,
-                                    VisionConfig.VISION_STD_DEV_Y,
-                                    VisionConfig.VISION_STD_DEV_THETA));
+                                    VisionConfig.visionStdDevX,
+                                    VisionConfig.visionStdDevY,
+                                    VisionConfig.visionStdDevTheta));
 
             System.out.println("Trying to integrate vision, XY: " + xyStds + " Deg: " + degStds);
             Pose2d integratedPose =
@@ -412,9 +404,9 @@ public class Vision extends SubsystemBase implements NTSendable {
                             integratedPose,
                             Utils.fpgaToCurrentTime(timeStamp),
                             VecBuilder.fill(
-                                    VisionConfig.VISION_STD_DEV_X,
-                                    VisionConfig.VISION_STD_DEV_Y,
-                                    VisionConfig.VISION_STD_DEV_THETA));
+                                    VisionConfig.visionStdDevX,
+                                    VisionConfig.visionStdDevY,
+                                    VisionConfig.visionStdDevTheta));
         } else {
             ll.setTagStatus("no tags");
             ll.sendInvalidStatus("no tag found rejection");
