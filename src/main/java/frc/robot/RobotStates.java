@@ -31,7 +31,7 @@ public class RobotStates {
     public static final SpectrumState l2 = new SpectrumState("l2");
     public static final SpectrumState l3 = new SpectrumState("l3");
     public static final SpectrumState l4 = new SpectrumState("l4");
-    public static final SpectrumState extendedState = new SpectrumState("extendedStates");
+    public static final SpectrumState shrinkState = new SpectrumState("extendedStates");
     public static final SpectrumState rightScore = new SpectrumState("rightScore");
     public static final SpectrumState reverse = new SpectrumState("reverse");
     public static final SpectrumState actionPrepState = new SpectrumState("actionPrepState");
@@ -63,7 +63,7 @@ public class RobotStates {
     public static final Trigger climbFinish = pilot.climbRoutine_start;
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-    public static final Trigger extended = pilot.fn.or(extendedState);
+    public static final Trigger shrink = pilot.fn.or(shrinkState);
     public static final Trigger processorAlgae = (l1.and(algae)).or(autonProcessor);
     public static final Trigger L2Algae = (l2.and(algae)).or(autonLowAlgae);
     public static final Trigger L3Algae = (l3.and(algae)).or(autonHighAlgae);
@@ -206,7 +206,7 @@ public class RobotStates {
                         rightScore.setFalse(),
                         coral.setFalse(),
                         algae.setFalse(),
-                        extendedState.setFalse())
+                        shrinkState.setFalse())
                 .withName("Clear Staged");
     }
 

@@ -304,7 +304,7 @@ public class Elbow extends Mechanism {
                 () -> {
                     // TODO: add a check for reversed and negate values when we do double sided
                     // scoring.
-                    if (RobotStates.extended.getAsBoolean()) {
+                    if (RobotStates.shrink.getAsBoolean()) {
                         setMMPositionFoc(
                                 () ->
                                         degreesToRotations(

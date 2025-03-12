@@ -213,7 +213,7 @@ public class Elevator extends Mechanism {
     public Command move(DoubleSupplier rotations, DoubleSupplier exRotations) {
         return run(
                 () -> {
-                    if (RobotStates.extended.getAsBoolean()) {
+                    if (RobotStates.shrink.getAsBoolean()) {
                         setMMPositionFoc(exRotations);
                     } else {
                         setMMPositionFoc(rotations);

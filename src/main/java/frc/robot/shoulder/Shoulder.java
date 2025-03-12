@@ -296,7 +296,7 @@ public class Shoulder extends Mechanism {
                 () -> {
                     // TODO: add a check for reversed and negate values when we do double sided
                     // scoring.
-                    if (RobotStates.extended.getAsBoolean()) {
+                    if (RobotStates.shrink.getAsBoolean()) {
                         setMMPositionFoc(() -> degreesToRotations(offsetPosition(exDegrees)));
                     } else {
                         setMMPositionFoc(() -> degreesToRotations(offsetPosition(degrees)));
