@@ -85,7 +85,7 @@ public class SwerveStates {
                                 new PrintCommand("! clearing align !"),
                                 new WaitCommand(alignTime),
                                 new InstantCommand(
-                                        () -> PPHolonomicDriveController.clearFeedbackOverrides()),
+                                        PPHolonomicDriveController::clearFeedbackOverrides),
                                 new PrintCommand("! cleared align !")))
                 .withName("autonAlign")
                 .alongWith(new PrintCommand("!! autonAlign Ran !!"));
