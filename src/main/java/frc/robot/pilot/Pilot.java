@@ -20,7 +20,7 @@ public class Pilot extends Gamepad {
     private final Trigger photon = new Trigger(() -> Rio.id == Rio.PHOTON_2025);
     public final Trigger fn = leftBumper;
     public final Trigger noFn = fn.not();
-    public final Trigger home_select = select;
+    public final Trigger home_select = A; // select;
 
     public final Trigger stationIntake_LT = leftTrigger.and(teleop);
     public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop, photon.not());

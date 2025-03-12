@@ -217,7 +217,7 @@ public class Shoulder extends Mechanism {
     public Trigger atDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        Math.abs(getPositionDegrees() + config.getOffset() - degrees.getAsDouble())
+                        Math.abs(getPositionDegrees() - config.getOffset() - degrees.getAsDouble())
                                 < tolerance.getAsDouble());
     }
 

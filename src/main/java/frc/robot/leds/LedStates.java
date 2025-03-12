@@ -25,7 +25,7 @@ public class LedStates {
         testModePattern(Util.testMode.and(Util.dsAttached));
 
         // General Led Commands
-        homeFinishLED(RobotStates.isAtHome.and(RobotStates.homeAll, Util.teleop), 7);
+        homeFinishLED(RobotStates.isAtHome.and(Util.teleop), 7);
 
         // Coral and Algae Led Commands
         coralModeLED(RobotStates.coral.and(Util.teleop), 6);
@@ -81,8 +81,18 @@ public class LedStates {
     }
 
     static void homeFinishLED(Trigger trigger, int priority) {
-        ledCommand("right.HomeFinish", right, right.solid(right.purple), priority, trigger);
-        ledCommand("left.HomeFinish", left, left.solid(left.purple), priority, trigger);
+        ledCommand(
+                "right.HomeFinish",
+                right,
+                right.bounce(right.purple, 3).blend(right.blink(right.purple, 0.5)),
+                priority,
+                trigger);
+        ledCommand(
+                "left.HomeFinish",
+                left,
+                right.bounce(right.purple, 3).blend(right.blink(right.purple, 0.5)),
+                priority,
+                trigger);
     }
 
     static void elevatorUpLED(Trigger trigger, int priority) {
@@ -96,8 +106,8 @@ public class LedStates {
     }
 
     static void coralModeLED(Trigger trigger, int priority) {
-        ledCommand("right.CoralMode", right, right.solid(Color.kWhite), priority, trigger);
-        ledCommand("left.CoralMode", left, left.solid(Color.kWhite), priority, trigger);
+        ledCommand("right.CoralMode", right, right.solid(Color.kCoral), priority, trigger);
+        ledCommand("left.CoralMode", left, left.solid(Color.kCoral), priority, trigger);
     }
 
     static void algaeModeLED(Trigger trigger, int priority) {
@@ -106,8 +116,8 @@ public class LedStates {
     }
 
     static void hasCoralLED(Trigger trigger, int priority) {
-        ledCommand("right.HasCoral", right, right.breathe(Color.kWhite, 1), priority, trigger);
-        ledCommand("left.HasCoral", left, left.breathe(Color.kWhite, 1), priority, trigger);
+        ledCommand("right.HasCoral", right, right.breathe(Color.kCoral, 1), priority, trigger);
+        ledCommand("left.HasCoral", left, left.breathe(Color.kCoral, 1), priority, trigger);
     }
 
     static void hasAlgaeLED(Trigger trigger, int priority) {
