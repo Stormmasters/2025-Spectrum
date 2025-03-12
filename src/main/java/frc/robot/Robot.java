@@ -56,7 +56,6 @@ public class Robot extends SpectrumRobot {
     static Telemetry telemetry = new Telemetry();
     private final Field2d m_field = new Field2d();
 
-    // TODO: Create robot faults
     public enum RobotFault {
         OVERCURRENT,
     }
