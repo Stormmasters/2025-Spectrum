@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NTSendable;
 import edu.wpi.first.networktables.NTSendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -138,7 +139,18 @@ public class Vision extends SubsystemBase implements NTSendable {
         //     Telemetry.print("Vision pose not present but tried to access it");
         // }
 
+        addMegaTag1_VisionInput(backLL);
+        addMegaTag2_VisionInput(backLL);
         addMegaTag1_VisionInput(frontLL);
+        addMegaTag2_VisionInput(frontLL);
+
+        System.out.println(
+                "Util TimeStamp: "
+                        + Utils.getCurrentTimeSeconds()
+                        + " LL Timestamp:"
+                        + Utils.fpgaToCurrentTime(frontLL.getMegaTag1PoseTimestamp())
+                        + " FPGA TimeStamp: "
+                        + Timer.getFPGATimestamp());
         // Robot.getSwerve()
         //         .addVisionMeasurement(
         //                 new Pose2d(),
@@ -300,7 +312,8 @@ public class Vision extends SubsystemBase implements NTSendable {
             System.out.println("Trying to integrate vision, XY: " + xyStds + " Deg: " + degStds);
             Pose2d integratedPose =
                     new Pose2d(megaTag1_2d.getTranslation(), megaTag1_2d.getRotation());
-            Robot.getSwerve().addVisionMeasurement(integratedPose, Utils.getCurrentTimeSeconds());
+            Robot.getSwerve()
+                    .addVisionMeasurement(integratedPose, Utils.fpgaToCurrentTime(timeStamp));
         } else {
             ll.setTagStatus("no tags");
             ll.sendInvalidStatus("no tag found rejection");
@@ -397,7 +410,7 @@ public class Vision extends SubsystemBase implements NTSendable {
             Robot.getSwerve()
                     .addVisionMeasurement(
                             integratedPose,
-                            Utils.getCurrentTimeSeconds(),
+                            Utils.fpgaToCurrentTime(timeStamp),
                             VecBuilder.fill(
                                     VisionConfig.VISION_STD_DEV_X,
                                     VisionConfig.VISION_STD_DEV_Y,
