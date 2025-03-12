@@ -33,7 +33,7 @@ public class Pilot extends Gamepad {
 
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
 
-    public final Trigger actionReady = rightBumper.and(teleop);
+    public final Trigger actionReady_RB = rightBumper.and(teleop);
 
     // vision Drive
     public final Trigger visionAim_A = A.and(teleop);
@@ -72,7 +72,7 @@ public class Pilot extends Gamepad {
         @Getter @Setter private double slowModeScalor = 0.45;
         @Getter @Setter private double defaultTurnScalor = 0.6;
         @Getter @Setter private double turboModeScalor = 1;
-        private double deadzone = 0.001;
+        private double deadzone = 0.05;
 
         public PilotConfig() {
             super("Pilot", 0);
