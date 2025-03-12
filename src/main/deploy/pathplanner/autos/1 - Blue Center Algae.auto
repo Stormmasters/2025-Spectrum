@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 Alt - L4 Trough Rush"
+            "pathName": "1 - Blue Center Algae"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Source L4",
+  "folder": "Algae Rush",
   "choreoAuto": false
 }

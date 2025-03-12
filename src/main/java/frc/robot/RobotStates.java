@@ -100,7 +100,7 @@ public class RobotStates {
     public static final Trigger L1Coral = (l1.and(coral)).or(autonL1);
     public static final Trigger L2Coral = l2.and(coral);
     public static final Trigger L3Coral = l3.and(coral);
-    public static final Trigger L4Coral = (l4.and(coral)).or(autonLeftL4, autonRightL4);
+    public static final Trigger L4Coral = (l4.and(coral));
     public static final Trigger branch = L2Coral.or(L3Coral, L4Coral);
     public static final Trigger stagedCoral = L1Coral.or(L2Coral, L3Coral, L4Coral);
 
@@ -220,8 +220,8 @@ public class RobotStates {
         autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
         autonSourceIntakeOff.onTrue(autonStationIntake.setFalse());
 
-        autonLeftL4.onTrue(rightScore.setFalse());
-        autonRightL4.onTrue(rightScore.setTrue());
+        autonLeft.onTrue(rightScore.setFalse());
+        autonRight.onTrue(rightScore.setTrue());
     }
 
     private RobotStates() {

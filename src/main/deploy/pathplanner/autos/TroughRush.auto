@@ -11,21 +11,15 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "3 - L4 Trough Rush"
+            "pathName": "3L - L4 Trough Rush"
           }
         }
       ]
     }
   },
   "resetOdom": false,
-  "folder": null,
+  "folder": "Source L4",
   "choreoAuto": false
 }

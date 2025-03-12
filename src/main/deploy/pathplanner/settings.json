@@ -11,14 +11,16 @@
     "Photon"
   ],
   "autoFolders": [
+    "Blue Center Origin",
     "Blue Left Origin",
     "Blue Right Origin",
     "Config Autos",
-    "Blue Center Origin",
-    "Photon"
+    "Algae Rush",
+    "Photon",
+    "Source L4"
   ],
-  "defaultMaxVel": 2.5,
-  "defaultMaxAccel": 2.5,
+  "defaultMaxVel": 5.0,
+  "defaultMaxAccel": 5.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
