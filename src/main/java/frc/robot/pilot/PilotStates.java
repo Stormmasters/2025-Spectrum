@@ -18,6 +18,7 @@ public class PilotStates {
     /** Set the states for the pilot controller */
     public static void setStates() {
 
+        pilot.actionReady_RB.whileTrue(slowMode());
         pilot.visionPoseReset_LB_Select.onTrue(VisionStates.resetVisionPose());
         // Rumble whenever we reorient
         pilot.upReorient
@@ -36,7 +37,8 @@ public class PilotStates {
      */
     public static Command slowMode() {
         return Commands.startEnd(
-                        () -> pilot.getSlowMode().setTrue(), () -> pilot.getSlowMode().setFalse())
+                        () -> pilot.getSlowMode().setState(true),
+                        () -> pilot.getSlowMode().setState(false))
                 .withName("Pilot.setSlowMode");
     }
 
@@ -46,7 +48,8 @@ public class PilotStates {
      */
     public static Command turboMode() {
         return Commands.startEnd(
-                        () -> pilot.getTurboMode().setTrue(), () -> pilot.getTurboMode().setFalse())
+                        () -> pilot.getTurboMode().setState(true),
+                        () -> pilot.getTurboMode().setState(false))
                 .withName("Pilot.setTurboMode");
     }
 
