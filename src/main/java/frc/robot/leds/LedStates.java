@@ -25,7 +25,7 @@ public class LedStates {
         testModePattern(Util.testMode.and(Util.dsAttached));
 
         // General Led Commands
-        homeFinishLED(RobotStates.isAtHome.and(Util.teleop), 7);
+        homeFinishLED(RobotStates.isAtHome.and(Util.teleop), 8);
 
         // Coral and Algae Led Commands
         coralModeLED(RobotStates.coral.and(Util.teleop), 6);
@@ -84,13 +84,13 @@ public class LedStates {
         ledCommand(
                 "right.HomeFinish",
                 right,
-                right.bounce(right.purple, 3).blend(right.blink(right.purple, 0.5)),
+                right.bounce(right.purple, 3).blend(right.solid(right.purple)),
                 priority,
                 trigger);
         ledCommand(
                 "left.HomeFinish",
                 left,
-                right.bounce(right.purple, 3).blend(right.blink(right.purple, 0.5)),
+                right.bounce(right.purple, 3).blend(right.solid(right.purple)),
                 priority,
                 trigger);
     }
