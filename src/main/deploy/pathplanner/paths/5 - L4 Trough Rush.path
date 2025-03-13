@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3938171376005697,
-        "y": 6.782718176129005
+        "x": 1.5610955056179778,
+        "y": 6.662429775280899
       },
       "isLocked": false,
       "linkedName": "feeder"
     },
     {
       "anchor": {
-        "x": 3.65625,
-        "y": 5.545014044943819
+        "x": 2.851053370786517,
+        "y": 4.033216292134832
       },
       "prevControl": {
-        "x": 3.449383468109879,
-        "y": 5.715105651294501
+        "x": 2.6867275280898877,
+        "y": 4.583707865168539
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "trough"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -65,15 +65,9 @@
       "command": null
     },
     {
-      "name": "right",
-      "waypointRelativePos": 0.20242756460454034,
+      "name": "left",
+      "waypointRelativePos": 0.3010963194988236,
       "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "shoulderL4",
-      "waypointRelativePos": 0.25097885669537734,
-      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],
@@ -86,8 +80,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -59.99999999999999
+    "velocity": 0.5,
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Blue Left L4 Trough Rush",

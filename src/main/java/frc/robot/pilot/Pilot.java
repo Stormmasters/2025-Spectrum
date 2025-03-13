@@ -79,7 +79,7 @@ public class Pilot extends Gamepad {
 
             setLeftStickDeadzone(deadzone);
             setLeftStickExp(3);
-            // Set Scalor in Constructor from Swerve Config
+            // Set Scalar in Constructor from Swerve Config
 
             setRightStickDeadzone(deadzone);
             setRightStickExp(3.0);
@@ -101,7 +101,7 @@ public class Pilot extends Gamepad {
         super(config);
         this.config = config;
 
-        // Set Left stick Scalor from Swerve Config
+        // Set Left stick Scalar from Swerve Config
         config.setLeftStickScalor(Robot.getConfig().swerve.getSpeedAt12Volts().magnitude());
         leftStickCurve.setScalar(config.getLeftStickScalor());
 

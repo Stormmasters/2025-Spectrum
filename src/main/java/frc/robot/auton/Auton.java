@@ -44,6 +44,8 @@ public class Auton {
     public static final EventTrigger autonHome = new EventTrigger("home");
     public static final EventTrigger autonActionOn = new EventTrigger("actionOn");
     public static final EventTrigger autonActionOff = new EventTrigger("actionOff");
+    public static final EventTrigger autonCoralStage = new EventTrigger("coralStage");
+    public static final EventTrigger autonShoulderL4 = new EventTrigger("shoulderL4");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;
@@ -103,8 +105,7 @@ public class Auton {
                         SpectrumAuton("TroughRush", mirrored),
                         aimL4score(),
                         SpectrumAuton("TroughRush2", mirrored),
-                        aimL4score(),
-                        SpectrumAuton("TroughRush2", mirrored))
+                        aimL4score())
                 .withName("Blue Left - L4 Trough Rush"));
     }
 
@@ -127,19 +128,19 @@ public class Auton {
     }
 
     public Command aimL4score() {
-        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l4score());
+        return SwerveStates.reefAimDrive().withTimeout(1).alongWith(l4score());
     }
 
     public Command aimL1score() {
-        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l1score());
+        return SwerveStates.reefAimDrive().withTimeout(1).alongWith(l1score());
     }
 
     public Command aimLowAlgae() {
-        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(lowAlgae());
+        return SwerveStates.reefAimDrive().withTimeout(1).alongWith(lowAlgae());
     }
 
     public Command aimHighAlgae() {
-        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(highAlgae());
+        return SwerveStates.reefAimDrive().withTimeout(1).alongWith(highAlgae());
     }
 
     public Command algaeNet() {
@@ -200,7 +201,7 @@ public class Auton {
     }
 
     public Command l4score() {
-        return Commands.waitSeconds(0.05)
+        return Commands.waitSeconds(0.15)
                 .andThen(
                         RobotStates.coral
                                 .setTrue()
@@ -215,7 +216,8 @@ public class Auton {
                                         RobotStates.actionPrepState.setFalse(),
                                         Commands.waitSeconds(0.5),
                                         RobotStates.clearStates(),
-                                        RobotStates.homeAll.setTrue()));
+                                        RobotStates.homeAll.setTrue(),
+                                        Commands.waitSeconds(.5)));
     }
 
     public Command l1score() {
