@@ -36,10 +36,10 @@ public class Elbow extends Mechanism {
 
         @Getter private final double scoreDelay = 0.2;
 
-        @Getter private final double stationIntake = 158.7;
-        @Getter private final double stationExtendedIntake = 154.4;
-        @Getter private final double groundAlgaeIntake = -80;
-        @Getter private final double groundCoralIntake = -75;
+        @Getter private final double stationIntake = -158.7;
+        @Getter private final double stationExtendedIntake = -154.4;
+        @Getter private final double groundAlgaeIntake = 80;
+        @Getter private final double groundCoralIntake = 75;
 
         @Getter private final double stage = -160;
         @Getter private final double l1Coral = -121.4;
@@ -302,6 +302,7 @@ public class Elbow extends Mechanism {
     public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
         return run(
                 () -> {
+<<<<<<< HEAD
                     // TODO: add a check for reversed and negate values when we do double sided
                     // scoring.
                     if (RobotStates.shrink.getAsBoolean()) {
@@ -309,11 +310,45 @@ public class Elbow extends Mechanism {
                                 () ->
                                         degreesToRotations(
                                                 offsetPosition(() -> checkNegative(exDegrees))));
+=======
+                    if (RobotStates.extended.getAsBoolean()) {
+                        if (RobotStates.reverse.getAsBoolean()) {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(
+                                                            () ->
+                                                                    checkNegative(
+                                                                            () ->
+                                                                                    -1
+                                                                                            * exDegrees
+                                                                                                    .getAsDouble()))));
+                        } else {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(
+                                                            () -> checkNegative(exDegrees))));
+                        }
+>>>>>>> origin/scoring-intaking-reversal
                     } else {
-                        setMMPositionFoc(
-                                () ->
-                                        degreesToRotations(
-                                                offsetPosition(() -> checkNegative(degrees))));
+                        if (RobotStates.reverse.getAsBoolean()) {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(
+                                                            () ->
+                                                                    checkNegative(
+                                                                            () ->
+                                                                                    -1
+                                                                                            * degrees
+                                                                                                    .getAsDouble()))));
+                        } else {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(() -> checkNegative(degrees))));
+                        }
                     }
                 });
     }
