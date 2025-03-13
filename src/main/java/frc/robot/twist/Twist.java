@@ -246,6 +246,38 @@ public class Twist extends Mechanism {
         setMMPositionFoc(() -> degreesToRotations(degrees));
     }
 
+    public Command move(DoubleSupplier targetDegrees, boolean clockwise) {
+        return run(
+                () -> {
+                    double currentDegrees = getPositionDegrees();
+                    // Normalize targetDegrees to be within 0 to 360
+                    double target = (targetDegrees.getAsDouble() % 360);
+                    // Normalize currentDegrees to be within 0 to 360
+                    double currentMod = (currentDegrees % 360);
+
+                    double output;
+
+                    if (clockwise) {
+                        // Calculate the closest clockwise position
+                        if (currentMod > target) {
+                            output = currentDegrees - (currentMod - target);
+                        } else {
+                            output = currentDegrees - (360 + currentMod - target);
+                        }
+                    } else {
+                        // Calculate the closest counterclockwise position
+                        if (currentMod < target) {
+                            output = currentDegrees + (target - currentMod);
+                        } else {
+                            output = currentDegrees + (360 + target - currentMod);
+                        }
+                    }
+
+                    final double out = output;
+                    setDegrees(() -> out);
+                });
+    }
+
     public Command move(DoubleSupplier degrees) {
         return run(
                 () -> {
@@ -259,6 +291,13 @@ public class Twist extends Mechanism {
                         setDegrees(degrees);
                     }
                 });
+    }
+
+    public DoubleSupplier getIfReversedDegrees(DoubleSupplier degrees) {
+        return () ->
+                (RobotStates.reverse.getAsBoolean())
+                        ? degrees.getAsDouble() + 180
+                        : degrees.getAsDouble();
     }
 
     public Command twistHome() {
