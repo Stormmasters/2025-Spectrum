@@ -610,9 +610,9 @@ public class Vision implements NTSendable, Subsystem {
             return 0;
         }
     }
-    
+
     public String getCageToClimb() {
-        Pose2d robotPose = frontLL.getMegaPose2d();
+        Pose2d robotPose = frontLL.getMegaTag2_Pose2d();
         double[] cageDiffs = new double[3];
 
         if (Field.isBlue()) {
