@@ -66,7 +66,6 @@ public class SwerveStates {
 
         // // vision aim
         pilot.reefAim_A.whileTrue(log(reefAimDrive()));
-        pilot.cageAim_B.whileTrue(log(cageAlignDrive()));
 
     }
 
@@ -94,17 +93,6 @@ public class SwerveStates {
                                 new PrintCommand("! cleared align !")))
                 .withName("autonAlign")
                 .alongWith(new PrintCommand("!! autonAlign Ran !!"));
-    }
-
-    public static Command alignToYDrive(DoubleSupplier yGoalMeters) {
-        return drive(
-                pilot::getDriveFwdPositive,
-                () -> getAlignToY(yGoalMeters),
-                pilot::getDriveCCWPositive);
-    }
-
-    private static double getAlignToY(DoubleSupplier yGoalMeters) {
-        return swerve.calculateYController(yGoalMeters);
     }
     
     public static Command reefAimDrive() {
