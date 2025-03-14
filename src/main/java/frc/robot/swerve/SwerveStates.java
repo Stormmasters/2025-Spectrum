@@ -96,10 +96,11 @@ public class SwerveStates {
                 .alongWith(new PrintCommand("!! autonAlign Ran !!"));
     }
 
-    public static Command cageAlignDrive() {
-        return fpvDrive();
-        
-
+    public static Command alignToYDrive(DoubleSupplier yGoalMeters) {
+        return drive(
+                pilot::getDriveFwdPositive,
+                () -> getAlignToY(yGoalMeters),
+                pilot::getDriveCCWPositive);
     }
 
     public static Command reefAimDrive() {
