@@ -15,6 +15,7 @@ import frc.robot.intake.IntakeStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.leds.SpectrumLEDs;
 import frc.spectrumLib.util.Util;
+import java.util.function.BooleanSupplier;
 
 public class LedStates {
     private static LedFull leds = Robot.getLeds();
@@ -48,7 +49,10 @@ public class LedStates {
             String name, SpectrumLEDs sLeds, LEDPattern pattern, Trigger trigger) {
         int priority = -1;
         return trigger.and(sLeds.checkPriority(priority), sLeds.defaultTrigger)
-                .onTrue(sLeds.setPattern(pattern, priority).withName(name));
+                // .onTrue(sLeds.setPattern(pattern, priority).withName(name));
+                .onTrue(
+                        setPatternWithReverseCheck(
+                                name, sLeds, pattern, priority, () -> sLeds == left));
     }
 
     static void disabledPattern(Trigger trigger) {
@@ -85,33 +89,25 @@ public class LedStates {
 
     private static Trigger withReverseLedCommand(
             String name, SpectrumLEDs sLed, LEDPattern pattern, int priority, Trigger trigger) {
-        if (sLed == left) {
-            return checkReversedFrontLedCommand(name, sLed, pattern, priority, trigger);
-        } else {
-            return checkReversedRearLedCommand(name, sLed, pattern, priority, trigger);
-        }
-    }
-
-    private static Trigger checkReversedFrontLedCommand(
-            String name, SpectrumLEDs sLed, LEDPattern pattern, int priority, Trigger trigger) {
         return trigger.and(sLed.checkPriority(priority))
                 .whileTrue(
-                        Commands.either(
-                                sLed.setPattern(pattern, priority).withName(name),
-                                sLed.setPattern(pattern.blink(Seconds.of(1)), priority)
-                                        .withName(name),
-                                RobotStates.reverse));
+                        log(
+                                setPatternWithReverseCheck(
+                                        name, sLed, pattern, priority, () -> sLed == left)));
     }
 
-    private static Trigger checkReversedRearLedCommand(
-            String name, SpectrumLEDs sLed, LEDPattern pattern, int priority, Trigger trigger) {
-        return trigger.and(sLed.checkPriority(priority))
-                .whileTrue(
-                        Commands.either(
-                                sLed.setPattern(pattern.blink(Seconds.of(1)), priority)
-                                        .withName(name),
-                                sLed.setPattern(pattern, priority).withName(name),
-                                RobotStates.reverse));
+    private static Command setPatternWithReverseCheck(
+            String name,
+            SpectrumLEDs sLed,
+            LEDPattern pattern,
+            int priority,
+            BooleanSupplier front) {
+        return Commands.either(
+                sLed.setPattern(pattern, priority),
+                sLed.setPattern(pattern.atBrightness(Percent.of(50)), priority),
+                () ->
+                        (RobotStates.reverse.getAsBoolean() == front.getAsBoolean())
+                                || RobotStates.photon.getAsBoolean());
     }
 
     static void homeFinishLED(Trigger trigger, int priority) {

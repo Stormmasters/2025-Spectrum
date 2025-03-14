@@ -51,12 +51,12 @@ public class SpectrumLEDs implements SpectrumSubsystem {
                 String name,
                 AddressableLED l,
                 AddressableLEDBuffer lb,
-                int statrtingIndex,
+                int startingIndex,
                 int endingIndex) {
             this.name = name;
             this.led = l;
             this.buffer = lb;
-            this.startingIndex = statrtingIndex;
+            this.startingIndex = startingIndex;
             this.endingIndex = endingIndex;
         }
     }
