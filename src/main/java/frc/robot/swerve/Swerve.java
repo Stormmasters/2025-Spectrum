@@ -479,4 +479,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
                         });
         simNotifier.startPeriodic(config.getSimLoopPeriod());
     }
+
+    double calculateYController(DoubleSupplier targetMeters) {
+        return yController.calculate(targetMeters.getAsDouble(), getRobotPose().getY());
+    }
 }
