@@ -103,6 +103,10 @@ public class SwerveStates {
                 pilot::getDriveCCWPositive);
     }
 
+    private static double getAlignToY(DoubleSupplier yGoalMeters) {
+        return swerve.calculateYController(yGoalMeters);
+    }
+    
     public static Command reefAimDrive() {
         return fpvAimDrive(
                         SwerveStates::getTagDistanceVelocity,
