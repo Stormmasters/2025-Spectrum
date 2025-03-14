@@ -201,7 +201,7 @@ public class Shoulder extends Mechanism {
     public Trigger belowDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        (getPositionDegrees() + config.getOffset())
+                        (getPositionDegrees() - config.getOffset())
                                 < (degrees.getAsDouble() - tolerance.getAsDouble()));
     }
 
@@ -209,7 +209,7 @@ public class Shoulder extends Mechanism {
     public Trigger aboveDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        (getPositionDegrees() + config.getOffset())
+                        (getPositionDegrees() - config.getOffset())
                                 > (degrees.getAsDouble() + tolerance.getAsDouble()));
     }
 

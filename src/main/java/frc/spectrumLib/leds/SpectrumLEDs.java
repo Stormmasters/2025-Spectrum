@@ -146,7 +146,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
     }
 
     /**
-     * LED Patter Stripe, takes in a double percent and sets the first length number of LEDs to one
+     * LED Pattern Stripe, takes in a double percent and sets the first length number of LEDs to one
      * color and the rest of the strip to another
      */
     public LEDPattern stripe(double percent, Color color1, Color color2) {
