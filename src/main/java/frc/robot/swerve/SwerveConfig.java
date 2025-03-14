@@ -122,7 +122,11 @@ public class SwerveConfig {
     // This needs to be tuned to your individual robot
     @Getter @Setter
     private LinearVelocity speedAt12Volts =
-            MetersPerSecond.of((95 / driveGearRatio) * 2 * Math.PI * wheelRadius.in(Meters));
+            MetersPerSecond.of(
+                    (95 / driveGearRatio)
+                            * 2
+                            * Math.PI
+                            * wheelRadius.in(Meters)); // 4.1427287893 m/s
 
     @Getter @Setter private boolean steerMotorReversed = true;
     @Getter @Setter private boolean invertLeftSide = false;

@@ -96,12 +96,8 @@ public class ShoulderStates {
                                 config::getScoreDelay,
                                 "Shoulder.L4Coral.score"));
 
-        autonShoulderL4.onTrue(
-                move(
-                        config::getL4CoralScore,
-                        config::getExl4Score,
-                        config::getScoreDelay,
-                        "Shoulder.L4Coral.score"));
+        autonShoulderL4.whileTrue(
+                move(config::getL4Coral, config::getExl4Coral, "Shoulder.L4Coral.prescore"));
 
         processorAlgae
                 .and(actionPrepState.or(actionState))

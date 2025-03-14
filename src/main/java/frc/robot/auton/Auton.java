@@ -63,6 +63,8 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
+        pathChooser.addOption("test", test(false));
+
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
 
@@ -127,20 +129,24 @@ public class Auton {
                 .withName("Blue Center Algae Rush"));
     }
 
+    public Command test(boolean mirrored) {
+        return (SpectrumAuton("L4-SideStart", mirrored));
+    }
+
     public Command aimL4score() {
-        return SwerveStates.reefAimDrive().withTimeout(1).alongWith(l4score());
+        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l4score());
     }
 
     public Command aimL1score() {
-        return SwerveStates.reefAimDrive().withTimeout(1).alongWith(l1score());
+        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l1score());
     }
 
     public Command aimLowAlgae() {
-        return SwerveStates.reefAimDrive().withTimeout(1).alongWith(lowAlgae());
+        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(lowAlgae());
     }
 
     public Command aimHighAlgae() {
-        return SwerveStates.reefAimDrive().withTimeout(1).alongWith(highAlgae());
+        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(highAlgae());
     }
 
     public Command algaeNet() {
