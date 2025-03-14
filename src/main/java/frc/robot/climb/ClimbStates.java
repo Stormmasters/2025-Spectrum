@@ -5,12 +5,15 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.climb.Climb.ClimbConfig;
+import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
 
 public class ClimbStates {
     private static Climb climb = Robot.getClimb();
     private static ClimbConfig config = Robot.getConfig().climb;
+
+    public static final SpectrumState isLatched = climb.getLatched();
 
     public static void setupDefaultCommand() {
         climb.setDefaultCommand(log(climb.runHoldClimb().withName("Climb.default")));
@@ -20,18 +23,20 @@ public class ClimbStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        // groundAlgae.whileTrue(log(algaeFloorIntake()));
-        // groundCoral.whileTrue(log(coralFloorIntake()));
-
-        // climbPrep.whileTrue(log(climbPrep()).alongWith(openLatch()));
-        // .whileTrue(log(climbFinish()).alongWith(closeLatch()));
-
         Robot.getOperator().latchOpen_startUp.onTrue(openLatch());
         Robot.getOperator().latchCloser_startDown.onTrue(closeLatch());
         Robot.getOperator()
                 .climbPrep_start
-                .and(Robot.getOperator().triggersPressed)
+                .and(Robot.getOperator().noTriggers.not())
                 .whileTrue(runClimb(() -> Robot.getOperator().getClimberTriggerAxis()));
+        Robot.getOperator()
+                .climbPrep_start
+                .and(Robot.getOperator().leftTriggerOnly)
+                .onTrue(openLatch());
+        Robot.getOperator()
+                .climbPrep_start
+                .and(Robot.getOperator().rightTriggerOnly)
+                .onTrue(closeLatch());
         Robot.getOperator()
                 .climbPrep_start
                 .onTrue(
@@ -40,8 +45,7 @@ public class ClimbStates {
                                 .andThen(closeLatch())
                                 .withName("Climb.prepClimber"));
 
-        homeAll.and(climb.getLatched().not()).whileTrue(log(home()));
-        // Robot.getPilot().reZero_start.whileTrue(climb.resetToInitialPos());
+        homeAll.and(climb.getLatched().not(), climbPrep.not()).whileTrue(log(home()));
     }
 
     public static Command runClimb(DoubleSupplier speed) {
@@ -50,16 +54,6 @@ public class ClimbStates {
 
     public static Command home() {
         return climb.moveToDegrees(config::getHome).withName("Climb.home");
-    }
-
-    // TODO: delete?
-    public static Command climbPrep() {
-        return climb.moveToDegrees(config::getPrepClimber).withName("Climb.prepClimber");
-    }
-
-    // TODO: delete?
-    public static Command climbFinish() {
-        return climb.moveToDegrees(config::getFinishClimb).withName("Climb.finishClimb");
     }
 
     public static DoubleSupplier getPosition() {

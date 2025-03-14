@@ -61,7 +61,7 @@ public class Climb extends Mechanism {
         @Getter private double climbX = 0.95; // 1.0;
         @Getter private double climbY = 0.55;
 
-        @Getter @Setter private double simRatio = 99.5555555555;
+        @Getter @Setter private double simRatio = 74.6666666667;
 
         @Getter private double length = 0.4;
 
@@ -142,7 +142,7 @@ public class Climb extends Mechanism {
 
     private void setInitialPosition() {
         if (config.isAttached()) {
-            motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything
+            motor.setPosition(0.25);
             followerMotors[0].setPosition(0.25);
         }
     }
@@ -262,7 +262,7 @@ public class Climb extends Mechanism {
                                     config.length,
                                     -30,
                                     180,
-                                    0)
+                                    90)
                             .setColor(new Color8Bit(Color.kBrown)),
                     mech,
                     climbMotorSim,

@@ -6,6 +6,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.vision.Vision.VisionConfig;
 import frc.spectrumLib.vision.LimelightHelpers.LimelightResults;
+import frc.spectrumLib.vision.LimelightHelpers.PoseEstimate;
 import frc.spectrumLib.vision.LimelightHelpers.RawFiducial;
 import java.text.DecimalFormat;
 import lombok.Getter;
@@ -172,21 +173,53 @@ public class Limelight {
     /* ::: Pose Retrieval ::: */
 
     /** @return the corresponding LL Pose3d (MEGATAG1) for the alliance in DriverStation.java */
-    public Pose3d getRawPose3d() {
+    public Pose3d getMegaTag1_Pose3d() {
         if (!isAttached()) {
             return new Pose3d();
         }
-        return LimelightHelpers.getBotPose3d_wpiBlue(
-                config.name); // 2024: all alliances use blue as 0,0
+        Pose3d pose3d = LimelightHelpers.getBotPose3d_wpiBlue(config.name);
+        if (pose3d == null) {
+            return new Pose3d();
+        }
+        return pose3d;
     }
 
     /** @return the corresponding LL Pose3d (MEGATAG2) for the alliance in DriverStation.java */
-    public Pose2d getMegaPose2d() {
+    public Pose2d getMegaTag2_Pose2d() {
         if (!isAttached()) {
             return new Pose2d();
         }
-        return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(config.name)
-                .pose; // 2024: all alliances use blue as 0,0
+        PoseEstimate poseEstimate =
+                LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(config.name);
+        if (poseEstimate == null) {
+            return new Pose2d();
+        }
+        return poseEstimate.pose;
+    }
+
+    public PoseEstimate getMegaTag1_PoseEstimate() {
+        if (!isAttached()) {
+            return new PoseEstimate();
+        }
+
+        PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(config.name);
+        if (poseEstimate == null) {
+            return new PoseEstimate();
+        }
+        return poseEstimate;
+    }
+
+    public PoseEstimate getMegaTag2_PoseEstimate() {
+        if (!isAttached()) {
+            return new PoseEstimate();
+        }
+
+        PoseEstimate poseEstimate =
+                LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(config.name);
+        if (poseEstimate == null) {
+            return new PoseEstimate();
+        }
+        return poseEstimate;
     }
 
     public boolean hasAccuratePose() {
@@ -215,7 +248,7 @@ public class Limelight {
      *
      * @return The timestamp of the pose estimation in seconds.
      */
-    public double getRawPoseTimestamp() {
+    public double getMegaTag1PoseTimestamp() {
         if (!isAttached()) {
             return 0;
         }
@@ -227,7 +260,7 @@ public class Limelight {
      *
      * @return The timestamp of the pose estimation in seconds.
      */
-    public double getMegaPoseTimestamp() {
+    public double getMegaTag2PoseTimestamp() {
         if (!isAttached()) {
             return 0;
         }
@@ -412,7 +445,7 @@ public class Limelight {
         if (!isAttached()) {
             return;
         }
-        Pose3d botPose3d = getRawPose3d();
+        Pose3d botPose3d = getMegaTag1_Pose3d();
         SmartDashboard.putString("LimelightX", df.format(botPose3d.getTranslation().getX()));
         SmartDashboard.putString("LimelightY", df.format(botPose3d.getTranslation().getY()));
         SmartDashboard.putString("LimelightZ", df.format(botPose3d.getTranslation().getZ()));
