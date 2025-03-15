@@ -192,8 +192,7 @@ public class RobotStates {
 
         // *********************************
         // Reversal States
-        operator.reverseEnabled.onTrue(reverse.setTrue());
-        operator.reverseDisabled.onTrue(reverse.setFalse());
+        operator.toggleReverse.onTrue(reverse.toggle());
     }
 
     private RobotStates() {
