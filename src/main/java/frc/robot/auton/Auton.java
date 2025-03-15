@@ -1,7 +1,6 @@
 package frc.robot.auton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathConstraints;
@@ -19,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotStates;
 import frc.robot.swerve.SwerveStates;
+import frc.robot.vision.VisionStates;
 import frc.spectrumLib.Telemetry;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
@@ -74,12 +74,7 @@ public class Auton {
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }
 
-    public static void setupNamedCommands() {
-        NamedCommands.registerCommand("autonAlign", SwerveStates.autonSwerveAlign(2));
-    }
-
     public Auton() {
-        setupNamedCommands();
         setupSelectors(); // runs the command to start the chooser for auto on shuffleboard
         Telemetry.print("Auton Subsystem Initialized: ");
     }
@@ -130,11 +125,13 @@ public class Auton {
     }
 
     public Command test(boolean mirrored) {
-        return (SpectrumAuton("L4-SideStart", mirrored));
+        return SpectrumAuton("L4-SideStart", mirrored).andThen(VisionStates.resetVisionPose());
     }
 
     public Command aimL4score() {
-        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l4score());
+        return SwerveStates.reefAimDrive()
+                .withTimeout(1.2)
+                .alongWith(l4score(), VisionStates.resetVisionPose());
     }
 
     public Command aimL1score() {

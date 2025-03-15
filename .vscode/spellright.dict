@@ -153,3 +153,5 @@ imu
 integratable
 beltonAuton
 choreoAuto
+alignwithpose
+drivetovisiontarget
