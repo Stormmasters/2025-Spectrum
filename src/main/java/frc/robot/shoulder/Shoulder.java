@@ -34,13 +34,13 @@ public class Shoulder extends Mechanism {
 
         /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
 
-        @Getter @Setter private double climbPrep = -56.7;;
+        @Getter @Setter private double climbPrep = -56.7;
         @Getter @Setter private double home = 0;
 
-        @Getter @Setter private double stationIntake = 9.2;
-        @Getter @Setter private double stationExtendedIntake = 23.6;
+        @Getter @Setter private double stationIntake = -9.2;
+        @Getter @Setter private double stationExtendedIntake = -23.6;
         @Getter @Setter private double groundAlgaeIntake = 0;
-        @Getter @Setter private double groundCoralIntake = -4;
+        @Getter @Setter private double groundCoralIntake = 4;
 
         @Getter @Setter private double processorAlgae = 55;
         @Getter @Setter private double l2Algae = 160; // -32;
@@ -291,17 +291,35 @@ public class Shoulder extends Mechanism {
         return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
     }
 
-    public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
-        return run(
-                () -> {
-                    // TODO: add a check for reversed and negate values when we do double sided
-                    // scoring.
-                    if (RobotStates.extended.getAsBoolean()) {
-                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(exDegrees)));
+    public Command move(DoubleSupplier shrinkDegrees, DoubleSupplier exDegrees) {
+        return run(() -> {
+                    if (!RobotStates.shrink.getAsBoolean()) {
+                        setMMPositionFoc(getIfReversedOffsetInRotations(exDegrees));
                     } else {
-                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(degrees)));
+                        setMMPositionFoc(getIfReversedOffsetInRotations(shrinkDegrees));
                     }
-                });
+                })
+                .withName("Shoulder.move");
+    }
+
+    public Command move(DoubleSupplier degrees) {
+        return run(() -> setMMPositionFoc(getIfReversedOffsetInRotations(degrees)))
+                .withName("Shoulder.move");
+    }
+
+    public DoubleSupplier getIfReversedOffsetInRotations(DoubleSupplier degrees) {
+        return getOffsetRotations(getIfReversedDegrees(degrees));
+    }
+
+    public DoubleSupplier getIfReversedDegrees(DoubleSupplier degrees) {
+        return () ->
+                (RobotStates.reverse.getAsBoolean()
+                        ? -1 * degrees.getAsDouble()
+                        : degrees.getAsDouble());
+    }
+
+    public DoubleSupplier getOffsetRotations(DoubleSupplier degrees) {
+        return () -> degreesToRotations(offsetPosition(degrees));
     }
 
     public DoubleSupplier offsetPosition(DoubleSupplier position) {
@@ -335,7 +353,7 @@ public class Shoulder extends Mechanism {
                                     config.simRatio,
                                     config.length,
                                     -270,
-                                    360 - 90,
+                                    360.0 - 90.0,
                                     -90)
                             .setMount(Robot.getElevator().getSim(), true),
                     mech,

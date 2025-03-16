@@ -36,10 +36,10 @@ public class Elbow extends Mechanism {
 
         @Getter private final double scoreDelay = 0.2;
 
-        @Getter private final double stationIntake = 158.7;
-        @Getter private final double stationExtendedIntake = 154.4;
-        @Getter private final double groundAlgaeIntake = -80;
-        @Getter private final double groundCoralIntake = -75;
+        @Getter private final double stationIntake = -158.7;
+        @Getter private final double stationExtendedIntake = -154.4;
+        @Getter private final double groundAlgaeIntake = 80;
+        @Getter private final double groundCoralIntake = 75;
 
         @Getter private final double stage = -160;
         @Getter private final double l1Coral = -121.4;
@@ -173,7 +173,6 @@ public class Elbow extends Mechanism {
         if (isAttached()) {
             builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty("Position Degrees", () -> (getPositionWithNegative()), null);
-            // builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("MotorVoltage", this::getVoltage, null);
             builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
         }
@@ -300,23 +299,35 @@ public class Elbow extends Mechanism {
         return newDeg;
     }
 
-    public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
-        return run(
-                () -> {
-                    // TODO: add a check for reversed and negate values when we do double sided
-                    // scoring.
-                    if (RobotStates.extended.getAsBoolean()) {
-                        setMMPositionFoc(
-                                () ->
-                                        degreesToRotations(
-                                                offsetPosition(() -> checkNegative(exDegrees))));
+    public Command move(DoubleSupplier shrinkDegrees, DoubleSupplier exDegrees) {
+        return run(() -> {
+                    if (!RobotStates.shrink.getAsBoolean()) {
+                        setMMPositionFoc(getIfReversedOffsetInRotations(exDegrees));
                     } else {
-                        setMMPositionFoc(
-                                () ->
-                                        degreesToRotations(
-                                                offsetPosition(() -> checkNegative(degrees))));
+                        setMMPositionFoc(getIfReversedOffsetInRotations(shrinkDegrees));
                     }
-                });
+                })
+                .withName("Elbow.move");
+    }
+
+    public Command move(DoubleSupplier degrees) {
+        return run(() -> setMMPositionFoc(getIfReversedOffsetInRotations(degrees)))
+                .withName("Elbow.move");
+    }
+
+    public DoubleSupplier getIfReversedOffsetInRotations(DoubleSupplier degrees) {
+        return getOffsetRotations(getIfReversedDegrees(degrees));
+    }
+
+    public DoubleSupplier getIfReversedDegrees(DoubleSupplier degrees) {
+        return () ->
+                (RobotStates.reverse.getAsBoolean()
+                        ? -1 * degrees.getAsDouble()
+                        : degrees.getAsDouble());
+    }
+
+    public DoubleSupplier getOffsetRotations(DoubleSupplier degrees) {
+        return () -> degreesToRotations(offsetPosition(degrees));
     }
 
     public Command moveToMotorPosition(DoubleSupplier position) {
@@ -354,8 +365,8 @@ public class Elbow extends Mechanism {
                                     config.elbowY,
                                     config.simRatio,
                                     config.length,
-                                    90 - 360,
-                                    360 - 90,
+                                    90.0 - 360.0,
+                                    360.0 - 90.0,
                                     180 - config.getStartingAngle())
                             .setColor(new Color8Bit(Color.kAqua))
                             .setMount(Robot.getShoulder().getSim(), true),
