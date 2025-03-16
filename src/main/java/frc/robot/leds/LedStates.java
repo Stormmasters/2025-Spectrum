@@ -104,7 +104,7 @@ public class LedStates {
             BooleanSupplier front) {
         return Commands.either(
                 sLed.setPattern(pattern, priority),
-                sLed.setPattern(pattern.atBrightness(Percent.of(50)), priority),
+                sLed.setPattern(pattern.atBrightness(Percent.of(25)), priority),
                 () ->
                         (RobotStates.reverse.getAsBoolean() == front.getAsBoolean())
                                 || RobotStates.photon.getAsBoolean());
