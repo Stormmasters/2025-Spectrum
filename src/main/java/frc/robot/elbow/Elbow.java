@@ -327,7 +327,7 @@ public class Elbow extends Mechanism {
     }
 
     public DoubleSupplier getOffsetRotations(DoubleSupplier degrees) {
-        return () -> degreesToRotations(offsetPosition(degrees));
+        return () -> degreesToRotations(offsetPosition(() -> checkNegative(degrees)));
     }
 
     public Command moveToMotorPosition(DoubleSupplier position) {

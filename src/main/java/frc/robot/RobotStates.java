@@ -5,6 +5,7 @@ import static frc.robot.auton.Auton.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.reefscape.Field;
 import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
@@ -201,16 +202,32 @@ public class RobotStates {
                 .and(VisionStates.usingRearTag.not())
                 .onTrue(reverse.setFalse());
         stationIntaking
-                .and(Zones.bottomLeftZone, () -> !Robot.getSwerve().frontClosestToAngle(144.011))
+                .and(
+                        Zones.bottomLeftZone,
+                        () ->
+                                !Robot.getSwerve()
+                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
                 .onTrue(reverse.setTrue());
         stationIntaking
-                .and(Zones.bottomLeftZone, () -> Robot.getSwerve().frontClosestToAngle(144.011))
+                .and(
+                        Zones.bottomLeftZone,
+                        () ->
+                                Robot.getSwerve()
+                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
                 .onTrue(reverse.setFalse());
         stationIntaking
-                .and(Zones.bottomRightZone, () -> !Robot.getSwerve().frontClosestToAngle(-144.011))
+                .and(
+                        Zones.bottomRightZone,
+                        () ->
+                                !Robot.getSwerve()
+                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
                 .onTrue(reverse.setTrue());
         stationIntaking
-                .and(Zones.bottomRightZone, () -> Robot.getSwerve().frontClosestToAngle(-144.011))
+                .and(
+                        Zones.bottomRightZone,
+                        () ->
+                                Robot.getSwerve()
+                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
                 .onTrue(reverse.setFalse());
     }
 
