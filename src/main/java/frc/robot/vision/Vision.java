@@ -518,6 +518,21 @@ public class Vision implements NTSendable, Subsystem {
         }
     }
 
+    public int getClosestTagID() {
+        int closestTagIDFront = (int) frontLL.getClosestTagID();
+        int closestTagIDBack = (int) backLL.getClosestTagID();
+
+        if (closestTagIDFront == -1) {
+            return (int) closestTagIDBack;
+        }
+        return (int) closestTagIDFront;
+    }
+
+    public boolean isRearTagClosest() {
+        int closestTagIDBack = (int) backLL.getClosestTagID();
+        return getClosestTagID() != -1 && closestTagIDBack == getClosestTagID();
+    }
+
     // ------------------------------------------------------------------------------
     // Calculation Functions
     // ------------------------------------------------------------------------------
@@ -533,15 +548,18 @@ public class Vision implements NTSendable, Subsystem {
             {6, 120}, {7, 180}, {8, -120}, {9, -60}, {10, 0}, {11, 60}
         };
 
-        int closetFrontTag = (int) frontLL.getClosestTagID();
-        int closetRearTag = (int) backLL.getClosestTagID();
-        int closetTag = closetFrontTag;
-        boolean rearTag = false;
+        // int closetFrontTag = (int) frontLL.getClosestTagID();
+        // int closetRearTag = (int) backLL.getClosestTagID();
+        // int closetTag = closetFrontTag;
+        // boolean rearTag = false;
 
-        if (closetTag == -1) {
-            closetTag = closetRearTag;
-            rearTag = true;
-        }
+        // if (closetTag == -1) {
+        //     closetTag = closetRearTag;
+        //     rearTag = true;
+        // }
+
+        int closetTag = getClosestTagID();
+        boolean rearTag = isRearTagClosest();
 
         if (closetTag == -1) {
             // Return current angle if no tag seen before going through the array
@@ -600,7 +618,7 @@ public class Vision implements NTSendable, Subsystem {
             return 0;
         }
     }
-  
+
     public double getTagTX() {
         if (frontLL.targetInView()) {
             return frontLL.getTagTx();
@@ -622,55 +640,50 @@ public class Vision implements NTSendable, Subsystem {
 
             if (indexOfSmallest(cageDiffs) == 0) {
                 return "B1";
-            }
-
-            else if (indexOfSmallest(cageDiffs) == 1) {
+            } else if (indexOfSmallest(cageDiffs) == 1) {
                 return "B2";
-            }
-
-            else if (indexOfSmallest(cageDiffs) == 2) {
+            } else if (indexOfSmallest(cageDiffs) == 2) {
                 return "B3";
-            }
-
-            else {
+            } else {
                 return "Nothing";
             }
-        }
-
-        else {
-            cageDiffs[0] = Math.abs(Field.flipYifRed(robotPose.getY()) - Field.flipYifRed(Units.inchesToMeters(286.779)) );
-            cageDiffs[1] = Math.abs(Field.flipYifRed(robotPose.getY()) - Field.flipYifRed(Units.inchesToMeters(242.855)));
-            cageDiffs[2] = Math.abs(Field.flipYifRed(robotPose.getY()) - Field.flipYifRed(Units.inchesToMeters(199.947)));
+        } else {
+            cageDiffs[0] =
+                    Math.abs(
+                            Field.flipYifRed(robotPose.getY())
+                                    - Field.flipYifRed(Units.inchesToMeters(286.779)));
+            cageDiffs[1] =
+                    Math.abs(
+                            Field.flipYifRed(robotPose.getY())
+                                    - Field.flipYifRed(Units.inchesToMeters(242.855)));
+            cageDiffs[2] =
+                    Math.abs(
+                            Field.flipYifRed(robotPose.getY())
+                                    - Field.flipYifRed(Units.inchesToMeters(199.947)));
 
             if (indexOfSmallest(cageDiffs) == 0) {
                 return "R1";
-            }
-
-            else if (indexOfSmallest(cageDiffs) == 1) {
+            } else if (indexOfSmallest(cageDiffs) == 1) {
                 return "R2";
-            }
-
-            else if (indexOfSmallest(cageDiffs) == 2) {
+            } else if (indexOfSmallest(cageDiffs) == 2) {
                 return "R3";
-            }
-
-            else {
+            } else {
                 return "Nothing";
             }
         }
-     }
+    }
 
     public static double indexOfSmallest(double[] array) {
         int indexOfSmallest = 0;
         double smallestIndex = array[indexOfSmallest];
-        for(int i = 0; i < array.length; i++) {
-            if(array[i] <= smallestIndex) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] <= smallestIndex) {
                 smallestIndex = array[i];
                 indexOfSmallest = i;
             }
         }
         return indexOfSmallest;
-     }
+    }
 
     /**
      * Gets a field-relative position for the score to the reef the robot should align, adjusted for
@@ -680,7 +693,8 @@ public class Vision implements NTSendable, Subsystem {
      */
     // public Translation2d getAdjustedReefPos() {
 
-    //     int reefID = closestReefFace(); // must call closestReefFace before this method gets passed
+    //     int reefID = closestReefFace(); // must call closestReefFace before this method gets
+    // passed
     //     Pose2d[] reefFaces = Field.Reef.getCenterFaces();
     //     double NORM_FUDGE = 0.075;
     //     // double tunableNoteVelocity = 1;
@@ -708,7 +722,8 @@ public class Vision implements NTSendable, Subsystem {
     //                     ? 0.0
     //                     : Math.abs(
     //                             MathUtil.angleModulus(
-    //                                             robotPos.minus(targetPose).getAngle().getRadians()
+    //
+    // robotPos.minus(targetPose).getAngle().getRadians()
     //                                                     - Math.atan2(
     //                                                             robotVel.vyMetersPerSecond,
     //                                                             robotVel.vxMetersPerSecond))

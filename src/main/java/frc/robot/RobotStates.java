@@ -10,6 +10,7 @@ import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
+import frc.robot.vision.VisionStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.util.Util;
@@ -193,6 +194,8 @@ public class RobotStates {
         // *********************************
         // Reversal States
         operator.toggleReverse.onTrue(reverse.toggle());
+        operator.staged.and(VisionStates.usingRearTag).onTrue(reverse.setTrue());
+        operator.staged.and(VisionStates.usingRearTag.not()).onTrue(reverse.setFalse());
     }
 
     private RobotStates() {

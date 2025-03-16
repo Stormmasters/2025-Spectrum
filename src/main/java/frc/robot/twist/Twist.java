@@ -101,7 +101,7 @@ public class Twist extends Mechanism {
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-.25, 0.5);
+            configMinMaxRotations(-.25, 0.75);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
@@ -250,7 +250,8 @@ public class Twist extends Mechanism {
         return run(
                 () -> {
                     if (RobotStates.reverse.getAsBoolean()) {
-                        if (degrees.getAsDouble() + 180 > 180) {
+                        if (degrees.getAsDouble() + 180 > 180
+                                && degrees.getAsDouble() - 179.9 > 0) {
                             setDegrees(() -> degrees.getAsDouble() - 179.9);
                         } else {
                             setDegrees(() -> degrees.getAsDouble() + 179.9);
