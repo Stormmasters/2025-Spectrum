@@ -19,7 +19,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Source L4",
   "choreoAuto": false
 }

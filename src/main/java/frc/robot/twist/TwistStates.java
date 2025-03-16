@@ -45,6 +45,9 @@ public class TwistStates {
                 .whileTrue(twist.moveToDegrees(config::getRightCoral).withName("Twist.rightCoral"));
         branch.and(rightScore.not())
                 .whileTrue(twist.moveToDegrees(config::getLeftCoral).withName("Twist.leftCoral"));
+
+        twistL4R.onTrue(twist.moveToDegrees(config::getRightCoral).withName("Twist.leftCoral"));
+        twistL4L.onTrue(twist.moveToDegrees(config::getLeftCoral).withName("Twist.leftCoral"));
     }
 
     public static Command coastMode() {

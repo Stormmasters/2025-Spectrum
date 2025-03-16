@@ -106,6 +106,11 @@ public class RobotStates {
 
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
 
+    // auton Triggers
+    public static final Trigger shoulderL4 = autonShoulderL4;
+    public static final Trigger twistL4R = autonTwistL4R;
+    public static final Trigger twistL4L = autonTwistL4L;
+
     // TODO: Handoffs are disabled
     // public static final Trigger algaeHandoff = operator.algaeHandoff_X;
     // public static final Trigger coralHandoff = operator.coralHandoff_Y;

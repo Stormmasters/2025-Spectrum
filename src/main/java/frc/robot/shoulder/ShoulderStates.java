@@ -2,7 +2,6 @@ package frc.robot.shoulder;
 
 import static frc.robot.RobotStates.*;
 import static frc.robot.auton.Auton.autonScore;
-import static frc.robot.auton.Auton.autonShoulderL4;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -96,8 +95,7 @@ public class ShoulderStates {
                                 config::getScoreDelay,
                                 "Shoulder.L4Coral.score"));
 
-        autonShoulderL4.whileTrue(
-                move(config::getL4Coral, config::getExl4Coral, "Shoulder.L4Coral.prescore"));
+        shoulderL4.onTrue(move(config::getExl4Coral, "Shoulder.L4Coral.prescore"));
 
         processorAlgae
                 .and(actionPrepState.or(actionState))

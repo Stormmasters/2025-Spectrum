@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.RobotStates;
 import frc.robot.swerve.SwerveStates;
-import frc.robot.vision.VisionStates;
 import frc.spectrumLib.Telemetry;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
@@ -46,6 +45,8 @@ public class Auton {
     public static final EventTrigger autonActionOff = new EventTrigger("actionOff");
     public static final EventTrigger autonCoralStage = new EventTrigger("coralStage");
     public static final EventTrigger autonShoulderL4 = new EventTrigger("shoulderL4");
+    public static final EventTrigger autonTwistL4R = new EventTrigger("twistL4R");
+    public static final EventTrigger autonTwistL4L = new EventTrigger("twistL4L");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;
@@ -59,11 +60,9 @@ public class Auton {
 
         pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
 
-        // pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
-        // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
-        // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
-
-        pathChooser.addOption("test", test(false));
+        pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
+        pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
+        pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
@@ -95,55 +94,55 @@ public class Auton {
     }
 
     public Command sourceL4(boolean mirrored) {
-        return (SpectrumAuton("L4-SideStart", mirrored)
+        return (RobotStates.homeAll
+                .setFalse()
+                .alongWith(SpectrumAuton("L4-SideStart", mirrored))
                 .withTimeout(2)
                 .andThen(
-                        aimL4score(),
+                        aimL4score(2),
                         SpectrumAuton("TroughRush", mirrored),
-                        aimL4score(),
+                        aimL4score(1.75),
                         SpectrumAuton("TroughRush2", mirrored),
-                        aimL4score())
-                .withName("Blue Left - L4 Trough Rush"));
+                        aimL4score(1.75))
+                .withName("Blue Left - Source L4"));
     }
 
     public Command centerAlgae(boolean mirrored) {
         return (SpectrumAuton("1 - Blue Center Algae", mirrored)
                 .withTimeout(1)
                 .andThen(
-                        aimHighAlgae(),
+                        aimHighAlgae(1.5),
                         SpectrumAuton("2 - Blue Center Algae", mirrored),
                         algaeNet(),
                         SpectrumAuton("3 - Blue Center Algae", mirrored),
-                        aimLowAlgae(),
+                        aimLowAlgae(1.5),
                         SpectrumAuton("4 - Blue Center Algae", mirrored),
                         algaeNet(),
                         SpectrumAuton("5 - Blue Center Algae", mirrored),
-                        aimLowAlgae(),
+                        aimLowAlgae(1.5),
                         SpectrumAuton("6 - Blue Center Algae", mirrored),
                         algaeNet())
                 .withName("Blue Center Algae Rush"));
     }
 
     public Command test(boolean mirrored) {
-        return SpectrumAuton("L4-SideStart", mirrored).andThen(VisionStates.resetVisionPose());
+        return SpectrumAuton("L4-SideStart", mirrored).andThen(aimL4score(1.75));
     }
 
-    public Command aimL4score() {
-        return SwerveStates.reefAimDrive()
-                .withTimeout(1.2)
-                .alongWith(l4score(), VisionStates.resetVisionPose());
+    public Command aimL4score(double alignTime) {
+        return SwerveStates.reefAimDrive().withTimeout(alignTime).alongWith(l4score());
     }
 
-    public Command aimL1score() {
-        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(l1score());
+    public Command aimL1score(double alignTime) {
+        return SwerveStates.reefAimDrive().withTimeout(alignTime).alongWith(l1score());
     }
 
-    public Command aimLowAlgae() {
-        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(lowAlgae());
+    public Command aimLowAlgae(double alignTime) {
+        return SwerveStates.reefAimDrive().withTimeout(alignTime).alongWith(lowAlgae());
     }
 
-    public Command aimHighAlgae() {
-        return SwerveStates.reefAimDrive().withTimeout(1.2).alongWith(highAlgae());
+    public Command aimHighAlgae(double alignTime) {
+        return SwerveStates.reefAimDrive().withTimeout(alignTime).alongWith(highAlgae());
     }
 
     public Command algaeNet() {

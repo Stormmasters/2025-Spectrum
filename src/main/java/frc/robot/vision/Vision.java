@@ -570,7 +570,7 @@ public class Vision extends SubsystemBase implements NTSendable {
         }
 
         if (closetTag == -1) {
-            // Return current angle if no tag seen before going throught the array
+            // Return current angle if no tag seen before going through the array
             return Robot.getSwerve().getRobotPose().getRotation().getRadians();
         }
 
