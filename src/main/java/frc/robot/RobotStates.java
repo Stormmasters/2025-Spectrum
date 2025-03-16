@@ -57,7 +57,7 @@ public class RobotStates {
     public static final Trigger stationIntaking = pilot.stationIntake_LT.or(autonStationIntake);
     // public static final Trigger stationExtendedIntaking = pilot.stationIntakeExtended_LT_RB;
     public static final Trigger groundAlgae = pilot.groundAlgae_RT;
-    public static final Trigger groundCoral = pilot.groundCoral_LB_RT;
+    public static final Trigger groundCoral = pilot.groundCoral_LB_LT;
     public static final Trigger intaking = stationIntaking.or(groundAlgae, groundCoral);
 
     // climb Triggers
