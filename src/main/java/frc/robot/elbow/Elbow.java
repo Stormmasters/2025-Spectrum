@@ -36,12 +36,12 @@ public class Elbow extends Mechanism {
 
         @Getter private final double scoreDelay = 0.2;
 
-        @Getter private final double stationIntake = 158.7;
-        @Getter private final double stationExtendedIntake = 154.4;
-        @Getter private final double groundAlgaeIntake = -80;
-        @Getter private final double groundCoralIntake = -75;
+        @Getter private final double stationIntake = -158.7;
+        @Getter private final double stationExtendedIntake = -154.4;
+        @Getter private final double groundAlgaeIntake = 80;
+        @Getter private final double groundCoralIntake = 75;
 
-        @Getter private final double stage = -160;
+        @Getter private final double stage = 180; // -160;
         @Getter private final double l1Coral = -121.4;
         @Getter private final double l2Coral = -118;
         @Getter private final double l2Score = -108;
@@ -205,7 +205,7 @@ public class Elbow extends Mechanism {
     public Trigger belowDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        (getPositionDegrees() + config.getOffset())
+                        (getPositionWithNegative())
                                 < (degrees.getAsDouble() - tolerance.getAsDouble()));
     }
 
@@ -213,7 +213,7 @@ public class Elbow extends Mechanism {
     public Trigger aboveDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        (getPositionDegrees() + config.getOffset())
+                        (getPositionWithNegative())
                                 > (degrees.getAsDouble() + tolerance.getAsDouble()));
     }
 
@@ -221,7 +221,7 @@ public class Elbow extends Mechanism {
     public Trigger atDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        Math.abs(getPositionDegrees() + config.getOffset() - degrees.getAsDouble())
+                        Math.abs(getPositionWithNegative() - degrees.getAsDouble())
                                 < tolerance.getAsDouble());
     }
 
@@ -302,18 +302,43 @@ public class Elbow extends Mechanism {
     public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
         return run(
                 () -> {
-                    // TODO: add a check for reversed and negate values when we do double sided
-                    // scoring.
                     if (RobotStates.extended.getAsBoolean()) {
-                        setMMPositionFoc(
-                                () ->
-                                        degreesToRotations(
-                                                offsetPosition(() -> checkNegative(exDegrees))));
+                        if (RobotStates.reverse.getAsBoolean()) {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(
+                                                            () ->
+                                                                    checkNegative(
+                                                                            () ->
+                                                                                    -1
+                                                                                            * exDegrees
+                                                                                                    .getAsDouble()))));
+                        } else {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(
+                                                            () -> checkNegative(exDegrees))));
+                        }
                     } else {
-                        setMMPositionFoc(
-                                () ->
-                                        degreesToRotations(
-                                                offsetPosition(() -> checkNegative(degrees))));
+                        if (RobotStates.reverse.getAsBoolean()) {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(
+                                                            () ->
+                                                                    checkNegative(
+                                                                            () ->
+                                                                                    -1
+                                                                                            * degrees
+                                                                                                    .getAsDouble()))));
+                        } else {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(() -> checkNegative(degrees))));
+                        }
                     }
                 });
     }

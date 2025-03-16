@@ -37,10 +37,10 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double climbPrep = -56.7;
         @Getter @Setter private double home = 0;
 
-        @Getter @Setter private double stationIntake = 9.2;
-        @Getter @Setter private double stationExtendedIntake = 23.6;
+        @Getter @Setter private double stationIntake = -9.2;
+        @Getter @Setter private double stationExtendedIntake = -23.6;
         @Getter @Setter private double groundAlgaeIntake = 0;
-        @Getter @Setter private double groundCoralIntake = -4;
+        @Getter @Setter private double groundCoralIntake = 4;
 
         @Getter @Setter private double processorAlgae = 55;
         @Getter @Setter private double l2Algae = 160; // -32;
@@ -201,7 +201,7 @@ public class Shoulder extends Mechanism {
     public Trigger belowDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        (getPositionDegrees() + config.getOffset())
+                        (getPositionDegrees() - config.getOffset())
                                 < (degrees.getAsDouble() - tolerance.getAsDouble()));
     }
 
@@ -209,7 +209,7 @@ public class Shoulder extends Mechanism {
     public Trigger aboveDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        (getPositionDegrees() + config.getOffset())
+                        (getPositionDegrees() - config.getOffset())
                                 > (degrees.getAsDouble() + tolerance.getAsDouble()));
     }
 
@@ -217,7 +217,7 @@ public class Shoulder extends Mechanism {
     public Trigger atDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        Math.abs(getPositionDegrees() + config.getOffset() - degrees.getAsDouble())
+                        Math.abs(getPositionDegrees() - config.getOffset() - degrees.getAsDouble())
                                 < tolerance.getAsDouble());
     }
 
@@ -294,12 +294,26 @@ public class Shoulder extends Mechanism {
     public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
         return run(
                 () -> {
-                    // TODO: add a check for reversed and negate values when we do double sided
-                    // scoring.
                     if (RobotStates.extended.getAsBoolean()) {
-                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(exDegrees)));
+                        if (RobotStates.reverse.getAsBoolean()) {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(
+                                                            () -> -1 * exDegrees.getAsDouble())));
+                        } else {
+                            setMMPositionFoc(() -> degreesToRotations(offsetPosition(exDegrees)));
+                        }
                     } else {
-                        setMMPositionFoc(() -> degreesToRotations(offsetPosition(degrees)));
+                        if (RobotStates.reverse.getAsBoolean()) {
+                            setMMPositionFoc(
+                                    () ->
+                                            degreesToRotations(
+                                                    offsetPosition(
+                                                            () -> -1 * degrees.getAsDouble())));
+                        } else {
+                            setMMPositionFoc(() -> degreesToRotations(offsetPosition(degrees)));
+                        }
                     }
                 });
     }

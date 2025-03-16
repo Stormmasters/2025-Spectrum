@@ -5,11 +5,13 @@ import static frc.robot.auton.Auton.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
+import frc.robot.vision.VisionStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.util.Util;
@@ -86,8 +88,6 @@ public class RobotStates {
     public static final Trigger homeElevator = operator.homeElevator_A;
 
     public static final Trigger hasGamePiece = new Trigger(Robot.getIntake()::hasIntakeGamePiece);
-
-    public static final SpectrumState backwardMode = new SpectrumState("backward");
 
     // Setup any binding to set states
     public static void setupStates() {
@@ -184,13 +184,33 @@ public class RobotStates {
         operator.leftScore.and(operator.staged).onTrue(rightScore.setFalse());
         operator.rightScore.and(operator.staged).onTrue(rightScore.setTrue());
 
+        // *********************************
         // Auton States
-
         autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
         autonSourceIntakeOff.onTrue(autonStationIntake.setFalse());
 
         autonLeftL4.onTrue(rightScore.setFalse());
         autonRightL4.onTrue(rightScore.setTrue());
+
+        // *********************************
+        // Reversal States
+        operator.toggleReverse.onTrue(reverse.toggle());
+        stagedCoral.and(L2Algae, L3Algae, VisionStates.usingRearTag).onTrue(reverse.setTrue());
+        stagedCoral
+                .and(L2Algae, L3Algae, VisionStates.usingRearTag.not())
+                .onTrue(reverse.setFalse());
+        stationIntaking
+                .and(Zones.bottomLeftZone, () -> !Robot.getSwerve().frontClosestToAngle(144.011))
+                .onTrue(reverse.setTrue());
+        stationIntaking
+                .and(Zones.bottomLeftZone, () -> Robot.getSwerve().frontClosestToAngle(144.011))
+                .onTrue(reverse.setFalse());
+        stationIntaking
+                .and(Zones.bottomRightZone, () -> !Robot.getSwerve().frontClosestToAngle(-144.011))
+                .onTrue(reverse.setTrue());
+        stationIntaking
+                .and(Zones.bottomRightZone, () -> Robot.getSwerve().frontClosestToAngle(-144.011))
+                .onTrue(reverse.setFalse());
     }
 
     private RobotStates() {
