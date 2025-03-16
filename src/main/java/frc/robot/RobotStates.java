@@ -195,9 +195,10 @@ public class RobotStates {
         // *********************************
         // Reversal States
         operator.toggleReverse.onTrue(reverse.toggle());
-        stagedCoral.and(L2Algae, L3Algae, VisionStates.usingRearTag).onTrue(reverse.setTrue());
+        stagedCoral.or(L2Algae, L3Algae).and(VisionStates.usingRearTag).onTrue(reverse.setTrue());
         stagedCoral
-                .and(L2Algae, L3Algae, VisionStates.usingRearTag.not())
+                .or(L2Algae, L3Algae)
+                .and(VisionStates.usingRearTag.not())
                 .onTrue(reverse.setFalse());
         stationIntaking
                 .and(Zones.bottomLeftZone, () -> !Robot.getSwerve().frontClosestToAngle(144.011))
