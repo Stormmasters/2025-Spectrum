@@ -43,7 +43,7 @@ public class ElbowStates {
                                 config::getStationExtendedIntake,
                                 "Elbow.StationIntake"));
         Robot.getPilot()
-                .groundCoral_LB_RT
+                .groundCoral_LB_LT
                 .and(actionState.not())
                 .whileTrue(move(config::getGroundCoralIntake, "Elbow.GroundCoral"));
 
