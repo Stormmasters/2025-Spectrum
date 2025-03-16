@@ -40,12 +40,15 @@ public class Twist extends Mechanism {
         // Positions set as percentage of Twist
         @Getter private final int initializedPosition = 20;
 
+        @Getter private final double stageDelay = 0.1;
+
         /* twist positions in percentage of max rotation || 0 is horizontal */
 
         @Getter private final double home = 0;
         @Getter private final double coralLollipop = 90;
         @Getter private final double stationIntake = 0; // 179.9;
-        @Getter private final double algaeIntake = stationIntake;
+        @Getter private final double algaeIntake = 179.9;
+        @Getter private final double groundAlgaeIntake = 0;
         @Getter private final double groundCoralIntake = 179.9;
         @Getter private final double leftCoral = 90;
         @Getter private final double rightCoral = -90;
@@ -101,7 +104,7 @@ public class Twist extends Mechanism {
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
-            configMinMaxRotations(-.25, 0.5);
+            configMinMaxRotations(-.25, 0.75);
             configReverseSoftLimit(getMinRotations(), true);
             configForwardSoftLimit(getMaxRotations(), true);
             configNeutralBrakeMode(true);
@@ -282,7 +285,7 @@ public class Twist extends Mechanism {
         return run(
                 () -> {
                     if (RobotStates.reverse.getAsBoolean()) {
-                        if (degrees.getAsDouble() + 180 > 180) {
+                        if (degrees.getAsDouble() + 180 > 180 && degrees.getAsDouble() - 180 >= 0) {
                             setDegrees(() -> degrees.getAsDouble() - 179.9);
                         } else {
                             setDegrees(() -> degrees.getAsDouble() + 179.9);

@@ -27,22 +27,30 @@ public class TwistStates {
 
         stationIntaking.whileTrue(move(config::getStationIntake, "Twist.stationIntake"));
 
-        algae.or(groundAlgae, stagedAlgae).whileTrue(move(config::getAlgaeIntake, "Twist.Algae"));
+        stagedAlgae.whileTrue(move(config::getAlgaeIntake, "Twist.Algae"));
 
         Robot.getPilot()
                 .groundAlgae_RT
-                .whileTrue(move(config::getAlgaeIntake, "Twist.AlgaeIntake"));
+                .whileTrue(move(config::getGroundAlgaeIntake, "Twist.AlgaeIntake"));
 
-        L1Coral.or(groundCoral).whileTrue(move(config::getL1Coral, "Twist.l1CoralOrGround"));
+        groundCoral.whileTrue(move(config::getGroundCoralIntake, "Twist.GroundCoralIntake"));
+
+        L1Coral.whileTrue(move(config::getL1Coral, "Twist.l1Coral"));
 
         netAlgae.whileTrue(move(config::getNet, "Twist.Net"));
 
-        branch.and(rightScore).whileTrue(move(config::getRightCoral, "Twist.rightCoral"));
-        branch.and(rightScore.not()).whileTrue(move(config::getLeftCoral, "Twist.leftCoral"));
+        branch.and(rightScore, actionPrepState)
+                .whileTrue(move(config::getRightCoral, config::getStageDelay, "Twist.rightCoral"));
+        branch.and(rightScore.not(), actionPrepState)
+                .whileTrue(move(config::getLeftCoral, config::getStageDelay, "Twist.leftCoral"));
     }
 
     public static Command move(DoubleSupplier degrees, String name) {
         return twist.move(degrees).withName(name);
+    }
+
+    public static Command move(DoubleSupplier degrees, DoubleSupplier delay, String name) {
+        return new WaitCommand(delay.getAsDouble()).andThen(move(degrees, name).withName(name));
     }
 
     public static Command coastMode() {
