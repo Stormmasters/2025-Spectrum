@@ -136,7 +136,7 @@ public class Auton {
                                 .setTrue()
                                 .alongWith(
                                         RobotStates.l4.setTrue(),
-                                        RobotStates.shrinkState.setTrue(),
+                                        RobotStates.extendedState.setTrue(),
                                         RobotStates.homeAll.setFalse())
                                 .andThen(
                                         Commands.waitSeconds(0.05),
@@ -155,7 +155,7 @@ public class Auton {
                                 .setTrue()
                                 .alongWith(
                                         RobotStates.l1.setTrue(),
-                                        RobotStates.shrinkState.setTrue(),
+                                        RobotStates.extendedState.setTrue(),
                                         RobotStates.homeAll.setFalse())
                                 .andThen(
                                         Commands.waitSeconds(0.05),

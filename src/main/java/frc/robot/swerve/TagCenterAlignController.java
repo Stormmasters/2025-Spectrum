@@ -2,7 +2,6 @@ package frc.robot.swerve;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import frc.robot.Robot;
 
 /**
  * Uses a profiled PID Controller to quickly turn the robot to a specified angle. Once the robot is
@@ -19,8 +18,7 @@ public class TagCenterAlignController {
 
     public TagCenterAlignController(SwerveConfig config) {
         this.config = config;
-        double maxVelocity = Robot.getConfig().swerve.getSpeedAt12Volts().baseUnitMagnitude();
-        constraints = new Constraints(maxVelocity / 4, maxVelocity / 40);
+        constraints = new Constraints(4.7 / 4, 4.7 / 40);
         controller =
                 new ProfiledPIDController(
                         config.getKPTagCenterController(),

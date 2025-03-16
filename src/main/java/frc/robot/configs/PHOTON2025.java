@@ -26,6 +26,7 @@ public class PHOTON2025 extends Config {
         shoulder.setAttached(true);
         intake.setAttached(true);
         climb.setAttached(true);
+        groundIntake.setAttached(false);
         leds.setAttached(true);
 
         // Always false for Photon

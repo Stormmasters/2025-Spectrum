@@ -2,14 +2,17 @@ package frc.robot;
 
 import static frc.robot.auton.Auton.*;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.reefscape.Field;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
+import frc.robot.swerve.Swerve;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.util.Util;
@@ -18,6 +21,7 @@ import lombok.Getter;
 public class RobotStates {
     private static final Pilot pilot = Robot.getPilot();
     private static final Operator operator = Robot.getOperator();
+    private static final Swerve swerve = Robot.getSwerve();
 
     @Getter private static double scoreTime = 3.0;
 
@@ -31,7 +35,7 @@ public class RobotStates {
     public static final SpectrumState l2 = new SpectrumState("l2");
     public static final SpectrumState l3 = new SpectrumState("l3");
     public static final SpectrumState l4 = new SpectrumState("l4");
-    public static final SpectrumState shrinkState = new SpectrumState("extendedStates");
+    public static final SpectrumState extendedState = new SpectrumState("extendedStates");
     public static final SpectrumState rightScore = new SpectrumState("rightScore");
     public static final SpectrumState reverse = new SpectrumState("reverse");
     public static final SpectrumState actionPrepState = new SpectrumState("actionPrepState");
@@ -48,7 +52,30 @@ public class RobotStates {
     public static final Trigger pm = new Trigger(() -> Rio.id == Rio.PM_2025);
 
     public static final Trigger photon = new Trigger(() -> Rio.id == Rio.PHOTON_2025);
+
     public static final Trigger sim = new Trigger(RobotBase::isSimulation);
+
+    // zones //TODO: Possibly move these to a different locations/pose file
+    public static final Trigger topLeftZone =
+            swerve.inXzoneAlliance(Field.Reef.center.getX(), Field.getHalfLength())
+                    .and(swerve.inYzoneAlliance(Field.Reef.center.getY(), Field.getFieldWidth()));
+    public static final Trigger topRightZone =
+            swerve.inXzoneAlliance(Field.Reef.center.getX(), Field.getHalfLength())
+                    .and(swerve.inYzoneAlliance(0, Field.Reef.center.getY()));
+    public static final Trigger bottomLeftZone =
+            swerve.inXzoneAlliance(0, Field.Reef.center.getX())
+                    .and(swerve.inYzoneAlliance(Field.Reef.center.getY(), Field.getFieldWidth()));
+    public static final Trigger bottomRightZone =
+            swerve.inXzoneAlliance(0, Field.Reef.center.getX())
+                    .and(swerve.inYzoneAlliance(0, Field.Reef.center.getY()));
+
+    public static final Trigger bargeZone =
+            swerve.inXzoneAlliance(
+                            3 * Field.getHalfLength() / 4,
+                            Field.getHalfLength()
+                                    - Units.inchesToMeters(24)
+                                    - swerve.getConfig().getRobotLength() / 2)
+                    .and(topLeftZone);
 
     // Intake Triggers
     public static final Trigger intakeRunning = coral.or(algae);
@@ -63,7 +90,7 @@ public class RobotStates {
     public static final Trigger climbFinish = pilot.climbRoutine_start;
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
-    public static final Trigger shrink = pilot.fn.or(shrinkState);
+    public static final Trigger extended = pilot.fn.or(extendedState);
     public static final Trigger processorAlgae = (l1.and(algae)).or(autonProcessor);
     public static final Trigger L2Algae = (l2.and(algae)).or(autonLowAlgae);
     public static final Trigger L3Algae = (l3.and(algae)).or(autonHighAlgae);
@@ -79,6 +106,10 @@ public class RobotStates {
 
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
 
+    // TODO: Handoffs are disabled
+    // public static final Trigger algaeHandoff = operator.algaeHandoff_X;
+    // public static final Trigger coralHandoff = operator.coralHandoff_Y;
+
     public static final Trigger isAtHome =
             ElevatorStates.isHome.and(ElbowStates.isHome, ShoulderStates.isHome);
 
@@ -86,6 +117,8 @@ public class RobotStates {
     public static final Trigger homeElevator = operator.homeElevator_A;
 
     public static final Trigger hasGamePiece = new Trigger(Robot.getIntake()::hasIntakeGamePiece);
+
+    public static final SpectrumState backwardMode = new SpectrumState("backward");
 
     // Setup any binding to set states
     public static void setupStates() {
@@ -109,10 +142,10 @@ public class RobotStates {
 
         // *********************************
         // ActionPrep and ActionState
-        pilot.actionReady_RB.onFalse(actionPrepState.setFalse());
+        pilot.actionReady.onFalse(actionPrepState.setFalse());
         autonActionOff.onTrue(actionPrepState.setFalse());
 
-        (pilot.actionReady_RB.and(coral.or(algae)))
+        (pilot.actionReady.and(coral.or(algae)))
                 .or(autonActionOn)
                 .onTrue(actionPrepState.setTrue(), actionState.setFalse());
 
@@ -182,18 +215,13 @@ public class RobotStates {
         operator.leftScore.and(operator.staged).onTrue(rightScore.setFalse());
         operator.rightScore.and(operator.staged).onTrue(rightScore.setTrue());
 
-        // *********************************
         // Auton States
+
         autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
         autonSourceIntakeOff.onTrue(autonStationIntake.setFalse());
 
         autonLeftL4.onTrue(rightScore.setFalse());
         autonRightL4.onTrue(rightScore.setTrue());
-
-        // *********************************
-        // Reversal States
-        operator.reverseEnabled.onTrue(reverse.setTrue());
-        operator.reverseDisabled.onTrue(reverse.setFalse());
     }
 
     private RobotStates() {
@@ -209,7 +237,7 @@ public class RobotStates {
                         rightScore.setFalse(),
                         coral.setFalse(),
                         algae.setFalse(),
-                        shrinkState.setFalse())
+                        extendedState.setFalse())
                 .withName("Clear Staged");
     }
 

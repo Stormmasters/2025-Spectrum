@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
-import frc.robot.RobotStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.Telemetry;
@@ -44,9 +43,9 @@ public class Twist extends Mechanism {
 
         @Getter private final double home = 0;
         @Getter private final double coralLollipop = 90;
-        @Getter private final double stationIntake = 0; // 179.9;
+        @Getter private final double stationIntake = 179.9;
         @Getter private final double algaeIntake = stationIntake;
-        @Getter private final double groundCoralIntake = 179.9;
+        @Getter private final double groundCoralIntake = 0;
         @Getter private final double leftCoral = 90;
         @Getter private final double rightCoral = -90;
         @Getter private final double l1Coral = 0;
@@ -73,7 +72,7 @@ public class Twist extends Mechanism {
         // Need to add auto launching positions when auton is added
 
         /* Cancoder config settings */
-        @Getter private final double CANcoderGearRatio = 1;
+        @Getter private final double CANcoderGearRatio = 1; // TODO: find CANcoder gear ratio
         @Getter private double CANcoderOffset = 0;
         @Getter private boolean isCANcoderAttached = false;
 
@@ -244,60 +243,6 @@ public class Twist extends Mechanism {
 
     private void setDegrees(DoubleSupplier degrees) {
         setMMPositionFoc(() -> degreesToRotations(degrees));
-    }
-
-    public Command move(DoubleSupplier targetDegrees, boolean clockwise) {
-        return run(
-                () -> {
-                    double currentDegrees = getPositionDegrees();
-                    // Normalize targetDegrees to be within 0 to 360
-                    double target = (targetDegrees.getAsDouble() % 360);
-                    // Normalize currentDegrees to be within 0 to 360
-                    double currentMod = (currentDegrees % 360);
-
-                    double output;
-
-                    if (clockwise) {
-                        // Calculate the closest clockwise position
-                        if (currentMod > target) {
-                            output = currentDegrees - (currentMod - target);
-                        } else {
-                            output = currentDegrees - (360 + currentMod - target);
-                        }
-                    } else {
-                        // Calculate the closest counterclockwise position
-                        if (currentMod < target) {
-                            output = currentDegrees + (target - currentMod);
-                        } else {
-                            output = currentDegrees + (360 + target - currentMod);
-                        }
-                    }
-
-                    final double out = output;
-                    setDegrees(() -> out);
-                });
-    }
-
-    public Command move(DoubleSupplier degrees) {
-        return run(
-                () -> {
-                    if (RobotStates.reverse.getAsBoolean()) {
-                        if (degrees.getAsDouble() + 180 > 180) {
-                            setDegrees(() -> degrees.getAsDouble() - 179.9);
-                        } else {
-                            setDegrees(() -> degrees.getAsDouble() + 179.9);
-                        }
-                    } else {
-                        setDegrees(degrees);
-                    }
-                });
-    }
-
-    public DoubleSupplier getIfReversedDegrees(DoubleSupplier degrees) {
-        return () ->
-                (RobotStates.reverse.getAsBoolean())
-                        ? degrees.getAsDouble() + 180
-                        : degrees.getAsDouble();
     }
 
     public Command twistHome() {
@@ -508,7 +453,6 @@ public class Twist extends Mechanism {
             return startingAngle * ((Math.abs(posePercent) - 50) / 50);
         }
 
-        @SuppressWarnings("unused ")
         private double calculateBaseLength(
                 double startingLength, double startingAngle, double angle, double posePercent) {
             double startingVerticalLeg =

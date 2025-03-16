@@ -1,5 +1,7 @@
 package frc.robot.pilot;
 
+import static frc.robot.RobotStates.photon;
+
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.spectrumLib.Rio;
@@ -31,7 +33,7 @@ public class Pilot extends Gamepad {
 
     public final Trigger climbRoutine_start = start.and(noFn, teleop);
 
-    public final Trigger actionReady_RB = rightBumper.and(teleop);
+    public final Trigger actionReady = rightBumper.and(teleop);
 
     // vision Drive
     public final Trigger visionAim_A = A.and(teleop);
@@ -52,7 +54,6 @@ public class Pilot extends Gamepad {
     public final Trigger coastOn_dB = disabled.and(B);
     public final Trigger coastOff_dA = disabled.and(A);
     public final Trigger reZero_start = disabled.and(leftBumper, rightBumper, start);
-    public final Trigger visionPoseReset_LB_Select = disabled.and(leftBumper, select);
 
     // TEST TRIGGERS
     public final Trigger testTune_tB = testMode.and(B);
@@ -70,22 +71,22 @@ public class Pilot extends Gamepad {
         @Getter @Setter private double slowModeScalor = 0.45;
         @Getter @Setter private double defaultTurnScalor = 0.6;
         @Getter @Setter private double turboModeScalor = 1;
-        private double deadzone = 0.05;
+        private double deadzone = 0.001;
 
         public PilotConfig() {
             super("Pilot", 0);
 
             setLeftStickDeadzone(deadzone);
             setLeftStickExp(3);
-            // Set Scalar in Constructor from Swerve Config
+            setLeftStickScalor(4.572);
 
             setRightStickDeadzone(deadzone);
             setRightStickExp(3.0);
-            setRightStickScalar(3 * Math.PI);
+            setRightStickScalor(3 * Math.PI);
 
             setTriggersDeadzone(deadzone);
             setTriggersExp(1);
-            setTriggersScalar(1);
+            setTriggersScalor(1);
         }
     }
 
@@ -98,11 +99,6 @@ public class Pilot extends Gamepad {
     public Pilot(PilotConfig config) {
         super(config);
         this.config = config;
-
-        // Set Left stick Scalar from Swerve Config
-        config.setLeftStickScalar(Robot.getConfig().swerve.getSpeedAt12Volts().magnitude());
-        leftStickCurve.setScalar(config.getLeftStickScalar());
-
         Robot.add(this);
         Telemetry.print("Pilot Subsystem Initialized: ");
     }
@@ -159,7 +155,7 @@ public class Pilot extends Gamepad {
         return -1 * ccwPositive; // invert the value
     }
 
-    public double getPilotStickAngle() {
-        return getLeftStickDirection().getRadians();
+    public double getTestTriggersAxis() { // TODO: Remove after Testing
+        return getRightTriggerAxis() - getLeftTriggerAxis();
     }
 }

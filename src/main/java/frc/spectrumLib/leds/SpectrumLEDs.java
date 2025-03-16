@@ -103,11 +103,10 @@ public class SpectrumLEDs implements SpectrumSubsystem {
         setPattern(defaultPattern);
         led.start();
 
-        SpectrumRobot.add(this);
+        SpectrumRobot.add(this); // TODO: Make a SpectrumRobot.java to this isn't importing robot
         CommandScheduler.getInstance().registerSubsystem(this);
     }
 
-    @Override
     public void periodic() {
         // Set the LEDs only if this is the main view
         if (mainView) {
@@ -267,20 +266,18 @@ public class SpectrumLEDs implements SpectrumSubsystem {
                 double position = backwards ? 2 * (1 - phase) : 2 * phase;
                 int ledPosition = (int) (position * bufLen);
 
-                for (int tempLed = 0; tempLed < bufLen; tempLed++) {
-                    if (tempLed == ledPosition) {
-                        writer.setLED(tempLed, c);
-                    } else if (tempLed == ledPosition - 1 || tempLed == ledPosition + 1) {
-                        writer.setLED(
-                                tempLed, new Color(c.red * 0.66, c.green * 0.66, c.blue * 0.66));
-                    } else if (tempLed == ledPosition - 2 || tempLed == ledPosition + 2) {
-                        writer.setLED(
-                                tempLed, new Color(c.red * 0.33, c.green * 0.33, c.blue * 0.33));
+                for (int led = 0; led < bufLen; led++) {
+                    if (led == ledPosition) {
+                        writer.setLED(led, c);
+                    } else if (led == ledPosition - 1 || led == ledPosition + 1) {
+                        writer.setLED(led, new Color(c.red * 0.66, c.green * 0.66, c.blue * 0.66));
+                    } else if (led == ledPosition - 2 || led == ledPosition + 2) {
+                        writer.setLED(led, new Color(c.red * 0.33, c.green * 0.33, c.blue * 0.33));
                     } else {
-                        writer.setLED(tempLed, Color.kBlack);
+                        writer.setLED(led, Color.kBlack);
                     }
                 }
-            }
+            };
         };
     }
 
@@ -303,12 +300,13 @@ public class SpectrumLEDs implements SpectrumSubsystem {
                                 * 0.58 // this is the speed, the higher the number the faster the
                                 // ombre moves
                                 % 1.0; // Modulo 1 to keep the phase within [0, 1]
-                for (int tempLed = 0; tempLed < bufLen; tempLed++) {
+                for (int led = 0; led < bufLen; led++) {
                     // Adjust ratio to include the phaseShift, causing the ombre to move
                     double ratio =
-                            ((tempLed + (bufLen * phaseShift))
-                                    / bufLen
-                                    % 1.0); // Modulo 1 to ensure the ratio loops within [0,
+                            (double)
+                                    ((led + (bufLen * phaseShift))
+                                            / bufLen
+                                            % 1.0); // Modulo 1 to ensure the ratio loops within [0,
                     // 1]
 
                     // Interpolate the red, green, and blue components separately using double
@@ -321,9 +319,9 @@ public class SpectrumLEDs implements SpectrumSubsystem {
                     Color currentColor = new Color(red, green, blue);
 
                     // Set the color of the current LED
-                    writer.setLED(tempLed, currentColor);
+                    writer.setLED(led, currentColor);
                 }
-            }
+            };
         };
     }
 
@@ -348,7 +346,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
                 double xDiffPerLed = (2.0 * Math.PI) / cycleLength;
                 double waveExponent = 0.4;
 
-                for (int tempLed = 0; tempLed < bufLen; tempLed++) {
+                for (int led = 0; led < bufLen; led++) {
                     x += xDiffPerLed;
 
                     double ratio = (Math.pow(Math.sin(x), waveExponent) + 1.0) / 2.0;
@@ -361,7 +359,7 @@ public class SpectrumLEDs implements SpectrumSubsystem {
                     double red = (c1.red * (1 - ratio)) + (c2.red * ratio);
                     double green = (c1.green * (1 - ratio)) + (c2.green * ratio);
                     double blue = (c1.blue * (1 - ratio)) + (c2.blue * ratio);
-                    writer.setLED(tempLed, new Color(red, green, blue));
+                    writer.setLED(led, new Color(red, green, blue));
                 }
             }
         };
@@ -399,13 +397,13 @@ public class SpectrumLEDs implements SpectrumSubsystem {
                 Color countdownColor = new Color(red, green, 0);
 
                 // Update the LEDs from the end of the strip towards the beginning
-                for (int tempLed = bufLen - 1; tempLed >= 0; tempLed--) {
-                    if (bufLen - tempLed <= ledsToTurnOff) {
+                for (int led = bufLen - 1; led >= 0; led--) {
+                    if (bufLen - led <= ledsToTurnOff) {
                         // Turn off the LEDs progressively
-                        writer.setLED(tempLed, Color.kBlack);
+                        writer.setLED(led, Color.kBlack);
                     } else {
                         // Set the remaining LEDs to the countdown color
-                        writer.setLED(tempLed, countdownColor);
+                        writer.setLED(led, countdownColor);
                     }
                 }
 

@@ -142,7 +142,7 @@ public class Climb extends Mechanism {
 
     private void setInitialPosition() {
         if (config.isAttached()) {
-            motor.setPosition(0.25);
+            motor.setPosition(0.25); // TODO: Remove once mechanism does this for everything
             followerMotors[0].setPosition(0.25);
         }
     }

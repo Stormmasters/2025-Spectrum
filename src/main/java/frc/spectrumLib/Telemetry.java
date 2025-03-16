@@ -19,6 +19,7 @@ public class Telemetry extends DogLog implements Subsystem {
 
     private static final Map<String, String[]> previousAlerts = new HashMap<>();
 
+    // TODO: Create default Fault Types
     public enum Fault {
         CAMERA_OFFLINE,
         AUTO_SHOT_TIMEOUT_TRIGGERED,
@@ -39,6 +40,7 @@ public class Telemetry extends DogLog implements Subsystem {
     public Telemetry() {
         super();
         register();
+        // DogLog.setEnabled(false);
     }
 
     @Override

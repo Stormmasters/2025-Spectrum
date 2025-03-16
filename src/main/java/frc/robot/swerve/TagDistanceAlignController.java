@@ -18,6 +18,7 @@ public class TagDistanceAlignController {
 
     public TagDistanceAlignController(SwerveConfig config) {
         this.config = config;
+        // constraints = new Constraints(4.7 / 8, 4.7 / 40);
         controller =
                 new PIDController(
                         config.getKPTagDistanceController(),
