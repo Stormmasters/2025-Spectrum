@@ -201,6 +201,7 @@ public class RobotStates {
                 .or(L2Algae, L3Algae)
                 .and(VisionStates.usingRearTag.not())
                 .onTrue(reverse.setFalse());
+        netAlgae.or(processorAlgae, groundAlgae, groundCoral).onTrue(reverse.setFalse());
         stationIntaking
                 .and(
                         Zones.bottomLeftZone,

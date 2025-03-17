@@ -30,10 +30,8 @@ public class ShoulderStates {
         stationIntaking.whileTrue(
                 move(
                         config::getStationIntake,
-                        config::getStationExtendedIntake,
+                        // config::getStationExtendedIntake,
                         "Shoulder.stationIntake"));
-        // stationExtendedIntaking.whileTrue(
-        //         move(config::getStationExtendedIntake, "Shoulder.stationExtendedIntake"));
         stationIntaking.or(groundCoral, groundAlgae).onFalse(home());
 
         groundCoral.whileTrue(move(config::getGroundCoralIntake, "Shoulder.groundCoral"));

@@ -40,7 +40,7 @@ public class ElbowStates {
                 .whileTrue(
                         move(
                                 config::getStationIntake,
-                                config::getStationExtendedIntake,
+                                // config::getStationExtendedIntake,
                                 "Elbow.StationIntake"));
         Robot.getPilot()
                 .groundCoral_LB_LT

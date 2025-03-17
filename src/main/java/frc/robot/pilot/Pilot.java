@@ -20,7 +20,7 @@ public class Pilot extends Gamepad {
     public final Trigger noFn = fn.not();
     public final Trigger home_select = select;
 
-    public final Trigger stationIntake_LT = leftTrigger.and(teleop);
+    public final Trigger stationIntake_LT = leftTrigger.and(noFn, teleop);
     public final Trigger groundAlgae_RT = rightTrigger.and(noFn, teleop, photon.not());
     public final Trigger photonRemoveL2Algae = groundAlgae_RT.and(photon);
     public final Trigger groundCoral_LB_LT = leftTrigger.and(fn, teleop, photon.not());
