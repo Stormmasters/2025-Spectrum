@@ -110,6 +110,8 @@ public class RobotStates {
     public static final Trigger shoulderL4 = autonShoulderL4;
     public static final Trigger twistL4R = autonTwistL4R;
     public static final Trigger twistL4L = autonTwistL4L;
+    public static final Trigger autoAlign = autonSwerveAlign;
+    public static final Trigger clearOverrideFeedBack = autonClearFeedback;
 
     // TODO: Handoffs are disabled
     // public static final Trigger algaeHandoff = operator.algaeHandoff_X;

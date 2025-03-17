@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
+import frc.robot.RobotStates;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
@@ -63,32 +64,25 @@ public class SwerveStates {
 
         // // vision aim
         pilot.visionAim_A.whileTrue(log(reefAimDrive()));
+
+        RobotStates.autoAlign.onTrue(autonSwerveAlign());
+        RobotStates.clearOverrideFeedBack.onTrue(clearFeedBack());
     }
 
-    /** Pilot Commands ************************************************************************ */
-    /**
-     * Drive the robot using left stick and control orientation using the right stick Only Cardinal
-     * directions are allowed
-     *
-     * @return
-     */
-    public static Command autonSwerveAlign(double alignTime) {
-        return (new PrintCommand("! starting align !")
-                        .andThen(
-                                new InstantCommand(
-                                        () -> {
-                                            PPHolonomicDriveController.overrideXFeedback(
-                                                    SwerveStates::getTagDistanceVelocity);
-                                            PPHolonomicDriveController.overrideYFeedback(
-                                                    SwerveStates::getTagTxVelocity);
-                                        }),
-                                new PrintCommand("! clearing align !"),
-                                new WaitCommand(alignTime),
-                                new InstantCommand(
-                                        () -> PPHolonomicDriveController.clearFeedbackOverrides()),
-                                new PrintCommand("! cleared align !")))
-                .withName("autonAlign")
-                .alongWith(new PrintCommand("!! autonAlign Ran !!"));
+    /* Pilot Commands ************************************************************************ */
+
+    public static Command autonSwerveAlign() {
+        return (new InstantCommand(
+                        () -> {
+                                PPHolonomicDriveController.overrideXFeedback(SwerveStates::getTagDistanceVelocity);
+                                PPHolonomicDriveController.overrideYFeedback(SwerveStates::getTagTxVelocity);
+                                }
+                        ))
+                .withName("autonAlign");
+    }
+
+    public static Command clearFeedBack() {
+        return new InstantCommand(() -> PPHolonomicDriveController.clearOverrideFeedBack());
     }
 
     public static Command reefAimDrive() {

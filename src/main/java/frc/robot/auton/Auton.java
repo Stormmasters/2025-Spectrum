@@ -47,6 +47,8 @@ public class Auton {
     public static final EventTrigger autonShoulderL4 = new EventTrigger("shoulderL4");
     public static final EventTrigger autonTwistL4R = new EventTrigger("twistL4R");
     public static final EventTrigger autonTwistL4L = new EventTrigger("twistL4L");
+    public static final EventTrigger autonSwerveAlign = new EventTrigger("autoAlign");
+    public static final EventTrigger autonClearFeedback = new EventTrigger("clearFeedBack");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;
@@ -60,9 +62,9 @@ public class Auton {
 
         pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
 
-        pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
-        pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
-        pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
+        // pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
+        // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
+        // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
