@@ -249,11 +249,44 @@ public class Twist extends Mechanism {
         setMMPositionFoc(() -> degreesToRotations(degrees));
     }
 
+    public Command move(DoubleSupplier targetDegrees, boolean clockwise) {
+        return run(
+                () -> {
+                    double currentDegrees = getPositionDegrees();
+                    // Normalize targetDegrees to be within 0 to 360
+                    double target = (targetDegrees.getAsDouble() % 360);
+                    // Normalize currentDegrees to be within 0 to 360
+                    double currentMod = (currentDegrees % 360);
+
+                    double output;
+
+                    if (clockwise) {
+                        // Calculate the closest clockwise position
+                        if (currentMod > target) {
+                            output = currentDegrees - (currentMod - target);
+                        } else {
+                            output = currentDegrees - (360 + currentMod - target);
+                        }
+                    } else {
+                        // Calculate the closest counterclockwise position
+                        if (currentMod < target) {
+                            output = currentDegrees + (target - currentMod);
+                        } else {
+                            output = currentDegrees + (360 + target - currentMod);
+                        }
+                    }
+
+                    final double out = output;
+                    setDegrees(() -> out);
+                });
+    }
+
     public Command move(DoubleSupplier degrees) {
         return run(
                 () -> {
                     if (RobotStates.reverse.getAsBoolean()) {
-                        if (degrees.getAsDouble() + 180 > 180 && degrees.getAsDouble() - 180 >= 0) {
+                        if (degrees.getAsDouble() + 180 >= 180
+                                && degrees.getAsDouble() - 179.9 >= 0) {
                             setDegrees(() -> degrees.getAsDouble() - 179.9);
                         } else {
                             setDegrees(() -> degrees.getAsDouble() + 179.9);
@@ -262,6 +295,13 @@ public class Twist extends Mechanism {
                         setDegrees(degrees);
                     }
                 });
+    }
+
+    public DoubleSupplier getIfReversedDegrees(DoubleSupplier degrees) {
+        return () ->
+                (RobotStates.reverse.getAsBoolean())
+                        ? degrees.getAsDouble() + 180
+                        : degrees.getAsDouble();
     }
 
     public Command twistHome() {
@@ -317,8 +357,8 @@ public class Twist extends Mechanism {
                             1.2,
                             config.getCoralLength(), // placeholder, should really be length of
                             // forearm
-                            Math.toRadians(-180),
-                            Math.toRadians(180),
+                            Math.toRadians(-360),
+                            Math.toRadians(360),
                             false, // Simulate gravity (change back to true)
                             0);
             this.twistMotorSim = twistMotorSim;
@@ -399,7 +439,7 @@ public class Twist extends Mechanism {
                             mount.getAngle()));
 
             /* changes which side is closest to the viewer; the left prong is always closest to the viewer */
-            if (getPositionPercentage() > 0) {
+            if (getPositionPercentage() > 0 && getPositionDegrees() % 360 <= 180) {
                 leftBase.setColor(config.getCoralColor());
                 leftProng.setColor(config.getCoralColor());
                 rightBase.setColor(config.getAlgaeColor());
@@ -466,6 +506,15 @@ public class Twist extends Mechanism {
                                         config.getCoralBaseAngle(), getPositionPercentage()),
                                 getPositionPercentage()));
             }
+        }
+
+        private double getPositionPercentage() {
+            double position = getPositionDegrees() % 360;
+            if (position > 180) {
+                position -= 180;
+                position = 180 - position;
+            }
+            return (position / 180) * 100;
         }
 
         private double calculateBaseAngle(double startingAngle, double posePercent) {

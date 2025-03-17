@@ -291,31 +291,35 @@ public class Shoulder extends Mechanism {
         return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
     }
 
-    public Command move(DoubleSupplier degrees, DoubleSupplier exDegrees) {
-        return run(
-                () -> {
-                    if (RobotStates.extended.getAsBoolean()) {
-                        if (RobotStates.reverse.getAsBoolean()) {
-                            setMMPositionFoc(
-                                    () ->
-                                            degreesToRotations(
-                                                    offsetPosition(
-                                                            () -> -1 * exDegrees.getAsDouble())));
-                        } else {
-                            setMMPositionFoc(() -> degreesToRotations(offsetPosition(exDegrees)));
-                        }
+    public Command move(DoubleSupplier shrinkDegrees, DoubleSupplier exDegrees) {
+        return run(() -> {
+                    if (!RobotStates.shrink.getAsBoolean()) {
+                        setMMPositionFoc(getIfReversedOffsetInRotations(exDegrees));
                     } else {
-                        if (RobotStates.reverse.getAsBoolean()) {
-                            setMMPositionFoc(
-                                    () ->
-                                            degreesToRotations(
-                                                    offsetPosition(
-                                                            () -> -1 * degrees.getAsDouble())));
-                        } else {
-                            setMMPositionFoc(() -> degreesToRotations(offsetPosition(degrees)));
-                        }
+                        setMMPositionFoc(getIfReversedOffsetInRotations(shrinkDegrees));
                     }
-                });
+                })
+                .withName("Shoulder.move");
+    }
+
+    public Command move(DoubleSupplier degrees) {
+        return run(() -> setMMPositionFoc(getIfReversedOffsetInRotations(degrees)))
+                .withName("Shoulder.move");
+    }
+
+    public DoubleSupplier getIfReversedOffsetInRotations(DoubleSupplier degrees) {
+        return getOffsetRotations(getIfReversedDegrees(degrees));
+    }
+
+    public DoubleSupplier getIfReversedDegrees(DoubleSupplier degrees) {
+        return () ->
+                (RobotStates.reverse.getAsBoolean()
+                        ? -1 * degrees.getAsDouble()
+                        : degrees.getAsDouble());
+    }
+
+    public DoubleSupplier getOffsetRotations(DoubleSupplier degrees) {
+        return () -> degreesToRotations(offsetPosition(degrees));
     }
 
     public DoubleSupplier offsetPosition(DoubleSupplier position) {

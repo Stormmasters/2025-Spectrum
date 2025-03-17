@@ -29,7 +29,7 @@ public class LedStates {
         testModePattern(Util.testMode.and(Util.dsAttached));
 
         // General Led Commands
-        homeFinishLED(RobotStates.isAtHome.and(Util.teleop), 8);
+        homeFinishLED(RobotStates.isAtHome.and(Util.teleop, RobotStates.staged.not()), 8);
 
         // Coral and Algae Led Commands
         coralModeLED(RobotStates.coral.and(Util.teleop), 6);
@@ -103,24 +103,36 @@ public class LedStates {
             int priority,
             BooleanSupplier front) {
         return Commands.either(
-                sLed.setPattern(pattern, priority),
-                sLed.setPattern(pattern.atBrightness(Percent.of(25)), priority),
-                () ->
-                        (RobotStates.reverse.getAsBoolean() == front.getAsBoolean())
-                                || RobotStates.photon.getAsBoolean());
+                        sLed.setPattern(pattern, priority)
+                                .until(
+                                        () ->
+                                                RobotStates.reverse.getAsBoolean()
+                                                                != front.getAsBoolean()
+                                                        && !RobotStates.photon.getAsBoolean()),
+                        sLed.setPattern(pattern.atBrightness(Percent.of(25)), priority)
+                                .until(
+                                        () ->
+                                                RobotStates.reverse.getAsBoolean()
+                                                        == front.getAsBoolean()),
+                        () ->
+                                (RobotStates.reverse.getAsBoolean() == front.getAsBoolean())
+                                        || RobotStates.photon.getAsBoolean())
+                .repeatedly();
     }
 
     static void homeFinishLED(Trigger trigger, int priority) {
         withReverseLedCommand(
                 "right.HomeFinish",
                 right,
-                right.bounce(right.purple, 3).blend(right.solid(right.purple)),
+                right.bounce(right.purple, 3)
+                        .blend(right.solid(right.purple).atBrightness(Percent.of(75))),
                 priority,
                 trigger);
         withReverseLedCommand(
                 "left.HomeFinish",
                 left,
-                right.bounce(right.purple, 3).blend(right.solid(right.purple)),
+                right.bounce(right.purple, 3)
+                        .blend(right.solid(right.purple).atBrightness(Percent.of(75))),
                 priority,
                 trigger);
     }
