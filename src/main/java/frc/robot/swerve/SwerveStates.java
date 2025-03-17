@@ -8,8 +8,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.robot.pilot.Pilot;
@@ -71,18 +69,21 @@ public class SwerveStates {
 
     /* Pilot Commands ************************************************************************ */
 
+    //TODO: make this a command FIELD RELATIVE instead of ROBOT RELATIVE
     public static Command autonSwerveAlign() {
         return (new InstantCommand(
                         () -> {
-                                PPHolonomicDriveController.overrideXFeedback(SwerveStates::getTagDistanceVelocity);
-                                PPHolonomicDriveController.overrideYFeedback(SwerveStates::getTagTxVelocity);
-                                }
-                        ))
-                .withName("autonAlign");
+                            PPHolonomicDriveController.overrideXFeedback(
+                                    SwerveStates::getTagDistanceVelocity);
+                            PPHolonomicDriveController.overrideYFeedback(
+                                    SwerveStates::getTagTxVelocity);
+                        }))
+                .withName("Swerve.autonAlign");
     }
 
     public static Command clearFeedBack() {
-        return new InstantCommand(() -> PPHolonomicDriveController.clearOverrideFeedBack());
+        return (new InstantCommand(() -> PPHolonomicDriveController.clearFeedbackOverrides()))
+                .withName("Swerve.clearFeedbackOverrides");
     }
 
     public static Command reefAimDrive() {

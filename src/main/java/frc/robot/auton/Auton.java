@@ -49,6 +49,9 @@ public class Auton {
     public static final EventTrigger autonTwistL4L = new EventTrigger("twistL4L");
     public static final EventTrigger autonSwerveAlign = new EventTrigger("autoAlign");
     public static final EventTrigger autonClearFeedback = new EventTrigger("clearFeedBack");
+    public static final EventTrigger autonL4 = new EventTrigger("L4");
+    public static final EventTrigger autonExtendedState = new EventTrigger("extendedState");
+    public static final EventTrigger autonHomeOff = new EventTrigger("homeOff");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;
@@ -62,15 +65,17 @@ public class Auton {
 
         pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
 
-        // pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
+        pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
+
+        pathChooser.addOption("test", SpectrumAuton("test", false));
 
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
 
-        pathChooser.addOption("Left | Algae Rush", centerAlgae(false));
-        pathChooser.addOption("Right | Algae Rush", centerAlgae(true));
+        // pathChooser.addOption("Left | Algae Rush", centerAlgae(false));
+        // pathChooser.addOption("Right | Algae Rush", centerAlgae(true));
 
         SmartDashboard.putData("Auto Chooser", pathChooser);
     }

@@ -5,6 +5,7 @@ import static frc.robot.auton.Auton.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
 import frc.robot.elbow.ElbowStates;
@@ -133,7 +134,7 @@ public class RobotStates {
 
         // *********************************
         // HOME Commands and States
-        pilot.home_select.or(operator.home_select, autonHome).whileTrue(homeAll.toggleToTrue());
+        pilot.home_select.or(operator.home_select).whileTrue(homeAll.toggleToTrue());
         pilot.home_select.or(operator.home_select).onFalse(clearStates());
         autonClearStates.whileTrue(clearStates());
 
@@ -214,8 +215,8 @@ public class RobotStates {
         operator.L3
                 .and(operator.staged)
                 .onTrue(l3.setTrue(), l1.setFalse(), l2.setFalse(), l4.setFalse());
-        operator.L4
-                .and(operator.staged)
+        (operator.L4.and(operator.staged))
+                .or(autonL4)
                 .onTrue(l4.setTrue(), l1.setFalse(), l2.setFalse(), l3.setFalse());
 
         // Set left or right score
@@ -226,9 +227,11 @@ public class RobotStates {
 
         autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
         autonSourceIntakeOff.onTrue(autonStationIntake.setFalse());
-
+        autonHomeOff.onTrue(homeAll.setFalse());
         autonLeft.onTrue(rightScore.setFalse());
         autonRight.onTrue(rightScore.setTrue());
+        autonHome.onTrue((Commands.waitSeconds(.5)).andThen(homeAll.setTrue()));
+        autonExtendedState.onTrue(extendedState.setTrue());
     }
 
     private RobotStates() {
