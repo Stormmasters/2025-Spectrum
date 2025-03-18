@@ -71,12 +71,6 @@
       "command": null
     },
     {
-      "name": "extendedState",
-      "waypointRelativePos": 0.4545810493343702,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "actionOn",
       "waypointRelativePos": 0.8320281910728117,
       "endWaypointRelativePos": null,

@@ -44,8 +44,8 @@ public class TwistStates {
         branch.and(rightScore.not(), actionPrepState)
                 .whileTrue(move(config::getLeftCoral, config::getStageDelay, "Twist.leftCoral"));
 
-        twistL4R.onTrue(twist.moveToDegrees(config::getRightCoral).withName("Twist.leftCoral"));
-        twistL4L.onTrue(twist.moveToDegrees(config::getLeftCoral).withName("Twist.leftCoral"));
+        twistL4R.onTrue(move(config::getRightCoral, "Twist.RightCoral"));
+        twistL4L.onTrue(move(config::getLeftCoral, "Twist.leftCoral"));
     }
 
     public static Command move(DoubleSupplier degrees, String name) {

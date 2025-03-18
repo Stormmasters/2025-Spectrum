@@ -59,12 +59,6 @@
       "command": null
     },
     {
-      "name": "extendedState",
-      "waypointRelativePos": 0.4483163664839361,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "L4",
       "waypointRelativePos": 0.4483163664839445,
       "endWaypointRelativePos": null,

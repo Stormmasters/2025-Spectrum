@@ -50,7 +50,6 @@ public class Auton {
     public static final EventTrigger autonSwerveAlign = new EventTrigger("autoAlign");
     public static final EventTrigger autonClearFeedback = new EventTrigger("clearFeedBack");
     public static final EventTrigger autonL4 = new EventTrigger("L4");
-    public static final EventTrigger autonExtendedState = new EventTrigger("extendedState");
     public static final EventTrigger autonHomeOff = new EventTrigger("homeOff");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
@@ -152,10 +151,7 @@ public class Auton {
                 .andThen(
                         RobotStates.algae
                                 .setTrue()
-                                .alongWith(
-                                        RobotStates.l4.setTrue(),
-                                        RobotStates.extendedState.setTrue(),
-                                        RobotStates.homeAll.setFalse())
+                                .alongWith(RobotStates.l4.setTrue(), RobotStates.homeAll.setFalse())
                                 .andThen(
                                         Commands.waitSeconds(0.05),
                                         RobotStates.actionPrepState.setTrue(),
@@ -171,10 +167,7 @@ public class Auton {
                 .andThen(
                         RobotStates.algae
                                 .setTrue()
-                                .alongWith(
-                                        RobotStates.l2.setTrue(),
-                                        RobotStates.extendedState.setTrue(),
-                                        RobotStates.homeAll.setFalse())
+                                .alongWith(RobotStates.l2.setTrue(), RobotStates.homeAll.setFalse())
                                 .andThen(
                                         Commands.waitSeconds(0.05),
                                         RobotStates.actionPrepState.setTrue(),
@@ -190,10 +183,7 @@ public class Auton {
                 .andThen(
                         RobotStates.algae
                                 .setTrue()
-                                .alongWith(
-                                        RobotStates.l3.setTrue(),
-                                        RobotStates.extendedState.setTrue(),
-                                        RobotStates.homeAll.setFalse())
+                                .alongWith(RobotStates.l3.setTrue(), RobotStates.homeAll.setFalse())
                                 .andThen(
                                         Commands.waitSeconds(0.05),
                                         RobotStates.actionPrepState.setTrue(),

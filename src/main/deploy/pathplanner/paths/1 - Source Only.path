@@ -59,12 +59,6 @@
       "command": null
     },
     {
-      "name": "extendedState",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "homeOff",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
