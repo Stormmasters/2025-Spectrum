@@ -14,7 +14,7 @@
       "userScale": "2",
       "width": "3840",
       "xpos": "0",
-      "ypos": "29"
+      "ypos": "40"
     }
   },
   "Table": {
@@ -63,8 +63,8 @@
     },
     "###/SmartDashboard/VisionSystemSim-main/Sim Field": {
       "Collapsed": "0",
-      "Pos": "1037,29",
-      "Size": "1219,610"
+      "Pos": "46,141",
+      "Size": "3756,1956"
     },
     "###/SmartDashboard/frontView": {
       "Collapsed": "0",

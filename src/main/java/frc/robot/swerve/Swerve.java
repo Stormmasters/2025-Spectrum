@@ -273,7 +273,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         return runOnce(
                 () -> {
                     double output;
-                    output = Field.flipTrueAngleIfRed(angleDegrees);
+                    output = Field.flipAngleIfRed(angleDegrees);
                     reorient(output);
                 });
     }

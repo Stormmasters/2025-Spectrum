@@ -25,7 +25,10 @@
       "/SmartDashboard/Scheduler": "Scheduler",
       "/SmartDashboard/States": "Alerts",
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",
+      "/SmartDashboard/X controller": "ProfiledPIDController",
+      "/SmartDashboard/Y controller": "ProfiledPIDController",
       "/SmartDashboard/frontView": "Mechanism2d",
+      "/SmartDashboard/tagController": "PIDController",
       "/SmartDashboard/vision": "Subsystem"
     },
     "windows": {

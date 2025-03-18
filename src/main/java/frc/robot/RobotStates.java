@@ -205,30 +205,24 @@ public class RobotStates {
         stationIntaking
                 .and(
                         Zones.bottomLeftZone,
-                        () ->
-                                !Robot.getSwerve()
-                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
+                        () -> !Robot.getSwerve().frontClosestToAngle(Field.flipAngleIfRed(144.011)))
                 .onTrue(reverse.setTrue());
         stationIntaking
                 .and(
                         Zones.bottomLeftZone,
-                        () ->
-                                Robot.getSwerve()
-                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
+                        () -> Robot.getSwerve().frontClosestToAngle(Field.flipAngleIfRed(144.011)))
                 .onTrue(reverse.setFalse());
         stationIntaking
                 .and(
                         Zones.bottomRightZone,
                         () ->
                                 !Robot.getSwerve()
-                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
+                                        .frontClosestToAngle(Field.flipAngleIfRed(-144.011)))
                 .onTrue(reverse.setTrue());
         stationIntaking
                 .and(
                         Zones.bottomRightZone,
-                        () ->
-                                Robot.getSwerve()
-                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
+                        () -> Robot.getSwerve().frontClosestToAngle(Field.flipAngleIfRed(-144.011)))
                 .onTrue(reverse.setFalse());
     }
 

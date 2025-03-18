@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -45,7 +47,6 @@ public class SwerveStates {
         //         .onTrue(log(lockToClosestFieldAngleDrive().withName("Swerve.FieldAngleLock")));
 
         pilot.fpv_LS.whileTrue(log(fpvDrive()));
-        pilot.cageAim_B.whileTrue(alignToYDrive(() -> Field.fieldWidth / 2));
 
         pilot.upReorient.onTrue(log(reorientForward()));
         pilot.leftReorient.onTrue(log(reorientLeft()));
@@ -54,6 +55,13 @@ public class SwerveStates {
 
         // // vision aim
         pilot.reefAim_A.whileTrue(log(reefAimDrive()));
+
+        Pose2d backReefOffset = Field.Reef.getOffsetPosition(1, Units.inchesToMeters(24));
+        pilot.cageAim_B.whileTrue(
+                alignDrive(
+                        backReefOffset::getX,
+                        backReefOffset::getY,
+                        () -> 0)); // alignToYDrive(() -> Field.fieldWidth / 2));
     }
 
     /** Pilot Commands ************************************************************************ */
@@ -121,8 +129,9 @@ public class SwerveStates {
     public static Command alignDrive(
             DoubleSupplier xGoalMeters, DoubleSupplier yGoalMeters, DoubleSupplier headingRadians) {
         return resetXController()
-                .alongWith(resetYController(), resetTurnController())
                 .andThen(
+                        resetYController(),
+                        resetTurnController(),
                         drive(
                                 getAlignToX(xGoalMeters),
                                 getAlignToY(yGoalMeters),

@@ -274,14 +274,14 @@ public class Vision implements NTSendable, Subsystem {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
                 degStds = 0.1;
-            } else if (multiTags && targetSize > 0.1) {
-                ll.sendValidStatus("Multi integration");
-                xyStds = 0.25;
-                degStds = 8;
             } else if (multiTags && targetSize > 2) {
                 ll.sendValidStatus("Strong Multi integration");
                 xyStds = 0.1;
                 degStds = 0.1;
+            }else if (multiTags && targetSize > 0.1) {
+                ll.sendValidStatus("Multi integration");
+                xyStds = 0.25;
+                degStds = 8;
             } else if (targetSize > 0.8
                     && (mt1PoseDifference < 0.5 || DriverStation.isDisabled())) {
                 // Integrate if the target is very big and we are close to pose or disabled
@@ -360,12 +360,12 @@ public class Vision implements NTSendable, Subsystem {
                     && targetSize > 0.4) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
-            } else if (multiTags && targetSize > 0.1) {
-                ll.sendValidStatus("Multi integration");
-                xyStds = 0.25;
             } else if (multiTags && targetSize > 2) {
                 ll.sendValidStatus("Strong Multi integration");
                 xyStds = 0.1;
+            } else if (multiTags && targetSize > 0.1) {
+                ll.sendValidStatus("Multi integration");
+                xyStds = 0.25;
             } else if (targetSize > 0.8
                     && (mt2PoseDifference < 0.5 || DriverStation.isDisabled())) {
                 // Integrate if the target is very big and we are close to pose or disabled
@@ -523,14 +523,15 @@ public class Vision implements NTSendable, Subsystem {
         int closestTagIDBack = (int) backLL.getClosestTagID();
 
         if (closestTagIDFront == -1) {
-            return (int) closestTagIDBack;
+            return closestTagIDBack;
         }
-        return (int) closestTagIDFront;
+        return closestTagIDFront;
     }
 
     public boolean isRearTagClosest() {
+        int closetTag = getClosestTagID();
         int closestTagIDBack = (int) backLL.getClosestTagID();
-        return getClosestTagID() != -1 && closestTagIDBack == getClosestTagID();
+        return closetTag != -1 && closestTagIDBack == closetTag;
     }
 
     // ------------------------------------------------------------------------------
@@ -684,64 +685,6 @@ public class Vision implements NTSendable, Subsystem {
         }
         return indexOfSmallest;
     }
-
-    /**
-     * Gets a field-relative position for the score to the reef the robot should align, adjusted for
-     * the robot's movement.
-     *
-     * @return A {@link Translation2d} representing a field relative position in meters.
-     */
-    // public Translation2d getAdjustedReefPos() {
-
-    //     int reefID = closestReefFace(); // must call closestReefFace before this method gets
-    // passed
-    //     Pose2d[] reefFaces = Field.Reef.getCenterFaces();
-    //     double NORM_FUDGE = 0.075;
-    //     // double tunableNoteVelocity = 1;
-    //     // double tunableNormFudge = 0;
-    //     // double tunableStrafeFudge = 1;
-    //     // TODO: fudges may be subject to removal
-    //     double tunableReefYFudge = 0.0;
-    //     double tunableReefXFudge = 0.0;
-
-    //     Translation2d robotPos = Robot.getSwerve().getRobotPose().getTranslation();
-    //     Translation2d targetPose =
-    //             Field.flipXifRed(reefFaces[reefID].getTranslation()); // given reef face
-    //     double xDifference = Math.abs(robotPos.getX() - targetPose.getX());
-    //     double spinYFudge =
-    //             (xDifference < 5.8)
-    //                     ? 0.05
-    //                     : 0.8; // change spin fudge for score distances vs. feed distances
-
-    //     ChassisSpeeds robotVel =
-    //             Robot.getSwerve().getCurrentRobotChassisSpeeds(); // get current robot velocity
-
-    //     double distance = robotPos.getDistance(reefFaces[fieldReefID].getTranslation());
-    //     double normFactor =
-    //             Math.hypot(robotVel.vxMetersPerSecond, robotVel.vyMetersPerSecond) < NORM_FUDGE
-    //                     ? 0.0
-    //                     : Math.abs(
-    //                             MathUtil.angleModulus(
-    //
-    // robotPos.minus(targetPose).getAngle().getRadians()
-    //                                                     - Math.atan2(
-    //                                                             robotVel.vyMetersPerSecond,
-    //                                                             robotVel.vxMetersPerSecond))
-    //                                     / Math.PI);
-
-    //     double x =
-    //             reefFaces[fieldReefID].getX()
-    //                     + (Field.isBlue() ? tunableReefXFudge : -tunableReefXFudge);
-    //     // - (robotVel.vxMetersPerSecond * (distance / tunableNoteVelocity));
-    //     //      * (1.0 - (tunableNormFudge * normFactor)));
-    //     double y =
-    //             reefFaces[fieldReefID].getY()
-    //                     + (Field.isBlue() ? -spinYFudge : spinYFudge)
-    //                     + tunableReefYFudge;
-    //     // - (robotVel.vyMetersPerSecond * (distance / tunableNoteVelocity));
-    //     //       * tunableStrafeFudge);
-    //     return new Translation2d(x, y);
-    // }
 
     // ------------------------------------------------------------------------------
     // VisionStates Commands
