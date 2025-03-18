@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.reefscape.Field;
 import frc.robot.Robot;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
@@ -37,13 +38,14 @@ public class SwerveStates {
         // When driving and have never steered, it doesn't lock
         // When driving, and we stop steering it locks
         // When not driving it stops locking
-        pilot.steer.and(pilot.driving).onTrue(steeringLock.setTrue());
-        pilot.driving.onFalse(steeringLock.setFalse());
-        steeringLock
-                .and(pilot.steer.not())
-                .onTrue(log(lockToClosestFieldAngleDrive().withName("Swerve.FieldAngleLock")));
+        // pilot.steer.and(pilot.driving).onTrue(steeringLock.setTrue());
+        // pilot.driving.onFalse(steeringLock.setFalse());
+        // steeringLock
+        //         .and(pilot.steer.not())
+        //         .onTrue(log(lockToClosestFieldAngleDrive().withName("Swerve.FieldAngleLock")));
 
         pilot.fpv_LS.whileTrue(log(fpvDrive()));
+        pilot.cageAim_B.whileTrue(alignToYDrive(() -> Field.fieldWidth / 2));
 
         pilot.upReorient.onTrue(log(reorientForward()));
         pilot.leftReorient.onTrue(log(reorientLeft()));
@@ -89,32 +91,42 @@ public class SwerveStates {
     }
 
     public static Command alignToXDrive(DoubleSupplier xGoalMeters) {
-        return drive(
-                () -> getAlignToX(xGoalMeters),
-                pilot::getDriveLeftPositive,
-                pilot::getDriveCCWPositive);
+        return resetXController()
+                .andThen(
+                        drive(
+                                getAlignToX(xGoalMeters),
+                                pilot::getDriveLeftPositive,
+                                pilot::getDriveCCWPositive));
     }
 
     public static Command alignToYDrive(DoubleSupplier yGoalMeters) {
-        return drive(
-                pilot::getDriveFwdPositive,
-                () -> getAlignToY(yGoalMeters),
-                pilot::getDriveCCWPositive);
+        return resetYController()
+                .andThen(
+                        drive(
+                                pilot::getDriveFwdPositive,
+                                getAlignToY(yGoalMeters),
+                                pilot::getDriveCCWPositive));
     }
 
     public static Command alignXYDrive(DoubleSupplier xGoalMeters, DoubleSupplier yGoalMeters) {
-        return drive(
-                () -> getAlignToX(xGoalMeters),
-                () -> getAlignToY(yGoalMeters),
-                pilot::getDriveCCWPositive);
+        return resetXController()
+                .alongWith(resetYController())
+                .andThen(
+                        drive(
+                                getAlignToX(xGoalMeters),
+                                getAlignToY(yGoalMeters),
+                                pilot::getDriveCCWPositive));
     }
 
     public static Command alignDrive(
             DoubleSupplier xGoalMeters, DoubleSupplier yGoalMeters, DoubleSupplier headingRadians) {
-        return drive(
-                () -> getAlignToX(xGoalMeters),
-                () -> getAlignToY(yGoalMeters),
-                () -> getAlignHeading(headingRadians));
+        return resetXController()
+                .alongWith(resetYController(), resetTurnController())
+                .andThen(
+                        drive(
+                                getAlignToX(xGoalMeters),
+                                getAlignToY(yGoalMeters),
+                                getAlignHeading(headingRadians)));
     }
 
     private static double getTagTxVelocity() {
@@ -129,16 +141,16 @@ public class SwerveStates {
         return swerve.calculateTagDistanceAlignController(() -> config.getHomeLlAimTAgoal());
     }
 
-    private static double getAlignToX(DoubleSupplier xGoalMeters) {
+    private static DoubleSupplier getAlignToX(DoubleSupplier xGoalMeters) {
         return swerve.calculateXController(xGoalMeters);
     }
 
-    private static double getAlignToY(DoubleSupplier yGoalMeters) {
+    private static DoubleSupplier getAlignToY(DoubleSupplier yGoalMeters) {
         return swerve.calculateYController(yGoalMeters);
     }
 
-    private static double getAlignHeading(DoubleSupplier headingRadians) {
-        return swerve.calculateRotationController(headingRadians);
+    private static DoubleSupplier getAlignHeading(DoubleSupplier headingRadians) {
+        return () -> swerve.calculateRotationController(headingRadians);
     }
 
     protected static Command snapSteerDrive() {
@@ -202,6 +214,14 @@ public class SwerveStates {
      * ************************************************************************* Helper Commands
      * ************************************************************************
      */
+    protected static Command resetXController() {
+        return swerve.runOnce(() -> swerve.resetXController()).withName("ResetXController");
+    }
+
+    protected static Command resetYController() {
+        return swerve.runOnce(() -> swerve.resetYController()).withName("ResetYController");
+    }
+
     protected static Command resetTurnController() {
         return swerve.runOnce(() -> swerve.resetRotationController())
                 .withName("ResetTurnController");
@@ -248,7 +268,7 @@ public class SwerveStates {
     protected static Command fpvAimDrive(
             DoubleSupplier velocityX, DoubleSupplier velocityY, DoubleSupplier targetRadians) {
         return resetTurnController()
-                .andThen(fpvDrive(velocityX, velocityY, () -> getAlignHeading(targetRadians)))
+                .andThen(fpvDrive(velocityX, velocityY, getAlignHeading(targetRadians)))
                 .withName("Swerve.fpvAimDrive");
     }
 
@@ -259,7 +279,7 @@ public class SwerveStates {
     protected static Command aimDrive(
             DoubleSupplier velocityX, DoubleSupplier velocityY, DoubleSupplier targetRadians) {
         return resetTurnController()
-                .andThen(drive(velocityX, velocityY, () -> getAlignHeading(targetRadians)))
+                .andThen(drive(velocityX, velocityY, getAlignHeading(targetRadians)))
                 .withName("Swerve.aimDrive");
     }
 
@@ -313,7 +333,7 @@ public class SwerveStates {
                     && Math.abs(velocityY.getAsDouble()) < 0.5) {
                 return 0;
             } else {
-                return getAlignHeading(heading::getAsDouble);
+                return getAlignHeading(heading::getAsDouble).getAsDouble();
             }
         };
     }

@@ -1,6 +1,7 @@
 package frc.robot.swerve;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Uses a profiled PID Controller to quickly turn the robot to a specified angle. Once the robot is
@@ -24,6 +25,8 @@ public class TranslationXController {
                         config.getTranslationConstraints());
 
         controller.setTolerance(config.getTranslationTolerance());
+        ;
+        SmartDashboard.putData("X controller", controller);
     }
 
     public double calculate(double goalMeters, double currentMeters) {

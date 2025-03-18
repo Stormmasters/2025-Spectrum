@@ -44,7 +44,6 @@ public class SwerveConfig {
     private Distance wheelRadius = Inches.of(3.815 / 2);
 
     // Theoretical free speed (m/s) at 12v applied output;
-    // This needs to be tuned to your individual robot
     @Getter @Setter
     private LinearVelocity speedAt12Volts =
             MetersPerSecond.of((95 / driveGearRatio) * 2 * Math.PI * wheelRadius.in(Meters));
@@ -65,16 +64,16 @@ public class SwerveConfig {
     @Getter private double kIHoldController = 0.0;
     @Getter private double kDHoldController = 0.0;
 
-    @Getter private double kPTranslationController = 3;
+    @Getter private double kPTranslationController = 4.5;
     @Getter private double kITranslationController = 0.0;
-    @Getter private double kDTranslationController = 0.0;
+    @Getter private double kDTranslationController = 0.1;
     @Getter private double translationTolerance = 0.00;
 
     @Getter
     private Constraints translationConstraints =
             new Constraints(
                     speedAt12Volts.baseUnitMagnitude() / 2,
-                    speedAt12Volts.baseUnitMagnitude() / 20);
+                    speedAt12Volts.baseUnitMagnitude() * 10);
 
     @Getter private double kPTagCenterController = 3.25;
     @Getter private double kITagCenterController = 0.0;
