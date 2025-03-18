@@ -277,7 +277,7 @@ public class Vision implements NTSendable, Subsystem {
             } else if (multiTags && targetSize > 2) {
                 ll.sendValidStatus("Strong Multi integration");
                 xyStds = 0.1;
-                degStds = 0.1;
+                degStds = 0.15;
             } else if (multiTags && targetSize > 0.1) {
                 ll.sendValidStatus("Multi integration");
                 xyStds = 0.25;

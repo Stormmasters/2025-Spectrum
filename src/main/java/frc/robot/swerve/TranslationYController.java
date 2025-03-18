@@ -37,14 +37,14 @@ public class TranslationYController {
             calculatedValue = 0;
             return calculatedValue;
         } else {
-            return calculatedValue;
+            return calculatedValue + (config.getKSdrive() * Math.signum(calculatedValue));
         }
     }
 
     public boolean atGoal(double current) {
         double goal = controller.getGoal().position;
         boolean atGoal = Math.abs(current - goal) < config.getTranslationTolerance();
-        System.out.println("At Goal: " + atGoal + " Goal: " + goal + " Current: " + current);
+        System.out.println("Y At Goal: " + atGoal + " Goal: " + goal + " Current: " + current);
         return atGoal;
     }
 

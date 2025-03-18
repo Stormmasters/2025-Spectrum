@@ -28,8 +28,8 @@ public class TagCenterAlignController {
                         config.getKITagCenterController(),
                         config.getKDTagCenterController());
         controller.setTolerance(0.0);
-        // SendableRegistry.add(controller, "TagCenterController");
-        SmartDashboard.putData("tagController", controller);
+
+        SmartDashboard.putData("tagCenterController", controller);
     }
 
     public double calculate(double goalMeters, double currentMeters) {

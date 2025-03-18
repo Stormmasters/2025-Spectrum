@@ -52,7 +52,7 @@ public class SwerveConfig {
     private LinearVelocity speedAt12Volts =
             MetersPerSecond.of((95 / driveGearRatio) * 2 * Math.PI * wheelRadius.in(Meters));
 
-    @Getter private double kSdrive = 0.09;
+    @Getter private double kSdrive = 0.13;
 
     // -----------------------------------------------------------------------
     // PID Controller Constants
@@ -68,10 +68,10 @@ public class SwerveConfig {
     @Getter private double kIHoldController = 0.0;
     @Getter private double kDHoldController = 0.0;
 
-    @Getter private double kPTranslationController = 4.5;
+    @Getter private double kPTranslationController = 2;
     @Getter private double kITranslationController = 0.0;
-    @Getter private double kDTranslationController = 0.1;
-    @Getter private double translationTolerance = 0.00;
+    @Getter private double kDTranslationController = 0.0;
+    @Getter private double translationTolerance = Units.inchesToMeters(0.25);
 
     @Getter
     private Constraints translationConstraints =
@@ -79,15 +79,15 @@ public class SwerveConfig {
                     speedAt12Volts.baseUnitMagnitude() / 2,
                     speedAt12Volts.baseUnitMagnitude() * 10);
 
-    @Getter private double kPTagCenterController = 3.25;
+    @Getter private double kPTagCenterController = 1.3;
     @Getter private double kITagCenterController = 0.0;
-    @Getter private double kDTagCenterController = 0.3;
-    @Getter private double tagCenterTolerance = 0.01; // meters
+    @Getter private double kDTagCenterController = 0.00;
+    @Getter private double tagCenterTolerance = Units.inchesToMeters(0.5); // meters
 
-    @Getter private double kPTagDistanceController = 0.15;
+    @Getter private double kPTagDistanceController = 0.1; // 0.15;
     @Getter private double kITagDistanceController = 0.0;
-    @Getter private double kDTagDistanceController = 0.0;
-    @Getter private double tagDistanceTolerance = 0.2; // meters
+    @Getter private double kDTagDistanceController = 0.00;
+    @Getter private double tagDistanceTolerance = 0.3; // Area
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     @Getter private final Rotation2d blueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
