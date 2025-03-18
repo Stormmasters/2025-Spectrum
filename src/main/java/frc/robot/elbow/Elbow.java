@@ -84,10 +84,14 @@ public class Elbow extends Mechanism {
         @Getter private final double mmAcceleration = 50;
         @Getter private final double mmJerk = 0;
 
+        @Getter @Setter private double sensorToMechanismRatio = 102.857;
+        @Getter @Setter private double rotorToSensorRatio = 1;
+
         /* Cancoder config settings */
-        @Getter private final double CANcoderGearRatio = 30.0 / 36.0;
+        @Getter private double CANcoderRotorToSensorRatio = 30.0 / 36.0;
+        @Getter private double CANcoderSensorToMechanismRatio = CANcoderRotorToSensorRatio * sensorToMechanismRatio;
         @Getter private double CANcoderOffset = 0;
-        @Getter private boolean isCANcoderAttached = false;
+        @Getter @Setter private boolean CANcoderAttached = false;
 
         /* Sim properties */
         @Getter private double elbowX = 0.8;
@@ -101,7 +105,7 @@ public class Elbow extends Mechanism {
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
-            configGearRatio(102.857);
+            configGearRatio(sensorToMechanismRatio);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
@@ -116,7 +120,7 @@ public class Elbow extends Mechanism {
                 configClockwise_Positive();
             }
             configGravityType(true);
-            setSimRatio(102.857);
+            setSimRatio(sensorToMechanismRatio);
         }
 
         public ElbowConfig modifyMotorConfig(TalonFX motor) {
@@ -141,9 +145,10 @@ public class Elbow extends Mechanism {
         if (isAttached()) {
             canCoder =
                     new SpectrumCANcoder(43, motor, config)
-                            .setGearRatio(config.getCANcoderGearRatio())
+                            .setRotorToSensorRatio(config.getCANcoderRotorToSensorRatio())
+                            .setSensorToMechanismRatio(config.getCANcoderSensorToMechanismRatio())
                             .setOffset(config.getCANcoderOffset())
-                            .setAttached(false);
+                            .setAttached(config.isCANcoderAttached());
 
             setInitialPosition();
         }
@@ -179,12 +184,14 @@ public class Elbow extends Mechanism {
     }
 
     private void setInitialPosition() {
-        if (canCoder.isAttached()) {
+        if (canCoder != null) {
+            if (canCoder.isAttached() && canCoder.canCoderResponseOK(canCoder.getCanCoder().getAbsolutePosition().getStatus())) {
             motor.setPosition(
                     canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
                             * config.getGearRatio());
+            }
         } else {
-            motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+        motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
         }
     }
 

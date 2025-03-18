@@ -135,7 +135,7 @@ public class Twist extends Mechanism {
         if (isAttached()) {
             canCoder =
                     new SpectrumCANcoder(44, motor, config)
-                            .setGearRatio(config.getCANcoderGearRatio())
+                            .setRotorToSensorRatio(config.getCANcoderGearRatio())
                             .setOffset(config.getCANcoderOffset())
                             .setAttached(false);
 

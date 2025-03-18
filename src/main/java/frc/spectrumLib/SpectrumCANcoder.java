@@ -13,7 +13,8 @@ import lombok.Getter;
 
 public class SpectrumCANcoder {
     @Getter private int CANcoderID;
-    @Getter private double gearRatio = 1;
+    @Getter private double rotorToSensorRatio = 1;
+    @Getter private double sensorToMechanismRatio = 1;
     @Getter private double offset = 0;
     @Getter private boolean attached = false;
 
@@ -44,8 +45,13 @@ public class SpectrumCANcoder {
         }
     }
 
-    public SpectrumCANcoder setGearRatio(double ratio) {
-        gearRatio = ratio;
+    public SpectrumCANcoder setRotorToSensorRatio(double ratio) {
+        rotorToSensorRatio = ratio;
+        return this;
+    }
+
+    public SpectrumCANcoder setSensorToMechanismRatio(double ratio) {
+        sensorToMechanismRatio = ratio;
         return this;
     }
 
@@ -77,7 +83,8 @@ public class SpectrumCANcoder {
                         FeedbackSensorSourceValue.SyncCANcoder;
                 break;
         }
-        talonConfigMod.Feedback.RotorToSensorRatio = gearRatio;
+        talonConfigMod.Feedback.RotorToSensorRatio = rotorToSensorRatio;
+        talonConfigMod.Feedback.SensorToMechanismRatio = sensorToMechanismRatio;
         configurator.apply(talonConfigMod);
         config.setTalonConfig(talonConfigMod);
         return this;

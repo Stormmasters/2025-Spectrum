@@ -2,6 +2,7 @@ package frc.robot.shoulder;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -84,10 +85,14 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double mmAcceleration = 50;
         @Getter @Setter private double mmJerk = 0;
 
+        @Getter @Setter private double sensorToMechanismRatio = 102.857;
+        @Getter @Setter private double rotorToSensorRatio = 1;
+
         /* Cancoder config settings */
-        @Getter private final double CANcoderGearRatio = 30.0 / 36.0;
+        @Getter private double CANcoderRotorToSensorRatio = 30.0 / 36.0;
+        @Getter private double CANcoderSensorToMechanismRatio = CANcoderRotorToSensorRatio * sensorToMechanismRatio;
         @Getter private double CANcoderOffset = 0;
-        @Getter private boolean isCANcoderAttached = false;
+        @Getter @Setter private boolean CANcoderAttached = false;
 
         /* Sim properties */
         @Getter private double shoulderX = 0.8;
@@ -102,7 +107,7 @@ public class Shoulder extends Mechanism {
             configPIDGains(0, positionKp, 0, positionKd);
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
-            configGearRatio(102.857);
+            configGearRatio(sensorToMechanismRatio);
             configSupplyCurrentLimit(currentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(-1 * torqueCurrentLimit);
@@ -116,7 +121,7 @@ public class Shoulder extends Mechanism {
                 configClockwise_Positive();
             }
             configGravityType(true);
-            setSimRatio(102.857);
+            setSimRatio(sensorToMechanismRatio);
         }
 
         public ShoulderConfig modifyMotorConfig(TalonFX motor) {
@@ -138,12 +143,13 @@ public class Shoulder extends Mechanism {
         super(config);
         this.config = config;
 
-        if (isAttached()) {
-            // canCoder =
-            //         new SpectrumCANcoder(42, motor, config)
-            //                 .setGearRatio(config.getCANcoderGearRatio())
-            //                 .setOffset(config.getCANcoderOffset())
-            //                 .setAttached(false);
+        if (isAttached()) { // && RobotStates.pm.and(RobotStates.photon, RobotStates.sim).not().getAsBoolean()) {
+            canCoder =
+                    new SpectrumCANcoder(42, motor, config)
+                            .setRotorToSensorRatio(config.getCANcoderRotorToSensorRatio())
+                            .setSensorToMechanismRatio(config.getCANcoderSensorToMechanismRatio())
+                            .setOffset(config.getCANcoderOffset())
+                            .setAttached(config.isCANcoderAttached());
             setInitialPosition();
         }
 
@@ -180,15 +186,15 @@ public class Shoulder extends Mechanism {
     }
 
     void setInitialPosition() {
-        // if (canCoder != null) {
-        //     if (canCoder.isAttached()) {
-        //         motor.setPosition(
-        //                 canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-        //                         * config.getGearRatio());
-        //     }
-        // } else {
+        if (canCoder != null) {
+            if (canCoder.isAttached() && canCoder.canCoderResponseOK(canCoder.getCanCoder().getAbsolutePosition().getStatus())) {
+                motor.setPosition(
+                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                                * config.getGearRatio());
+            }
+        } else {
         motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
-        // }
+        }
     }
 
     public Command resetToIntialPos() {
