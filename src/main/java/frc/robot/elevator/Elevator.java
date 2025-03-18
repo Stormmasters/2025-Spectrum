@@ -27,7 +27,6 @@ public class Elevator extends Mechanism {
         @Getter @Setter private double minRotations = 0.3;
 
         /* Elevator positions in rotations */
-        // TODO: Find elevator positions
         @Getter @Setter private double fullExtend = maxRotations * .999;
         @Getter @Setter private double home = 0;
 
@@ -161,7 +160,7 @@ public class Elevator extends Mechanism {
     }
 
     public Command resetToInitialPos() {
-        return run(() -> setInitialPosition());
+        return run(this::setInitialPosition);
     }
 
     // --------------------------------------------------------------------------------
@@ -211,13 +210,13 @@ public class Elevator extends Mechanism {
         };
     }
 
-    public Command move(DoubleSupplier rotations, DoubleSupplier exRotations) {
+    public Command move(DoubleSupplier shrinkRotations, DoubleSupplier exRotations) {
         return run(
                 () -> {
-                    if (RobotStates.extended.getAsBoolean()) {
+                    if (!RobotStates.shrink.getAsBoolean()) {
                         setMMPositionFoc(exRotations);
                     } else {
-                        setMMPositionFoc(rotations);
+                        setMMPositionFoc(shrinkRotations);
                     }
                 });
     }

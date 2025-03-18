@@ -152,7 +152,4 @@ imumode
 imu
 integratable
 beltonAuton
-choreoAuto
-alignwithpose
-drivetovisiontarget
-Exl
+Pathplanner

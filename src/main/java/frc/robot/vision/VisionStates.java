@@ -1,13 +1,14 @@
 package frc.robot.vision;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 
 public class VisionStates {
-    // TODO: needs alignwithpose, and drivetovisiontarget methods
-    // TODO: add logging for VisionStates
 
     private static Vision vision = Robot.getVision();
+
+    public static final Trigger usingRearTag = new Trigger(vision::isRearTagClosest);
 
     public static void setupDefaultCommand() {
         vision.setDefaultCommand(vision.blinkLimelights().withName("Vision.default"));
@@ -33,17 +34,4 @@ public class VisionStates {
         return vision.runOnce(vision::resetPoseToVision)
                 .withName("VisionCommands.resetPoseToVision");
     }
-
-    // TODO: rebuild autonResetPoseToVision and forcePoseToVision for later use
-
-    // Set robot pose to vision pose looking at 5 of the last available poses in auto
-    // public static Command autonResetPoseToVision() {
-    //     return vision.runOnce(vision::autonResetPoseToVision)
-    //         .withName("VisionCommands.autonResetPoseToVision");
-    // }
-
-    //   <p> /**et robot pose to vision pose regardless of validity. Does not reset rotation. */
-    //   public static Command forcePoseToVision() { return
-    //   vision.run(vision::forcePoseToVision).withName("VisionCommands.forcePoseToVision"); }
-
 }

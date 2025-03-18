@@ -24,8 +24,6 @@ import frc.robot.elbow.Elbow;
 import frc.robot.elbow.Elbow.ElbowConfig;
 import frc.robot.elevator.Elevator;
 import frc.robot.elevator.Elevator.ElevatorConfig;
-import frc.robot.groundIntake.GroundIntake;
-import frc.robot.groundIntake.GroundIntake.GroundIntakeConfig;
 import frc.robot.intake.Intake;
 import frc.robot.intake.Intake.IntakeConfig;
 import frc.robot.leds.LedFull;
@@ -41,6 +39,7 @@ import frc.robot.swerve.SwerveConfig;
 import frc.robot.twist.Twist;
 import frc.robot.twist.Twist.TwistConfig;
 import frc.robot.vision.Vision;
+import frc.robot.vision.Vision.VisionConfig;
 import frc.robot.vision.VisionSystem;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumRobot;
@@ -57,10 +56,9 @@ import org.json.simple.parser.ParseException;
 public class Robot extends SpectrumRobot {
     @Getter private static RobotSim robotSim;
     @Getter private static Config config;
-    private static Telemetry telemetry = new Telemetry();
-    private final Field2d m_field = new Field2d();
+    static Telemetry telemetry = new Telemetry();
+    @Getter private static final Field2d field2d = new Field2d();
 
-    // TODO: Create robot faults
     public enum RobotFault {
         OVERCURRENT,
     }
@@ -73,17 +71,16 @@ public class Robot extends SpectrumRobot {
         public ElevatorConfig elevator = new ElevatorConfig();
         public ShoulderConfig shoulder = new ShoulderConfig();
 
-        public GroundIntakeConfig groundIntake = new GroundIntakeConfig();
         public IntakeConfig intake = new IntakeConfig();
         public LedFullConfig leds = new LedFullConfig();
         public ClimbConfig climb = new ClimbConfig();
         public ElbowConfig elbow = new ElbowConfig();
         public TwistConfig twist = new TwistConfig();
+        public VisionConfig vision = new VisionConfig();
     }
 
     @Getter private static Swerve swerve;
     @Getter private static Elevator elevator;
-    @Getter private static GroundIntake groundIntake;
     @Getter private static Intake intake;
     @Getter private static LedFull leds;
     @Getter private static Operator operator;
@@ -136,15 +133,13 @@ public class Robot extends SpectrumRobot {
             Timer.delay(canInitDelay);
             climb = new Climb(config.climb);
             Timer.delay(canInitDelay);
-            groundIntake = new GroundIntake(config.groundIntake);
-            Timer.delay(canInitDelay);
             shoulder = new Shoulder(config.shoulder);
             Timer.delay(canInitDelay);
             elbow = new Elbow(config.elbow);
             Timer.delay(canInitDelay);
             intake = new Intake(config.intake);
             Timer.delay(canInitDelay);
-            vision = new Vision();
+            vision = new Vision(config.vision);
             visionSystem = new VisionSystem(swerve::getRobotPose);
             Timer.delay(canInitDelay);
             twist = new Twist(config.twist);
@@ -192,7 +187,7 @@ public class Robot extends SpectrumRobot {
     }
 
     public void setupAutoVisualizer() {
-        SmartDashboard.putData("Auto Visualizer", m_field);
+        SmartDashboard.putData("Field2d", field2d);
     }
 
     @Override // Deprecated
@@ -220,6 +215,7 @@ public class Robot extends SpectrumRobot {
             CommandScheduler.getInstance().run();
 
             SmartDashboard.putNumber("MatchTime", DriverStation.getMatchTime());
+            field2d.setRobotPose(swerve.getRobotPose());
         } catch (Throwable t) {
             // intercept error and log it
             CrashTracker.logThrowableCrash(t);
@@ -241,16 +237,14 @@ public class Robot extends SpectrumRobot {
         String newAutoName;
         List<PathPlannerPath> pathPlannerPaths = new ArrayList<>();
         newAutoName = (auton.getAutonomousCommand()).getName();
-        if (autoName != newAutoName) {
+        if (!autoName.equals(newAutoName)) {
             autoName = newAutoName;
             if (AutoBuilder.getAllAutoNames().contains(autoName)) {
                 try {
                     pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
-                } catch (IOException a) {
-                } catch (ParseException b) {
-                } finally {
+                } catch (IOException | ParseException e) {
+                    Telemetry.print("Could not load path planner paths");
                 }
-                ;
                 List<Pose2d> poses = new ArrayList<>();
                 for (PathPlannerPath path : pathPlannerPaths) {
                     poses.addAll(
@@ -263,7 +257,7 @@ public class Robot extends SpectrumRobot {
                                                             new Rotation2d()))
                                     .collect(Collectors.toList()));
                 }
-                m_field.getObject("path").setPoses(poses);
+                field2d.getObject("path").setPoses(poses);
             }
         }
     }

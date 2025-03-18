@@ -20,6 +20,10 @@ public class IntakeStates {
                     .and(photon);
 
     public static final Trigger hasGamePiece = new Trigger(intake::hasIntakeGamePiece);
+    public static final Trigger hasCoral =
+            hasGamePiece.and(intake.aboveVelocityRPM(() -> 0, () -> 0));
+    public static final Trigger hasAlgae =
+            hasGamePiece.and(intake.belowVelocityRPM(() -> 0, () -> 0));
 
     public static void setupDefaultCommand() {
         intake.setDefaultCommand(
@@ -115,11 +119,6 @@ public class IntakeStates {
     private static Command runVoltageCurrentLimits(
             DoubleSupplier voltage, DoubleSupplier supplyCurrent, DoubleSupplier torqueCurrent) {
         return intake.runVoltageCurrentLimits(voltage, supplyCurrent, torqueCurrent);
-    }
-
-    private static Command runGroundIntake() {
-        return intake.runTCcurrentLimits(
-                config::getCoralGroundTorqueCurrent, config::getCoralGroundSupplyCurrent);
     }
 
     // Log Command
