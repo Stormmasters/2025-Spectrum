@@ -32,7 +32,7 @@ public class Elbow extends Mechanism {
         @Getter private final double handAlgae = 0;
         @Getter private final double home = 180;
         @Getter private final double clearElevator = -125;
-        @Getter private final double climbPrep = 67;
+        @Getter private final double climbPrep = 180; // 67;
 
         @Getter private final double scoreDelay = 0.2;
 

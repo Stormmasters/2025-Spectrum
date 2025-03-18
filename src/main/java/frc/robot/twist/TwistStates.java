@@ -43,6 +43,8 @@ public class TwistStates {
                 .whileTrue(move(config::getRightCoral, config::getStageDelay, "Twist.rightCoral"));
         branch.and(rightScore.not(), actionPrepState)
                 .whileTrue(move(config::getLeftCoral, config::getStageDelay, "Twist.leftCoral"));
+
+        climbPrep.whileTrue(move(config::getClimbPrep, "Twist.climbPrep"));
     }
 
     public static Command move(DoubleSupplier degrees, String name) {
