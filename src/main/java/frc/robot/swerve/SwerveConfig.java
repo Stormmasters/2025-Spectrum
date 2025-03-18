@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.ClosedLoopOutputType;
@@ -31,7 +32,7 @@ public class SwerveConfig {
     @Getter @Setter private double robotLength = Units.inchesToMeters(29.5);
 
     @Getter @Setter private double maxAngularRate = 1.5 * Math.PI; // rad/s
-    @Getter @Setter private double deadband = 0.02;
+    @Getter @Setter private double deadband = 0.00;
 
     @Getter @Setter
     private double driveGearRatio = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0); // 6.74603174603;
@@ -48,6 +49,8 @@ public class SwerveConfig {
     private LinearVelocity speedAt12Volts =
             MetersPerSecond.of((95 / driveGearRatio) * 2 * Math.PI * wheelRadius.in(Meters));
 
+    @Getter private double kSdrive = 0.09;
+
     // -----------------------------------------------------------------------
     // PID Controller Constants
     // -----------------------------------------------------------------------
@@ -62,10 +65,10 @@ public class SwerveConfig {
     @Getter private double kIHoldController = 0.0;
     @Getter private double kDHoldController = 0.0;
 
-    @Getter private double kPTranslationController = 4;
+    @Getter private double kPTranslationController = 3;
     @Getter private double kITranslationController = 0.0;
     @Getter private double kDTranslationController = 0.0;
-    @Getter private double translationTolerance = 0.001;
+    @Getter private double translationTolerance = 0.00;
 
     @Getter
     private Constraints translationConstraints =
@@ -73,10 +76,10 @@ public class SwerveConfig {
                     speedAt12Volts.baseUnitMagnitude() / 2,
                     speedAt12Volts.baseUnitMagnitude() / 20);
 
-    @Getter private double kPTagCenterController = 3.3;
+    @Getter private double kPTagCenterController = 3.25;
     @Getter private double kITagCenterController = 0.0;
-    @Getter private double kDTagController = 0.0;
-    @Getter private double tagCenterTolerance = 0.00001; // meters
+    @Getter private double kDTagCenterController = 0.3;
+    @Getter private double tagCenterTolerance = 0.01; // meters
 
     @Getter private double kPTagDistanceController = 0.15;
     @Getter private double kITagDistanceController = 0.0;
@@ -94,19 +97,38 @@ public class SwerveConfig {
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     @Getter
     private Slot0Configs steerGains =
-            new Slot0Configs().withKP(100).withKI(0).withKD(2.0).withKS(0.2).withKV(1.5).withKA(0);
+            new Slot0Configs()
+                    .withKP(4000.0)
+                    .withKI(0)
+                    .withKD(50.0)
+                    .withKS(0.15)
+                    .withKV(1.5)
+                    .withKA(0)
+                    .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+    // new Slot0Configs().withKP(100).withKI(0).withKD(0.5).withKS(0.1).withKV(1.91).withKA(0);
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     @Getter
     private Slot0Configs driveGains =
-            new Slot0Configs().withKP(0.1).withKI(0).withKD(0).withKS(0).withKV(0.12).withKA(0);
+            new Slot0Configs()
+                    .withKP(50.0)
+                    .withKI(0)
+                    .withKD(0.0)
+                    .withKS(2.261118000000002)
+                    .withKA(0.0)
+                    .withKV(0.0);
+    // new Slot0Configs().withKP(0.1).withKI(0).withKD(0).withKS(0).withKV(0.124).withKA(0);
 
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
-    @Getter private ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
+    @Getter
+    private ClosedLoopOutputType steerClosedLoopOutput =
+            ClosedLoopOutputType.TorqueCurrentFOC; // .Voltage;
     // The closed-loop output type to use for the drive motors;
     // This affects the PID/FF gains for the drive motors
-    @Getter private ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
+    @Getter
+    private ClosedLoopOutputType driveClosedLoopOutput =
+            ClosedLoopOutputType.TorqueCurrentFOC; // .Voltage;
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot

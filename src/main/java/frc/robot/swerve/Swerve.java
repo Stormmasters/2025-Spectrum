@@ -385,10 +385,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     // --------------------------------------------------------------------------------
     // Tag Center Align Controller
     // --------------------------------------------------------------------------------
-    void resetTagCenterAlignController(double currentMeters) {
-        tagCenterAlignController.reset(currentMeters);
-    }
-
     double calculateTagCenterAlignController(
             DoubleSupplier targetMeters, DoubleSupplier currentMeters) {
         return tagCenterAlignController.calculate(
@@ -398,10 +394,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     // --------------------------------------------------------------------------------
     // Tag Distance Align Controller
     // --------------------------------------------------------------------------------
-    void resetTagDistanceAlignController(double currentMeters) {
-        tagDistanceAlignController.reset(currentMeters);
-    }
-
     double calculateTagDistanceAlignController(DoubleSupplier targetArea) {
         boolean front = true;
         if (Robot.getVision().frontLL.targetInView()) {
