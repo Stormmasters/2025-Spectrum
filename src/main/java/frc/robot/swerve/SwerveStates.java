@@ -56,12 +56,12 @@ public class SwerveStates {
         // // vision aim
         pilot.reefAim_A.whileTrue(log(reefAimDrive()));
 
-        Pose2d backReefOffset = Field.Reef.getOffsetPosition(1, Units.inchesToMeters(24));
+        Pose2d backReefOffset = Field.Reef.getOffsetPosition(21, Units.inchesToMeters(24));
         pilot.cageAim_B.whileTrue(
                 alignDrive(
                         backReefOffset::getX,
                         backReefOffset::getY,
-                        () -> 0)); // alignToYDrive(() -> Field.fieldWidth / 2));
+                        () -> Math.toRadians(180))); // alignToYDrive(() -> Field.fieldWidth / 2));
     }
 
     /** Pilot Commands ************************************************************************ */

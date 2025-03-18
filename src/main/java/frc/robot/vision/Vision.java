@@ -278,7 +278,7 @@ public class Vision implements NTSendable, Subsystem {
                 ll.sendValidStatus("Strong Multi integration");
                 xyStds = 0.1;
                 degStds = 0.1;
-            }else if (multiTags && targetSize > 0.1) {
+            } else if (multiTags && targetSize > 0.1) {
                 ll.sendValidStatus("Multi integration");
                 xyStds = 0.25;
                 degStds = 8;
@@ -549,26 +549,18 @@ public class Vision implements NTSendable, Subsystem {
             {6, 120}, {7, 180}, {8, -120}, {9, -60}, {10, 0}, {11, 60}
         };
 
-        // int closetFrontTag = (int) frontLL.getClosestTagID();
-        // int closetRearTag = (int) backLL.getClosestTagID();
-        // int closetTag = closetFrontTag;
-        // boolean rearTag = false;
-
-        // if (closetTag == -1) {
-        //     closetTag = closetRearTag;
-        //     rearTag = true;
-        // }
-
-        int closetTag = getClosestTagID();
+        int closestTag = getClosestTagID();
         boolean rearTag = isRearTagClosest();
 
-        if (closetTag == -1) {
+        if (closestTag == -1) {
             // Return current angle if no tag seen before going through the array
-            return Robot.getSwerve().getRobotPose().getRotation().getRadians();
+            Pose2d currentPose = Robot.getSwerve().getRobotPose();
+            int tagID = Field.Reef.getReefZoneTagID(Field.flipIfRed(currentPose));
+            closestTag = tagID;
         }
 
         for (int i = 0; i < reefFrontAngles.length; i++) {
-            if (closetTag == reefFrontAngles[i][0]) {
+            if (closestTag == reefFrontAngles[i][0]) {
                 if (rearTag) {
                     return Math.toRadians(reefFrontAngles[i][1] + 180);
                 }

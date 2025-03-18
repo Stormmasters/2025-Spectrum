@@ -27,6 +27,10 @@ public class SwerveConfig {
     @Getter private final double homeLlAimTAgoal = 7.9;
     @Getter private final double eventLlAimTAgoal = 8.1;
 
+    @Getter
+    private final double scoreOffsetFromReef =
+            Units.inchesToMeters(8.0 + 18.5); // Offset + half of robot length with bumpers
+
     @Getter private final double simLoopPeriod = 0.005; // 5 ms
     @Getter @Setter private double robotWidth = Units.inchesToMeters(29.5);
     @Getter @Setter private double robotLength = Units.inchesToMeters(29.5);
