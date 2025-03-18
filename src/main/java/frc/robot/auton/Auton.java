@@ -65,11 +65,11 @@ public class Auton {
 
         pathChooser.setDefaultOption("Do Nothing", Commands.print("Do Nothing Auto ran"));
 
-        pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
+        // pathChooser.addOption("1 Meter", SpectrumAuton("1 Meter", false));
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption("test", SpectrumAuton("test", false));
+        // pathChooser.addOption("test", SpectrumAuton("test", false));
 
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
@@ -108,9 +108,8 @@ public class Auton {
                 .andThen(
                         aimL4score(2),
                         SpectrumAuton("TroughRush", mirrored),
-                        aimL4score(1.75),
-                        SpectrumAuton("TroughRush2", mirrored),
-                        aimL4score(1.75))
+                        aimL4score(2),
+                        SpectrumAuton("TroughRush2", mirrored))
                 .withName("Blue Left - Source L4"));
     }
 
@@ -130,10 +129,6 @@ public class Auton {
                         SpectrumAuton("6 - Blue Center Algae", mirrored),
                         algaeNet())
                 .withName("Blue Center Algae Rush"));
-    }
-
-    public Command test(boolean mirrored) {
-        return SpectrumAuton("L4-SideStart", mirrored).andThen(aimL4score(1.75));
     }
 
     public Command aimL4score(double alignTime) {

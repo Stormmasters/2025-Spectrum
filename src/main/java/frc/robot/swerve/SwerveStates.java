@@ -69,7 +69,7 @@ public class SwerveStates {
 
     /* Pilot Commands ************************************************************************ */
 
-    //TODO: make this a command FIELD RELATIVE instead of ROBOT RELATIVE
+    // TODO: make this a command FIELD RELATIVE instead of ROBOT RELATIVE
     public static Command autonSwerveAlign() {
         return (new InstantCommand(
                         () -> {
