@@ -2,7 +2,6 @@ package frc.robot.shoulder;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
@@ -16,6 +15,7 @@ import frc.robot.RobotSim;
 import frc.robot.RobotStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
+import frc.spectrumLib.SpectrumCANcoderConfig;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.ArmConfig;
@@ -85,13 +85,17 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double mmAcceleration = 50;
         @Getter @Setter private double mmJerk = 0;
 
-        @Getter @Setter private double sensorToMechanismRatio = 102.857;
-        @Getter @Setter private double rotorToSensorRatio = 1;
+        @Getter @Setter private double sensorToMechanismRatio = 102.857; // 85.7142857
+        @Getter @Setter private double rotorToSensorRatio = 1; // 0.833333333333333333333333
 
         /* Cancoder config settings */
-        @Getter private double CANcoderRotorToSensorRatio = 30.0 / 36.0;
-        @Getter private double CANcoderSensorToMechanismRatio = CANcoderRotorToSensorRatio * sensorToMechanismRatio;
-        @Getter private double CANcoderOffset = 0;
+        @Getter @Setter private double CANcoderSensorToMechanismRatio = 36.0 / 36;
+
+        @Getter @Setter
+        private double CANcoderRotorToSensorRatio =
+                CANcoderSensorToMechanismRatio * sensorToMechanismRatio;
+
+        @Getter @Setter private double CANcoderOffset = 0;
         @Getter @Setter private boolean CANcoderAttached = false;
 
         /* Sim properties */
@@ -136,6 +140,7 @@ public class Shoulder extends Mechanism {
 
     protected ShoulderConfig config;
     protected SpectrumCANcoder canCoder;
+    protected SpectrumCANcoderConfig canCoderConfig;
     @Getter private ShoulderSim sim;
     CANcoderSimState canCoderSim;
 
@@ -143,13 +148,20 @@ public class Shoulder extends Mechanism {
         super(config);
         this.config = config;
 
-        if (isAttached()) { // && RobotStates.pm.and(RobotStates.photon, RobotStates.sim).not().getAsBoolean()) {
-            canCoder =
-                    new SpectrumCANcoder(42, motor, config)
-                            .setRotorToSensorRatio(config.getCANcoderRotorToSensorRatio())
-                            .setSensorToMechanismRatio(config.getCANcoderSensorToMechanismRatio())
-                            .setOffset(config.getCANcoderOffset())
-                            .setAttached(config.isCANcoderAttached());
+        if (isAttached()
+                && config.isCANcoderAttached()) { // && RobotStates.pm.and(RobotStates.photon,
+            // RobotStates.sim).not().getAsBoolean()) {
+            canCoderConfig =
+                    new SpectrumCANcoderConfig(
+                            config.getCANcoderRotorToSensorRatio(),
+                            config.getCANcoderSensorToMechanismRatio(),
+                            config.getCANcoderOffset(),
+                            config.isCANcoderAttached());
+            canCoder = new SpectrumCANcoder(42, canCoderConfig, motor, config);
+            // .setRotorToSensorRatio(config.getCANcoderRotorToSensorRatio())
+            // .setSensorToMechanismRatio(config.getCANcoderSensorToMechanismRatio())
+            // .setOffset(config.getCANcoderOffset())
+            // .setAttached(true); // config.isCANcoderAttached());
             setInitialPosition();
         }
 
@@ -187,13 +199,19 @@ public class Shoulder extends Mechanism {
 
     void setInitialPosition() {
         if (canCoder != null) {
-            if (canCoder.isAttached() && canCoder.canCoderResponseOK(canCoder.getCanCoder().getAbsolutePosition().getStatus())) {
+            if (canCoder.isAttached()) {
+                System.out.println("CANCODER ATTACHED");
+                // if (canCoder.canCoderResponseOK(
+                //         canCoder.getCanCoder().getAbsolutePosition().getStatus())) {
+                //     motor.setPosition(
+                //             canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                //                     * config.getGearRatio());
+                // }
                 motor.setPosition(
-                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                                * config.getGearRatio());
+                        degreesToRotations(offsetPosition(() -> config.getInitPosition())));
             }
         } else {
-        motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
+            motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));
         }
     }
 

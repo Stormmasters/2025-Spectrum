@@ -12,13 +12,29 @@ import frc.spectrumLib.mechanism.Mechanism.Config;
 import lombok.Getter;
 
 public class SpectrumCANcoder {
-    @Getter private int CANcoderID;
-    @Getter private double rotorToSensorRatio = 1;
-    @Getter private double sensorToMechanismRatio = 1;
-    @Getter private double offset = 0;
-    @Getter private boolean attached = false;
+    // @Getter private double rotorToSensorRatio = 1;
+    // @Getter private double sensorToMechanismRatio = 1;
+    // @Getter private double offset = 0;
+    // @Getter private boolean attached = false;
+
+    // public class SpectrumCANcoderConfig {
+    //     @Getter @Setter private int CANcoderID;
+    //     @Getter private double rotorToSensorRatio = 1;
+    //     @Getter private double sensorToMechanismRatio = 1;
+    //     @Getter private double offset = 0;
+    //     @Getter private boolean attached = false;
+
+    //     public SpectrumCANcoderConfig(double rotorToSensorRatio, double sensorToMechanismRatio,
+    // double offset, boolean attached) {
+    //         this.rotorToSensorRatio = rotorToSensorRatio;
+    //         this.sensorToMechanismRatio = sensorToMechanismRatio;
+    //         this.offset = offset;
+    //         this.attached = attached;
+    //     }
+    // }
 
     @Getter private CANcoder canCoder;
+    private SpectrumCANcoderConfig config;
 
     private enum CANCoderFeedbackType {
         RemoteCANcoder,
@@ -28,47 +44,54 @@ public class SpectrumCANcoder {
 
     private CANCoderFeedbackType feedbackSource = CANCoderFeedbackType.FusedCANcoder;
 
-    public SpectrumCANcoder(int CANcoderID, TalonFX motor, Config config) {
-        this.CANcoderID = CANcoderID;
+    public SpectrumCANcoder(
+            int CANcoderID, SpectrumCANcoderConfig config, TalonFX motor, Config mechConfig) {
+        this.config = config;
+        config.setCANcoderID(CANcoderID);
 
-        if (isAttached()) {
+        if (config.isAttached()) {
             canCoder = new CANcoder(CANcoderID, Rio.CANIVORE);
             CANcoderConfiguration canCoderConfigs = new CANcoderConfiguration();
-            canCoderConfigs.MagnetSensor.MagnetOffset = offset;
+            canCoderConfigs.MagnetSensor.MagnetOffset = config.getOffset();
             canCoderConfigs.MagnetSensor.SensorDirection =
                     SensorDirectionValue.CounterClockwise_Positive;
             canCoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
             if (canCoderResponseOK(canCoder.getConfigurator().apply(canCoderConfigs))) {
                 // Modify configuration to use remote CANcoder fused
-                modifyMotorConfig(motor, config);
+                modifyMotorConfig(motor, mechConfig);
             }
+            canCoder.setPosition(canCoder.getPosition().getValueAsDouble() - 0.8333333333333);
         }
     }
 
-    public SpectrumCANcoder setRotorToSensorRatio(double ratio) {
-        rotorToSensorRatio = ratio;
-        return this;
+    // public SpectrumCANcoder setRotorToSensorRatio(double ratio) {
+    //     rotorToSensorRatio = ratio;
+    //     return this;
+    // }
+
+    // public SpectrumCANcoder setSensorToMechanismRatio(double ratio) {
+    //     sensorToMechanismRatio = ratio;
+    //     return this;
+    // }
+
+    // public SpectrumCANcoder setOffset(double offset) {
+    //     this.offset = offset;
+    //     return this;
+    // }
+
+    // public SpectrumCANcoder setAttached(boolean attached) {
+    //     this.attached = attached;
+    //     return this;
+    // }
+
+    public boolean isAttached() {
+        return config.isAttached();
     }
 
-    public SpectrumCANcoder setSensorToMechanismRatio(double ratio) {
-        sensorToMechanismRatio = ratio;
-        return this;
-    }
-
-    public SpectrumCANcoder setOffset(double offset) {
-        this.offset = offset;
-        return this;
-    }
-
-    public SpectrumCANcoder setAttached(boolean attached) {
-        this.attached = attached;
-        return this;
-    }
-
-    public SpectrumCANcoder modifyMotorConfig(TalonFX motor, Config config) {
+    public SpectrumCANcoder modifyMotorConfig(TalonFX motor, Config mechConfig) {
         TalonFXConfigurator configurator = motor.getConfigurator();
-        TalonFXConfiguration talonConfigMod = config.getTalonConfig();
-        talonConfigMod.Feedback.FeedbackRemoteSensorID = CANcoderID;
+        TalonFXConfiguration talonConfigMod = mechConfig.getTalonConfig();
+        talonConfigMod.Feedback.FeedbackRemoteSensorID = config.getCANcoderID();
         switch (feedbackSource) {
             case RemoteCANcoder:
                 talonConfigMod.Feedback.FeedbackSensorSource =
@@ -83,10 +106,10 @@ public class SpectrumCANcoder {
                         FeedbackSensorSourceValue.SyncCANcoder;
                 break;
         }
-        talonConfigMod.Feedback.RotorToSensorRatio = rotorToSensorRatio;
-        talonConfigMod.Feedback.SensorToMechanismRatio = sensorToMechanismRatio;
+        talonConfigMod.Feedback.RotorToSensorRatio = config.getRotorToSensorRatio();
+        talonConfigMod.Feedback.SensorToMechanismRatio = config.getSensorToMechanismRatio();
         configurator.apply(talonConfigMod);
-        config.setTalonConfig(talonConfigMod);
+        mechConfig.setTalonConfig(talonConfigMod);
         return this;
     }
 
@@ -94,7 +117,7 @@ public class SpectrumCANcoder {
         if (!response.isOK()) {
             Telemetry.print(
                     "CANcoder ID "
-                            + CANcoderID
+                            + config.getCANcoderID()
                             + " failed config with error "
                             + response.toString());
             return false;
