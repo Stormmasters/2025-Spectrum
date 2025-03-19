@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.robot.climb.ClimbStates;
-import frc.robot.intake.IntakeStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.leds.SpectrumLEDs;
 import frc.spectrumLib.util.Util;
@@ -167,14 +166,23 @@ public class LedStates {
     static void coralStagedLED(Trigger trigger, int priority) {
         withReverseLedCommand(
                 "right.CoralStaged", right, right.breathe(Color.kCoral, 1), priority, trigger);
-        withReverseLedCommand("left.CoralStaged", left, left.breathe(Color.kCoral,1 ), priority, trigger);
+        withReverseLedCommand(
+                "left.CoralStaged", left, left.breathe(Color.kCoral, 1), priority, trigger);
     }
 
     static void algaeStagedLED(Trigger trigger, int priority) {
         withReverseLedCommand(
-                "right.AlgaeStaged", right, right.breathe(Color.kMediumSeaGreen, 1), priority, trigger);
+                "right.AlgaeStaged",
+                right,
+                right.breathe(Color.kMediumSeaGreen, 1),
+                priority,
+                trigger);
         withReverseLedCommand(
-                "left.AlgaeStaged", left, left.breathe(Color.kMediumSeaGreen, 1), priority, trigger);
+                "left.AlgaeStaged",
+                left,
+                left.breathe(Color.kMediumSeaGreen, 1),
+                priority,
+                trigger);
     }
 
     static void hasCoralLED(Trigger trigger, int priority) {
