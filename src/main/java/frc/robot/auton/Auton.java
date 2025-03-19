@@ -68,7 +68,7 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        // pathChooser.addOption("test", SpectrumAuton("test", false));
+        // pathChooser.addOption("test", test()));
 
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
@@ -101,15 +101,14 @@ public class Auton {
 
     public Command sourceL4(boolean mirrored) {
         return (RobotStates.homeAll
-                .setFalse()
-                .alongWith(SpectrumAuton("L4-SideStart", mirrored))
-                .withTimeout(2)
-                .andThen(
-                        aimL4score(2),
-                        SpectrumAuton("TroughRush", mirrored),
-                        aimL4score(2),
-                        SpectrumAuton("TroughRush2", mirrored))
-                .withName("Blue Left - Source L4"));
+                        .setFalse()
+                        .alongWith(SpectrumAuton("L4-SideStart", mirrored))
+                        .andThen(
+                                aimL4score(2.5),
+                                SpectrumAuton("TroughRush", mirrored),
+                                aimL4score(2.5),
+                                SpectrumAuton("TroughRush2", mirrored)))
+                .withName("Blue Left - Source L4");
     }
 
     public Command centerAlgae(boolean mirrored) {
@@ -199,10 +198,7 @@ public class Auton {
                 .andThen(
                         RobotStates.coral
                                 .setTrue()
-                                .alongWith(
-                                        RobotStates.l4.setTrue(),
-                                        RobotStates.shrinkState.setTrue(),
-                                        RobotStates.homeAll.setFalse())
+                                .alongWith(RobotStates.l4.setTrue(), RobotStates.homeAll.setFalse())
                                 .andThen(
                                         Commands.waitSeconds(0.05),
                                         RobotStates.actionPrepState.setTrue(),
@@ -219,10 +215,7 @@ public class Auton {
                 .andThen(
                         RobotStates.coral
                                 .setTrue()
-                                .alongWith(
-                                        RobotStates.l1.setTrue(),
-                                        RobotStates.shrinkState.setTrue(),
-                                        RobotStates.homeAll.setFalse())
+                                .alongWith(RobotStates.l1.setTrue(), RobotStates.homeAll.setFalse())
                                 .andThen(
                                         Commands.waitSeconds(0.05),
                                         RobotStates.actionPrepState.setTrue(),

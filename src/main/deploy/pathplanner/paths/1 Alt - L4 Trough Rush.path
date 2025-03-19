@@ -33,26 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "extendedState",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.0,
-      "command": null
-    },
-    {
       "name": "left",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "shoulderL4",
-      "waypointRelativePos": 0.09592795614722474,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "twistL4L",
-      "waypointRelativePos": 0.393500391542678,
       "endWaypointRelativePos": null,
       "command": null
     }

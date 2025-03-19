@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.2077949438202247,
-        "y": 7.032162921348314
+        "y": 7.048595505617977
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.503179854264608,
-        "y": 6.6329731255431605
+        "x": 1.5031798542646082,
+        "y": 6.649405709812824
       },
       "isLocked": false,
       "linkedName": "feeder"
@@ -67,18 +67,6 @@
     {
       "name": "left",
       "waypointRelativePos": 0.3010963194988236,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "shoulderL4",
-      "waypointRelativePos": 0.3465152701644485,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "twistL4L",
-      "waypointRelativePos": 0.44675019577133673,
       "endWaypointRelativePos": null,
       "command": null
     }
