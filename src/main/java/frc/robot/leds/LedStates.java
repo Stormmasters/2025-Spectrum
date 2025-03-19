@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.robot.climb.ClimbStates;
-import frc.robot.intake.IntakeStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.leds.SpectrumLEDs;
 import frc.spectrumLib.util.Util;
@@ -34,8 +33,10 @@ public class LedStates {
         // Coral and Algae Led Commands
         coralModeLED(RobotStates.coral.and(Util.teleop), 6);
         algaeModeLED(RobotStates.algae.and(Util.teleop), 6);
-        hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 7);
-        hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 7);
+        coralStagedLED(RobotStates.stagedCoral.and(Util.teleop), 7);
+        algaeStagedLED(RobotStates.stagedAlgae.and(Util.teleop), 7);
+        // hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 7);
+        // hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 7);
 
         // Elevator Led Commands
         // elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
@@ -160,6 +161,28 @@ public class LedStates {
                 "right.AlgaeMode", right, right.solid(Color.kMediumSeaGreen), priority, trigger);
         withReverseLedCommand(
                 "left.AlgaeMode", left, left.solid(Color.kMediumSeaGreen), priority, trigger);
+    }
+
+    static void coralStagedLED(Trigger trigger, int priority) {
+        withReverseLedCommand(
+                "right.CoralStaged", right, right.breathe(Color.kCoral, 1), priority, trigger);
+        withReverseLedCommand(
+                "left.CoralStaged", left, left.breathe(Color.kCoral, 1), priority, trigger);
+    }
+
+    static void algaeStagedLED(Trigger trigger, int priority) {
+        withReverseLedCommand(
+                "right.AlgaeStaged",
+                right,
+                right.breathe(Color.kMediumSeaGreen, 1),
+                priority,
+                trigger);
+        withReverseLedCommand(
+                "left.AlgaeStaged",
+                left,
+                left.breathe(Color.kMediumSeaGreen, 1),
+                priority,
+                trigger);
     }
 
     static void hasCoralLED(Trigger trigger, int priority) {
