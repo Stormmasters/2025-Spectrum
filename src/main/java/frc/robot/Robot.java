@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static frc.robot.RobotStates.autonStationIntake;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -303,6 +305,7 @@ public class Robot extends SpectrumRobot {
         try {
             Telemetry.print("!!! Teleop Init Starting !!! ");
             resetCommandsAndButtons();
+            autonStationIntake.setTrue();
 
             Telemetry.print("!!! Teleop Init Complete !!! ");
         } catch (Throwable t) {
