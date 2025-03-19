@@ -27,6 +27,8 @@ public class ShoulderStates {
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
 
+        Robot.getOperator().antiSecretClimb_LTRSup.whileTrue(shoulder.move(config::getNetAlgae));
+
         stationIntaking.whileTrue(
                 move(
                         config::getStationIntake,
