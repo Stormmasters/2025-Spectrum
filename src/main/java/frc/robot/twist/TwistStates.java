@@ -46,6 +46,8 @@ public class TwistStates {
 
         twistL4R.onTrue(move(config::getRightCoral, "Twist.RightCoral"));
         twistL4L.onTrue(move(config::getLeftCoral, "Twist.leftCoral"));
+
+        climbPrep.whileTrue(move(config::getClimbPrep, "Twist.climbPrep"));
     }
 
     public static Command move(DoubleSupplier degrees, String name) {
