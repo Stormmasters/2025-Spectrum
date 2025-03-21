@@ -68,10 +68,12 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        // pathChooser.addOption("test", test()));
+        pathChooser.addOption("test", test());
 
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
+
+        pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
 
         // pathChooser.addOption("Left | Algae Rush", centerAlgae(false));
         // pathChooser.addOption("Right | Algae Rush", centerAlgae(true));
@@ -99,10 +101,14 @@ public class Auton {
         printAutoDuration();
     }
 
+    public Command test() {
+        return (SwerveStates.swerveTest());
+    }
+
     public Command sourceL4(boolean mirrored) {
         return (RobotStates.homeAll
                         .setFalse()
-                        .alongWith(SpectrumAuton("L4-SideStart", mirrored))
+                        .alongWith(SpectrumAuton("L4-SideStart", mirrored).withTimeout(2))
                         .andThen(
                                 aimL4score(2.5),
                                 SpectrumAuton("TroughRush", mirrored),
@@ -238,10 +244,7 @@ public class Auton {
      */
     public Command SpectrumAuton(String autoName, boolean mirrored) {
         Command autoCommand = new PathPlannerAuto(autoName, mirrored);
-        return (Commands.waitSeconds(0.01)
-                        .andThen(autoCommand)
-                        .alongWith(Commands.print(autoName + " Auto Selected")))
-                .withName(autoName);
+        return (Commands.waitSeconds(0.01).andThen(autoCommand)).withName(autoName);
     }
 
     /**

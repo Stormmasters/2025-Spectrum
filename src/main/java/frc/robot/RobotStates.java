@@ -209,10 +209,13 @@ public class RobotStates {
         // *********************************
         // Reversal States
         operator.toggleReverse.or(pilot.toggleReverse).onTrue(reverse.toggle());
-        stagedCoral.or(L2Algae, L3Algae).and(VisionStates.usingRearTag).onTrue(reverse.setTrue());
         stagedCoral
                 .or(L2Algae, L3Algae)
-                .and(VisionStates.usingRearTag.not())
+                .and(VisionStates.usingRearTag, actionPrepState.not())
+                .onTrue(reverse.setTrue());
+        stagedCoral
+                .or(L2Algae, L3Algae)
+                .and(VisionStates.usingRearTag.not(), actionPrepState.not())
                 .onTrue(reverse.setFalse());
         netAlgae.or(processorAlgae, groundAlgae, groundCoral).onTrue(reverse.setFalse());
         stationIntaking
@@ -258,7 +261,8 @@ public class RobotStates {
                         rightScore.setFalse(),
                         coral.setFalse(),
                         algae.setFalse(),
-                        shrinkState.setFalse())
+                        shrinkState.setFalse(),
+                        autonStationIntake.setFalse())
                 .withName("Clear Staged");
     }
 
@@ -268,7 +272,8 @@ public class RobotStates {
                         reverse.setFalse(),
                         actionPrepState.setFalse(),
                         actionState.setFalse(),
-                        homeAll.setFalse())
+                        homeAll.setFalse(),
+                        coastMode.setFalse())
                 .withName("Clear States");
     }
 }

@@ -112,6 +112,10 @@ public class SwerveStates {
                 () -> getAlignHeading(headingRadians));
     }
 
+    public static Command swerveTest() {
+        return drive(() -> 0.5, () -> 0, () -> 0);
+    }
+
     private static double getTagTxVelocity() {
         if (Robot.getVision().tagsInView()) {
             return swerve.calculateTagCenterAlignController(
@@ -121,7 +125,42 @@ public class SwerveStates {
     }
 
     private static double getTagDistanceVelocity() {
-        return swerve.calculateTagDistanceAlignController(() -> config.getHomeLlAimTAgoal());
+        int tagID = Robot.getVision().getClosestTagID();
+        if (tagID < 0) {
+            return 0;
+        }
+        double[][] tagIDAreas = {
+            {17, config.getEventTag17TAGoal()},
+            {18, config.getEventTag18TAGoal()},
+            {19, config.getEventTag19TAGoal()},
+            {20, config.getEventTag20TAGoal()},
+            {21, config.getEventTag21TAGoal()},
+            {22, config.getEventTag22TAGoal()},
+            {6, config.getEventTag6TAGoal()},
+            {7, config.getEventTag7TAGoal()},
+            {8, config.getEventTag8TAGoal()},
+            {9, config.getEventTag9TAGoal()},
+            {10, config.getEventTag10TAGoal()},
+            {11, config.getEventTag11TAGoal()}
+        };
+        if (tagID >= 17) {
+            tagID -= 17;
+        }
+        if (tagID < 0) {
+            tagID = 0;
+        }
+        if (tagID >= tagIDAreas.length) {
+            tagID = 11;
+        }
+
+        final int finalTagID = tagID;
+        try {
+            return swerve.calculateTagDistanceAlignController(() -> tagIDAreas[finalTagID][1]);
+        } catch (Exception e) {
+            Telemetry.print("Error in getTagDistanceVelocity: " + finalTagID);
+            return config.getEventLlAimTAgoal();
+        }
+        // return swerve.calculateTagDistanceAlignController(() -> tagIDAreas[finalTagID][1]);
     }
 
     private static double getAlignToX(DoubleSupplier xGoalMeters) {
