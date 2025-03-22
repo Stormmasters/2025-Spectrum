@@ -239,6 +239,9 @@ public class Robot extends SpectrumRobot {
                                             .andThen(
                                                     SwerveStates.reefAimDrive()
                                                             .ignoringDisable(true)
+                                                            .withTimeout(0.5),
+                                                    auton.sourceL4(false)
+                                                            .ignoringDisable(true)
                                                             .withTimeout(0.5)));
             AutonStartCommand.schedule();
             commandInit = true;
@@ -321,6 +324,7 @@ public class Robot extends SpectrumRobot {
         try {
             Telemetry.print("!!! Teleop Init Starting !!! ");
             resetCommandsAndButtons();
+            field2d.getObject("path").setPoses(new ArrayList<>()); // clears auto visualizer
 
             Telemetry.print("!!! Teleop Init Complete !!! ");
         } catch (Throwable t) {
