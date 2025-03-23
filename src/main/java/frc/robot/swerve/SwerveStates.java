@@ -58,14 +58,19 @@ public class SwerveStates {
 
     /* Pilot Commands ************************************************************************ */
 
-    // TODO: make this a command FIELD RELATIVE instead of ROBOT RELATIVE
+    // TODO: actually test
     public static Command autonSwerveAlign() {
+        double tagAngleDegrees = Robot.getVision().getReefTagAngle();
+        Rotation2d tagAngle = Rotation2d.fromDegrees(tagAngleDegrees);
+        
+        // changes commanded velocities from ROBOT RELATIVE to FIELD RELATIVE
+        double fieldXVelocity = getTagDistanceVelocity() * tagAngle.getCos() - getTagTxVelocity() * tagAngle.getSin();
+        double fieldYVelocity = getTagDistanceVelocity() * tagAngle.getSin() + getTagTxVelocity() * tagAngle.getCos();
+
         return (new InstantCommand(
                         () -> {
-                            PPHolonomicDriveController.overrideXFeedback(
-                                    SwerveStates::getTagDistanceVelocity);
-                            PPHolonomicDriveController.overrideYFeedback(
-                                    SwerveStates::getTagTxVelocity);
+                            PPHolonomicDriveController.overrideXFeedback(fieldXVelocity);
+                            PPHolonomicDriveController.overrideYFeedback(fieldYVelocity);
                         }))
                 .withName("Swerve.autonAlign");
     }
