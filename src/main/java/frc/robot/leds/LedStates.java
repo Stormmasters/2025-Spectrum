@@ -36,7 +36,7 @@ public class LedStates {
         // algaeStagedLED(RobotStates.stagedAlgae.and(Util.teleop), 7);
         // hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 7);
         // // hasAlgaeLED(IntakeStates.hasAlgae.and(Util.teleop), 7);
-        // rightCoralLED(RobotStates.rightScore.and(Util.teleop), 8);
+        rightCoralLED(RobotStates.rightScore.and(Util.teleop), 8);
 
         // Elevator Led Commands
         // elevatorUpLED(ElevatorStates.isUp.and(Util.teleop), 6);
@@ -156,10 +156,10 @@ public class LedStates {
     }
 
     static void algaeModeLED(Trigger trigger, int priority) {
-        withReverseLedCommand(
-                "right.AlgaeMode", right, right.solid(Color.kMediumSeaGreen), priority, trigger);
-        withReverseLedCommand(
-                "left.AlgaeMode", left, left.solid(Color.kMediumSeaGreen), priority, trigger);
+        // withReverseLedCommand(
+        //         "right.AlgaeMode", right, right.solid(Color.kMediumSeaGreen), priority, trigger);
+        // withReverseLedCommand(
+        //         "left.AlgaeMode", left, left.solid(Color.kMediumSeaGreen), priority, trigger);
     }
 
     static void coralStagedLED(Trigger trigger, int priority) {
@@ -185,18 +185,20 @@ public class LedStates {
     }
 
     static void rightCoralLED(Trigger trigger, int priority) {
-        withReverseLedCommand(
-                "right.RightCoral",
-                right,
-                right.edges(Color.kGreen, 5).overlayOn(right.breathe(Color.kCoral, 1)),
-                priority,
-                trigger);
-        withReverseLedCommand(
-                "left.RightCoral",
-                left,
-                left.edges(Color.kGreen, 5).overlayOn(left.breathe(Color.kCoral, 1)),
-                priority,
-                trigger);
+        // withReverseLedCommand(
+        //         "right.RightCoral",
+        //         right,
+        //         right.edges(Color.kGreen, 5).overlayOn(right.breathe(Color.kCoral, 1)),
+        //         priority,
+        //         trigger);
+        // withReverseLedCommand(
+        //         "left.RightCoral",
+        //         left,
+        //         left.edges(Color.kGreen, 5).overlayOn(left.breathe(Color.kCoral, 1)),
+        //         priority,
+        //         trigger);
+        ledCommand("right.RightCoral", right, right.solid(Color.kGreen), priority, trigger);
+        ledCommand("left.LeftCoral", left, left.solid(Color.kGreen), priority, trigger);
     }
 
     static void hasCoralLED(Trigger trigger, int priority) {

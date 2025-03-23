@@ -60,13 +60,13 @@
     },
     {
       "name": "sourceIntakeOff",
-      "waypointRelativePos": 0.20086139389192625,
+      "waypointRelativePos": 0.3026624902114333,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "left",
-      "waypointRelativePos": 0.3010963194988236,
+      "waypointRelativePos": 0.3966327329678886,
       "endWaypointRelativePos": null,
       "command": null
     }
