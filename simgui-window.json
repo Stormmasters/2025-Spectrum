@@ -33,17 +33,12 @@
     },
     "###/SmartDashboard/Auto Chooser": {
       "Collapsed": "0",
-      "Pos": "377,271",
+      "Pos": "339,253",
       "Size": "307,60"
-    },
-    "###/SmartDashboard/Auto Visualizer": {
-      "Collapsed": "0",
-      "Pos": "4,638",
-      "Size": "668,354"
     },
     "###/SmartDashboard/Field2d": {
       "Collapsed": "0",
-      "Pos": "8,639",
+      "Pos": "5,641",
       "Size": "650,348"
     },
     "###/SmartDashboard/LeftView": {
@@ -78,17 +73,17 @@
     },
     "###Addressable LEDs": {
       "Collapsed": "0",
-      "Pos": "592,34",
+      "Pos": "585,29",
       "Size": "416,220"
     },
     "###FMS": {
       "Collapsed": "0",
-      "Pos": "375,36",
+      "Pos": "368,30",
       "Size": "202,214"
     },
     "###Joysticks": {
       "Collapsed": "0",
-      "Pos": "4,383",
+      "Pos": "10,386",
       "Size": "976,252"
     },
     "###Keyboard 0 Settings": {

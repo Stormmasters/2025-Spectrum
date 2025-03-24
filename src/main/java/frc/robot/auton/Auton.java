@@ -68,7 +68,7 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        // pathChooser.addOption("test", test());
+        pathChooser.addOption("test", SpectrumAuton("test", false));
 
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
@@ -99,10 +99,6 @@ public class Auton {
 
     public void exit() {
         printAutoDuration();
-    }
-
-    public Command test() {
-        return (SwerveStates.swerveTest());
     }
 
     public Command sourceL4(boolean mirrored) {

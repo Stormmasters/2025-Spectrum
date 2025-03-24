@@ -5,14 +5,19 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 
 public class SwerveStates {
@@ -52,7 +57,7 @@ public class SwerveStates {
         // // vision aim
         pilot.reefAim_A.whileTrue(log(reefAimDrive()));
 
-        RobotStates.autoAlign.onTrue(autonSwerveAlign());
+        RobotStates.autoAlign.whileTrue(autonSwerveAlign());
         RobotStates.clearOverrideFeedBack.onTrue(clearFeedBack());
     }
 
@@ -60,18 +65,35 @@ public class SwerveStates {
 
     // TODO: actually test
     public static Command autonSwerveAlign() {
-        double tagAngleDegrees = Robot.getVision().getReefTagAngle();
-        Rotation2d tagAngle = Rotation2d.fromDegrees(tagAngleDegrees);
-        
-        // changes commanded velocities from ROBOT RELATIVE to FIELD RELATIVE
-        double fieldXVelocity = getTagDistanceVelocity() * tagAngle.getCos() - getTagTxVelocity() * tagAngle.getSin();
-        double fieldYVelocity = getTagDistanceVelocity() * tagAngle.getSin() + getTagTxVelocity() * tagAngle.getCos();
-
-        return (new InstantCommand(
+        return new RunCommand(
                         () -> {
-                            PPHolonomicDriveController.overrideXFeedback(fieldXVelocity);
-                            PPHolonomicDriveController.overrideYFeedback(fieldYVelocity);
-                        }))
+                            // Calculates velocities continuously
+                            double tagAngleDegrees = Robot.getVision().getReefTagAngle();
+                            Rotation2d tagAngle = Rotation2d.fromDegrees(tagAngleDegrees);
+
+                            // Changes ROBOT RELATIVE velocities to FIELD RELATIVE velocities
+                            double fieldXVelocity =
+                                    getTagDistanceVelocity() * tagAngle.getCos()
+                                            - getTagTxVelocity() * tagAngle.getSin();
+                            double fieldYVelocity =
+                                    getTagDistanceVelocity() * tagAngle.getSin()
+                                            + getTagTxVelocity() * tagAngle.getCos();
+
+                            // Flips feedback if on the red alliance
+                            Optional<Alliance> alliance = DriverStation.getAlliance();
+                            if (alliance.isPresent()
+                                    && alliance.get() == DriverStation.Alliance.Red) {
+                                fieldXVelocity = -fieldXVelocity;
+                                fieldYVelocity = -fieldYVelocity;
+                            }
+
+                            final double finalFieldXVelocity = fieldXVelocity;
+                            final double finalFieldYVelocity = fieldYVelocity;
+
+                            // Updates the feedback system continuously
+                            PPHolonomicDriveController.overrideXFeedback(() -> finalFieldXVelocity);
+                            PPHolonomicDriveController.overrideYFeedback(() -> finalFieldYVelocity);
+                        })
                 .withName("Swerve.autonAlign");
     }
 
@@ -115,10 +137,6 @@ public class SwerveStates {
                 () -> getAlignToX(xGoalMeters),
                 () -> getAlignToY(yGoalMeters),
                 () -> getAlignHeading(headingRadians));
-    }
-
-    public static Command swerveTest() {
-        return drive(() -> 0.5, () -> 0, () -> 0);
     }
 
     private static double getTagTxVelocity() {
