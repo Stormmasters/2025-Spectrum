@@ -137,7 +137,7 @@ public class Field {
             }
 
             // Determine the zone based on the angle
-            double zoneAngle = 2 * Math.PI / 6; // 60 degrees per zone
+            double zoneAngle = Math.PI / 3; // 60 degrees per zone
             for (int i = 0; i < 6; i++) {
                 if (angle >= i * zoneAngle && angle < (i + 1) * zoneAngle) {
                     return i;
@@ -147,6 +147,11 @@ public class Field {
             return -1; // Should not reach here
         }
 
+        /**
+         * Returns the reef tag ID based on the robot's pose
+         * @param pose
+         * @return
+         */
         public static int getReefZoneTagID(Pose2d pose) {
             pose = flipIfRed(pose);
             int tag = indexToReefTagID(getReefZone(pose));
@@ -159,7 +164,13 @@ public class Field {
         }
 
         public static Pose2d getOffsetPosition(int blueTagID, double offsetMeters) {
-            int faceIndex = reefTagIDToIndex(blueTagID);
+            int faceIndex = blueTagID;
+            if(isBlue()){
+                faceIndex = blueReefTagIDToIndex(blueTagID);   
+            } else {
+            faceIndex = redReefTagIDToIndex(blueToRedTagID(blueTagID));
+            }
+
             if (faceIndex < 0 || faceIndex >= centerFaces.length) {
                 System.out.println("Invalid face index: returning mid field");
                 return new Pose2d(halfLength, halfWidth, new Rotation2d());
@@ -168,6 +179,7 @@ public class Field {
             Pose2d face = centerFaces[faceIndex];
             Rotation2d rotation = face.getRotation();
             // Calculate the perpendicular offset
+            //TODO: Connect offset into Swerveconfig or Swerve that goes to offset here
             Translation2d offset = new Translation2d(offsetMeters, rotation);
             // Apply the offset to the face's position
             Translation2d newTranslation = face.getTranslation().plus(offset);
@@ -185,36 +197,31 @@ public class Field {
         }
 
         /**
-         * Converts a reef tag ID to an index
+         * Converts a blue Reef tag ID to an index for CenterFaces
          *
          * @param tagID
          * @return
          */
-        public static int reefTagIDToIndex(int tagID) {
-            if (tagID < 17 || tagID > 22) {
+        public static int blueReefTagIDToIndex(int blueTagID) {
+            if (blueTagID < 17 || blueTagID > 22) {
                 return -1;
             }
-            return tagID - 17;
+            return blueTagID - 17;
         }
 
-        public static int redToBlueTagID(int redTagID) {
-            switch (redTagID) {
-                case 6:
-                    return 19;
-                case 7:
-                    return 18;
-                case 8:
-                    return 17;
-                case 9:
-                    return 22;
-                case 10:
-                    return 21;
-                case 11:
-                    return 20;
-                default:
-                    return redTagID;
+        /**
+         * Converts a red Reef tag ID to an index for CenterFaces
+         * @param redTagID
+         * @return
+         */
+        public static int redReefTagIDToIndex (int redTagID) {
+            if(redTagID < 6 || redTagID > 11) {
+                return -1;
             }
+
+            return -1 * (redTagID - 11);
         }
+
 
         public static int blueToRedTagID(int blueTagID) {
             switch (blueTagID) {
@@ -238,10 +245,22 @@ public class Field {
         // Returns the reef face pose based on the tag ID
         // return midfield if you give a non-blue reef tag
         public static Pose2d getReefSideFromTagID(int tagID) {
-            return centerFaces[reefTagIDToIndex(tagID)];
+            if (isRed()){
+                return centerFaces[redReefTagIDToIndex(tagID)];
+            }
+
+            return centerFaces[blueReefTagIDToIndex(tagID)];
         }
 
+        /**
+         * Returns the score pose based on the reef tag ID
+         * received by the limelight
+         * @param blueReefTagID 
+         * may also be a red reef tag ID that will later be converted from a blue reef tagID
+         * @return
+         */
         public static Pose2d getScorePoseFromTagID(int blueReefTagID) {
+            //TODO: add offset to pose using the given offset classes
             return getOffsetPosition(
                     blueReefTagID, Robot.getConfig().swerve.getScoreOffsetFromReef());
         }
