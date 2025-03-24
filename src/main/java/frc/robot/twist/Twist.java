@@ -180,13 +180,14 @@ public class Twist extends Mechanism {
     }
 
     private void setInitialPosition() {
-        if (canCoder.isAttached()) {
-            motor.setPosition(
-                    canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                            * config.getGearRatio());
-        } else {
-            motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
-        }
+        // if (canCoder.isAttached()) {
+        //     motor.setPosition(
+        //             canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+        //                     * config.getGearRatio());
+        // } else {
+        //     motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
+        // }
+        motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
     }
 
     public Command resetToInitialPos() {

@@ -89,11 +89,10 @@ public class Elbow extends Mechanism {
         @Getter @Setter private double rotorToSensorRatio = 1;
 
         /* Cancoder config settings */
-        @Getter @Setter private double CANcoderRotorToSensorRatio = 30.0 / 36.0;
+        @Getter @Setter private double CANcoderRotorToSensorRatio = 102.857 * 1.2;
 
-        @Getter @Setter
-        private double CANcoderSensorToMechanismRatio =
-                CANcoderRotorToSensorRatio * sensorToMechanismRatio;
+        @Getter @Setter private double CANcoderSensorToMechanismRatio = 0.833333333333333333333333;
+        // CANcoderRotorToSensorRatio * sensorToMechanismRatio;
 
         @Getter @Setter private double CANcoderOffset = 0;
         @Getter @Setter private boolean CANcoderAttached = false;
@@ -151,7 +150,7 @@ public class Elbow extends Mechanism {
         if (isAttached()) {
             canCoderConfig =
                     new SpectrumCANcoderConfig(
-                            config.getRotorToSensorRatio(),
+                            config.getCANcoderRotorToSensorRatio(),
                             config.getCANcoderSensorToMechanismRatio(),
                             config.getCANcoderOffset(),
                             config.isCANcoderAttached());

@@ -35,12 +35,11 @@ public class SpectrumCANcoder {
             canCoderConfigs.MagnetSensor.MagnetOffset = config.getOffset();
             canCoderConfigs.MagnetSensor.SensorDirection =
                     SensorDirectionValue.CounterClockwise_Positive;
-            canCoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 1.0;
+            canCoderConfigs.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
             if (canCoderResponseOK(canCoder.getConfigurator().apply(canCoderConfigs))) {
                 // Modify configuration to use remote CANcoder fused
                 modifyMotorConfig(motor, mechConfig);
             }
-            canCoder.setPosition(canCoder.getPosition().getValueAsDouble() - 0.8333333333333);
         }
     }
 
