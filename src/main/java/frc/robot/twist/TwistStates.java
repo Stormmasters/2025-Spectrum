@@ -39,9 +39,9 @@ public class TwistStates {
 
         netAlgae.whileTrue(move(config::getNet, "Twist.Net"));
 
-        branch.and(rightScore, actionPrepState)
+        branch.and((rightScore.or(Robot.getOperator().rightScore)), actionPrepState)
                 .whileTrue(move(config::getRightCoral, config::getStageDelay, "Twist.rightCoral"));
-        branch.and(rightScore.not(), actionPrepState)
+        branch.and((rightScore.not().or(Robot.getOperator().leftScore)), actionPrepState)
                 .whileTrue(move(config::getLeftCoral, config::getStageDelay, "Twist.leftCoral"));
 
         twistL4R.onTrue(move(config::getRightCoral, "Twist.RightCoral"));

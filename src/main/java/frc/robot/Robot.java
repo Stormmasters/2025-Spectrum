@@ -1,9 +1,9 @@
 package frc.robot;
 
-import static frc.robot.RobotStates.autonStationIntake;
-
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auton.Auton;
 import frc.robot.climb.Climb;
@@ -36,6 +37,7 @@ import frc.robot.shoulder.Shoulder;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.SwerveConfig;
+import frc.robot.swerve.SwerveStates;
 import frc.robot.twist.Twist;
 import frc.robot.twist.Twist.TwistConfig;
 import frc.robot.vision.Vision;
@@ -92,6 +94,7 @@ public class Robot extends SpectrumRobot {
     @Getter private static Elbow elbow;
     @Getter private static Shoulder shoulder;
     @Getter private static Twist twist;
+    public static boolean commandInit = false;
 
     public Robot() {
         super();
@@ -228,6 +231,22 @@ public class Robot extends SpectrumRobot {
         Telemetry.print("### Disabled Init Starting ### ");
         resetCommandsAndButtons();
 
+        if (!commandInit) {
+            Command AutonStartCommand =
+                    FollowPathCommand.warmupCommand()
+                            .andThen(
+                                    PathfindingCommand.warmupCommand()
+                                            .andThen(
+                                                    SwerveStates.reefAimDrive()
+                                                            .ignoringDisable(true)
+                                                            .withTimeout(0.5),
+                                                    auton.sourceL4(false)
+                                                            .ignoringDisable(true)
+                                                            .withTimeout(0.5)));
+            AutonStartCommand.schedule();
+            commandInit = true;
+        }
+
         Telemetry.print("### Disabled Init Complete ### ");
     }
 
@@ -305,7 +324,7 @@ public class Robot extends SpectrumRobot {
         try {
             Telemetry.print("!!! Teleop Init Starting !!! ");
             resetCommandsAndButtons();
-            autonStationIntake.setTrue();
+            field2d.getObject("path").setPoses(new ArrayList<>()); // clears auto visualizer
 
             Telemetry.print("!!! Teleop Init Complete !!! ");
         } catch (Throwable t) {
