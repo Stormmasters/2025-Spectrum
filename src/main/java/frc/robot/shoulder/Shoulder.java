@@ -85,16 +85,16 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double mmAcceleration = 50;
         @Getter @Setter private double mmJerk = 0;
 
-        @Getter @Setter private double sensorToMechanismRatio = 102.857; // 85.7142857
-        @Getter @Setter private double rotorToSensorRatio = 1; // 0.833333333333333333333333
+        @Getter @Setter private double sensorToMechanismRatio = 102.857;
+        @Getter @Setter private double rotorToSensorRatio = 1;
 
         /* Cancoder config settings */
+        @Getter @Setter private double CANcoderRotorToSensorRatio = 102.857 * 1.2;
+        // CANcoderSensorToMechanismRatio / sensorToMechanismRatio;
+        
         @Getter @Setter
         private double CANcoderSensorToMechanismRatio =
-                0.833333333333333333333333; // 1.2; // 36.0 / 30.0;
-
-        @Getter @Setter private double CANcoderRotorToSensorRatio = 102.857 * 1.2;
-        // CANcoderSensorToMechanismRatio * sensorToMechanismRatio;
+                0.833333333333333333333333; // 1.2; // 30.0 / 36.0;
 
         @Getter @Setter private double CANcoderOffset = 0;
         @Getter @Setter private boolean CANcoderAttached = false;
@@ -159,10 +159,7 @@ public class Shoulder extends Mechanism {
                             config.getCANcoderOffset(),
                             config.isCANcoderAttached());
             canCoder = new SpectrumCANcoder(42, canCoderConfig, motor, config);
-            // .setRotorToSensorRatio(config.getCANcoderRotorToSensorRatio())
-            // .setSensorToMechanismRatio(config.getCANcoderSensorToMechanismRatio())
-            // .setOffset(config.getCANcoderOffset())
-            // .setAttached(true); // config.isCANcoderAttached());
+
             setInitialPosition();
         }
 
@@ -200,14 +197,13 @@ public class Shoulder extends Mechanism {
 
     void setInitialPosition() {
         if (canCoder != null) {
-            if (canCoder.isAttached()) {
-                System.out.println("CANCODER ATTACHED");
-                // if (canCoder.canCoderResponseOK(
-                //         canCoder.getCanCoder().getAbsolutePosition().getStatus())) {
-                //     motor.setPosition(
-                //             canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                //                     * config.getGearRatio());
-                // }
+            if (canCoder.isAttached()
+                    && canCoder.canCoderResponseOK(
+                            canCoder.getCanCoder().getAbsolutePosition().getStatus())) {
+                motor.setPosition(
+                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                                / config.getCANcoderSensorToMechanismRatio());
+            } else {
                 motor.setPosition(
                         degreesToRotations(offsetPosition(() -> config.getInitPosition())));
             }

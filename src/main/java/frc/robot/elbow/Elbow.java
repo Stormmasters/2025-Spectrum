@@ -90,9 +90,9 @@ public class Elbow extends Mechanism {
 
         /* Cancoder config settings */
         @Getter @Setter private double CANcoderRotorToSensorRatio = 102.857 * 1.2;
+        // CANcoderRotorToSensorRatio * sensorToMechanismRatio;
 
         @Getter @Setter private double CANcoderSensorToMechanismRatio = 0.833333333333333333333333;
-        // CANcoderRotorToSensorRatio * sensorToMechanismRatio;
 
         @Getter @Setter private double CANcoderOffset = 0;
         @Getter @Setter private boolean CANcoderAttached = false;
@@ -155,10 +155,6 @@ public class Elbow extends Mechanism {
                             config.getCANcoderOffset(),
                             config.isCANcoderAttached());
             canCoder = new SpectrumCANcoder(43, canCoderConfig, motor, config);
-            // .setRotorToSensorRatio(config.getCANcoderRotorToSensorRatio())
-            // .setSensorToMechanismRatio(config.getCANcoderSensorToMechanismRatio())
-            // .setOffset(config.getCANcoderOffset())
-            // .setAttached(config.isCANcoderAttached());
 
             setInitialPosition();
         }
@@ -195,13 +191,15 @@ public class Elbow extends Mechanism {
 
     private void setInitialPosition() {
         if (canCoder != null) {
-            if (canCoder.isAttached()) {
-                // if (canCoder.canCoderResponseOK(
-                //         canCoder.getCanCoder().getAbsolutePosition().getStatus())) {
-                //     motor.setPosition(
-                //             canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-                //                     * config.getGearRatio());
-                // }
+            if (canCoder.isAttached()
+                    && canCoder.canCoderResponseOK(
+                            canCoder.getCanCoder().getAbsolutePosition().getStatus())) {
+                motor.setPosition(
+                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                                / config.getCANcoderSensorToMechanismRatio());
+            } else {
+                motor.setPosition(
+                        degreesToRotations(offsetPosition(() -> config.getInitPosition())));
             }
         } else {
             motor.setPosition(degreesToRotations(offsetPosition(() -> config.getInitPosition())));

@@ -24,6 +24,7 @@ import frc.robot.RobotSim;
 import frc.robot.RobotStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
+import frc.spectrumLib.SpectrumCANcoderConfig;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.Mount;
@@ -76,9 +77,13 @@ public class Twist extends Mechanism {
         // Need to add auto launching positions when auton is added
 
         /* Cancoder config settings */
-        @Getter private final double CANcoderGearRatio = 1;
-        @Getter private double CANcoderOffset = 0;
-        @Getter private boolean isCANcoderAttached = false;
+        @Getter @Setter private double CANcoderRotorToSensorRatio = 102.857 * 1.2;
+        // CANcoderRotorToSensorRatio * sensorToMechanismRatio;
+
+        @Getter @Setter private double CANcoderSensorToMechanismRatio = 1;
+
+        @Getter @Setter private double CANcoderOffset = 0;
+        @Getter @Setter private boolean CANcoderAttached = false;
 
         /* Sim properties */
         @Getter private double twistX = 0.525;
@@ -125,6 +130,7 @@ public class Twist extends Mechanism {
 
     private TwistConfig config;
     private SpectrumCANcoder canCoder;
+    private SpectrumCANcoderConfig canCoderConfig;
     @Getter private TwistSim sim;
     CANcoderSimState canCoderSim;
 
@@ -133,11 +139,13 @@ public class Twist extends Mechanism {
         this.config = config;
 
         if (isAttached()) {
-            // canCoder =
-            //         new SpectrumCANcoder(44, motor, config)
-            //                 .setRotorToSensorRatio(config.getCANcoderGearRatio())
-            //                 .setOffset(config.getCANcoderOffset())
-            //                 .setAttached(false);
+            canCoderConfig =
+                    new SpectrumCANcoderConfig(
+                            config.getCANcoderRotorToSensorRatio(),
+                            config.getCANcoderSensorToMechanismRatio(),
+                            config.getCANcoderOffset(),
+                            config.isCANcoderAttached());
+            canCoder = new SpectrumCANcoder(44, canCoderConfig, motor, config);
 
             setInitialPosition();
         }
@@ -180,14 +188,19 @@ public class Twist extends Mechanism {
     }
 
     private void setInitialPosition() {
-        // if (canCoder.isAttached()) {
-        //     motor.setPosition(
-        //             canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
-        //                     * config.getGearRatio());
-        // } else {
-        //     motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
-        // }
-        motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
+        if (canCoder != null) {
+            if (canCoder.isAttached()
+                    && canCoder.canCoderResponseOK(
+                            canCoder.getCanCoder().getAbsolutePosition().getStatus())) {
+                motor.setPosition(
+                        canCoder.getCanCoder().getAbsolutePosition().getValueAsDouble()
+                                / config.getCANcoderSensorToMechanismRatio());
+            } else {
+                motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
+            }
+        } else {
+            motor.setPosition(degreesToRotations(() -> config.getInitPosition()));
+        }
     }
 
     public Command resetToInitialPos() {
