@@ -12,26 +12,6 @@ import frc.spectrumLib.mechanism.Mechanism.Config;
 import lombok.Getter;
 
 public class SpectrumCANcoder {
-    // @Getter private double rotorToSensorRatio = 1;
-    // @Getter private double sensorToMechanismRatio = 1;
-    // @Getter private double offset = 0;
-    // @Getter private boolean attached = false;
-
-    // public class SpectrumCANcoderConfig {
-    //     @Getter @Setter private int CANcoderID;
-    //     @Getter private double rotorToSensorRatio = 1;
-    //     @Getter private double sensorToMechanismRatio = 1;
-    //     @Getter private double offset = 0;
-    //     @Getter private boolean attached = false;
-
-    //     public SpectrumCANcoderConfig(double rotorToSensorRatio, double sensorToMechanismRatio,
-    // double offset, boolean attached) {
-    //         this.rotorToSensorRatio = rotorToSensorRatio;
-    //         this.sensorToMechanismRatio = sensorToMechanismRatio;
-    //         this.offset = offset;
-    //         this.attached = attached;
-    //     }
-    // }
 
     @Getter private CANcoder canCoder;
     private SpectrumCANcoderConfig config;
@@ -63,26 +43,6 @@ public class SpectrumCANcoder {
             canCoder.setPosition(canCoder.getPosition().getValueAsDouble() - 0.8333333333333);
         }
     }
-
-    // public SpectrumCANcoder setRotorToSensorRatio(double ratio) {
-    //     rotorToSensorRatio = ratio;
-    //     return this;
-    // }
-
-    // public SpectrumCANcoder setSensorToMechanismRatio(double ratio) {
-    //     sensorToMechanismRatio = ratio;
-    //     return this;
-    // }
-
-    // public SpectrumCANcoder setOffset(double offset) {
-    //     this.offset = offset;
-    //     return this;
-    // }
-
-    // public SpectrumCANcoder setAttached(boolean attached) {
-    //     this.attached = attached;
-    //     return this;
-    // }
 
     public boolean isAttached() {
         return config.isAttached();
