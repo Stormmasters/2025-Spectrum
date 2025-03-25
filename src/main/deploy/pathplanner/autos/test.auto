@@ -7,19 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 - Source Only Test"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2 - Source Only Test"
+            "pathName": "test"
           }
         }
       ]

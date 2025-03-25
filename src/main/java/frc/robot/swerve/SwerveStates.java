@@ -91,8 +91,13 @@ public class SwerveStates {
                             final double finalFieldYVelocity = fieldYVelocity;
 
                             // Updates the feedback system continuously
-                            PPHolonomicDriveController.overrideXFeedback(() -> finalFieldXVelocity);
-                            PPHolonomicDriveController.overrideYFeedback(() -> finalFieldYVelocity);
+                            PPHolonomicDriveController.overrideXYFeedback(
+                                    () -> finalFieldXVelocity, () -> finalFieldYVelocity);
+                            System.out.println(
+                                    "!! X Override: "
+                                            + finalFieldXVelocity
+                                            + " | Y Override: "
+                                            + finalFieldYVelocity);
                         })
                 .withName("Swerve.autonAlign");
     }
