@@ -148,13 +148,15 @@ public class Elbow extends Mechanism {
         this.config = config;
 
         if (isAttached()) {
-            canCoderConfig =
-                    new SpectrumCANcoderConfig(
-                            config.getCANcoderRotorToSensorRatio(),
-                            config.getCANcoderSensorToMechanismRatio(),
-                            config.getCANcoderOffset(),
-                            config.isCANcoderAttached());
-            canCoder = new SpectrumCANcoder(43, canCoderConfig, motor, config);
+            if (config.isCANcoderAttached()) {
+                canCoderConfig =
+                        new SpectrumCANcoderConfig(
+                                config.getCANcoderRotorToSensorRatio(),
+                                config.getCANcoderSensorToMechanismRatio(),
+                                config.getCANcoderOffset(),
+                                config.isCANcoderAttached());
+                canCoder = new SpectrumCANcoder(43, canCoderConfig, motor, config);
+            }
 
             setInitialPosition();
         }

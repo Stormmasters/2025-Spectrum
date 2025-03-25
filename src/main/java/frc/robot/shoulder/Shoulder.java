@@ -149,16 +149,17 @@ public class Shoulder extends Mechanism {
         super(config);
         this.config = config;
 
-        if (isAttached()
-                && config.isCANcoderAttached()) { // && RobotStates.pm.and(RobotStates.photon,
+        if (isAttached()) { // && RobotStates.pm.and(RobotStates.photon,
             // RobotStates.sim).not().getAsBoolean()) {
-            canCoderConfig =
-                    new SpectrumCANcoderConfig(
-                            config.getCANcoderRotorToSensorRatio(),
-                            config.getCANcoderSensorToMechanismRatio(),
-                            config.getCANcoderOffset(),
-                            config.isCANcoderAttached());
-            canCoder = new SpectrumCANcoder(42, canCoderConfig, motor, config);
+            if (config.isCANcoderAttached()) {
+                canCoderConfig =
+                        new SpectrumCANcoderConfig(
+                                config.getCANcoderRotorToSensorRatio(),
+                                config.getCANcoderSensorToMechanismRatio(),
+                                config.getCANcoderOffset(),
+                                config.isCANcoderAttached());
+                canCoder = new SpectrumCANcoder(42, canCoderConfig, motor, config);
+            }
 
             setInitialPosition();
         }
