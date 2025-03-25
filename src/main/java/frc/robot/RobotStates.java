@@ -104,7 +104,7 @@ public class RobotStates {
 
     // Setup any binding to set states
     public static void setupStates() {
-        Util.disabled.whileTrue(clearStates().repeatedly());
+        Util.disabled.onTrue(clearStates().repeatedly().withTimeout(3));
 
         // *********************************
         // HOME Commands and States
