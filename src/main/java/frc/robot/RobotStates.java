@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.reefscape.Field;
 import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
+import frc.robot.swerve.SwerveStates;
 import frc.robot.vision.VisionStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
@@ -218,34 +218,52 @@ public class RobotStates {
                 .and(VisionStates.usingRearTag.not(), actionPrepState.not())
                 .onTrue(reverse.setFalse());
         netAlgae.or(processorAlgae, groundAlgae, groundCoral).onTrue(reverse.setFalse());
+
+        // stationIntaking
+        //         .and(
+        //                 Zones.bottomLeftZone,
+        //                 () ->
+        //                         !Robot.getSwerve()
+        //                                 .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
+        //         .onTrue(reverse.setTrue());
+        // stationIntaking
+        //         .and(
+        //                 Zones.bottomLeftZone,
+        //                 () ->
+        //                         Robot.getSwerve()
+        //                                 .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
+        //         .onTrue(reverse.setFalse());
+        // stationIntaking
+        //         .and(
+        //                 Zones.bottomRightZone,
+        //                 () ->
+        //                         !Robot.getSwerve()
+        //                                 .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
+        //         .onTrue(reverse.setTrue());
+        // stationIntaking
+        //         .and(
+        //                 Zones.bottomRightZone,
+        //                 () ->
+        //                         Robot.getSwerve()
+        //                                 .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
+        //         .onTrue(reverse.setFalse());
+
         stationIntaking
-                .and(
-                        Zones.bottomLeftZone,
-                        () ->
-                                !Robot.getSwerve()
-                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
+                .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
                 .onTrue(reverse.setTrue());
         stationIntaking
-                .and(
-                        Zones.bottomLeftZone,
-                        () ->
-                                Robot.getSwerve()
-                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
+                .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation)
                 .onTrue(reverse.setFalse());
         stationIntaking
-                .and(
-                        Zones.bottomRightZone,
-                        () ->
-                                !Robot.getSwerve()
-                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
+                .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation.not())
                 .onTrue(reverse.setTrue());
         stationIntaking
-                .and(
-                        Zones.bottomRightZone,
-                        () ->
-                                Robot.getSwerve()
-                                        .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
+                .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation)
                 .onTrue(reverse.setFalse());
+
+        netAlgae.and(Zones.bargeZone, SwerveStates.isFrontClosestToNet.not())
+                .onTrue(reverse.setTrue());
+        netAlgae.and(Zones.bargeZone, SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
     }
 
     private RobotStates() {

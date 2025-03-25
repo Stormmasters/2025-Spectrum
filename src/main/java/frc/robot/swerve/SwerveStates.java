@@ -8,6 +8,8 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.reefscape.Field;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.robot.pilot.Pilot;
@@ -23,6 +25,25 @@ public class SwerveStates {
     static Command pilotSteerCommand =
             log(pilotDrive().withName("SwerveCommands.pilotSteer").ignoringDisable(true));
     static SpectrumState steeringLock = new SpectrumState("SteeringLock");
+
+    public static final Trigger isFrontClosestToLeftStation =
+            new Trigger(
+                    () ->
+                            swerve.frontClosestToAngle(
+                                    Field.flipTrueAngleIfRed(
+                                            Field.CoralStation.leftCenterFaceDegrees)));
+    public static final Trigger isFrontClosestToRightStation =
+            new Trigger(
+                    () ->
+                            swerve.frontClosestToAngle(
+                                    Field.flipTrueAngleIfRed(
+                                            Field.CoralStation.rightCenterFaceDegrees)));
+
+    public static final Trigger isFrontClosestToNet =
+            new Trigger(
+                    () ->
+                            swerve.frontClosestToAngle(
+                                    Field.flipTrueAngleIfRed(Field.Barge.netSideDegrees)));
 
     protected static void setupDefaultCommand() {
         swerve.setDefaultCommand(pilotSteerCommand);
