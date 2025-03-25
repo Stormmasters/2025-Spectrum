@@ -153,6 +153,5 @@ imu
 integratable
 beltonAuton
 Pathplanner
-Math.atan2 
-flipXifRed
-Math.hypot robotVel.vxMetersPerSecond
+hypot
+atan

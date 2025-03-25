@@ -277,7 +277,7 @@ public class Vision implements NTSendable, Subsystem {
             } else if (multiTags && targetSize > 2) {
                 ll.sendValidStatus("Strong Multi integration");
                 xyStds = 0.1;
-                degStds = 0.15;
+                degStds = 0.1;
             } else if (multiTags && targetSize > 0.1) {
                 ll.sendValidStatus("Multi integration");
                 xyStds = 0.25;
@@ -314,6 +314,11 @@ public class Vision implements NTSendable, Subsystem {
 
             if (!integrateXY) {
                 xyStds = 999999;
+            }
+
+            if (integrateXY) {
+                xyStds = 0.01;
+                degStds = 0.01;
             }
 
             Pose2d integratedPose =
@@ -360,6 +365,12 @@ public class Vision implements NTSendable, Subsystem {
                     && targetSize > 0.4) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
+            } else if (multiTags && targetSize > 2) {
+                ll.sendValidStatus("Strong Multi integration");
+                xyStds = 0.1;
+            } else if (multiTags && targetSize > 0.1) {
+                ll.sendValidStatus("Multi integration");
+                xyStds = 0.25;
             } else if (multiTags && targetSize > 2) {
                 ll.sendValidStatus("Strong Multi integration");
                 xyStds = 0.1;
