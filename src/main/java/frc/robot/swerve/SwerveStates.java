@@ -31,19 +31,19 @@ public class SwerveStates {
                     () ->
                             swerve.frontClosestToAngle(
                                     Field.flipTrueAngleIfRed(
-                                            Field.CoralStation.leftCenterFaceDegrees)));
+                                            Field.CoralStation.leftFaceRobotPovDegrees)));
     public static final Trigger isFrontClosestToRightStation =
             new Trigger(
                     () ->
                             swerve.frontClosestToAngle(
                                     Field.flipTrueAngleIfRed(
-                                            Field.CoralStation.rightCenterFaceDegrees)));
+                                            Field.CoralStation.rightFaceRobotPovDegrees)));
 
     public static final Trigger isFrontClosestToNet =
             new Trigger(
                     () ->
                             swerve.frontClosestToAngle(
-                                    Field.flipTrueAngleIfRed(Field.Barge.netSideDegrees)));
+                                    Field.flipTrueAngleIfRed(Field.Barge.netRobotPovDegrees)));
 
     protected static void setupDefaultCommand() {
         swerve.setDefaultCommand(pilotSteerCommand);

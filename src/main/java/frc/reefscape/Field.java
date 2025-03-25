@@ -35,7 +35,7 @@ public class Field {
     }
 
     public static class Barge {
-        public static final double netSideDegrees = 0;
+        public static final double netRobotPovDegrees = 0;
 
         public static final Translation2d farCage =
                 new Translation2d(Units.inchesToMeters(345.428), Units.inchesToMeters(286.779));
@@ -50,10 +50,8 @@ public class Field {
     }
 
     public static class CoralStation {
-        public static final double leftCenterFaceDegrees =
-                144.011; // Used for reversing hp station intake
-        public static final double rightCenterFaceDegrees =
-                -144.011; // Used for reversing hp station intake
+        public static final double leftFaceRobotPovDegrees = 144.011;
+        public static final double rightFaceRobotPovDegrees = -144.011;
 
         public static final Pose2d leftCenterFace =
                 new Pose2d(
