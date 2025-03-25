@@ -33,6 +33,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
+import frc.reefscape.HomeOffsets;
+import frc.reefscape.StateChampsOffsets;
+import frc.reefscape.WorldsChampsOffsets;
 import frc.robot.Robot;
 import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.Telemetry;
@@ -55,6 +58,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     private TagDistanceAlignController tagDistanceAlignController;
     private TranslationXController xController;
     private TranslationYController yController;
+    private HomeOffsets homeOffsets = new HomeOffsets();
+    private StateChampsOffsets stateChampsOffsets = new StateChampsOffsets();
+    private WorldsChampsOffsets worldsChampsOffsets = new WorldsChampsOffsets();
 
     @Getter
     protected SwerveModuleState[] setpoints =
@@ -360,6 +366,23 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     private double getAngleDifference(double angle1, double angle2) {
         double diff = Math.abs(angle1 - angle2) % 360;
         return diff > 180 ? 360 - diff : diff;
+    }
+    // --------------------------------------------------------------------------------
+    // Offsets
+    // --------------------------------------------------------------------------------
+    public double homeOffsets(int tagID) {
+
+        return homeOffsets.getTagOffset(tagID);
+    }
+
+    public double stateChampsOffset(int tagID) {
+
+        return stateChampsOffsets.getTagOffset(tagID);
+    }
+
+    public double worldsChampsOffset(int tagID) {
+
+        return worldsChampsOffsets.getTagOffset(tagID);
     }
 
     // --------------------------------------------------------------------------------
