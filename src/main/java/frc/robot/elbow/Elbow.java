@@ -90,7 +90,7 @@ public class Elbow extends Mechanism {
 
         /* Cancoder config settings */
         @Getter @Setter private double CANcoderRotorToSensorRatio = 102.857 * 1.2;
-        // CANcoderRotorToSensorRatio * sensorToMechanismRatio;
+        // CANcoderRotorToSensorRatio / sensorToMechanismRatio;
 
         @Getter @Setter private double CANcoderSensorToMechanismRatio = 0.833333333333333333333333;
 

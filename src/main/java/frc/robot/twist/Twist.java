@@ -75,11 +75,12 @@ public class Twist extends Mechanism {
         @Getter private final double mmAcceleration = 32;
         @Getter private final double mmJerk = 0;
 
-        // Need to add auto launching positions when auton is added
+        @Getter @Setter private double sensorToMechanismRatio = 22.4;
+        @Getter @Setter private double rotorToSensorRatio = 1;
 
         /* Cancoder config settings */
-        @Getter @Setter private double CANcoderRotorToSensorRatio = 102.857 * 1.2;
-        // CANcoderRotorToSensorRatio * sensorToMechanismRatio;
+        @Getter @Setter private double CANcoderRotorToSensorRatio = 22.4;
+        // CANcoderRotorToSensorRatio / sensorToMechanismRatio;
 
         @Getter @Setter private double CANcoderSensorToMechanismRatio = 1;
 
@@ -105,7 +106,7 @@ public class Twist extends Mechanism {
             configFeedForwardGains(positionKs, positionKv, positionKa, positionKg);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
             configMotionMagic(mmCruiseVelocity, mmAcceleration, mmJerk);
-            configGearRatio(22.4);
+            configGearRatio(sensorToMechanismRatio);
             configSupplyCurrentLimit(currentLimit, true);
             configStatorCurrentLimit(torqueCurrentLimit, true);
             configForwardTorqueCurrentLimit(torqueCurrentLimit);

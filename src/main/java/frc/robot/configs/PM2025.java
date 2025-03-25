@@ -17,5 +17,8 @@ public class PM2025 extends Config {
         twist.setAttached(true);
         intake.setAttached(true);
         climb.setAttached(true);
+
+        twist.setCANcoderAttached(true);
+        twist.setCANcoderOffset(-0.385254);
     }
 }
