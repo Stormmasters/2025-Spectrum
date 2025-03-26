@@ -155,7 +155,7 @@ public class SwerveStates {
 
         final int finalTagID = tagID;
         try {
-            return swerve.calculateTagDistanceAlignController(() -> tagIDAreas[finalTagID][1]);
+            return swerve.calculateTagDistanceAlignController(() -> config.getHomeLlAimTAgoal());
         } catch (Exception e) {
             Telemetry.print("Error in getTagDistanceVelocity: " + finalTagID);
             return config.getEventLlAimTAgoal();
