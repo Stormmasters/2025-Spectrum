@@ -18,12 +18,13 @@ public class HomeOffsets {
     @Getter private static final double Tag11Offset = 0.0;
 
     // blue tag offsets
-    @Getter private static final double Tag17Offset = 0.0;
-    @Getter private static final double Tag18Offset = 0.0;
-    @Getter private static final double Tag19Offset = 0.0;
-    @Getter private static final double Tag20Offset = 0.0;
-    @Getter private static final double Tag21Offset = 0.0;
-    @Getter private static final double Tag22Offset = 0.0;
+    @Getter private static final double Tag17Offset = 0.5;
+    @Getter private static final double Tag18Offset = 0.5;
+    @Getter private static final double Tag19Offset = 0.5;
+    @Getter private static final double Tag20Offset = 0.5;
+    @Getter private static final double Tag21Offset = 0.5;
+    @Getter private static final double Tag22Offset = 0.5;
+
 
     // blue tag area goals
     @Getter private final double eventTag17TAGoal = 7.8;
