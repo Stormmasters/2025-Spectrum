@@ -189,13 +189,14 @@ public class Robot extends SpectrumRobot {
         RobotStates.clearStates().schedule();
     }
 
-    public void setupAutoVisualizer() {
+    public void setupSmartDashboardData() {
         SmartDashboard.putData("Field2d", field2d);
+        SmartDashboard.putBoolean("Initialized?", commandInit);
     }
 
     @Override // Deprecated
     public void robotInit() {
-        setupAutoVisualizer();
+        setupSmartDashboardData();
         WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
     }
 
