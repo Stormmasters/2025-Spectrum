@@ -25,6 +25,6 @@ public class FM2025 extends Config {
         elbow.setCANcoderAttached(true);
         elbow.setCANcoderOffset(0.451741333); // add 0.208333333 to the inverse of the position
         twist.setCANcoderAttached(true);
-        twist.setCANcoderOffset(-0.485596); // normal procedure
+        twist.setCANcoderOffset(0.463623);
     }
 }
