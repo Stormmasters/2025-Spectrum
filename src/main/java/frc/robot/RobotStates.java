@@ -219,35 +219,6 @@ public class RobotStates {
                 .onTrue(reverse.setFalse());
         netAlgae.or(processorAlgae, groundAlgae, groundCoral).onTrue(reverse.setFalse());
 
-        // stationIntaking
-        //         .and(
-        //                 Zones.bottomLeftZone,
-        //                 () ->
-        //                         !Robot.getSwerve()
-        //                                 .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
-        //         .onTrue(reverse.setTrue());
-        // stationIntaking
-        //         .and(
-        //                 Zones.bottomLeftZone,
-        //                 () ->
-        //                         Robot.getSwerve()
-        //                                 .frontClosestToAngle(Field.flipTrueAngleIfRed(144.011)))
-        //         .onTrue(reverse.setFalse());
-        // stationIntaking
-        //         .and(
-        //                 Zones.bottomRightZone,
-        //                 () ->
-        //                         !Robot.getSwerve()
-        //                                 .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
-        //         .onTrue(reverse.setTrue());
-        // stationIntaking
-        //         .and(
-        //                 Zones.bottomRightZone,
-        //                 () ->
-        //                         Robot.getSwerve()
-        //                                 .frontClosestToAngle(Field.flipTrueAngleIfRed(-144.011)))
-        //         .onTrue(reverse.setFalse());
-
         stationIntaking
                 .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
                 .onTrue(reverse.setTrue());
@@ -261,9 +232,8 @@ public class RobotStates {
                 .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation)
                 .onTrue(reverse.setFalse());
 
-        netAlgae.and(Zones.bargeZone, SwerveStates.isFrontClosestToNet.not())
-                .onTrue(reverse.setTrue());
-        netAlgae.and(Zones.bargeZone, SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
+        netAlgae.and(SwerveStates.isFrontClosestToNet.not()).onTrue(reverse.setTrue());
+        netAlgae.and(SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
     }
 
     private RobotStates() {

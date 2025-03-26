@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
+import frc.reefscape.Zones;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.robot.pilot.Pilot;
@@ -42,8 +43,8 @@ public class SwerveStates {
     public static final Trigger isFrontClosestToNet =
             new Trigger(
                     () ->
-                            swerve.frontClosestToAngle(
-                                    Field.flipTrueAngleIfRed(Field.Barge.netRobotPovDegrees)));
+                            swerve.frontClosestToAngle(Field.Barge.netRobotPovDegrees)
+                                    == Zones.blueFieldSide.getAsBoolean());
 
     protected static void setupDefaultCommand() {
         swerve.setDefaultCommand(pilotSteerCommand);
