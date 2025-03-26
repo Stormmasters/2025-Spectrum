@@ -91,12 +91,22 @@ public class SwerveStates {
                 .alongWith(new PrintCommand("!! autonAlign Ran !!"));
     }
 
+//     public static Command reefAimDrive() {
+//         return fpvAimDrive(
+//                         SwerveStates::getTagDistanceVelocity,
+//                         SwerveStates::getTagTxVelocity,
+//                         Robot.getVision()::getReefTagAngle)
+//                 .withName("Swerve.reefAimDrive");
+//     }
+
     public static Command reefAimDrive() {
-        return fpvAimDrive(
-                        SwerveStates::getTagDistanceVelocity,
-                        SwerveStates::getTagTxVelocity,
-                        Robot.getVision()::getReefTagAngle)
-                .withName("Swerve.reefAimDrive");
+        Pose2d reef = Field.Reef.getScorePoseFromTagID(Field.Reef.getReefZoneTagID(swerve.getRobotPose()));
+
+        return alignDrive(
+                () -> reef.getX(), 
+                () -> reef.getY(), 
+                () -> reef.getRotation().getDegrees())
+        .withName("Swerve.reefAimDrive");
     }
 
     public static Command alignToXDrive(DoubleSupplier xGoalMeters) {
