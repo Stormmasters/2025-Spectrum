@@ -141,13 +141,15 @@ public class Twist extends Mechanism {
         this.config = config;
 
         if (isAttached()) {
-            canCoderConfig =
-                    new SpectrumCANcoderConfig(
-                            config.getCANcoderRotorToSensorRatio(),
-                            config.getCANcoderSensorToMechanismRatio(),
-                            config.getCANcoderOffset(),
-                            config.isCANcoderAttached());
-            canCoder = new SpectrumCANcoder(44, canCoderConfig, motor, config);
+            if (config.isCANcoderAttached()) {
+                canCoderConfig =
+                        new SpectrumCANcoderConfig(
+                                config.getCANcoderRotorToSensorRatio(),
+                                config.getCANcoderSensorToMechanismRatio(),
+                                config.getCANcoderOffset(),
+                                config.isCANcoderAttached());
+                canCoder = new SpectrumCANcoder(44, canCoderConfig, motor, config);
+            }
 
             setInitialPosition();
         }
