@@ -633,61 +633,7 @@ public class Vision implements NTSendable, Subsystem {
         }
     }
 
-    public String getCageToClimb() {
-        Pose2d robotPose = frontLL.getMegaTag2_Pose2d();
-        double[] cageDiffs = new double[3];
-
-        if (Field.isBlue()) {
-            cageDiffs[0] = Math.abs(robotPose.getY() - Units.inchesToMeters(286.779));
-            cageDiffs[1] = Math.abs(robotPose.getY() - Units.inchesToMeters(242.855));
-            cageDiffs[2] = Math.abs(robotPose.getY() - Units.inchesToMeters(199.947));
-
-            if (indexOfSmallest(cageDiffs) == 0) {
-                return "B1";
-            } else if (indexOfSmallest(cageDiffs) == 1) {
-                return "B2";
-            } else if (indexOfSmallest(cageDiffs) == 2) {
-                return "B3";
-            } else {
-                return "Nothing";
-            }
-        } else {
-            cageDiffs[0] =
-                    Math.abs(
-                            Field.flipYifRed(robotPose.getY())
-                                    - Field.flipYifRed(Units.inchesToMeters(286.779)));
-            cageDiffs[1] =
-                    Math.abs(
-                            Field.flipYifRed(robotPose.getY())
-                                    - Field.flipYifRed(Units.inchesToMeters(242.855)));
-            cageDiffs[2] =
-                    Math.abs(
-                            Field.flipYifRed(robotPose.getY())
-                                    - Field.flipYifRed(Units.inchesToMeters(199.947)));
-
-            if (indexOfSmallest(cageDiffs) == 0) {
-                return "R1";
-            } else if (indexOfSmallest(cageDiffs) == 1) {
-                return "R2";
-            } else if (indexOfSmallest(cageDiffs) == 2) {
-                return "R3";
-            } else {
-                return "Nothing";
-            }
-        }
-    }
-
-    public static double indexOfSmallest(double[] array) {
-        int indexOfSmallest = 0;
-        double smallestIndex = array[indexOfSmallest];
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] <= smallestIndex) {
-                smallestIndex = array[i];
-                indexOfSmallest = i;
-            }
-        }
-        return indexOfSmallest;
-    }
+    
 
     // ------------------------------------------------------------------------------
     // VisionStates Commands
