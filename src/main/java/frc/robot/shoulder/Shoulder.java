@@ -172,7 +172,7 @@ public class Shoulder extends Mechanism {
         if (isAttached()) {
             builder.addStringProperty("CurrentCommand", this::getCurrentCommandName, null);
             builder.addDoubleProperty(
-                    "Position Degrees", () -> (this.getPositionDegrees() - config.offset), null);
+                    "Position Degrees", () -> (getPositionDegrees() - config.offset), null);
             // builder.addDoubleProperty("Velocity", this::getVelocityRPM, null);
             builder.addDoubleProperty("MotorVoltage", this::getVoltage, null);
             builder.addDoubleProperty("StatorCurrent", this::getStatorCurrent, null);
@@ -291,6 +291,16 @@ public class Shoulder extends Mechanism {
         return super.moveToDegrees(offsetPosition(degrees)).withName(getName() + ".runPoseDegrees");
     }
 
+    public double checkMoveOverTop(DoubleSupplier degrees) {
+        double newDeg = degrees.getAsDouble();
+        if (newDeg < -90 && (getPositionDegrees() - config.offset) > 90) {
+            newDeg += 360;
+        } else if (newDeg > 90 && (getPositionDegrees() - config.offset) < -90) {
+            newDeg -= 360;
+        }
+        return newDeg;
+    }
+
     public Command move(DoubleSupplier shrinkDegrees, DoubleSupplier exDegrees) {
         return run(() -> {
                     if (!RobotStates.shrink.getAsBoolean()) {
@@ -319,7 +329,7 @@ public class Shoulder extends Mechanism {
     }
 
     public DoubleSupplier getOffsetRotations(DoubleSupplier degrees) {
-        return () -> degreesToRotations(offsetPosition(degrees));
+        return () -> degreesToRotations(offsetPosition(() -> checkMoveOverTop(degrees)));
     }
 
     public DoubleSupplier offsetPosition(DoubleSupplier position) {
@@ -352,7 +362,7 @@ public class Shoulder extends Mechanism {
                                     config.shoulderY,
                                     config.simRatio,
                                     config.length,
-                                    -270,
+                                    -360,
                                     360.0 - 90.0,
                                     -90)
                             .setMount(Robot.getElevator().getSim(), true),

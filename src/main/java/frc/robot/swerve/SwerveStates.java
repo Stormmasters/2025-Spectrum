@@ -10,6 +10,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.reefscape.Field;
+import frc.reefscape.Zones;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.reefscape.Field;
@@ -18,6 +21,7 @@ import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
 import java.util.function.DoubleSupplier;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class SwerveStates {
     static Swerve swerve = Robot.getSwerve();
@@ -27,6 +31,25 @@ public class SwerveStates {
     static Command pilotSteerCommand =
             log(pilotDrive().withName("SwerveCommands.pilotSteer").ignoringDisable(true));
     static SpectrumState steeringLock = new SpectrumState("SteeringLock");
+
+    public static final Trigger isFrontClosestToLeftStation =
+            new Trigger(
+                    () ->
+                            swerve.frontClosestToAngle(
+                                    Field.flipTrueAngleIfRed(
+                                            Field.CoralStation.leftFaceRobotPovDegrees)));
+    public static final Trigger isFrontClosestToRightStation =
+            new Trigger(
+                    () ->
+                            swerve.frontClosestToAngle(
+                                    Field.flipTrueAngleIfRed(
+                                            Field.CoralStation.rightFaceRobotPovDegrees)));
+
+    public static final Trigger isFrontClosestToNet =
+            new Trigger(
+                    () ->
+                            swerve.frontClosestToAngle(Field.Barge.netRobotPovDegrees)
+                                    == Zones.blueFieldSide.getAsBoolean());
 
     protected static void setupDefaultCommand() {
         swerve.setDefaultCommand(pilotSteerCommand);

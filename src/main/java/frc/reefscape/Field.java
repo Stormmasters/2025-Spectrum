@@ -39,6 +39,8 @@ public class Field {
     }
 
     public static class Barge {
+        public static final double netRobotPovDegrees = 0;
+
         public static final Translation2d farCage =
                 new Translation2d(Units.inchesToMeters(345.428), Units.inchesToMeters(286.779));
         public static final Translation2d middleCage =
@@ -114,6 +116,9 @@ public class Field {
     }
 
     public static class CoralStation {
+        public static final double leftFaceRobotPovDegrees = 144.011;
+        public static final double rightFaceRobotPovDegrees = -144.011;
+
         public static final Pose2d leftCenterFace =
                 new Pose2d(
                         Units.inchesToMeters(33.526),
