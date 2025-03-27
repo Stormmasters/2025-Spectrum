@@ -385,6 +385,27 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         return worldsChampsOffsets.getTagOffset(tagID);
     }
 
+   
+
+    Pose2d getScoreReefPose() {
+        int reefTagID = Field.Reef.getReefZoneTagID(getRobotPose());
+
+        return Field.Reef.getScorePoseFromTagID(reefTagID);
+    }
+
+    
+    DoubleSupplier getScoreReefPoseX() {
+        return () -> getScoreReefPose().getX();
+    }
+
+    DoubleSupplier getScoreReefPoseY() {
+        return () -> getScoreReefPose().getY();
+    }
+
+    DoubleSupplier getScoreReefPoseAngle() {
+        return () -> getScoreReefPose().getRotation().getRadians();
+    }
+
     // --------------------------------------------------------------------------------
     // Rotation Controller
     // --------------------------------------------------------------------------------

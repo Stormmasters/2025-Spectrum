@@ -100,12 +100,10 @@ public class SwerveStates {
 //     }
 
     public static Command reefAimDrive() {
-        Pose2d reef = Field.Reef.getScorePoseFromTagID(Field.Reef.getReefZoneTagID(swerve.getRobotPose()));
-
         return alignDrive(
-                () -> reef.getX(), 
-                () -> reef.getY(), 
-                () -> reef.getRotation().getDegrees())
+                swerve.getScoreReefPoseX(), 
+                swerve.getScoreReefPoseY(), 
+                swerve.getScoreReefPoseAngle())
         .withName("Swerve.reefAimDrive");
     }
 

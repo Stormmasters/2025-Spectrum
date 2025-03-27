@@ -64,20 +64,20 @@ public class Field {
                 Math.abs(robotPose.getY() - closeCage.getY())};
     
             if(isRed()) {
+                double redRobotYPose = Field.flipYifRed(robotPose.getY());
+
                 cageDiffs[0] =
                         Math.abs(
-                                Field.flipYifRed(robotPose.getY())
-                                        - Field.flipYifRed(Units.inchesToMeters(286.779)));
+                                redRobotYPose
+                                        - Field.flipYifRed(farCage.getY()));
                 cageDiffs[1] =
                         Math.abs(
                                 Field.flipYifRed(robotPose.getY())
-                                        - Field.flipYifRed(Units.inchesToMeters(242.855)));
+                                        - Field.flipYifRed(middleCage.getY()));
                 cageDiffs[2] =
                         Math.abs(
                                 Field.flipYifRed(robotPose.getY())
-                                        - Field.flipYifRed(Units.inchesToMeters(199.947)));
-    
-                
+                                        - Field.flipYifRed(closeCage.getY()));
             }
             index = indexOfSmallest(cageDiffs);
 
