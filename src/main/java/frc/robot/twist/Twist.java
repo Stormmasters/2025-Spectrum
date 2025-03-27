@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.RobotStates;
@@ -51,12 +52,13 @@ public class Twist extends Mechanism {
         @Getter private final double groundAlgaeIntake = 0;
         @Getter private final double groundCoralIntake = 179.9;
         @Getter private final double leftCoral = 90;
-        @Getter private final double rightCoral = -90;
+        @Getter private final double rightCoral = 270; // -90;
         @Getter private final double l1Coral = 0;
         @Getter private final double net = algaeIntake;
         @Getter private final double climbPrep = 179.9;
 
         @Getter private final double initPosition = 0;
+        @Getter private double triggerTolerance = 0.95;
 
         /* Twist config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -106,10 +108,10 @@ public class Twist extends Mechanism {
             configForwardTorqueCurrentLimit(torqueCurrentLimit);
             configReverseTorqueCurrentLimit(torqueCurrentLimit);
             configMinMaxRotations(-.25, 0.75);
-            configReverseSoftLimit(getMinRotations(), true);
-            configForwardSoftLimit(getMaxRotations(), true);
+            configReverseSoftLimit(getMinRotations(), false);
+            configForwardSoftLimit(getMaxRotations(), false);
             configNeutralBrakeMode(true);
-            configContinuousWrap(false);
+            configContinuousWrap(true);
             configGravityType(true);
             configClockwise_Positive();
         }
@@ -298,6 +300,65 @@ public class Twist extends Mechanism {
                 });
     }
 
+    // public Command moveAwayFromElevator(DoubleSupplier degrees) {
+    //     return new ConditionalCommand(scorePrepAwayFromElevator(degrees), move(degrees),
+    // actionPrepState);
+    // }
+
+    public Command moveAwayFromElevator(DoubleSupplier degrees) {
+        return new ConditionalCommand(
+                move(() -> adjustTargetToReverse(degrees), true),
+                move(() -> adjustTargetToReverse(degrees), false),
+                () -> checkClockwiseFromElevator(() -> adjustTargetToReverse(degrees)));
+    }
+
+    public double adjustTargetToReverse(DoubleSupplier degrees) {
+        if (RobotStates.reverse.getAsBoolean()) {
+            return degrees.getAsDouble() + 180;
+        }
+        return degrees.getAsDouble();
+    }
+
+    private boolean checkClockwiseFromElevator(DoubleSupplier degrees) {
+        // check if moving from within to past elevator
+        double degreesMod = degrees.getAsDouble() % 360;
+        double currentMod = getPositionDegrees() % 360;
+
+        if (currentMod < 0) {
+            currentMod += 360;
+        }
+
+        if (degreesMod > 180 && currentMod < 180) {
+            if (RobotStates.reverse.getAsBoolean()) {
+                return false;
+            }
+            return true;
+        }
+
+        // check if moving from past elevator back to within
+        if (degreesMod < 180 && currentMod > 180) {
+            if (RobotStates.reverse.getAsBoolean()) {
+                return false;
+            }
+            return true;
+        }
+
+        if (degreesMod < currentMod) {
+            return true;
+        }
+        return false;
+    }
+
+    // public Command scorePrepAwayFromElevator(DoubleSupplier degrees) {
+    //     return new ConditionalCommand(
+    //             rightScoreAwayFromElevator(degrees), move(degrees, true), rightScore);
+    // }
+
+    // public Command rightScoreAwayFromElevator(DoubleSupplier degrees) {
+    //     return new ConditionalCommand(
+    //             move(degrees, false), move(degrees, true), RobotStates.reverse);
+    // }
+
     public DoubleSupplier getIfReversedDegrees(DoubleSupplier degrees) {
         return () ->
                 (RobotStates.reverse.getAsBoolean())
@@ -356,10 +417,9 @@ public class Twist extends Mechanism {
                             DCMotor.getKrakenX60Foc(config.getNumMotors()),
                             config.getSimRatio(),
                             1.2,
-                            config.getCoralLength(), // placeholder, should really be length of
-                            // forearm
-                            Math.toRadians(-360),
-                            Math.toRadians(360),
+                            config.getCoralLength(),
+                            -100000000.0, // Math.toRadians(-360),
+                            100000000.0, // Math.toRadians(360),
                             false, // Simulate gravity (change back to true)
                             0);
             this.twistMotorSim = twistMotorSim;
@@ -514,7 +574,11 @@ public class Twist extends Mechanism {
             if (position > 180) {
                 position -= 180;
                 position = 180 - position;
+            } else if (position < -180) {
+                position += 180;
+                position = 180 + position;
             }
+
             return (position / 180) * 100;
         }
 

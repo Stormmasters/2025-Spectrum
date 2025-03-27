@@ -13,6 +13,7 @@ import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
 import frc.robot.swerve.SwerveStates;
+import frc.robot.twist.TwistStates;
 import frc.robot.vision.VisionStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
@@ -42,6 +43,7 @@ public class RobotStates {
     public static final SpectrumState actionState = new SpectrumState("actionState");
     public static final SpectrumState homeAll = new SpectrumState("homeAll");
     public static final SpectrumState autonStationIntake = new SpectrumState("autonStationIntake");
+    public static final SpectrumState twistAtReef = new SpectrumState("twistCoralReef");
 
     /**
      * Define Robot States here and how they can be triggered States should be triggers that command
@@ -197,6 +199,11 @@ public class RobotStates {
         operator.leftScore.and(operator.staged).onTrue(rightScore.setFalse());
         operator.rightScore.and(operator.staged).onTrue(rightScore.setTrue());
 
+        actionPrepState
+                .and(stagedCoral, TwistStates.isLeft.or(TwistStates.isRight))
+                .onTrue(twistAtReef.setTrue());
+        actionState.onTrue(twistAtReef.setFalse());
+
         // *********************************
         // Auton States
         autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
@@ -211,11 +218,11 @@ public class RobotStates {
         operator.toggleReverse.or(pilot.toggleReverse).onTrue(reverse.toggle());
         stagedCoral
                 .or(L2Algae, L3Algae)
-                .and(VisionStates.usingRearTag, actionPrepState.not())
+                .and(VisionStates.usingRearTag, actionPrepState.not(), actionState.not())
                 .onTrue(reverse.setTrue());
         stagedCoral
                 .or(L2Algae, L3Algae)
-                .and(VisionStates.usingRearTag.not(), actionPrepState.not())
+                .and(VisionStates.usingRearTag.not(), actionPrepState.not(), actionState.not())
                 .onTrue(reverse.setFalse());
         netAlgae.or(processorAlgae, groundAlgae, groundCoral).onTrue(reverse.setFalse());
 
@@ -261,7 +268,8 @@ public class RobotStates {
                         actionPrepState.setFalse(),
                         actionState.setFalse(),
                         homeAll.setFalse(),
-                        coastMode.setFalse())
+                        coastMode.setFalse(),
+                        twistAtReef.setFalse())
                 .withName("Clear States");
     }
 }
