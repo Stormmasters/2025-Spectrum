@@ -100,7 +100,7 @@ public class Auton {
     public void exit() {
         printAutoDuration();
     }
-    
+
     public Command sourceL4(boolean mirrored) {
         return (RobotStates.homeAll
                         .setFalse()

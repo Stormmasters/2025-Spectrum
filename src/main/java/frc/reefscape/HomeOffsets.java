@@ -1,11 +1,11 @@
 package frc.reefscape;
 
 import frc.robot.Robot;
+import frc.robot.swerve.SwerveConfig;
 import lombok.Getter;
 
 public class HomeOffsets {
-    // TODO: connect home offsets to Swerve for given offsets
-    // TODO: set TA offsets in here for home
+
     private static final double halfRobotLength =
             Robot.getSwerve().getConfig().getRobotLength() / 2;
 
@@ -21,10 +21,9 @@ public class HomeOffsets {
     @Getter private static final double Tag17Offset = 0.5;
     @Getter private static final double Tag18Offset = 0.5;
     @Getter private static final double Tag19Offset = 0.5;
-    @Getter private static final double Tag20Offset = 0.5;
+    @Getter private static final double Tag20Offset = 100;
     @Getter private static final double Tag21Offset = 0.5;
     @Getter private static final double Tag22Offset = 0.5;
-
 
     // blue tag area goals
     @Getter private final double eventTag17TAGoal = 7.8;
@@ -59,21 +58,4 @@ public class HomeOffsets {
         {10, Tag10Offset + halfRobotLength},
         {11, Tag11Offset + halfRobotLength}
     };
-
-    public double getTagOffset(int tag) {
-        double homeTag = tag;
-        if (homeTag < 0 || homeTag > 22) {
-            return -1;
-        }
-
-        if (homeTag > 17) {
-            homeTag -= 17;
-        }
-
-        try {
-            return tagOffsets[tag][1];
-        } catch (Exception e) {
-            return -1;
-        }
-    }
 }

@@ -58,9 +58,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     private TagDistanceAlignController tagDistanceAlignController;
     private TranslationXController xController;
     private TranslationYController yController;
-    private HomeOffsets homeOffsets = new HomeOffsets();
-    private StateChampsOffsets stateChampsOffsets = new StateChampsOffsets();
-    private WorldsChampsOffsets worldsChampsOffsets = new WorldsChampsOffsets();
+    private HomeOffsets homeOffsets;
+    private StateChampsOffsets stateChampsOffsets;
+    private WorldsChampsOffsets worldsChampsOffsets;
 
     @Getter
     protected SwerveModuleState[] setpoints =
@@ -372,38 +372,56 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     // --------------------------------------------------------------------------------
     public double homeOffsets(int tagID) {
 
-        return homeOffsets.getTagOffset(tagID);
+        return getTagOffset(tagID);
     }
 
-    public double stateChampsOffset(int tagID) {
+    public double getTagOffset(int tag) {
+        double[][] tagOffsetsArray = homeOffsets.getTagOffsets();
+        double homeTag = tag;
+        if (homeTag < 0 || homeTag > 22) {
+            return -1;
+        }
 
-        return stateChampsOffsets.getTagOffset(tagID);
+        if (homeTag > 17) {
+            homeTag -= 17;
+        }
+
+        try {
+            return tagOffsetsArray[tag][1];
+        } catch (Exception e) {
+            return 0;
+        }
     }
-
-    public double worldsChampsOffset(int tagID) {
-
-        return worldsChampsOffsets.getTagOffset(tagID);
-    }
-
-   
 
     Pose2d getScoreReefPose() {
         int reefTagID = Field.Reef.getReefZoneTagID(getRobotPose());
+        if (reefTagID < 0) {
+            return getRobotPose();
+        }
 
+        SmartDashboard.putNumber("Target ID", reefTagID);
         return Field.Reef.getScorePoseFromTagID(reefTagID);
     }
 
-    
-    DoubleSupplier getScoreReefPoseX() {
-        return () -> getScoreReefPose().getX();
+    double getScoreReefPoseX() {
+        double reefX = getScoreReefPose().getX();
+
+        SmartDashboard.putNumber("TargetReefX", reefX);
+        return reefX;
     }
 
-    DoubleSupplier getScoreReefPoseY() {
-        return () -> getScoreReefPose().getY();
+    double getScoreReefPoseY() {
+        double reefY = getScoreReefPose().getY();
+
+        SmartDashboard.putNumber("TargetReefY", reefY);
+        return reefY;
     }
 
-    DoubleSupplier getScoreReefPoseAngle() {
-        return () -> getScoreReefPose().getRotation().getRadians() + 180;
+    double getScoreReefPoseAngle() {
+        double reefAngle = getScoreReefPose().getRotation().getRadians() + Math.PI;
+
+        SmartDashboard.putNumber("TargetReefAngle", reefAngle);
+        return reefAngle;
     }
 
     // --------------------------------------------------------------------------------
@@ -432,6 +450,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     // --------------------------------------------------------------------------------
     // Tag Center Align Controller
     // --------------------------------------------------------------------------------
+    // void resetTagCenterAlignController(double currentMeters) {
+    //     tagCenterAlignController.reset(currentMeters);
+    // }
+
     double calculateTagCenterAlignController(
             DoubleSupplier targetMeters, DoubleSupplier currentMeters) {
         return tagCenterAlignController.calculate(
@@ -441,6 +463,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     // --------------------------------------------------------------------------------
     // Tag Distance Align Controller
     // --------------------------------------------------------------------------------
+    void resetTagDistanceAlignController(double currentMeters) {
+        tagDistanceAlignController.reset(currentMeters);
+    }
+
     double calculateTagDistanceAlignController(DoubleSupplier targetArea) {
         boolean front = true;
         if (Robot.getVision().frontLL.targetInView()) {

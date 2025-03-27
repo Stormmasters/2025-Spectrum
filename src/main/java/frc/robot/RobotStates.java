@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
@@ -219,18 +218,18 @@ public class RobotStates {
                 .onTrue(reverse.setFalse());
         netAlgae.or(processorAlgae, groundAlgae, groundCoral).onTrue(reverse.setFalse());
 
-        stationIntaking
-                .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
-                .onTrue(reverse.setTrue());
-        stationIntaking
-                .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation)
-                .onTrue(reverse.setFalse());
-        stationIntaking
-                .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation.not())
-                .onTrue(reverse.setTrue());
-        stationIntaking
-                .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation)
-                .onTrue(reverse.setFalse());
+        // stationIntaking
+        //         .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
+        //         .onTrue(reverse.setTrue());
+        // stationIntaking
+        //         .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation)
+        //         .onTrue(reverse.setFalse());
+        // stationIntaking
+        //         .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation.not())
+        //         .onTrue(reverse.setTrue());
+        // stationIntaking
+        //         .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation)
+        //         .onTrue(reverse.setFalse());
 
         netAlgae.and(SwerveStates.isFrontClosestToNet.not()).onTrue(reverse.setTrue());
         netAlgae.and(SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
