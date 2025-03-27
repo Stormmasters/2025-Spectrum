@@ -46,6 +46,13 @@ public class TagCenterAlignController {
         return controller.atSetpoint();
     }
 
+    public boolean atGoal(double current) {
+        double goal = 0;
+        boolean atGoal = Math.abs(current - goal) < config.getTagCenterGoalTolerance();
+        System.out.println("At Center Goal: " + atGoal + " Goal: " + goal + " Current: " + current);
+        return atGoal;
+    }
+
     public void reset(double currentMeters) {
         controller.reset(currentMeters);
     }

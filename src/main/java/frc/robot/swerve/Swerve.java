@@ -395,6 +395,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
                 targetMeters.getAsDouble(), currentMeters.getAsDouble());
     }
 
+    public boolean atTagCenterGoal(double currentMeters) {
+        return tagCenterAlignController.atGoal(currentMeters);
+    }
+
     // --------------------------------------------------------------------------------
     // Tag Distance Align Controller
     // --------------------------------------------------------------------------------
@@ -419,6 +423,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         } else {
             return 0;
         }
+    }
+
+    public boolean atTagDistanceGoal(double currentArea) {
+        return tagDistanceAlignController.atGoal(currentArea);
     }
 
     // --------------------------------------------------------------------------------

@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L1 Leave"
+            "pathName": "4 - Source Only"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 5.0
+            "pathName": "5 - Source Only"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Photon",
+  "folder": "Better Source L4",
   "choreoAuto": false
 }

@@ -4,19 +4,18 @@
   "holonomicMode": true,
   "pathFolders": [
     "Blue Center Algae Rush",
-    "Side Start Source L4",
     "Blue Left Preload-Source ",
     "Blue Left Source",
     "Config Paths",
-    "Photon"
+    "Side Start Source L4"
   ],
   "autoFolders": [
+    "Algae Rush",
+    "Better Source L4",
     "Blue Center Origin",
     "Blue Left Origin",
     "Blue Right Origin",
     "Config Autos",
-    "Algae Rush",
-    "Photon",
     "Source L4"
   ],
   "defaultMaxVel": 4.0,

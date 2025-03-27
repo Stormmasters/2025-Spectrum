@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Drive Forward"
+            "pathName": "1 - Source Only"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
-  "folder": null,
+  "resetOdom": false,
+  "folder": "Better Source L4",
   "choreoAuto": false
 }

@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "L4 Leave"
+            "pathName": "4 - L4 Trough Rush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3R - Source Only"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Photon",
+  "folder": "Better Source L4",
   "choreoAuto": false
 }

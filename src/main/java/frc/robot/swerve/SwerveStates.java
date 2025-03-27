@@ -94,18 +94,22 @@ public class SwerveStates {
                             PPHolonomicDriveController.overrideXFeedback(() -> finalFieldVelocityX);
                             PPHolonomicDriveController.overrideYFeedback(() -> finalFieldVelocityY);
 
-                            System.out.println(
-                                    "!! X Override: "
-                                            + finalFieldVelocityX
-                                            + " | Y Override: "
-                                            + finalFieldVelocityY
-                                            + " !!");
+                            // System.out.println(
+                            //         "!! X Override: "
+                            //                 + finalFieldVelocityX
+                            //                 + " | Y Override: "
+                            //                 + finalFieldVelocityY
+                            //                 + " !!");
                         })
                 .withName("Swerve.autonAlign");
     }
 
     public static Command clearFeedBack() {
-        return (new InstantCommand(() -> PPHolonomicDriveController.clearFeedbackOverrides()))
+        return (new InstantCommand(
+                        () -> {
+                            PPHolonomicDriveController.clearFeedbackOverrides();
+                            System.out.println("!! Feedback Cleared !!");
+                        }))
                 .withName("Swerve.clearFeedbackOverrides");
     }
 

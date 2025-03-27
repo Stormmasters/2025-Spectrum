@@ -16,7 +16,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.Robot;
 import frc.robot.RobotStates;
+import frc.robot.swerve.Swerve;
 import frc.robot.swerve.SwerveStates;
 import frc.spectrumLib.Telemetry;
 import java.io.IOException;
@@ -53,6 +55,7 @@ public class Auton {
     public static final EventTrigger autonHomeOff = new EventTrigger("homeOff");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
+    static Swerve swerve = Robot.getSwerve();
     private boolean autoMessagePrinted = true;
     private double autonStart = 0;
 
@@ -68,7 +71,7 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption("test", SpectrumAuton("test", false));
+        // pathChooser.addOption("test", test(false));
 
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
@@ -101,6 +104,11 @@ public class Auton {
         printAutoDuration();
     }
 
+    public boolean atAlignGoal() {
+        return swerve.atTagCenterGoal(Robot.getVision().getTagTX())
+                && swerve.atTagDistanceGoal(Robot.getVision().getTagTA());
+    }
+
     public Command sourceL4(boolean mirrored) {
         return (RobotStates.homeAll
                         .setFalse()
@@ -113,86 +121,27 @@ public class Auton {
                 .withName("Blue Left - Source L4");
     }
 
-    public Command centerAlgae(boolean mirrored) {
-        return (SpectrumAuton("1 - Blue Center Algae", mirrored)
-                .withTimeout(1)
-                .andThen(
-                        aimHighAlgae(1.5),
-                        SpectrumAuton("2 - Blue Center Algae", mirrored),
-                        algaeNet(),
-                        SpectrumAuton("3 - Blue Center Algae", mirrored),
-                        aimLowAlgae(1.5),
-                        SpectrumAuton("4 - Blue Center Algae", mirrored),
-                        algaeNet(),
-                        SpectrumAuton("5 - Blue Center Algae", mirrored),
-                        aimLowAlgae(1.5),
-                        SpectrumAuton("6 - Blue Center Algae", mirrored),
-                        algaeNet())
-                .withName("Blue Center Algae Rush"));
+    public Command sideStartL4(boolean mirrored) {
+        return (SpectrumAuton("L4-Start", mirrored)
+                        .until(() -> atAlignGoal())
+                        .andThen(
+                                Commands.waitSeconds(.5),
+                                SpectrumAuton("L4-Leg1", mirrored).until(() -> atAlignGoal()),
+                                Commands.waitSeconds(.5),
+                                SpectrumAuton("L4-Leg2", mirrored).until(() -> atAlignGoal()),
+                                Commands.waitSeconds(.5),
+                                SpectrumAuton("L4-Leg3", mirrored).until(() -> atAlignGoal())))
+                .withName("Blue Left - Source L4");
     }
+
+    // public Command test(boolean mirrored) {
+    //     return (SpectrumAuton("test", mirrored)
+    //             .until(() -> atAlignGoal())
+    //             .andThen(SwerveStates.clearFeedBack()));
+    // }
 
     public Command aimL4score(double alignTime) {
         return SwerveStates.reefAimDrive().withTimeout(alignTime).alongWith(l4score());
-    }
-
-    public Command aimL1score(double alignTime) {
-        return SwerveStates.reefAimDrive().withTimeout(alignTime).alongWith(l1score());
-    }
-
-    public Command aimLowAlgae(double alignTime) {
-        return SwerveStates.reefAimDrive().withTimeout(alignTime).alongWith(lowAlgae());
-    }
-
-    public Command aimHighAlgae(double alignTime) {
-        return SwerveStates.reefAimDrive().withTimeout(alignTime).alongWith(highAlgae());
-    }
-
-    public Command algaeNet() {
-        return Commands.waitSeconds(0.05)
-                .andThen(
-                        RobotStates.algae
-                                .setTrue()
-                                .alongWith(RobotStates.l4.setTrue(), RobotStates.homeAll.setFalse())
-                                .andThen(
-                                        Commands.waitSeconds(0.05),
-                                        RobotStates.actionPrepState.setTrue(),
-                                        Commands.waitSeconds(1.1),
-                                        RobotStates.actionPrepState.setFalse(),
-                                        Commands.waitSeconds(0.5),
-                                        RobotStates.clearStates(),
-                                        RobotStates.homeAll.setTrue()));
-    }
-
-    public Command lowAlgae() {
-        return Commands.waitSeconds(0.05)
-                .andThen(
-                        RobotStates.algae
-                                .setTrue()
-                                .alongWith(RobotStates.l2.setTrue(), RobotStates.homeAll.setFalse())
-                                .andThen(
-                                        Commands.waitSeconds(0.05),
-                                        RobotStates.actionPrepState.setTrue(),
-                                        Commands.waitSeconds(1.1),
-                                        RobotStates.actionPrepState.setFalse(),
-                                        Commands.waitSeconds(0.5),
-                                        RobotStates.clearStates(),
-                                        RobotStates.homeAll.setTrue()));
-    }
-
-    public Command highAlgae() {
-        return Commands.waitSeconds(0.05)
-                .andThen(
-                        RobotStates.algae
-                                .setTrue()
-                                .alongWith(RobotStates.l3.setTrue(), RobotStates.homeAll.setFalse())
-                                .andThen(
-                                        Commands.waitSeconds(0.05),
-                                        RobotStates.actionPrepState.setTrue(),
-                                        Commands.waitSeconds(1.1),
-                                        RobotStates.actionPrepState.setFalse(),
-                                        Commands.waitSeconds(0.5),
-                                        RobotStates.clearStates(),
-                                        RobotStates.homeAll.setTrue()));
     }
 
     public Command l4score() {
@@ -212,22 +161,6 @@ public class Auton {
                                         Commands.waitSeconds(.5)));
     }
 
-    public Command l1score() {
-        return Commands.waitSeconds(0.05)
-                .andThen(
-                        RobotStates.coral
-                                .setTrue()
-                                .alongWith(RobotStates.l1.setTrue(), RobotStates.homeAll.setFalse())
-                                .andThen(
-                                        Commands.waitSeconds(0.05),
-                                        RobotStates.actionPrepState.setTrue(),
-                                        Commands.waitSeconds(1.1),
-                                        RobotStates.actionPrepState.setFalse(),
-                                        Commands.waitSeconds(0.5),
-                                        RobotStates.clearStates(),
-                                        RobotStates.homeAll.setTrue()));
-    }
-
     /**
      * Creates a SpectrumAuton command sequence.
      *
@@ -239,6 +172,7 @@ public class Auton {
      * @return a Command that represents the SpectrumAuton sequence
      */
     public Command SpectrumAuton(String autoName, boolean mirrored) {
+        SwerveStates.clearFeedBack();
         Command autoCommand = new PathPlannerAuto(autoName, mirrored);
         return (Commands.waitSeconds(0.01).andThen(autoCommand)).withName(autoName);
     }
