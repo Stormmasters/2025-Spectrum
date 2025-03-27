@@ -403,7 +403,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     }
 
     DoubleSupplier getScoreReefPoseAngle() {
-        return () -> getScoreReefPose().getRotation().getRadians();
+        return () -> getScoreReefPose().getRotation().getRadians() + 180;
     }
 
     // --------------------------------------------------------------------------------
