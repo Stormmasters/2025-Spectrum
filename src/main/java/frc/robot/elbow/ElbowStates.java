@@ -101,15 +101,6 @@ public class ElbowStates {
         return elbow.move(degrees, exDegrees).withName(name);
     }
 
-    public static Command stationIntake() {
-        return elbow.moveToDegrees(config::getStationIntake).withName("Elbow.StationIntake");
-    }
-
-    public static Command stationExtendedIntake() {
-        return elbow.moveToDegrees(config::getStationExtendedIntake)
-                .withName("Shoulder.stationExtendedIntake");
-    }
-
     public static Command coastMode() {
         return elbow.coastMode().withName("Elbow.CoastMode");
     }
