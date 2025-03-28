@@ -30,6 +30,8 @@ import frc.spectrumLib.mechanism.Mechanism;
 import frc.spectrumLib.sim.Mount;
 import frc.spectrumLib.sim.Mount.MountType;
 import frc.spectrumLib.sim.Mountable;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import lombok.*;
 
@@ -111,7 +113,7 @@ public class Twist extends Mechanism {
             configReverseSoftLimit(getMinRotations(), false);
             configForwardSoftLimit(getMaxRotations(), false);
             configNeutralBrakeMode(true);
-            configContinuousWrap(true);
+            configContinuousWrap(false);
             configGravityType(true);
             configClockwise_Positive();
         }
@@ -261,27 +263,39 @@ public class Twist extends Mechanism {
                     // Normalize currentDegrees to be within 0 to 360
                     double currentMod = (currentDegrees % 360);
 
-                    double output;
+                    double output = currentDegrees;
 
-                    if (clockwise) {
-                        // Calculate the closest clockwise position
-                        if (currentMod > target) {
+                    if (Math.abs(currentMod - target) < 8) {
+                        if (currentMod - target > 0) {
                             output = currentDegrees - (currentMod - target);
                         } else {
-                            output = currentDegrees - (360 + currentMod - target);
+                            output = currentDegrees + (target - currentMod);
                         }
                     } else {
-                        // Calculate the closest counterclockwise position
-                        if (currentMod < target) {
-                            output = currentDegrees + (target - currentMod);
+                        if (clockwise) {
+                            // Calculate the closest clockwise position
+                            if (currentMod > target) {
+                                output = currentDegrees - (currentMod - target);
+                            } else if (currentMod < target) {
+                                output = currentDegrees - (360 + currentMod - target);
+                            }
                         } else {
-                            output = currentDegrees + (360 + target - currentMod);
+                            // Calculate the closest counterclockwise position
+                            if (currentMod < target) {
+                                output = currentDegrees + (target - currentMod);
+                            } else if (currentMod > target) {
+                                output = currentDegrees + (360 + target - currentMod);
+                            }
                         }
                     }
 
                     final double out = output;
                     setDegrees(() -> out);
                 });
+    }
+
+    public Command move(DoubleSupplier targetDegrees, BooleanSupplier clockwise) {
+        return move(targetDegrees, clockwise.getAsBoolean());
     }
 
     public Command move(DoubleSupplier degrees) {
@@ -300,16 +314,15 @@ public class Twist extends Mechanism {
                 });
     }
 
-    // public Command moveAwayFromElevator(DoubleSupplier degrees) {
-    //     return new ConditionalCommand(scorePrepAwayFromElevator(degrees), move(degrees),
-    // actionPrepState);
-    // }
+    public Command moveAwayFromElevatorWithReverse(DoubleSupplier degrees) {
+        return move(() -> adjustTargetToReverse(degrees), () -> checkClockwiseFromElevator(() -> adjustTargetToReverse(degrees), true));
+    }
 
     public Command moveAwayFromElevator(DoubleSupplier degrees) {
         return new ConditionalCommand(
-                move(() -> adjustTargetToReverse(degrees), true),
-                move(() -> adjustTargetToReverse(degrees), false),
-                () -> checkClockwiseFromElevator(() -> adjustTargetToReverse(degrees)));
+                move(degrees, true),
+                move(degrees, false),
+                () -> checkClockwiseFromElevator(degrees, false));
     }
 
     public double adjustTargetToReverse(DoubleSupplier degrees) {
@@ -319,7 +332,7 @@ public class Twist extends Mechanism {
         return degrees.getAsDouble();
     }
 
-    private boolean checkClockwiseFromElevator(DoubleSupplier degrees) {
+    private boolean checkClockwiseFromElevator(DoubleSupplier degrees, boolean checkReversed) {
         // check if moving from within to past elevator
         double degreesMod = degrees.getAsDouble() % 360;
         double currentMod = getPositionDegrees() % 360;
@@ -328,36 +341,44 @@ public class Twist extends Mechanism {
             currentMod += 360;
         }
 
+        System.out.println("TARGET: " + degreesMod);
+        System.out.println("CURRENT: " + currentMod);
+
         if (degreesMod > 180 && currentMod < 180) {
-            if (RobotStates.reverse.getAsBoolean()) {
+            if (RobotStates.reverse.getAsBoolean() && checkReversed) {
+                System.out.println("1: false");
                 return false;
             }
+            System.out.println("1: true");
             return true;
         }
 
         // check if moving from past elevator back to within
         if (degreesMod < 180 && currentMod > 180) {
-            if (RobotStates.reverse.getAsBoolean()) {
+            if (RobotStates.reverse.getAsBoolean() && checkReversed) {
+                System.out.println("2: false");
                 return false;
             }
+            System.out.println("2: true");
+            return true;
+        }
+
+        if (degreesMod > 180 && currentMod > 180) {
+            if (degreesMod < currentMod) {
+                System.out.println("3: false");
+                return false;
+            }
+            System.out.println("3: true");
             return true;
         }
 
         if (degreesMod < currentMod) {
+            System.out.println("4: true");
             return true;
         }
+        System.out.println("4: false");
         return false;
     }
-
-    // public Command scorePrepAwayFromElevator(DoubleSupplier degrees) {
-    //     return new ConditionalCommand(
-    //             rightScoreAwayFromElevator(degrees), move(degrees, true), rightScore);
-    // }
-
-    // public Command rightScoreAwayFromElevator(DoubleSupplier degrees) {
-    //     return new ConditionalCommand(
-    //             move(degrees, false), move(degrees, true), RobotStates.reverse);
-    // }
 
     public DoubleSupplier getIfReversedDegrees(DoubleSupplier degrees) {
         return () ->
@@ -367,16 +388,25 @@ public class Twist extends Mechanism {
     }
 
     public Command twistHome() {
-        return run(
-                () -> {
-                    if (algae.getAsBoolean()) {
-                        setDegrees(config::getAlgaeIntake);
-                    } else if (coral.getAsBoolean()) {
-                        setDegrees(config::getLeftCoral);
-                    } else {
-                        setDegrees(config::getHome);
-                    }
-                });
+        // return run(
+        //         () -> {
+        //             if (algae.getAsBoolean()) {
+        //                 setDegrees(config::getAlgaeIntake);
+        //             } else if (coral.getAsBoolean()) {
+        //                 setDegrees(config::getLeftCoral);
+        //             } else {
+        //                 setDegrees(config::getHome);
+        //             }
+        //         });
+
+        return new ConditionalCommand(
+                        moveAwayFromElevator(config::getAlgaeIntake),
+                        new ConditionalCommand(
+                                moveAwayFromElevator(config::getLeftCoral),
+                                moveAwayFromElevator(config::getHome),
+                                () -> coral.getAsBoolean()),
+                        () -> algae.getAsBoolean())
+                .withName("Twist.home");
     }
 
     // --------------------------------------------------------------------------------
@@ -416,8 +446,8 @@ public class Twist extends Mechanism {
                     new SingleJointedArmSim(
                             DCMotor.getKrakenX60Foc(config.getNumMotors()),
                             config.getSimRatio(),
-                            1.2,
-                            config.getCoralLength(),
+                            0.1,
+                            0.1,
                             -100000000.0, // Math.toRadians(-360),
                             100000000.0, // Math.toRadians(360),
                             false, // Simulate gravity (change back to true)

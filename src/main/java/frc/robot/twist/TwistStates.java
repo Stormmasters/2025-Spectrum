@@ -70,7 +70,7 @@ public class TwistStates {
     }
 
     public static Command move(DoubleSupplier degrees, boolean clockwise, String name) {
-        return twist.move(degrees, clockwise).withName(name);
+        return twist.move(degrees, () -> clockwise).withName(name);
     }
 
     public static Command move(DoubleSupplier degrees, DoubleSupplier delay, String name) {
@@ -80,7 +80,7 @@ public class TwistStates {
     }
 
     public static Command moveAwayFromElevator(DoubleSupplier degrees, String name) {
-        return twist.moveAwayFromElevator(degrees).withName(name);
+        return twist.moveAwayFromElevatorWithReverse(degrees).withName(name);
     }
 
     public static Command coastMode() {
