@@ -37,7 +37,6 @@ import frc.robot.shoulder.Shoulder;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.robot.swerve.Swerve;
 import frc.robot.swerve.SwerveConfig;
-import frc.robot.swerve.SwerveStates;
 import frc.robot.twist.Twist;
 import frc.robot.twist.Twist.TwistConfig;
 import frc.robot.vision.Vision;
@@ -238,10 +237,7 @@ public class Robot extends SpectrumRobot {
                             .andThen(
                                     PathfindingCommand.warmupCommand()
                                             .andThen(
-                                                    SwerveStates.reefAimDrive()
-                                                            .ignoringDisable(true)
-                                                            .withTimeout(0.5),
-                                                    auton.sourceL4(false)
+                                                    auton.sideStartL4(false)
                                                             .ignoringDisable(true)
                                                             .withTimeout(0.5)));
             AutonStartCommand.schedule();

@@ -45,8 +45,8 @@ public class TagDistanceAlignController {
     public boolean atGoal(double current) {
         double goal = controller.getSetpoint();
         boolean atGoal = Math.abs(current - goal) < config.getTagDistanceGoalTolerance();
-        System.out.println(
-                "At Distance Goal: " + atGoal + " Goal: " + goal + " Current: " + current);
+        // System.out.println("At Distance Goal: " + atGoal + " Goal: " + goal + " Current: " +
+        // current);
         return atGoal;
     }
 

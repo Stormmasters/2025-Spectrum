@@ -2,6 +2,7 @@ package frc.robot.auton;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.events.EventTrigger;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
@@ -71,7 +73,9 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        // pathChooser.addOption("test", test(false));
+        pathChooser.addOption("test", test(false));
+
+        pathChooser.addOption("Side Start L4 Test", sideStartL4(false));
 
         pathChooser.addOption("Left | Source L4", sourceL4(false));
         pathChooser.addOption("Right | Source L4", sourceL4(true));
@@ -125,20 +129,24 @@ public class Auton {
         return (SpectrumAuton("L4-Start", mirrored)
                         .until(() -> atAlignGoal())
                         .andThen(
-                                Commands.waitSeconds(.5),
-                                SpectrumAuton("L4-Leg1", mirrored).until(() -> atAlignGoal()),
-                                Commands.waitSeconds(.5),
-                                SpectrumAuton("L4-Leg2", mirrored).until(() -> atAlignGoal()),
-                                Commands.waitSeconds(.5),
-                                SpectrumAuton("L4-Leg3", mirrored).until(() -> atAlignGoal())))
+                                score(),
+                                SpectrumAuton("L4-Leg1", mirrored)
+                                        .withTimeout(6)
+                                        .until(() -> atAlignGoal()),
+                                score(),
+                                SpectrumAuton("L4-Leg2", mirrored)
+                                        .withTimeout(6)
+                                        .until(() -> atAlignGoal()),
+                                score(),
+                                SpectrumAuton("L4-Leg3", mirrored)
+                                        .withTimeout(6)
+                                        .until(() -> atAlignGoal())))
                 .withName("Blue Left - Source L4");
     }
 
-    // public Command test(boolean mirrored) {
-    //     return (SpectrumAuton("test", mirrored)
-    //             .until(() -> atAlignGoal())
-    //             .andThen(SwerveStates.clearFeedBack()));
-    // }
+    public Command test(boolean mirrored) {
+        return SpectrumAuton("L4-Start", mirrored, 3).until(() -> atAlignGoal());
+    }
 
     public Command aimL4score(double alignTime) {
         return SwerveStates.reefAimDrive().withTimeout(alignTime).alongWith(l4score());
@@ -161,20 +169,49 @@ public class Auton {
                                         Commands.waitSeconds(.5)));
     }
 
+    public Command score() {
+        return RobotStates.actionPrepState
+                .setFalse()
+                .andThen(
+                        new InstantCommand(
+                                () -> PPHolonomicDriveController.clearFeedbackOverrides()),
+                        Commands.waitSeconds(0.5),
+                        RobotStates.clearStates(),
+                        RobotStates.homeAll.setTrue(),
+                        Commands.waitSeconds(.5));
+    }
+
     /**
      * Creates a SpectrumAuton command sequence.
      *
      * <p>This method generates a command sequence that first waits for 0.01 seconds and then
-     * executes a PathPlannerAuto command with the specified autonomous routine name.
+     * executes a PathPlannerAuto command with the specified autonomous routine name. Clears any
+     * feedback overrides that may have been set on a pervious path.
      *
      * @param autoName the name of the autonomous routine to execute
      * @param mirrored whether the autonomous routine should be mirrored
      * @return a Command that represents the SpectrumAuton sequence
      */
     public Command SpectrumAuton(String autoName, boolean mirrored) {
-        SwerveStates.clearFeedBack();
         Command autoCommand = new PathPlannerAuto(autoName, mirrored);
         return (Commands.waitSeconds(0.01).andThen(autoCommand)).withName(autoName);
+    }
+
+    /**
+     * Creates a SpectrumAuton command sequence.
+     *
+     * <p>This method generates a command sequence that first waits for 0.01 seconds and then
+     * executes a PathPlannerAuto command with the specified autonomous routine name. Clears any
+     * feedback overrides that may have been set on a pervious path.
+     *
+     * @param autoName the name of the autonomous routine to execute
+     * @param mirrored whether the autonomous routine should be mirrored
+     * @param duration the timeout in seconds of the autonomous command
+     * @return a Command that represents the SpectrumAuton sequence
+     */
+    public Command SpectrumAuton(String autoName, boolean mirrored, double duration) {
+        Command autoCommand = new PathPlannerAuto(autoName, mirrored);
+        return (Commands.waitSeconds(0.01).andThen(autoCommand)).withName(autoName).withTimeout(duration);
     }
 
     /**

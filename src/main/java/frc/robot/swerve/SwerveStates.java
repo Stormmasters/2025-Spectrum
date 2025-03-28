@@ -68,16 +68,17 @@ public class SwerveStates {
         return new RunCommand(
                         () -> {
                             // Calculates velocities continuously
-                            double tagAngleDegrees = Robot.getVision().getReefTagAngle();
-                            Rotation2d tagAngle = Rotation2d.fromDegrees(tagAngleDegrees);
+                            double robotAngleDegrees =
+                                    Robot.getSwerve().getRobotPose().getRotation().getDegrees();
+                            Rotation2d robotAngle = Rotation2d.fromDegrees(robotAngleDegrees);
 
                             // Changes ROBOT RELATIVE velocities to FIELD RELATIVE velocities
                             double fieldXVelocity =
-                                    getTagDistanceVelocity() * tagAngle.getCos()
-                                            - getTagTxVelocity() * tagAngle.getSin();
+                                    getTagDistanceVelocity() * robotAngle.getCos()
+                                            - getTagTxVelocity() * robotAngle.getSin();
                             double fieldYVelocity =
-                                    getTagDistanceVelocity() * tagAngle.getSin()
-                                            + getTagTxVelocity() * tagAngle.getCos();
+                                    getTagDistanceVelocity() * robotAngle.getSin()
+                                            + getTagTxVelocity() * robotAngle.getCos();
 
                             // Flips feedback if on the red alliance
                             Optional<Alliance> alliance = DriverStation.getAlliance();
@@ -101,6 +102,7 @@ public class SwerveStates {
                             //                 + finalFieldVelocityY
                             //                 + " !!");
                         })
+                .until(() -> Robot.getAuton().atAlignGoal())
                 .withName("Swerve.autonAlign");
     }
 

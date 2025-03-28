@@ -75,18 +75,6 @@
       "waypointRelativePos": 0.8257635082223956,
       "endWaypointRelativePos": null,
       "command": null
-    },
-    {
-      "name": "actionOff",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "home",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
     }
   ],
   "globalConstraints": {
