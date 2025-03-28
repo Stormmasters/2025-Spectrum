@@ -367,62 +367,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         double diff = Math.abs(angle1 - angle2) % 360;
         return diff > 180 ? 360 - diff : diff;
     }
-    // --------------------------------------------------------------------------------
-    // Offsets
-    // --------------------------------------------------------------------------------
-    public double homeOffsets(int tagID) {
-
-        return getTagOffset(tagID);
-    }
-
-    public double getTagOffset(int tag) {
-        double[][] tagOffsetsArray = homeOffsets.getTagOffsets();
-        double homeTag = tag;
-        if (homeTag < 0 || homeTag > 22) {
-            return -1;
-        }
-
-        if (homeTag > 17) {
-            homeTag -= 17;
-        }
-
-        try {
-            return tagOffsetsArray[tag][1];
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    Pose2d getScoreReefPose() {
-        int reefTagID = Field.Reef.getReefZoneTagID(getRobotPose());
-        if (reefTagID < 0) {
-            return getRobotPose();
-        }
-
-        SmartDashboard.putNumber("Target ID", reefTagID);
-        return Field.Reef.getScorePoseFromTagID(reefTagID);
-    }
-
-    double getScoreReefPoseX() {
-        double reefX = getScoreReefPose().getX();
-
-        SmartDashboard.putNumber("TargetReefX", reefX);
-        return reefX;
-    }
-
-    double getScoreReefPoseY() {
-        double reefY = getScoreReefPose().getY();
-
-        SmartDashboard.putNumber("TargetReefY", reefY);
-        return reefY;
-    }
-
-    double getScoreReefPoseAngle() {
-        double reefAngle = getScoreReefPose().getRotation().getRadians() + Math.PI;
-
-        SmartDashboard.putNumber("TargetReefAngle", reefAngle);
-        return reefAngle;
-    }
 
     // --------------------------------------------------------------------------------
     // Rotation Controller

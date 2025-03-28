@@ -185,7 +185,7 @@ public class Field {
          */
         public static int getReefZone(Pose2d pose) {
             Translation2d point = pose.getTranslation();
-            Translation2d relativePoint = point.minus(center);
+            Translation2d relativePoint = point.minus(flipIfRed(center));
             double angle = Math.atan2(relativePoint.getY(), relativePoint.getX());
             double distance = relativePoint.getNorm();
 
@@ -227,29 +227,29 @@ public class Field {
             return tag;
         }
 
+        // TODO: Fix getOffsetPosition
         public static Pose2d getOffsetPosition(int blueTagID, double offsetMeters) {
-            if (blueTagID < 0) {
+
+            int faceIndex = reefTagIDToIndex(blueTagID);
+
+            if (faceIndex < 0 || faceIndex >= centerFaces.length) {
+                System.out.println("Bad Face Index: " + faceIndex);
                 return Robot.getSwerve().getRobotPose();
             }
 
-            int faceIndex = reefTagIDToIndex(blueTagID);
-            if (isRed()) {
-                // converts blue tag to red and indexes the tag
-                faceIndex = reefTagIDToIndex(blueToRedTagID(blueTagID));
-            }
+            System.out.println("Face Index: " + faceIndex);
 
-            if (faceIndex < 0 || faceIndex >= centerFaces.length) {
-                System.out.println("Invalid face index: returning mid field");
-                return new Pose2d(halfLength, halfWidth, new Rotation2d());
-            }
+            Pose2d face = flipIfRed(centerFaces[faceIndex]);
 
-            Pose2d face = centerFaces[faceIndex];
-            Rotation2d rotation = face.getRotation();
+            Rotation2d rotation = face.getRotation().rotateBy(new Rotation2d(Math.PI));
             // Calculate the perpendicular offset
-            // TODO: check if rotation matches the target
-            Translation2d offset = new Translation2d(offsetMeters, rotation);
+            Translation2d offset = flipIfRed(new Translation2d(offsetMeters, rotation));
+
             // Apply the offset to the face's position
             Translation2d newTranslation = face.getTranslation().plus(offset);
+            // if (isRed()) {
+            //     newTranslation = flipIfRed(newTranslation);
+            // }
             return new Pose2d(newTranslation, rotation);
         }
 
@@ -281,8 +281,9 @@ public class Field {
 
             // blue reef indexer
             if (tagID < 17 || tagID > 22) {
-                return -1;
+                return 0;
             }
+
             return tagID - 17;
         }
 
@@ -311,8 +312,11 @@ public class Field {
          * @param tagID
          * @return Pose2d of reef side
          */
-        public static Pose2d getReefSideFromTagID(int tagID) {
-            Pose2d reefFacePose = centerFaces[reefTagIDToIndex(tagID)];
+        public static Pose2d getReefSideFromTagID(int faceIndex) {
+            if (faceIndex < 0) {
+                return Robot.getSwerve().getRobotPose();
+            }
+            Pose2d reefFacePose = centerFaces[reefTagIDToIndex(faceIndex)];
 
             if (isRed()) {
                 reefFacePose = flipIfRed(reefFacePose);
@@ -329,7 +333,6 @@ public class Field {
          *     blue reef tagID
          * @return
          */
-        // TODO: Build a Swerve Command in Swerve States to use this method for a target value
         public static Pose2d getScorePoseFromTagID(int blueReefTagID) {
             if (blueReefTagID < 0) {
                 return Robot.getSwerve().getRobotPose();
@@ -337,7 +340,8 @@ public class Field {
             if (blueReefTagID > 22) {
                 return Robot.getSwerve().getRobotPose();
             }
-            double offSetMeters = Robot.getSwerve().homeOffsets(blueReefTagID);
+            Zones zones = new Zones();
+            double offSetMeters = zones.getTagOffset(blueReefTagID);
 
             return getOffsetPosition(blueReefTagID, offSetMeters);
         }

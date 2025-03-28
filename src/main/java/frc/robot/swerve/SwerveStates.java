@@ -25,6 +25,7 @@ public class SwerveStates {
     static Swerve swerve = Robot.getSwerve();
     static SwerveConfig config = Robot.getConfig().swerve;
     static Pilot pilot = Robot.getPilot();
+    static Zones zones = new Zones();
 
     static Command pilotSteerCommand =
             log(pilotDrive().withName("SwerveCommands.pilotSteer").ignoringDisable(true));
@@ -122,9 +123,9 @@ public class SwerveStates {
 
     public static Command reefAimDrive() {
         return alignDrive(
-                        () -> swerve.getScoreReefPoseX(),
-                        () -> swerve.getScoreReefPoseY(),
-                        () -> swerve.getScoreReefPoseAngle())
+                        () -> zones.getScoreReefPoseX(),
+                        () -> zones.getScoreReefPoseY(),
+                        () -> zones.getScoreReefPoseAngle())
                 .withName("Swerve.reefAimDrive");
     }
 

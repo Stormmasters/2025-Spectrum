@@ -28,7 +28,9 @@
       "/SmartDashboard/X controller": "ProfiledPIDController",
       "/SmartDashboard/Y controller": "ProfiledPIDController",
       "/SmartDashboard/frontView": "Mechanism2d",
+      "/SmartDashboard/tagCenterController": "PIDController",
       "/SmartDashboard/tagController": "PIDController",
+      "/SmartDashboard/tagDistanceController": "PIDController",
       "/SmartDashboard/vision": "Subsystem"
     },
     "windows": {
@@ -61,7 +63,10 @@
         },
         "right": 3466,
         "top": 291,
-        "width": 17.54825210571289
+        "width": 17.54825210571289,
+        "window": {
+          "visible": true
+        }
       },
       "/SmartDashboard/Field2d": {
         "bottom": 1476,
@@ -135,6 +140,12 @@
     }
   },
   "NetworkTables": {
+    "Retained Values": {
+      "open": false
+    },
+    "Transitory Values": {
+      "open": false
+    },
     "transitory": {
       "CameraPublisher": {
         "open": true
