@@ -96,13 +96,19 @@ public class ShoulderStates {
 
         shoulderL4.onTrue(move(config::getExl4Coral, "Shoulder.L4Coral.prescore"));
 
+        // algae
         processorAlgae
-                .and(actionPrepState.or(actionState))
+                .and(actionPrepState)
                 .whileTrue(move(config::getProcessorAlgae, "Shoulder.processorAlgae"));
+        processorAlgae
+                .and(actionState)
+                .whileTrue(move(config::getHome, "Shoulder.processorAlgaeHome"));
         L2Algae.and(actionPrepState).whileTrue(move(config::getL2Algae, "Shoulder.L2Algae"));
         L2Algae.and(actionState).whileTrue(move(config::getHome, "Shoulder.L2AlgaeHome"));
         L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Shoulder.L3Algae"));
         L3Algae.and(actionState).whileTrue(move(config::getHome, "Shoulder.L3AlgaeHome"));
+        netAlgae.and(actionPrepState.or(actionState).not())
+                .whileTrue(move(config::getHome, "Shoulder.netAlgaePrep"));
         netAlgae.and(actionPrepState.or(actionState))
                 .whileTrue(move(config::getNetAlgae, "Shoulder.netAlgae"));
 

@@ -59,7 +59,7 @@ public class Elbow extends Mechanism {
         @Getter private final double exL4Coral = -132; // -126;
         @Getter private final double exL4Score = -106.9; // -104;
 
-        @Getter private final double processorAlgae = -86;
+        @Getter private final double processorAlgae = 64.072;
         @Getter private final double l2Algae = -86;
         @Getter private final double l3Algae = -86;
         @Getter private final double net = -170;

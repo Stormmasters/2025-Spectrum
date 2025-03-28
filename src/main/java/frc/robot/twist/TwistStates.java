@@ -37,6 +37,8 @@ public class TwistStates {
 
         L1Coral.whileTrue(move(config::getL1Coral, "Twist.l1Coral"));
 
+        processorAlgae.whileTrue(move(config::getProcessorAlgae, "Twist.l1Algae"));
+
         netAlgae.whileTrue(move(config::getNet, "Twist.Net"));
 
         branch.and((rightScore.or(Robot.getOperator().rightScore)), actionPrepState)
