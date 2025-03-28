@@ -52,17 +52,17 @@ public class SwerveStates {
 
     protected static void setStates() {
 
-        pilot.steer.whileTrue(
-                swerve.getDefaultCommand()); // Force back to manual steering when we steer
+        // pilot.steer.whileTrue(
+        //         swerve.getDefaultCommand()); // Force back to manual steering when we steer
 
         // When driving and have never steered, it doesn't lock
         // When driving, and we stop steering it locks
         // When not driving it stops locking
-        pilot.steer.and(pilot.driving).onTrue(steeringLock.setTrue());
-        pilot.driving.onFalse(steeringLock.setFalse());
-        steeringLock
-                .and(pilot.steer.not())
-                .onTrue(log(lockToClosestFieldAngleDrive().withName("Swerve.FieldAngleLock")));
+        // pilot.steer.and(pilot.driving).onTrue(steeringLock.setTrue());
+        // pilot.driving.onFalse(steeringLock.setFalse());
+        // steeringLock
+        //         .and(pilot.steer.not())
+        //         .onTrue(log(lockToClosestFieldAngleDrive().withName("Swerve.FieldAngleLock")));
 
         pilot.fpv_LS.whileTrue(log(fpvDrive()));
 

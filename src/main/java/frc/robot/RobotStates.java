@@ -217,7 +217,14 @@ public class RobotStates {
                 .or(L2Algae, L3Algae)
                 .and(VisionStates.usingRearTag.not(), actionPrepState.not())
                 .onTrue(reverse.setFalse());
-        netAlgae.or(processorAlgae, groundAlgae, groundCoral).onTrue(reverse.setFalse());
+        groundAlgae
+                .or(groundCoral, processorAlgae)
+                .and(pilot.toggleReverse.or(operator.toggleReverse))
+                .onTrue(reverse.setTrue());
+        groundAlgae
+                .or(groundCoral, processorAlgae)
+                .and(pilot.toggleReverse.or(operator.toggleReverse).not())
+                .onTrue(reverse.setFalse());
 
         stationIntaking
                 .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
