@@ -1,6 +1,5 @@
 package frc.robot.twist;
 
-import static frc.robot.RobotStates.algae;
 import static frc.robot.RobotStates.coral;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -149,7 +148,13 @@ public class Twist extends Mechanism {
                                 config.getCANcoderSensorToMechanismRatio(),
                                 config.getCANcoderOffset(),
                                 config.isCANcoderAttached());
-                canCoder = new SpectrumCANcoder(44, canCoderConfig, motor, config);
+                canCoder =
+                        new SpectrumCANcoder(
+                                44,
+                                canCoderConfig,
+                                motor,
+                                config,
+                                SpectrumCANcoder.CANCoderFeedbackType.FusedCANcoder);
             }
 
             setInitialPosition();
@@ -326,9 +331,7 @@ public class Twist extends Mechanism {
     public Command twistHome() {
         return run(
                 () -> {
-                    if (algae.getAsBoolean()) {
-                        setDegrees(config::getAlgaeIntake);
-                    } else if (coral.getAsBoolean()) {
+                    if (coral.getAsBoolean()) {
                         setDegrees(config::getLeftCoral);
                     } else {
                         setDegrees(config::getHome);

@@ -16,7 +16,7 @@ public class SpectrumCANcoder {
     @Getter private CANcoder canCoder;
     private SpectrumCANcoderConfig config;
 
-    private enum CANCoderFeedbackType {
+    public enum CANCoderFeedbackType {
         RemoteCANcoder,
         FusedCANcoder,
         SyncCANcoder,
@@ -25,9 +25,14 @@ public class SpectrumCANcoder {
     private CANCoderFeedbackType feedbackSource = CANCoderFeedbackType.FusedCANcoder;
 
     public SpectrumCANcoder(
-            int CANcoderID, SpectrumCANcoderConfig config, TalonFX motor, Config mechConfig) {
+            int CANcoderID,
+            SpectrumCANcoderConfig config,
+            TalonFX motor,
+            Config mechConfig,
+            CANCoderFeedbackType feedbackSource) {
         this.config = config;
         config.setCANcoderID(CANcoderID);
+        this.feedbackSource = feedbackSource;
 
         if (config.isAttached()) {
             canCoder = new CANcoder(CANcoderID, Rio.CANIVORE);

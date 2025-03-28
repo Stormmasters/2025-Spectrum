@@ -158,7 +158,13 @@ public class Shoulder extends Mechanism {
                                 config.getCANcoderSensorToMechanismRatio(),
                                 config.getCANcoderOffset(),
                                 config.isCANcoderAttached());
-                canCoder = new SpectrumCANcoder(42, canCoderConfig, motor, config);
+                canCoder =
+                        new SpectrumCANcoder(
+                                42,
+                                canCoderConfig,
+                                motor,
+                                config,
+                                SpectrumCANcoder.CANCoderFeedbackType.FusedCANcoder);
             }
 
             setInitialPosition();
