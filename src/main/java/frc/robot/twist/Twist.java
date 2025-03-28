@@ -61,6 +61,7 @@ public class Twist extends Mechanism {
 
         @Getter private final double initPosition = 0;
         @Getter private double triggerTolerance = 0.95;
+        @Getter private double twistTolerance = 8;
 
         /* Twist config settings */
         @Getter private final double zeroSpeed = -0.1;
@@ -254,7 +255,7 @@ public class Twist extends Mechanism {
         setMMPositionFoc(() -> degreesToRotations(degrees));
     }
 
-    public Command move(DoubleSupplier targetDegrees, boolean clockwise) {
+    public Command move(DoubleSupplier targetDegrees, BooleanSupplier clockwise) {
         return run(
                 () -> {
                     double currentDegrees = getPositionDegrees();
@@ -265,14 +266,14 @@ public class Twist extends Mechanism {
 
                     double output = currentDegrees;
 
-                    if (Math.abs(currentMod - target) < 8) {
+                    if (Math.abs(currentMod - target) < config.getTwistTolerance()) {
                         if (currentMod - target > 0) {
                             output = currentDegrees - (currentMod - target);
                         } else {
                             output = currentDegrees + (target - currentMod);
                         }
                     } else {
-                        if (clockwise) {
+                        if (clockwise.getAsBoolean()) {
                             // Calculate the closest clockwise position
                             if (currentMod > target) {
                                 output = currentDegrees - (currentMod - target);
@@ -294,9 +295,9 @@ public class Twist extends Mechanism {
                 });
     }
 
-    public Command move(DoubleSupplier targetDegrees, BooleanSupplier clockwise) {
-        return move(targetDegrees, clockwise.getAsBoolean());
-    }
+    // public Command move(DoubleSupplier targetDegrees, BooleanSupplier clockwise) {
+    //     return move(targetDegrees, clockwise.getAsBoolean());
+    // }
 
     public Command move(DoubleSupplier degrees) {
         return run(
@@ -319,10 +320,7 @@ public class Twist extends Mechanism {
     }
 
     public Command moveAwayFromElevator(DoubleSupplier degrees) {
-        return new ConditionalCommand(
-                move(degrees, true),
-                move(degrees, false),
-                () -> checkClockwiseFromElevator(degrees, false));
+        return move(degrees, () -> checkClockwiseFromElevator(degrees, false));
     }
 
     public double adjustTargetToReverse(DoubleSupplier degrees) {
