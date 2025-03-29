@@ -66,14 +66,14 @@ public class Elevator extends Mechanism {
         /* Elevator config settings */
         @Getter private final double zeroSpeed = -0.2;
         @Getter private final double positionKp = 100;
-        @Getter private final double positionKd = 6;
+        @Getter private final double positionKd = 8; // 6
         @Getter private final double positionKa = 0.2;
         @Getter private final double positionKv = 0;
         @Getter private final double positionKs = 5;
         @Getter private final double positionKg = 25.3;
         @Getter private final double mmCruiseVelocity = 70;
         @Getter private final double mmAcceleration = 700;
-        @Getter private final double mmJerk = 7000;
+        @Getter private final double mmJerk = 4500;
 
         @Getter private double currentLimit = 60;
         @Getter private double torqueCurrentLimit = 160;

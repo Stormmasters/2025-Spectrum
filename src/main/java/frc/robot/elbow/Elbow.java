@@ -73,23 +73,24 @@ public class Elbow extends Mechanism {
         @Getter private final double zeroSpeed = -0.1;
         @Getter private final double holdMaxSpeedRPM = 18;
 
-        @Getter private final double currentLimit = 20;
-        @Getter private final double torqueCurrentLimit = 60;
+        @Getter private final double currentLimit = 60;
+        @Getter private final double torqueCurrentLimit = 80;
         @Getter private final double positionKp = 1400;
         @Getter private final double positionKd = 160;
         @Getter private final double positionKv = 0;
         @Getter private final double positionKs = 0.4;
         @Getter private final double positionKa = 0.002;
-        @Getter private final double positionKg = 7;
+        @Getter private final double positionKg = 11.66666666; // 7 * 1.6666
         @Getter private final double mmCruiseVelocity = 10;
         @Getter private final double mmAcceleration = 50;
         @Getter private final double mmJerk = 0;
 
-        @Getter @Setter private double sensorToMechanismRatio = 102.857;
+        @Getter @Setter private double sensorToMechanismRatio = 61.71428571; // 102.857;
         @Getter @Setter private double rotorToSensorRatio = 1;
 
         /* Cancoder config settings */
-        @Getter @Setter private double CANcoderRotorToSensorRatio = 102.857 * 1.2;
+        @Getter @Setter
+        private double CANcoderRotorToSensorRatio = 61.71428571 * 1.2; // 102.857 * 1.2;
         // CANcoderRotorToSensorRatio / sensorToMechanismRatio;
 
         @Getter @Setter private double CANcoderSensorToMechanismRatio = 0.833333333333333333333333;

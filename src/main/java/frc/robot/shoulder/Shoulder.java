@@ -73,23 +73,24 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double zeroSpeed = -0.1;
         @Getter @Setter private double holdMaxSpeedRPM = 18;
 
-        @Getter @Setter private double currentLimit = 20;
-        @Getter @Setter private double torqueCurrentLimit = 100;
+        @Getter @Setter private double currentLimit = 60;
+        @Getter @Setter private double torqueCurrentLimit = 80;
         @Getter @Setter private double positionKp = 1500;
-        @Getter @Setter private double positionKd = 140;
+        @Getter @Setter private double positionKd = 170;
         @Getter @Setter private double positionKv = 0;
         @Getter @Setter private double positionKs = 0.06;
         @Getter @Setter private double positionKa = 0.001;
-        @Getter @Setter private double positionKg = 12.5;
+        @Getter @Setter private double positionKg = 20.83333; // 12.5 * 1.666666
         @Getter @Setter private double mmCruiseVelocity = 10;
         @Getter @Setter private double mmAcceleration = 50;
         @Getter @Setter private double mmJerk = 0;
 
-        @Getter @Setter private double sensorToMechanismRatio = 102.857;
+        @Getter @Setter private double sensorToMechanismRatio = 61.71428571; // 102.857;
         @Getter @Setter private double rotorToSensorRatio = 1;
 
         /* Cancoder config settings */
-        @Getter @Setter private double CANcoderRotorToSensorRatio = 102.857 * 1.2;
+        @Getter @Setter
+        private double CANcoderRotorToSensorRatio = 61.71428571 * 1.2; // 102.857 * 1.2;
         // CANcoderSensorToMechanismRatio / sensorToMechanismRatio;
 
         @Getter @Setter
