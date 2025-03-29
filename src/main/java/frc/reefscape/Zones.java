@@ -68,6 +68,24 @@ public class Zones {
         return tagOffsetsArray[indexOfTag][1];
     }
 
+    public double getTagAngleOffset(int tag) {
+        double[][] tagOffsetsArray = homeOffsets.getTagOffsets();
+        int indexOfTag = tag;
+        if (tag < 0 || tag > 22) {
+            return 0;
+        }
+
+        if (tag >= 17) {
+            indexOfTag = indexOfTag - 17;
+        }
+
+        if (indexOfTag < 0 || indexOfTag > 16) {
+            return 0;
+        }
+
+        return tagOffsetsArray[indexOfTag][2];
+    }
+
     /**
      * Calls on getReefZoneTagID with the given robot swerve position. Automatically has a check on
      * reefTagID and returns robot pose if the robot is not in a target reef zone
