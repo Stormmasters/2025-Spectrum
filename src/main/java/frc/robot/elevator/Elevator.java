@@ -71,11 +71,11 @@ public class Elevator extends Mechanism {
         @Getter private final double positionKv = 0;
         @Getter private final double positionKs = 5;
         @Getter private final double positionKg = 25.3;
-        @Getter private final double mmCruiseVelocity = 40;
-        @Getter private final double mmAcceleration = 280;
-        @Getter private final double mmJerk = 2000;
+        @Getter private final double mmCruiseVelocity = 70;
+        @Getter private final double mmAcceleration = 700;
+        @Getter private final double mmJerk = 7000;
 
-        @Getter private double currentLimit = 40;
+        @Getter private double currentLimit = 60;
         @Getter private double torqueCurrentLimit = 160;
 
         /* Sim properties */
