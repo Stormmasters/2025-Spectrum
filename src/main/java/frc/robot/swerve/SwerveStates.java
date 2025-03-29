@@ -52,8 +52,8 @@ public class SwerveStates {
 
     protected static void setStates() {
 
-        // pilot.steer.whileTrue(
-        //         swerve.getDefaultCommand()); // Force back to manual steering when we steer
+        pilot.steer.whileTrue(
+                swerve.getDefaultCommand()); // Force back to manual steering when we steer
 
         // When driving and have never steered, it doesn't lock
         // When driving, and we stop steering it locks
