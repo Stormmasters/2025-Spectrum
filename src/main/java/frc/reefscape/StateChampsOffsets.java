@@ -1,31 +1,43 @@
 package frc.reefscape;
 
+import edu.wpi.first.math.util.Units;
 import frc.robot.Robot;
 import lombok.Getter;
 
 public class StateChampsOffsets {
 
-    private static final double halfRobotLength =
-            Robot.getSwerve().getConfig().getRobotLength() / 2;
-
     // red tag offsets
-    @Getter private static final double Tag6Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag7Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag8Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag9Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag10Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag11Offset = 0.0 + halfRobotLength;
+    @Getter private static final double Tag6Offset = offsetInMeters(24);
+    @Getter private static final double Tag7Offset = offsetInMeters(24);
+    @Getter private static final double Tag8Offset = offsetInMeters(24);
+    @Getter private static final double Tag9Offset = offsetInMeters(24);
+    @Getter private static final double Tag10Offset = offsetInMeters(24);
+    @Getter private static final double Tag11Offset = offsetInMeters(24);
 
     // blue tag offsets
-    @Getter private static final double Tag17Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag18Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag19Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag20Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag21Offset = 0.0 + halfRobotLength;
-    @Getter private static final double Tag22Offset = 0.0 + halfRobotLength;
+    @Getter private static final double Tag17Offset = offsetInMeters(24);
+    @Getter private static final double Tag18Offset = offsetInMeters(24);
+    @Getter private static final double Tag19Offset = offsetInMeters(24);
+    @Getter private static final double Tag20Offset = offsetInMeters(24);
+    @Getter private static final double Tag21Offset = offsetInMeters(24);
+    @Getter private static final double Tag22Offset = offsetInMeters(24);
+
+    /**
+     * Converts inches to meters and adds half the robot length to the offset
+     *
+     * @param offsetInches
+     * @return
+     */
+    private static double offsetInMeters(double offsetInches) {
+
+        double halfRobotLength = Robot.getSwerve().getConfig().getRobotLength() / 2;
+
+        double meterConversion = Units.inchesToMeters(offsetInches) + halfRobotLength;
+
+        return meterConversion;
+    }
 
     // tag offsets ordered from blue tags to red tags due to centerFaces index values
-
     @Getter
     private static final double[][] tagOffsets = {
         {17, Tag17Offset},

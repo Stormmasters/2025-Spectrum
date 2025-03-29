@@ -52,20 +52,20 @@ public class Zones {
      */
     public double getTagOffset(int tag) {
         double[][] tagOffsetsArray = homeOffsets.getTagOffsets();
-        double homeTag = tag;
-        if (homeTag < 0 || homeTag > 22) {
+        int indexOfTag = tag;
+        if (tag < 0 || tag > 22) {
             return 0;
         }
 
-        if (homeTag > 16) {
-            homeTag -= 17;
+        if (tag >= 17) {
+            indexOfTag = indexOfTag - 17;
         }
 
-        try {
-            return tagOffsetsArray[tag][1];
-        } catch (Exception e) {
+        if (indexOfTag < 0 || indexOfTag > 16) {
             return 0;
         }
+
+        return tagOffsetsArray[indexOfTag][1];
     }
 
     /**

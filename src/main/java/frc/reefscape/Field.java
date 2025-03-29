@@ -186,7 +186,7 @@ public class Field {
         public static int getReefZone(Pose2d pose) {
             Translation2d point = pose.getTranslation();
             Translation2d relativePoint = point.minus(flipIfRed(center));
-            double angle = Math.atan2(relativePoint.getY(), relativePoint.getX());
+            double angle = Math.atan2(relativePoint.getX(), relativePoint.getY()); // Standard atan2
             double distance = relativePoint.getNorm();
 
             // Normalize angle to be between 0 and 2*PI
@@ -201,13 +201,10 @@ public class Field {
 
             // Determine the zone based on the angle
             double zoneAngle = Math.PI / 3; // 60 degrees per zone
-            for (int i = 0; i < 6; i++) {
-                if (angle + Math.PI >= i * zoneAngle && angle + Math.PI < (i + 1) * zoneAngle) {
-                    return i;
-                }
-            }
+            int index = (int) ((angle + Math.PI) / zoneAngle); // Convert angle to zone index
 
-            return -1; // Should not reach here
+            return index % 6; // Modular for safety, definitely works without the modular just dont
+            // remove it
         }
 
         /**
@@ -227,7 +224,6 @@ public class Field {
             return tag;
         }
 
-        // TODO: Fix getOffsetPosition
         public static Pose2d getOffsetPosition(int blueTagID, double offsetMeters) {
 
             int faceIndex = reefTagIDToIndex(blueTagID);
@@ -237,16 +233,15 @@ public class Field {
                 return Robot.getSwerve().getRobotPose();
             }
 
-            System.out.println("Face Index: " + faceIndex);
-
             Pose2d face = flipIfRed(centerFaces[faceIndex]);
 
             Rotation2d rotation = face.getRotation().rotateBy(new Rotation2d(Math.PI));
             // Calculate the perpendicular offset
-            Translation2d offset = flipIfRed(new Translation2d(offsetMeters, rotation));
+            Translation2d offset = flipIfRed(new Translation2d(-offsetMeters, rotation));
 
             // Apply the offset to the face's position
             Translation2d newTranslation = face.getTranslation().plus(offset);
+
             // if (isRed()) {
             //     newTranslation = flipIfRed(newTranslation);
             // }
@@ -281,12 +276,18 @@ public class Field {
 
             // blue reef indexer
             if (tagID < 17 || tagID > 22) {
-                return 0;
+                return -1;
             }
 
             return tagID - 17;
         }
 
+        /**
+         * Converts a blue reef tag ID to a red reef tag ID
+         *
+         * @param blueTagID
+         * @return
+         */
         public static int blueToRedTagID(int blueTagID) {
             switch (blueTagID) {
                 case 17:
