@@ -210,13 +210,20 @@ public class RobotStates {
         operator.toggleReverse.or(pilot.toggleReverse).onTrue(reverse.toggle());
         stagedCoral
                 .or(L2Algae, L3Algae)
-                .and(VisionStates.usingRearTag, actionPrepState.not())
+                .and(VisionStates.usingRearTag, actionPrepState.not(), actionState.not())
                 .onTrue(reverse.setTrue());
         stagedCoral
                 .or(L2Algae, L3Algae)
-                .and(VisionStates.usingRearTag.not(), actionPrepState.not())
+                .and(VisionStates.usingRearTag.not(), actionPrepState.not(), actionState.not())
                 .onTrue(reverse.setFalse());
-        netAlgae.or(processorAlgae, groundAlgae, groundCoral).onTrue(reverse.setFalse());
+        groundAlgae
+                .or(groundCoral, processorAlgae)
+                .and(pilot.toggleReverse.or(operator.toggleReverse))
+                .onTrue(reverse.setTrue());
+        groundAlgae
+                .or(groundCoral, processorAlgae)
+                .and(pilot.toggleReverse.or(operator.toggleReverse).not())
+                .onTrue(reverse.setFalse());
 
         // stationIntaking
         //         .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
