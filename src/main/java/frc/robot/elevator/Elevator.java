@@ -72,7 +72,7 @@ public class Elevator extends Mechanism {
         @Getter private final double positionKs = 5;
         @Getter private final double positionKg = 25.3;
         @Getter private final double mmCruiseVelocity = 70;
-        @Getter private final double mmAcceleration = 700;
+        @Getter private final double mmAcceleration = 400;
         @Getter private final double mmJerk = 4500;
 
         @Getter private double currentLimit = 60;
