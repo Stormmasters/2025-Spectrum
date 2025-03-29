@@ -77,6 +77,12 @@ public class ElbowStates {
                 .whileTrue(move(config::getL4Score, config::getExL4Score, "Elbow.l4Score"));
 
         // Algae
+        processorAlgae
+                .and(actionPrepState)
+                .whileTrue(move(config::getProcessorAlgae, "Elbow.processorAlgae"));
+        processorAlgae
+                .and(actionState)
+                .whileTrue(move(config::getHome, "Elbow.processorAlgaeHome"));
         L2Algae.and(actionPrepState).whileTrue(move(config::getL2Algae, "Elbow.l2Algae"));
         L2Algae.and(actionState).whileTrue(move(config::getHome, "Elbow.l2AlgaeHome"));
         L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Elbow.l3Algae"));
@@ -99,15 +105,6 @@ public class ElbowStates {
 
     public static Command move(DoubleSupplier degrees, DoubleSupplier exDegrees, String name) {
         return elbow.move(degrees, exDegrees).withName(name);
-    }
-
-    public static Command stationIntake() {
-        return elbow.moveToDegrees(config::getStationIntake).withName("Elbow.StationIntake");
-    }
-
-    public static Command stationExtendedIntake() {
-        return elbow.moveToDegrees(config::getStationExtendedIntake)
-                .withName("Shoulder.stationExtendedIntake");
     }
 
     public static Command coastMode() {
