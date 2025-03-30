@@ -236,8 +236,20 @@ public class Field {
 
             Pose2d face = flipIfRed(centerFaces[faceIndex]);
 
-            double rotation = reverseRotation(offsetRadians);
+            // TODO: find a way to set the angle of the robot to the reef face to either when front
+            // or back is closer
+            // currently, only heading is set to front for facing the reef face
+            double rotation = offsetRadians; //reverseRotation(offsetRadians); 
+            System.out.println("Rotation Target: " + rotation);
             Rotation2d rotationOffset = face.getRotation().rotateBy(new Rotation2d(rotation));
+
+            // double offsetChecker = 1;
+            // double robotRotation = Robot.getSwerve().getRobotPose().getRotation().getRadians()
+            //checks if the rotation is 0 since that means back is closer
+            //TODO: same as above
+            // if (rotation == 0) {
+            //     offsetChecker = -1;
+            // }
 
             // Calculate the perpendicular offset
             Translation2d offsetTranslation =
@@ -314,11 +326,12 @@ public class Field {
          * @param targetAngle
          * @return
          */
+        //TODO: currently doesn't work as intended (tested in Sim)
         public static double reverseRotation(double targetAngle) {
             double robotRotation = Robot.getSwerve().getRobotPose().getRotation().getRadians();
-            boolean backIsCloser = Math.abs(targetAngle - robotRotation) > 180;
+            boolean backIsCloser = Math.abs(targetAngle - robotRotation) <= Math.PI;
             if (backIsCloser) {
-                return targetAngle - Math.PI;
+                return 0;
             }
             return targetAngle;
         }
@@ -351,10 +364,7 @@ public class Field {
          * @return
          */
         public static Pose2d getScorePoseFromTagID(int blueReefTagID) {
-            if (blueReefTagID < 0) {
-                return Robot.getSwerve().getRobotPose();
-            }
-            if (blueReefTagID > 22) {
+            if (blueReefTagID < 0 || blueReefTagID > 22 || blueReefTagID == 16) {
                 return Robot.getSwerve().getRobotPose();
             }
 

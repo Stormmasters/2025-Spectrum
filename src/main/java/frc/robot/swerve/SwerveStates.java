@@ -5,8 +5,6 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -77,6 +75,7 @@ public class SwerveStates {
 
         // // vision aim
         pilot.reefAim_A.whileTrue(log(reefAimDrive()));
+        pilot.reefAim_B.whileTrue(log(reefAimDriveVision()));
 
         // Pose2d backReefOffset = Field.Reef.getOffsetPosition(21, Units.inchesToMeters(24));
         // pilot.cageAim_B.whileTrue(
@@ -113,13 +112,13 @@ public class SwerveStates {
                 .alongWith(new PrintCommand("!! autonAlign Ran !!"));
     }
 
-    //     public static Command reefAimDrive() {
-    //         return fpvAimDrive(
-    //                         SwerveStates::getTagDistanceVelocity,
-    //                         SwerveStates::getTagTxVelocity,
-    //                         Robot.getVision()::getReefTagAngle)
-    //                 .withName("Swerve.reefAimDrive");
-    //     }
+    public static Command reefAimDriveVision() {
+        return fpvAimDrive(
+                        SwerveStates::getTagDistanceVelocity,
+                        SwerveStates::getTagTxVelocity,
+                        Robot.getVision()::getReefTagAngle)
+                .withName("Swerve.reefAimDrive");
+    }
 
     public static Command reefAimDrive() {
         return alignDrive(

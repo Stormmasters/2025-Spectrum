@@ -22,8 +22,8 @@ public class WorldsChampsOffsets {
     @Getter private static final double Tag21Offset = meterConverter(24);
     @Getter private static final double Tag22Offset = meterConverter(24);
 
-    // red tag angles offsets 
-    //Still need to be set up on Worlds Fields
+    // red tag angles offsets
+    // Still need to be set up on Worlds Fields
     @Getter private static final double Tag17Angle = radianConverter(60);
     @Getter private static final double Tag18Angle = radianConverter(0);
     @Getter private static final double Tag19Angle = radianConverter(300);
@@ -32,7 +32,7 @@ public class WorldsChampsOffsets {
     @Getter private static final double Tag22Angle = radianConverter(120);
 
     // blue tag angles offsets
-    //Still need to be set up on Worlds Fields
+    // Still need to be set up on Worlds Fields
     @Getter private static final double Tag6Angle = radianConverter(120);
     @Getter private static final double Tag7Angle = radianConverter(180);
     @Getter private static final double Tag8Angle = radianConverter(240);

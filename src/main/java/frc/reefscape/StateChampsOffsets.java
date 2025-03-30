@@ -7,7 +7,7 @@ import lombok.Getter;
 public class StateChampsOffsets {
 
     // red tag offsets
-    //still needs to be set up for states fields
+    // still needs to be set up for states fields
     @Getter private static final double Tag6Offset = meterConverter(24);
     @Getter private static final double Tag7Offset = meterConverter(24);
     @Getter private static final double Tag8Offset = meterConverter(24);
@@ -16,7 +16,7 @@ public class StateChampsOffsets {
     @Getter private static final double Tag11Offset = meterConverter(24);
 
     // blue tag offsets
-    //still needs to be set up for states fields
+    // still needs to be set up for states fields
     @Getter private static final double Tag17Offset = meterConverter(24);
     @Getter private static final double Tag18Offset = meterConverter(24);
     @Getter private static final double Tag19Offset = meterConverter(24);

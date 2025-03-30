@@ -35,7 +35,8 @@ public class Pilot extends Gamepad {
 
     // vision Drive
     public final Trigger reefAim_A = A.and(teleop);
-    public final Trigger cageAim_B = B.and(teleop);
+    public final Trigger reefAim_B = B.and(teleop);
+    // public final Trigger cageAim_B = B.and(teleop);
 
     // Drive Triggers
     public final Trigger upReorient = upDpad.and(fn, teleop);
