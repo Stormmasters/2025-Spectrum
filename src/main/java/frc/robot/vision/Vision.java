@@ -153,10 +153,10 @@ public class Vision implements NTSendable, Subsystem {
     @Override
     public void initSendable(NTSendableBuilder builder) {
         builder.addDoubleProperty("FrontTX", frontLL::getTagTx, null);
-        builder.addDoubleProperty("FrontTY", frontLL::getTagTA, null);
+        builder.addDoubleProperty("FrontTA", frontLL::getTagTA, null);
         builder.addDoubleProperty("FrontTagID", frontLL::getClosestTagID, null);
         builder.addDoubleProperty("BackTX", backLL::getTagTx, null);
-        builder.addDoubleProperty("BackTY", backLL::getTagTA, null);
+        builder.addDoubleProperty("BackTA", backLL::getTagTA, null);
         builder.addDoubleProperty("BackTagID", backLL::getClosestTagID, null);
     }
 
@@ -277,19 +277,17 @@ public class Vision implements NTSendable, Subsystem {
                 ll.sendValidStatus("Strong Multi integration");
                 xyStds = 0.1;
                 degStds = 0.1;
-            } else if (multiTags && targetSize > 0.1) {
+            } else if (multiTags && targetSize > 0.2) {
                 ll.sendValidStatus("Multi integration");
                 xyStds = 0.25;
                 degStds = 8;
-            } else if (targetSize > 0.8
-                    && (mt1PoseDifference < 0.5 || DriverStation.isDisabled())) {
-                // Integrate if the target is very big and we are close to pose or disabled
+            } else if (targetSize > 2 && (mt1PoseDifference < 0.5)) {
+                // Integrate if the target is very big and we are close to pose
                 ll.sendValidStatus("Close integration");
                 xyStds = 0.5;
                 degStds = 999999;
-            } else if (targetSize > 0.1
-                    && (mt1PoseDifference < 0.25 || DriverStation.isDisabled())) {
-                // Integrate if we are very close to pose or disabled and target is large enough
+            } else if (targetSize > 1 && (mt1PoseDifference < 0.25)) {
+                // Integrate if we are very close to pose and target is large enough
                 ll.sendValidStatus("Proximity integration");
                 xyStds = 1.0;
                 degStds = 999999;
@@ -315,7 +313,7 @@ public class Vision implements NTSendable, Subsystem {
                 xyStds = 999999;
             }
 
-            if (integrateXY) {
+            if (integrateXY) { // If we are disabled just use this pose
                 xyStds = 0.01;
                 degStds = 0.01;
             }
@@ -367,22 +365,14 @@ public class Vision implements NTSendable, Subsystem {
             } else if (multiTags && targetSize > 2) {
                 ll.sendValidStatus("Strong Multi integration");
                 xyStds = 0.1;
-            } else if (multiTags && targetSize > 0.1) {
+            } else if (multiTags && targetSize > 0.2) {
                 ll.sendValidStatus("Multi integration");
                 xyStds = 0.25;
-            } else if (multiTags && targetSize > 2) {
-                ll.sendValidStatus("Strong Multi integration");
-                xyStds = 0.1;
-            } else if (multiTags && targetSize > 0.1) {
-                ll.sendValidStatus("Multi integration");
-                xyStds = 0.25;
-            } else if (targetSize > 0.8
-                    && (mt2PoseDifference < 0.5 || DriverStation.isDisabled())) {
+            } else if (targetSize > 2 && (mt2PoseDifference < 0.5 || DriverStation.isDisabled())) {
                 // Integrate if the target is very big and we are close to pose or disabled
                 ll.sendValidStatus("Close integration");
                 xyStds = 0.5;
-            } else if (targetSize > 0.1
-                    && (mt2PoseDifference < 0.25 || DriverStation.isDisabled())) {
+            } else if (targetSize > 1 && (mt2PoseDifference < 0.25 || DriverStation.isDisabled())) {
                 // Integrate if we are very close to pose or disabled and target is large enough
                 ll.sendValidStatus("Proximity integration");
                 xyStds = 0.0;
