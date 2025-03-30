@@ -80,7 +80,7 @@ public class Elbow extends Mechanism {
         @Getter private final double positionKv = 0;
         @Getter private final double positionKs = 0.4;
         @Getter private final double positionKa = 0.002;
-        @Getter private final double positionKg = 11.66666666; // 7 * 1.6666
+        @Getter private final double positionKg = 14; // 11.66666666; // 7 * 1.6666
         @Getter private final double mmCruiseVelocity = 10;
         @Getter private final double mmAcceleration = 50;
         @Getter private final double mmJerk = 0;
@@ -149,7 +149,7 @@ public class Elbow extends Mechanism {
         this.config = config;
 
         if (isAttached()) {
-            if (config.isCANcoderAttached()) {
+            if (config.isCANcoderAttached() && !Robot.isSimulation()) {
                 canCoderConfig =
                         new SpectrumCANcoderConfig(
                                 config.getCANcoderRotorToSensorRatio(),

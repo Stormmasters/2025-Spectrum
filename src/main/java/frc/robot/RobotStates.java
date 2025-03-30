@@ -25,6 +25,7 @@ public class RobotStates {
     private static final Operator operator = Robot.getOperator();
 
     @Getter private static double scoreTime = 3.0;
+    @Getter private static double stagingTime = 1;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
@@ -84,6 +85,8 @@ public class RobotStates {
     public static final Trigger stagedCoral = L1Coral.or(L2Coral, L3Coral, L4Coral);
 
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
+
+    public static final Trigger toggleReverse = pilot.toggleReverse.or(operator.toggleReverse);
 
     // auton Triggers
     public static final Trigger shoulderL4 = autonShoulderL4;
@@ -203,6 +206,10 @@ public class RobotStates {
                 .and(stagedCoral, TwistStates.isLeft.or(TwistStates.isRight))
                 .onTrue(twistAtReef.setTrue());
         actionState.onTrue(twistAtReef.setFalse());
+        reverse.onChange(
+                twistAtReef
+                        .setFalseForTime(RobotStates::getStagingTime)
+                        .onlyIf(stagedCoral.and(actionPrepState)));
 
         // *********************************
         // Auton States
@@ -215,7 +222,7 @@ public class RobotStates {
 
         // *********************************
         // Reversal States
-        operator.toggleReverse.or(pilot.toggleReverse).onTrue(reverse.toggle());
+        toggleReverse.onTrue(reverse.toggle());
         stagedCoral
                 .or(L2Algae, L3Algae)
                 .and(VisionStates.usingRearTag, actionPrepState.not(), actionState.not())
@@ -224,13 +231,10 @@ public class RobotStates {
                 .or(L2Algae, L3Algae)
                 .and(VisionStates.usingRearTag.not(), actionPrepState.not(), actionState.not())
                 .onTrue(reverse.setFalse());
+        groundAlgae.or(groundCoral, processorAlgae).and(toggleReverse).onTrue(reverse.setTrue());
         groundAlgae
                 .or(groundCoral, processorAlgae)
-                .and(pilot.toggleReverse.or(operator.toggleReverse))
-                .onTrue(reverse.setTrue());
-        groundAlgae
-                .or(groundCoral, processorAlgae)
-                .and(pilot.toggleReverse.or(operator.toggleReverse).not())
+                .and(toggleReverse.not())
                 .onTrue(reverse.setFalse());
 
         stationIntaking

@@ -47,18 +47,29 @@ public class TwistStates {
 
         netAlgae.whileTrue(move(config::getNet, "Twist.Net"));
 
-        branch.and((rightScore.or(Robot.getOperator().rightScore)), actionPrepState)
+        branch.and(
+                        (rightScore.or(Robot.getOperator().rightScore)),
+                        actionPrepState,
+                        twistAtReef.not())
                 .whileTrue(move(config::getRightCoral, config::getStageDelay, "Twist.rightCoral"));
-        // branch.and((rightScore.or(Robot.getOperator().rightScore)), actionPrepState, twistAtReef)
-        //         .whileTrue(move(config::getRightCoral, false, "Twist.rightCoralOverBranch"));
+        branch.and(
+                        (rightScore.or(Robot.getOperator().rightScore)),
+                        actionPrepState,
+                        twistAtReef,
+                        toggleReverse.not())
+                .whileTrue(moveAwayFromBranch(config::getRightCoral, "Twist.rightCoralOverBranch"));
 
-        branch.and((rightScore.not().or(Robot.getOperator().leftScore)), actionPrepState)
+        branch.and(
+                        (rightScore.not().or(Robot.getOperator().leftScore)),
+                        actionPrepState,
+                        twistAtReef.not())
                 .whileTrue(move(config::getLeftCoral, config::getStageDelay, "Twist.leftCoral"));
-        // branch.and(
-        //                 (rightScore.not().or(Robot.getOperator().rightScore)),
-        //                 actionPrepState,
-        //                 twistAtReef)
-        //         .whileTrue(move(config::getLeftCoral, true, "Twist.leftCoralOverBranch"));
+        branch.and(
+                        (rightScore.not().or(Robot.getOperator().rightScore)),
+                        actionPrepState,
+                        twistAtReef,
+                        toggleReverse.not())
+                .whileTrue(moveAwayFromBranch(config::getLeftCoral, "Twist.leftCoralOverBranch"));
 
         twistL4R.onTrue(move(config::getRightCoral, "Twist.RightCoral"));
         twistL4L.onTrue(move(config::getLeftCoral, "Twist.leftCoral"));
@@ -72,7 +83,7 @@ public class TwistStates {
     }
 
     public static Command move(DoubleSupplier degrees, boolean clockwise, String name) {
-        return twist.move(degrees, () -> clockwise).withName(name);
+        return twist.move(degrees, clockwise).withName(name);
     }
 
     public static Command move(DoubleSupplier degrees, DoubleSupplier delay, String name) {
@@ -82,7 +93,11 @@ public class TwistStates {
     }
 
     public static Command moveAwayFromElevator(DoubleSupplier degrees, String name) {
-        return twist.moveAwayFromElevatorWithReverse(degrees).withName(name);
+        return twist.moveAwayFromElevatorCheckReverse(degrees).withName(name);
+    }
+
+    public static Command moveAwayFromBranch(DoubleSupplier degrees, String name) {
+        return twist.moveAwayFromBranchCheckReversed(degrees).withName(name);
     }
 
     public static Command coastMode() {
