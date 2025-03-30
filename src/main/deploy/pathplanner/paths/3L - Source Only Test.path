@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2077949438202247,
-        "y": 7.048595505617977
+        "x": 1.1667134831460673,
+        "y": 6.982865168539325
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9210523950737786,
-        "y": 6.636796124135232
+        "x": 1.8799709343996212,
+        "y": 6.57106578705658
       },
       "isLocked": false,
       "linkedName": "feeder"
@@ -32,11 +32,11 @@
   "constraintZones": [
     {
       "name": "Align Override",
-      "minWaypointRelativePos": 0.8273296789350032,
+      "minWaypointRelativePos": 0.8476898981989021,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.75,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 4.0,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "poseUpdate",
-      "waypointRelativePos": 0.0,
+      "waypointRelativePos": 0.34808144087705506,
       "endWaypointRelativePos": 1.0,
       "command": null
     }

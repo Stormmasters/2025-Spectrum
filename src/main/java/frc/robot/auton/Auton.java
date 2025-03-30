@@ -50,6 +50,7 @@ public class Auton {
     public static final EventTrigger autonPoseUpdate = new EventTrigger("poseUpdate");
     public static final EventTrigger autonL4 = new EventTrigger("L4");
     public static final EventTrigger autonHomeOff = new EventTrigger("homeOff");
+    public static final EventTrigger autonReverse = new EventTrigger("reverse");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;

@@ -84,6 +84,7 @@ public class Elbow extends Mechanism {
         @Getter private final double mmCruiseVelocity = 10;
         @Getter private final double mmAcceleration = 50;
         @Getter private final double mmJerk = 0;
+        @Getter private final double slowMmAcceleration = 5;
 
         @Getter @Setter private double sensorToMechanismRatio = 61.71428571; // 102.857;
         @Getter @Setter private double rotorToSensorRatio = 1;
@@ -340,6 +341,16 @@ public class Elbow extends Mechanism {
     public Command move(DoubleSupplier degrees) {
         return run(() -> setMMPositionFoc(getIfReversedOffsetInRotations(degrees)))
                 .withName("Elbow.move");
+    }
+
+    public Command slowMove(DoubleSupplier degrees) {
+        return run(
+                () ->
+                        setDynMMPositionFoc(
+                                config::getMmCruiseVelocity,
+                                config::getSlowMmAcceleration,
+                                config::getMmJerk,
+                                getIfReversedDegrees(degrees)));
     }
 
     public DoubleSupplier getIfReversedOffsetInRotations(DoubleSupplier degrees) {

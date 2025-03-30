@@ -13,13 +13,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 - Source Only Test"
+            "pathName": "2 - Source Only"
           }
         }
       ]

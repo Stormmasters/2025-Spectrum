@@ -37,6 +37,7 @@ public class ElevatorStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
         homeAll.whileTrue(home());
+        homeAll.and(Util.autoMode).whileTrue(slowHome());
         Robot.getOperator()
                 .antiSecretClimb_LTRSup
                 .whileTrue(move(config::getFullExtend, "Elevator.fullExtend"));
@@ -77,16 +78,12 @@ public class ElevatorStates {
                 .whileTrue(move(config::getL4Coral, config::getExl4Coral, "Elevator.L4Coral"));
         L4Coral.and(actionState)
                 .whileTrue(move(config::getL4Score, config::getExl4Score, "Elevator.L4CoralScore"));
-
-        L4Coral.and(actionPrepState, () -> Util.autoMode.getAsBoolean())
-                .whileTrue(
-                        slowMove(config::getL4Coral, config::getExl4Coral, "Elevator.slowL4Coral"));
-        L4Coral.and(actionState, () -> Util.autoMode.getAsBoolean())
+        L4Coral.and(actionPrepState, Util.autoMode)
+                .whileTrue(slowMove(config::getL4Coral, config::getExl4Coral, "Elevator.L4Coral"));
+        L4Coral.and(actionState, Util.autoMode)
                 .whileTrue(
                         slowMove(
-                                config::getL4Score,
-                                config::getExl4Score,
-                                "Elevator.slowL4CoralScore"));
+                                config::getL4Score, config::getExl4Score, "Elevator.L4CoralScore"));
 
         processorAlgae
                 .and(actionPrepState)
@@ -129,11 +126,11 @@ public class ElevatorStates {
     }
 
     private static Command home() {
-        if (Util.autoMode.getAsBoolean()) {
-            return slowMove(() -> config.getHome(), "Elevator.slowHome");
-        } else {
-            return move(config::getHome, "Elevator.home");
-        }
+        return move(config::getHome, "Elevator.home");
+    }
+
+    private static Command slowHome() {
+        return slowMove(() -> config.getHome(), "Elevator.slowHome");
     }
 
     private static Command coastMode() {

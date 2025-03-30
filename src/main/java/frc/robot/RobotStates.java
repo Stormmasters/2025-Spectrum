@@ -203,6 +203,7 @@ public class RobotStates {
         autonLeft.onTrue(rightScore.setFalse());
         autonRight.onTrue(rightScore.setTrue());
         autonHome.onTrue(homeAll.toggleToTrue());
+        autonReverse.whileTrue(reverse.setTrue());
 
         // *********************************
         // Reversal States

@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.2077949438202247,
-        "y": 7.048595505617977
+        "x": 1.1667134831460673,
+        "y": 6.982865168539325
       },
       "prevControl": {
-        "x": 1.7521863589427333,
-        "y": 6.667408533012546
+        "x": 1.711104898268576,
+        "y": 6.601678195933894
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,12 +32,6 @@
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
-    {
-      "name": "",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
     {
       "name": "clearStates",
       "waypointRelativePos": 0.24784651527015533,

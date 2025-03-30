@@ -24,6 +24,7 @@ public class ShoulderStates {
 
     public static void setStates() {
         homeAll.whileTrue(home());
+        homeAll.and(Util.autoMode).whileTrue(slowHome());
         coastMode.onTrue(log(coastMode()).ignoringDisable(true));
         coastMode.onFalse(log(ensureBrakeMode()));
 
@@ -93,6 +94,15 @@ public class ShoulderStates {
                                 config::getExl4Score,
                                 config::getScoreDelay,
                                 "Shoulder.L4Coral.score"));
+        L4Coral.and(actionPrepState, Util.autoMode)
+                .whileTrue(slowMove(config::getExl4Coral, "Shoulder.L4Coral.prescore"));
+        L4Coral.and(actionState, Util.autoMode)
+                .whileTrue(
+                        slowMove(
+                                config::getL4CoralScore,
+                                config::getExl4Score,
+                                config::getScoreDelay,
+                                "Shoulder.L4Coral.score"));
 
         shoulderL4.whileTrue(
                 move(config::getL4Coral, config::getExl4Coral, "Shoulder.L4Coral.prescore"));
@@ -124,11 +134,7 @@ public class ShoulderStates {
     }
 
     public static Command home() {
-        if (Util.autoMode.getAsBoolean()) {
-            return shoulder.slowMove(() -> config.getHome()).withName("Shoulder.slowHome");
-        } else {
-            return shoulder.moveToDegrees(config::getHome).withName("Shoulder.home");
-        }
+        return shoulder.moveToDegrees(config::getHome).withName("Shoulder.home");
     }
 
     public static Command slowHome() {
@@ -152,6 +158,12 @@ public class ShoulderStates {
     }
 
     public static Command move(
+            DoubleSupplier degrees, DoubleSupplier exDegrees, DoubleSupplier delay, String name) {
+        return new WaitCommand(delay.getAsDouble())
+                .andThen(move(degrees, exDegrees, name).withName(name));
+    }
+
+    public static Command slowMove(
             DoubleSupplier degrees, DoubleSupplier exDegrees, DoubleSupplier delay, String name) {
         return new WaitCommand(delay.getAsDouble())
                 .andThen(move(degrees, exDegrees, name).withName(name));
