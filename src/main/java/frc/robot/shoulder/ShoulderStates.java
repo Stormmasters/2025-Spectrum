@@ -125,10 +125,9 @@ public class ShoulderStates {
 
     public static Command home() {
         if (Util.autoMode.getAsBoolean()) {
-                return shoulder.slowMove(()->config.getHome()).withName("Shoulder.slowHome");
-        }
-        else {
-                return shoulder.moveToDegrees(config::getHome).withName("Shoulder.home");
+            return shoulder.slowMove(() -> config.getHome()).withName("Shoulder.slowHome");
+        } else {
+            return shoulder.moveToDegrees(config::getHome).withName("Shoulder.home");
         }
     }
 

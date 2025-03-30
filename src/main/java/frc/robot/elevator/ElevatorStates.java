@@ -130,10 +130,9 @@ public class ElevatorStates {
 
     private static Command home() {
         if (Util.autoMode.getAsBoolean()) {
-                return slowMove(() -> config.getHome(), "Elevator.slowHome");
-        }
-        else {
-            return move(config::getHome, "Elevator.home");    
+            return slowMove(() -> config.getHome(), "Elevator.slowHome");
+        } else {
+            return move(config::getHome, "Elevator.home");
         }
     }
 

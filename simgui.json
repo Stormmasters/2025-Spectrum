@@ -39,10 +39,47 @@
         }
       },
       "/SmartDashboard/Field2d": {
+        "Robot": {
+          "arrowColor": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "color": [
+            0.32549020648002625,
+            0.10588235408067703,
+            0.7215686440467834,
+            255.0
+          ],
+          "length": 0.9269999861717224,
+          "style": "Box/Image",
+          "width": 0.9269999861717224
+        },
         "bottom": 1638,
         "builtin": "2025 Reefscape",
         "height": 8.051901817321777,
         "left": 534,
+        "limelight-back": {
+          "arrows": false,
+          "style": "Hidden"
+        },
+        "limelight-front": {
+          "arrows": false,
+          "style": "Hidden"
+        },
+        "path": {
+          "arrows": false,
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "selectable": false,
+          "style": "Line",
+          "weight": 2.0
+        },
         "right": 3466,
         "top": 291,
         "width": 17.54825210571289,
