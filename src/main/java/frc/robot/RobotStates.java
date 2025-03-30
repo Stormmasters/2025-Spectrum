@@ -23,7 +23,7 @@ public class RobotStates {
     private static final Pilot pilot = Robot.getPilot();
     private static final Operator operator = Robot.getOperator();
 
-    @Getter private static double scoreTime = 3.0;
+    @Getter private static double scoreTime = 1.0;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
@@ -137,6 +137,8 @@ public class RobotStates {
         autonActionOff.onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
 
         operator.algaeStage.or(operator.coralStage).onTrue(actionState.setFalse());
+
+        (L2Algae.or(L3Algae)).and(actionState).onTrue(actionState.setFalse());
 
         // *********************************
         // Intaking States
