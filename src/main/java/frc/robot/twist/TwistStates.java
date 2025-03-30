@@ -46,8 +46,8 @@ public class TwistStates {
         branch.and((rightScore.not().or(Robot.getOperator().leftScore)), actionPrepState)
                 .whileTrue(move(config::getLeftCoral, config::getStageDelay, "Twist.leftCoral"));
 
-        twistL4R.onTrue(move(config::getRightCoral, "Twist.RightCoral"));
-        twistL4L.onTrue(move(config::getLeftCoral, "Twist.leftCoral"));
+        twistL4R.whileTrue(move(config::getRightCoral, "Twist.RightCoral"));
+        twistL4L.whileTrue(move(config::getLeftCoral, "Twist.leftCoral"));
 
         climbPrep.whileTrue(move(config::getClimbPrep, "Twist.climbPrep"));
     }

@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9210523950737783,
+        "x": 1.9210523950737786,
         "y": 6.636796124135232
       },
       "isLocked": false,
@@ -32,11 +32,11 @@
   "constraintZones": [
     {
       "name": "Align Override",
-      "minWaypointRelativePos": 0.75,
+      "minWaypointRelativePos": 0.8273296789350032,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.1,
-        "maxAcceleration": 0.1,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,9 +47,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "autoAlign",
-      "waypointRelativePos": 0.76,
-      "endWaypointRelativePos": null,
+      "name": "poseUpdate",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],

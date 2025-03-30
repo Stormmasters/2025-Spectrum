@@ -4,7 +4,6 @@ import static frc.robot.auton.Auton.*;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
@@ -87,8 +86,7 @@ public class RobotStates {
     public static final Trigger shoulderL4 = autonShoulderL4;
     public static final Trigger twistL4R = autonTwistL4R;
     public static final Trigger twistL4L = autonTwistL4L;
-    public static final Trigger autoAlign = autonSwerveAlign;
-    public static final Trigger clearOverrideFeedBack = autonClearFeedback;
+    public static final Trigger poseUpdate = autonPoseUpdate;
 
     // TODO: Handoffs are disabled
     // public static final Trigger algaeHandoff = operator.algaeHandoff_X;
@@ -204,7 +202,7 @@ public class RobotStates {
         autonHomeOff.onTrue(homeAll.setFalse());
         autonLeft.onTrue(rightScore.setFalse());
         autonRight.onTrue(rightScore.setTrue());
-        autonHome.onTrue((Commands.waitSeconds(.5)).andThen(homeAll.setTrue()));
+        autonHome.onTrue(homeAll.toggleToTrue());
 
         // *********************************
         // Reversal States

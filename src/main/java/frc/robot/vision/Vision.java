@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.reefscape.Field;
 import frc.robot.Robot;
+import frc.robot.RobotStates;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.Telemetry.PrintPriority;
 import frc.spectrumLib.util.Util;
@@ -125,6 +126,7 @@ public class Vision implements NTSendable, Subsystem {
         setLimeLightOrientation();
         disabledLimelightUpdates();
         enabledLimelightUpdates();
+        autonLimelightUpdates();
 
         Robot.getField2d().getObject(frontLL.getCameraName()).setPose(getFrontMegaTag2Pose());
         Robot.getField2d().getObject(backLL.getCameraName()).setPose(getBackMegaTag2Pose());
@@ -190,6 +192,37 @@ public class Vision implements NTSendable, Subsystem {
 
     private void enabledLimelightUpdates() {
         if (Util.teleop.getAsBoolean()) {
+            for (Limelight limelight : allLimelights) {
+                limelight.setIMUmode(3);
+            }
+            try {
+                addMegaTag2_VisionInput(backLL);
+            } catch (Exception e) {
+                Telemetry.print("REAR MT2: Vision pose not present but tried to access it");
+            }
+
+            try {
+                addMegaTag2_VisionInput(frontLL);
+            } catch (Exception e) {
+                Telemetry.print("FRONT MT2: Vision pose not present but tried to access it");
+            }
+
+            try {
+                addMegaTag1_VisionInput(backLL, false);
+            } catch (Exception e) {
+                Telemetry.print("REAR MT1: Vision pose not present but tried to access it");
+            }
+
+            try {
+                addMegaTag1_VisionInput(frontLL, false);
+            } catch (Exception e) {
+                Telemetry.print("FRONT MT1: Vision pose not present but tried to access it");
+            }
+        }
+    }
+
+    private void autonLimelightUpdates() {
+        if (Util.autoMode.getAsBoolean() && RobotStates.poseUpdate.getAsBoolean()) {
             for (Limelight limelight : allLimelights) {
                 limelight.setIMUmode(3);
             }

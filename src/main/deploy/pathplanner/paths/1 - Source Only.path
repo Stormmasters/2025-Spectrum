@@ -32,11 +32,11 @@
   "constraintZones": [
     {
       "name": "Align Override",
-      "minWaypointRelativePos": 0.7991386061080693,
+      "minWaypointRelativePos": 0.750587314017227,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.1,
-        "maxAcceleration": 0.1,
+        "maxVelocity": 0.5,
+        "maxAcceleration": 3.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -65,14 +65,20 @@
       "command": null
     },
     {
+      "name": "poseUpdate",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
       "name": "actionOn",
-      "waypointRelativePos": 0.6472200469851228,
+      "waypointRelativePos": 0.3057948316366475,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "autoAlign",
-      "waypointRelativePos": 0.8257635082223956,
+      "name": "actionOff",
+      "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
     }

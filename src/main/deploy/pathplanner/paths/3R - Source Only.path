@@ -4,15 +4,15 @@
     {
       "anchor": {
         "x": 1.2077949438202247,
-        "y": 7.032162921348314
+        "y": 7.048595505617977
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9210523950737783,
-        "y": 6.6203635398655685
+        "x": 1.9210523950737786,
+        "y": 6.636796124135232
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "feeder"
     },
     {
       "anchor": {
@@ -32,11 +32,11 @@
   "constraintZones": [
     {
       "name": "Align Override",
-      "minWaypointRelativePos": 0.75,
+      "minWaypointRelativePos": 0.8,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.1,
-        "maxAcceleration": 0.1,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,8 +47,56 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "autoAlign",
-      "waypointRelativePos": 0.76,
+      "name": "sourceIntakeOff",
+      "waypointRelativePos": 0.2024275646045442,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "right",
+      "waypointRelativePos": 0.44205168363351793,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "coral",
+      "waypointRelativePos": 0.44675019577133573,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "L4",
+      "waypointRelativePos": 0.4483163664839445,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "homeOff",
+      "waypointRelativePos": 0.4483163664839451,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "actionOn",
+      "waypointRelativePos": 0.7615505090054862,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "poseUpdate",
+      "waypointRelativePos": 0.8508222396241183,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "actionOff",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "home",
+      "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
       "command": null
     }

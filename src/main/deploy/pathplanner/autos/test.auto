@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4 - Source Only Test"
+            "pathName": "1 - Source Only"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3R - Source Only Test"
+            "pathName": "2 - Source Only Test"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
-  "folder": "Better Source L4",
+  "resetOdom": false,
+  "folder": null,
   "choreoAuto": false
 }

@@ -1,7 +1,6 @@
 package frc.robot.shoulder;
 
 import static frc.robot.RobotStates.*;
-import static frc.robot.auton.Auton.autonScore;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -9,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.spectrumLib.Telemetry;
+import frc.spectrumLib.util.Util;
 import java.util.function.DoubleSupplier;
 
 public class ShoulderStates {
@@ -94,7 +94,8 @@ public class ShoulderStates {
                                 config::getScoreDelay,
                                 "Shoulder.L4Coral.score"));
 
-        shoulderL4.onTrue(move(config::getExl4Coral, "Shoulder.L4Coral.prescore"));
+        shoulderL4.whileTrue(
+                move(config::getL4Coral, config::getExl4Coral, "Shoulder.L4Coral.prescore"));
 
         // algae
         processorAlgae
@@ -116,8 +117,6 @@ public class ShoulderStates {
         Robot.getOperator()
                 .climbPrep_start
                 .whileTrue(move(config::getClimbPrep, "Shoulder.startClimb"));
-
-        autonScore.onTrue(new WaitCommand(4.0).andThen(move(() -> 180, "Shoulder.homeAuto")));
     }
 
     public static Command runShoulder(DoubleSupplier speed) {
@@ -125,7 +124,16 @@ public class ShoulderStates {
     }
 
     public static Command home() {
-        return shoulder.moveToDegrees(config::getHome).withName("Shoulder.home");
+        if (Util.autoMode.getAsBoolean()) {
+                return shoulder.slowMove(()->config.getHome()).withName("Shoulder.slowHome");
+        }
+        else {
+                return shoulder.moveToDegrees(config::getHome).withName("Shoulder.home");
+        }
+    }
+
+    public static Command slowHome() {
+        return shoulder.slowMove(() -> config.getHome()).withName("Shoulder.slowHome");
     }
 
     public static DoubleSupplier getPosition() {
@@ -134,6 +142,10 @@ public class ShoulderStates {
 
     public static Command move(DoubleSupplier degrees, String name) {
         return shoulder.move(degrees, degrees).withName(name);
+    }
+
+    public static Command slowMove(DoubleSupplier degrees, String name) {
+        return shoulder.slowMove(degrees).withName(name);
     }
 
     public static Command move(DoubleSupplier degrees, DoubleSupplier exDegrees, String name) {

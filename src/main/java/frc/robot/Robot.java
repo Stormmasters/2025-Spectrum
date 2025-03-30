@@ -233,13 +233,7 @@ public class Robot extends SpectrumRobot {
 
         if (!commandInit) {
             Command AutonStartCommand =
-                    FollowPathCommand.warmupCommand()
-                            .andThen(
-                                    PathfindingCommand.warmupCommand()
-                                            .andThen(
-                                                    auton.sideStartL4(false)
-                                                            .ignoringDisable(true)
-                                                            .withTimeout(0.5)));
+                    FollowPathCommand.warmupCommand().andThen(PathfindingCommand.warmupCommand());
             AutonStartCommand.schedule();
             commandInit = true;
         }

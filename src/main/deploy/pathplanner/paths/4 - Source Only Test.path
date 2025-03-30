@@ -33,9 +33,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "clearFeedBack",
+      "name": "poseUpdate",
       "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
+      "endWaypointRelativePos": 0.3512137823022769,
       "command": null
     }
   ],

@@ -11,12 +11,11 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
 import frc.reefscape.Zones;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Robot;
-import frc.robot.RobotStates;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.Telemetry;
@@ -78,9 +77,6 @@ public class SwerveStates {
 
         // // vision aim
         pilot.reefAim_A.whileTrue(log(reefAimDrive()));
-
-        RobotStates.autoAlign.whileTrue(autonSwerveAlign());
-        RobotStates.clearOverrideFeedBack.onTrue(clearFeedBack());
     }
 
     /* Pilot Commands ************************************************************************ */
@@ -124,7 +120,6 @@ public class SwerveStates {
                             //                 + finalFieldVelocityY
                             //                 + " !!");
                         })
-                .until(() -> Robot.getAuton().atAlignGoal())
                 .withName("Swerve.autonAlign");
     }
 

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.elevator.Elevator.ElevatorConfig;
 import frc.spectrumLib.Telemetry;
+import frc.spectrumLib.util.Util;
 import java.util.function.DoubleSupplier;
 
 public class ElevatorStates {
@@ -77,6 +78,16 @@ public class ElevatorStates {
         L4Coral.and(actionState)
                 .whileTrue(move(config::getL4Score, config::getExl4Score, "Elevator.L4CoralScore"));
 
+        L4Coral.and(actionPrepState, () -> Util.autoMode.getAsBoolean())
+                .whileTrue(
+                        slowMove(config::getL4Coral, config::getExl4Coral, "Elevator.slowL4Coral"));
+        L4Coral.and(actionState, () -> Util.autoMode.getAsBoolean())
+                .whileTrue(
+                        slowMove(
+                                config::getL4Score,
+                                config::getExl4Score,
+                                "Elevator.slowL4CoralScore"));
+
         processorAlgae
                 .and(actionPrepState)
                 .whileTrue(move(config::getProcessorAlgae, "Elevator.processorAlgae"));
@@ -104,12 +115,26 @@ public class ElevatorStates {
         return elevator.move(rotations, exRotaitons).withName(name);
     }
 
+    public static Command slowMove(DoubleSupplier rotations, String name) {
+        return elevator.slowMove(rotations, rotations).withName(name);
+    }
+
+    public static Command slowMove(
+            DoubleSupplier rotations, DoubleSupplier exRotaitons, String name) {
+        return elevator.slowMove(rotations, exRotaitons).withName(name);
+    }
+
     private static Command holdPosition() {
         return elevator.holdPosition().withName("Elevator.holdPosition");
     }
 
     private static Command home() {
-        return move(config::getHome, "Elevator.home");
+        if (Util.autoMode.getAsBoolean()) {
+                return slowMove(() -> config.getHome(), "Elevator.slowHome");
+        }
+        else {
+            return move(config::getHome, "Elevator.home");    
+        }
     }
 
     private static Command coastMode() {
