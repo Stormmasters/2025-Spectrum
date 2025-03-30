@@ -41,7 +41,7 @@ public class HomeOffsets {
     @Getter private static final double eventTag10TAGoal = 7.7;
     @Getter private static final double eventTag11TAGoal = 7.8;
 
-    // red tag angles offsets 
+    // red tag angles offsets
     // original values: 60, 0, 300, 240, 180, 120
     @Getter private static final double Tag17Angle = radianConverter(60);
     @Getter private static final double Tag18Angle = radianConverter(0);
@@ -50,7 +50,7 @@ public class HomeOffsets {
     @Getter private static final double Tag21Angle = radianConverter(180);
     @Getter private static final double Tag22Angle = radianConverter(120);
 
-    //blue tag angles offsets
+    // blue tag angles offsets
     // original values: 120, 180, 240, 300, 0, 60
     @Getter private static final double Tag6Angle = radianConverter(120);
     @Getter private static final double Tag7Angle = radianConverter(180);
@@ -72,21 +72,16 @@ public class HomeOffsets {
         return meterConversion + halfRobotLength;
     }
 
-    /**
-     * 
-     * 
-     * @param degrees
-     */
+    /** @param degrees */
     private static double radianConverter(double offsetDegrees) {
         double radianConversion = Units.degreesToRadians(offsetDegrees);
 
         return radianConversion;
     }
 
-
     // tag offsets ordered from blue tags to red tags due to centerFaces index values
     @Getter
-    private static final double[][] tagOffsets = {
+    private static final double[][] reefTagOffsets = {
         {17, Tag17Offset, Tag17Angle},
         {18, Tag18Offset, Tag18Angle},
         {19, Tag19Offset, Tag19Angle},

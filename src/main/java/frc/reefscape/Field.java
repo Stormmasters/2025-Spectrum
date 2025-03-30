@@ -224,7 +224,8 @@ public class Field {
             return tag;
         }
 
-        public static Pose2d getOffsetPosition(int blueTagID, double offsetMeters, double offsetRadians) {
+        public static Pose2d getOffsetPosition(
+                int blueTagID, double offsetMeters, double offsetRadians) {
 
             int faceIndex = reefTagIDToIndex(blueTagID);
 
@@ -239,7 +240,8 @@ public class Field {
             Rotation2d rotationOffset = face.getRotation().rotateBy(new Rotation2d(rotation));
 
             // Calculate the perpendicular offset
-            Translation2d offsetTranslation = flipIfRed(new Translation2d(-offsetMeters, rotationOffset));
+            Translation2d offsetTranslation =
+                    flipIfRed(new Translation2d(-offsetMeters, rotationOffset));
 
             // Apply the offset to the face's position
             Translation2d newTranslation = face.getTranslation().plus(offsetTranslation);
@@ -306,21 +308,20 @@ public class Field {
         }
 
         /**
-         * Converts a target angle into a reverse rotation if the back is closer
-         * else, the original tag angle is returned for front heading
-         * 
+         * Converts a target angle into a reverse rotation if the back is closer else, the original
+         * tag angle is returned for front heading
+         *
          * @param targetAngle
          * @return
          */
         public static double reverseRotation(double targetAngle) {
             double robotRotation = Robot.getSwerve().getRobotPose().getRotation().getRadians();
-            boolean backIsCloser = Math.abs(targetAngle-robotRotation) > 180;
+            boolean backIsCloser = Math.abs(targetAngle - robotRotation) > 180;
             if (backIsCloser) {
                 return targetAngle - Math.PI;
             }
             return targetAngle;
         }
-
 
         /**
          * Returns the reef face pose based on the tag ID sent from either red or blue

@@ -7,6 +7,7 @@ import lombok.Getter;
 public class StateChampsOffsets {
 
     // red tag offsets
+    //still needs to be set up for states fields
     @Getter private static final double Tag6Offset = meterConverter(24);
     @Getter private static final double Tag7Offset = meterConverter(24);
     @Getter private static final double Tag8Offset = meterConverter(24);
@@ -15,6 +16,7 @@ public class StateChampsOffsets {
     @Getter private static final double Tag11Offset = meterConverter(24);
 
     // blue tag offsets
+    //still needs to be set up for states fields
     @Getter private static final double Tag17Offset = meterConverter(24);
     @Getter private static final double Tag18Offset = meterConverter(24);
     @Getter private static final double Tag19Offset = meterConverter(24);
@@ -22,22 +24,22 @@ public class StateChampsOffsets {
     @Getter private static final double Tag21Offset = meterConverter(24);
     @Getter private static final double Tag22Offset = meterConverter(24);
 
-     // red tag angles offsets
-     @Getter private static final double Tag17Angle = radianConverter(60);
-     @Getter private static final double Tag18Angle = radianConverter(0);
-     @Getter private static final double Tag19Angle = radianConverter(300);
-     @Getter private static final double Tag20Angle = radianConverter(240);
-     @Getter private static final double Tag21Angle = radianConverter(180);
-     @Getter private static final double Tag22Angle = radianConverter(120);
- 
-     //blue tag angles offsets
-     @Getter private static final double Tag6Angle = radianConverter(120);
-     @Getter private static final double Tag7Angle = radianConverter(180);
-     @Getter private static final double Tag8Angle = radianConverter(240);
-     @Getter private static final double Tag9Angle = radianConverter(300);
-     @Getter private static final double Tag10Angle = radianConverter(0);
-     @Getter private static final double Tag11Angle = radianConverter(60);
-     
+    // red tag angles offsets
+    @Getter private static final double Tag17Angle = radianConverter(60);
+    @Getter private static final double Tag18Angle = radianConverter(0);
+    @Getter private static final double Tag19Angle = radianConverter(300);
+    @Getter private static final double Tag20Angle = radianConverter(240);
+    @Getter private static final double Tag21Angle = radianConverter(180);
+    @Getter private static final double Tag22Angle = radianConverter(120);
+
+    // blue tag angles offsets
+    @Getter private static final double Tag6Angle = radianConverter(120);
+    @Getter private static final double Tag7Angle = radianConverter(180);
+    @Getter private static final double Tag8Angle = radianConverter(240);
+    @Getter private static final double Tag9Angle = radianConverter(300);
+    @Getter private static final double Tag10Angle = radianConverter(0);
+    @Getter private static final double Tag11Angle = radianConverter(60);
+
     /**
      * Converts inches to meters and adds half the robot length to the offset
      *
@@ -51,17 +53,12 @@ public class StateChampsOffsets {
         return meterConversion + halfRobotLength;
     }
 
-    /**
-     * 
-     * 
-     * @param degrees
-     */
+    /** @param degrees */
     private static double radianConverter(double offsetDegrees) {
         double radianConversion = Units.degreesToRadians(offsetDegrees);
 
         return radianConversion;
     }
-
 
     // tag offsets ordered from blue tags to red tags due to centerFaces index values
     @Getter
