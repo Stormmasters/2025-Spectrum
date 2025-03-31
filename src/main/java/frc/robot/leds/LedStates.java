@@ -30,8 +30,8 @@ public class LedStates {
         // homeFinishLED(RobotStates.isAtHome.and(Util.teleop, RobotStates.staged.not()), 8);
 
         // // Coral and Algae Led Commands
-        // coralModeLED(RobotStates.coral.and(Util.teleop), 6);
-        // algaeModeLED(RobotStates.algae.and(Util.teleop), 6);
+        coralModeLED(RobotStates.coral.and(Util.teleop), 6);
+        algaeModeLED(RobotStates.algae.and(Util.teleop), 6);
         // coralStagedLED(RobotStates.stagedCoral.and(Util.teleop), 7);
         // algaeStagedLED(RobotStates.stagedAlgae.and(Util.teleop), 7);
         // hasCoralLED(IntakeStates.hasCoral.and(Util.teleop), 7);
@@ -150,9 +150,12 @@ public class LedStates {
     }
 
     static void coralModeLED(Trigger trigger, int priority) {
-        withReverseLedCommand(
-                "right.CoralMode", right, right.solid(Color.kCoral), priority, trigger);
-        withReverseLedCommand("left.CoralMode", left, left.solid(Color.kCoral), priority, trigger);
+        // withReverseLedCommand(
+        //         "right.CoralMode", right, right.solid(Color.kCoral), priority, trigger);
+        // withReverseLedCommand("left.CoralMode", left, left.solid(Color.kCoral), priority,
+        // trigger);
+        ledCommand("right.CoralMode", right, right.solid(Color.kCoral), priority, trigger);
+        ledCommand("left.CoralMode", left, left.solid(Color.kCoral), priority, trigger);
     }
 
     static void algaeModeLED(Trigger trigger, int priority) {
@@ -160,6 +163,8 @@ public class LedStates {
         //         "right.AlgaeMode", right, right.solid(Color.kMediumSeaGreen), priority, trigger);
         // withReverseLedCommand(
         //         "left.AlgaeMode", left, left.solid(Color.kMediumSeaGreen), priority, trigger);
+        ledCommand("right.AlgaeMode", right, right.solid(Color.kMediumSeaGreen), priority, trigger);
+        ledCommand("left.AlgaeMode", left, left.solid(Color.kMediumSeaGreen), priority, trigger);
     }
 
     static void coralStagedLED(Trigger trigger, int priority) {
