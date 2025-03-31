@@ -5,6 +5,7 @@ import static frc.robot.auton.Auton.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
@@ -25,7 +26,7 @@ public class RobotStates {
     private static final Operator operator = Robot.getOperator();
 
     @Getter private static double scoreTime = 1.0;
-    @Getter private static double stagingTime = 1;
+    @Getter private static double stagingTime = 1.0;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
@@ -101,6 +102,12 @@ public class RobotStates {
 
     public static final Trigger isAtHome =
             ElevatorStates.isHome.and(ElbowStates.isHome, ShoulderStates.isHome);
+
+    public static final Trigger twistStageComplete =
+            stagedCoral.and(
+                    TwistStates.isLeft
+                            .and(rightScore.not())
+                            .or(TwistStates.isRight.and(rightScore)));
 
     // reset triggers
     public static final Trigger homeElevator = operator.homeElevator_A;
@@ -204,14 +211,17 @@ public class RobotStates {
         operator.leftScore.and(operator.staged).onTrue(rightScore.setFalse());
         operator.rightScore.and(operator.staged).onTrue(rightScore.setTrue());
 
-        actionPrepState
-                .and(stagedCoral, TwistStates.isLeft.or(TwistStates.isRight))
-                .onTrue(twistAtReef.setTrue());
+        // Set twist at reef if the arm is staged and at left or right
+        actionPrepState.and(twistStageComplete).onTrue(twistAtReef.setTrue());
         actionState.onTrue(twistAtReef.setFalse());
         reverse.onChange(
                 twistAtReef
-                        .setFalseForTime(RobotStates::getStagingTime)
-                        .onlyIf(stagedCoral.and(actionPrepState)));
+                        .setFalse()
+                        .andThen(
+                                new WaitCommand(getStagingTime()),
+                                twistAtReef
+                                        .setTrue()
+                                        .onlyIf(actionPrepState.and(twistStageComplete))));
 
         // *********************************
         // Auton States

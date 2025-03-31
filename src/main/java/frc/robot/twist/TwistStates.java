@@ -14,9 +14,17 @@ public class TwistStates {
     private static TwistConfig config = Robot.getConfig().twist;
 
     public static final Trigger isLeft =
-            twist.atDegrees(config::getLeftCoral, config::getTriggerTolerance);
+            twist.atDegrees(config::getLeftCoral, config::getTriggerTolerance)
+                    .and(reverse.not())
+                    .or(
+                            twist.atDegrees(config::getRightCoral, config::getTriggerTolerance)
+                                    .and(reverse));
     public static final Trigger isRight =
-            twist.atDegrees(config::getRightCoral, config::getTriggerTolerance);
+            twist.atDegrees(config::getRightCoral, config::getTriggerTolerance)
+                    .and(reverse.not())
+                    .or(
+                            twist.atDegrees(config::getLeftCoral, config::getTriggerTolerance)
+                                    .and(reverse));
 
     public static void setupDefaultCommand() {
         twist.setDefaultCommand(log(twist.runHoldTwist().withName("Twist.default")));
@@ -24,6 +32,7 @@ public class TwistStates {
     }
 
     public static void setStates() {
+
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
@@ -55,7 +64,7 @@ public class TwistStates {
         branch.and(
                         (rightScore.or(Robot.getOperator().rightScore)),
                         actionPrepState,
-                        twistAtReef,
+                        twistAtReef.debounce(config.getTwistAtReefDelay()),
                         toggleReverse.not())
                 .whileTrue(moveAwayFromBranch(config::getRightCoral, "Twist.rightCoralOverBranch"));
 
@@ -65,9 +74,9 @@ public class TwistStates {
                         twistAtReef.not())
                 .whileTrue(move(config::getLeftCoral, config::getStageDelay, "Twist.leftCoral"));
         branch.and(
-                        (rightScore.not().or(Robot.getOperator().rightScore)),
+                        (rightScore.not().or(Robot.getOperator().leftScore)),
                         actionPrepState,
-                        twistAtReef,
+                        twistAtReef.debounce(config.getTwistAtReefDelay()),
                         toggleReverse.not())
                 .whileTrue(moveAwayFromBranch(config::getLeftCoral, "Twist.leftCoralOverBranch"));
 

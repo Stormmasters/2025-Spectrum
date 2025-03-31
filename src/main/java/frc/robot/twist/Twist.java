@@ -1,7 +1,5 @@
 package frc.robot.twist;
 
-import static frc.robot.RobotStates.coral;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -11,7 +9,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.RobotStates;
@@ -33,6 +31,7 @@ public class Twist extends Mechanism {
         @Getter private final int initializedPosition = 20;
 
         @Getter private final double stageDelay = 0.05;
+        @Getter private final double twistAtReefDelay = 0.3;
 
         /* twist positions in percentage of max rotation || 0 is horizontal */
 
@@ -50,7 +49,7 @@ public class Twist extends Mechanism {
         @Getter private final double climbPrep = 179.9;
 
         @Getter private final double initPosition = 0;
-        @Getter private double triggerTolerance = 8;
+        @Getter private double triggerTolerance = 5;
         @Getter private double twistTolerance = 8;
 
         /* Twist config settings */
@@ -350,10 +349,6 @@ public class Twist extends Mechanism {
     }
 
     public Command moveAwayFromElevatorCheckReverse(DoubleSupplier degrees) {
-        // return move(
-        //         () -> adjustTargetToReverse(degrees),
-        //         checkClockwiseFromElevator(() -> adjustTargetToReverse(degrees), true));
-
         return Commands.either(
                         moveAwayFromElevatorReversed(() -> adjustTargetToReverse(degrees))
                                 .until(() -> RobotStates.reverse.getAsBoolean() != true),
@@ -412,43 +407,50 @@ public class Twist extends Mechanism {
             currentMod += 360;
         }
 
-        Telemetry.print("TARGET: " + degreesMod);
-        Telemetry.print("CURRENT: " + currentMod);
+        // Telemetry.print("TARGET: " + degreesMod);
+        // Telemetry.print("CURRENT: " + currentMod);
 
         // check if moving from within to past elevator
-        if (degreesMod > 180 && currentMod < 180) {
-            if (reverse) { // RobotStates.reverse.getAsBoolean() && checkReversed) {
-                Telemetry.print("1: false");
+        if (degreesMod > 180 + config.getTwistTolerance()
+                && degreesMod < 360 - config.getTwistTolerance()
+                && currentMod < 180 + config.getTwistTolerance()) {
+            if (reverse) {
+                // Telemetry.print("1: false");
                 return false;
             }
-            System.out.println("1: true");
+            // System.out.println("1: true");
             return true;
         }
 
         // check if moving from past elevator back to within
-        if (degreesMod < 180 && currentMod > 180) {
-            if (reverse) { // RobotStates.reverse.getAsBoolean() && checkReversed) {
-                Telemetry.print("2: false");
+        if (degreesMod < 180 + config.getTwistTolerance()
+                && currentMod > 180 + config.getTwistTolerance()
+                && currentMod < 360 - config.getTwistTolerance()) {
+            if (reverse) {
+                // Telemetry.print("2: false");
                 return false;
             }
-            Telemetry.print("2: true");
+            // Telemetry.print("2: true");
             return true;
         }
 
-        if (degreesMod > 180 && currentMod > 180) {
+        if (degreesMod > 180 + config.getTwistTolerance()
+                && degreesMod < 360 - config.getTwistTolerance()
+                && currentMod > 180 + config.getTwistTolerance()
+                && currentMod < 360 - config.getTwistTolerance()) {
             if (degreesMod < currentMod) {
-                Telemetry.print("3: false");
+                // Telemetry.print("3: false");
                 return false;
             }
-            Telemetry.print("3: true");
+            // Telemetry.print("3: true");
             return true;
         }
 
-        if (degreesMod < currentMod) {
-            Telemetry.print("4: true");
+        if (degreesMod < currentMod && currentMod < 360 - config.getTwistTolerance()) {
+            // Telemetry.print("4: true");
             return true;
         }
-        Telemetry.print("4: false");
+        // Telemetry.print("4: false");
         return false;
     }
 
@@ -456,8 +458,8 @@ public class Twist extends Mechanism {
         double degreesMod = degrees.getAsDouble() % 360;
         double currentMod = getPositionDegrees() % 360;
 
-        Telemetry.print("TARGET: " + degreesMod);
-        Telemetry.print("CURRENT: " + currentMod);
+        // Telemetry.print("TARGET: " + degreesMod);
+        // Telemetry.print("CURRENT: " + currentMod);
 
         if (currentMod < 0) {
             currentMod += 360;
@@ -479,18 +481,14 @@ public class Twist extends Mechanism {
 
         if (degreesMod > 180 && currentMod > 180) {
             if (degreesMod < currentMod) {
-                Telemetry.print("3: false");
                 return false;
             }
-            Telemetry.print("3: true");
             return true;
         }
 
         if (degreesMod < currentMod) {
-            Telemetry.print("4: true");
             return true;
         }
-        Telemetry.print("4: false");
         return false;
     }
 
@@ -502,20 +500,14 @@ public class Twist extends Mechanism {
     }
 
     public Command twistHome() {
-        // return run(
-        //         () -> {
-        //             if (coral.getAsBoolean()) {
-        //                 setDegrees(config::getLeftCoral);
-        //             } else {
-        //                 setDegrees(config::getHome);
-        //             }
-        //         });
+        return homeAwayFromElevator(config::getHome).withName("Twist.home");
+    }
 
-        return new ConditionalCommand(
-                        homeAwayFromElevator(config::getLeftCoral),
-                        homeAwayFromElevator(config::getHome),
-                        () -> coral.getAsBoolean())
-                .withName("Twist.home");
+    public Trigger atDegrees(DoubleSupplier target, DoubleSupplier tolerance) {
+        return new Trigger(
+                () ->
+                        Math.abs(((getPositionDegrees() % 360) + 360) % 360 - target.getAsDouble())
+                                < tolerance.getAsDouble());
     }
 
     // --------------------------------------------------------------------------------
