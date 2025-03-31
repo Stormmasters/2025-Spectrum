@@ -75,7 +75,6 @@ public class SwerveStates {
 
         // // vision aim
         pilot.reefAim_A.whileTrue(log(reefAimDrive()));
-        pilot.reefAim_B.whileTrue(log(reefAimDriveVision()));
 
         // Pose2d backReefOffset = Field.Reef.getOffsetPosition(21, Units.inchesToMeters(24));
         // pilot.cageAim_B.whileTrue(
@@ -121,6 +120,9 @@ public class SwerveStates {
     }
 
     public static Command reefAimDrive() {
+        if (Robot.getVision().tagsInView()) {
+            return reefAimDriveVision();
+        }
         return alignDrive(
                         () -> zones.getScoreReefPoseX(),
                         () -> zones.getScoreReefPoseY(),

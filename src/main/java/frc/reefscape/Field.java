@@ -236,24 +236,25 @@ public class Field {
 
             Pose2d face = flipIfRed(centerFaces[faceIndex]);
 
-            // TODO: find a way to set the angle of the robot to the reef face to either when front
-            // or back is closer
             // currently, only heading is set to front for facing the reef face
-            double rotation = offsetRadians; //reverseRotation(offsetRadians); 
+            double reefRotation = face.getRotation().getRadians();
+            double robotAngle = Robot.getSwerve().getRobotPose().getRotation().getRadians();
+
+            double rotation = reverseRotation(robotAngle, reefRotation, offsetRadians);
             System.out.println("Rotation Target: " + rotation);
+
             Rotation2d rotationOffset = face.getRotation().rotateBy(new Rotation2d(rotation));
 
-            // double offsetChecker = 1;
-            // double robotRotation = Robot.getSwerve().getRobotPose().getRotation().getRadians()
-            //checks if the rotation is 0 since that means back is closer
-            //TODO: same as above
-            // if (rotation == 0) {
-            //     offsetChecker = -1;
-            // }
+            double offsetChecker = 1;
+
+            // checks if the rotation is 0 since that means back is closer
+            if (rotation == 0) {
+                offsetChecker = -1;
+            }
 
             // Calculate the perpendicular offset
             Translation2d offsetTranslation =
-                    flipIfRed(new Translation2d(-offsetMeters, rotationOffset));
+                    flipIfRed(new Translation2d(-offsetMeters * offsetChecker, rotationOffset));
 
             // Apply the offset to the face's position
             Translation2d newTranslation = face.getTranslation().plus(offsetTranslation);
@@ -320,20 +321,44 @@ public class Field {
         }
 
         /**
-         * Converts a target angle into a reverse rotation if the back is closer else, the original
-         * tag angle is returned for front heading
+         * Converts a target angle into a reverse rotation if the back is closer; otherwise, returns
+         * the original target angle for front heading.
          *
-         * @param targetAngle
-         * @return
+         * @param robotAngle The current angle of the robot in radians.
+         * @param reefRotation The rotation adjustment factor in radians.
+         * @param targetAngle The desired target angle in radians.
+         * @return The optimal rotation angle.
          */
-        //TODO: currently doesn't work as intended (tested in Sim)
-        public static double reverseRotation(double targetAngle) {
-            double robotRotation = Robot.getSwerve().getRobotPose().getRotation().getRadians();
-            boolean backIsCloser = Math.abs(targetAngle - robotRotation) <= Math.PI;
-            if (backIsCloser) {
-                return 0;
+        public static double reverseRotation(
+                double robotAngle, double reefRotation, double targetAngle) {
+
+            // Adjust target angle based on reef rotation and normalize
+            double adjustedTargetAngle = normalizeAngle(reefRotation + targetAngle);
+
+            // Calculate front and back heading differences
+            double robotTargetAngleToFront =
+                    Math.abs(normalizeAngle(adjustedTargetAngle - robotAngle));
+            double robotTargetAngleToBack =
+                    Math.abs(normalizeAngle(adjustedTargetAngle - (robotAngle + Math.PI)));
+
+            // Return the optimal rotation
+            if (robotTargetAngleToBack < robotTargetAngleToFront) {
+                return normalizeAngle(targetAngle - Math.PI);
             }
-            return targetAngle;
+            return normalizeAngle(targetAngle);
+        }
+
+        /**
+         * Normalizes an angle to the range [-π, π).
+         *
+         * @param angle The angle in radians.
+         * @return The normalized angle.
+         */
+        private static double normalizeAngle(double angle) {
+            angle = angle % (2 * Math.PI);
+            if (angle >= Math.PI) angle -= 2 * Math.PI;
+            if (angle < -Math.PI) angle += 2 * Math.PI;
+            return angle;
         }
 
         /**
