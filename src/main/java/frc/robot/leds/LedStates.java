@@ -49,6 +49,7 @@ public class LedStates {
         seesTagDefault(VisionStates.seeingTag.and(Util.teleop), 5);
         seesTagAndCoralMode(VisionStates.seeingTag.and(RobotStates.coral, Util.teleop), 7);
         seesTagAndAlgaeMode(VisionStates.seeingTag.and(RobotStates.algae, Util.teleop), 7);
+        seesTagAndRightCoral(VisionStates.seeingTag.and(RobotStates.rightScore, Util.teleop), 9);
     }
 
     /** Default LED commands for each mode */
@@ -261,6 +262,21 @@ public class LedStates {
                 "left.SeesTagAndAlgaeMode",
                 left,
                 left.edges(Color.kYellow, 5).overlayOn(left.solid(Color.kMediumSeaGreen)),
+                priority,
+                trigger);
+    }
+
+    static void seesTagAndRightCoral(Trigger trigger, int priority) {
+        ledCommand(
+                "right.SeesTagAndRightCoral",
+                right,
+                right.edges(Color.kYellow, 5).overlayOn(right.solid(Color.kGreen)),
+                priority,
+                trigger);
+        ledCommand(
+                "left.SeesTagAndRightCoral",
+                left,
+                left.edges(Color.kYellow, 5).overlayOn(right.solid(Color.kGreen)),
                 priority,
                 trigger);
     }
