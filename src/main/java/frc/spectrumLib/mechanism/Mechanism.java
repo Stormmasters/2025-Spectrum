@@ -670,10 +670,10 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
             if (config.talonConfig.CurrentLimits.StatorCurrentLimit != statorLimit.getAsDouble()
                     && config.talonConfig.CurrentLimits.SupplyCurrentLimit
                             != supplyLimit.getAsDouble()) {
-                config.configSupplyCurrentLimit(supplyLimit.getAsDouble(), true);
-                config.configStatorCurrentLimit(statorLimit.getAsDouble(), true);
-                config.configForwardTorqueCurrentLimit(statorLimit.getAsDouble());
-                config.configReverseTorqueCurrentLimit(-1 * statorLimit.getAsDouble());
+                config.configSupplyCurrentLimit(Math.abs(supplyLimit.getAsDouble()), true);
+                config.configStatorCurrentLimit(Math.abs(statorLimit.getAsDouble()), true);
+                config.configForwardTorqueCurrentLimit(Math.abs(statorLimit.getAsDouble()));
+                config.configReverseTorqueCurrentLimit(-1 * Math.abs(statorLimit.getAsDouble()));
                 for (int i = 0; i < 10; i++) {
                     StatusCode result = motor.getConfigurator().apply(config.talonConfig);
                     if (!result.isOK()) {
