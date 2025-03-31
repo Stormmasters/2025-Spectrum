@@ -32,7 +32,6 @@ public class TwistStates {
     }
 
     public static void setStates() {
-
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
@@ -64,7 +63,7 @@ public class TwistStates {
         branch.and(
                         (rightScore.or(Robot.getOperator().rightScore)),
                         actionPrepState,
-                        twistAtReef.debounce(config.getTwistAtReefDelay()),
+                        twistAtReef,
                         toggleReverse.not())
                 .whileTrue(moveAwayFromBranch(config::getRightCoral, "Twist.rightCoralOverBranch"));
 
@@ -76,11 +75,11 @@ public class TwistStates {
         branch.and(
                         (rightScore.not().or(Robot.getOperator().leftScore)),
                         actionPrepState,
-                        twistAtReef.debounce(config.getTwistAtReefDelay()),
+                        twistAtReef,
                         toggleReverse.not())
                 .whileTrue(moveAwayFromBranch(config::getLeftCoral, "Twist.leftCoralOverBranch"));
 
-        twistL4R.onTrue(move(config::getRightCoral, "Twist.RightCoral"));
+        twistL4R.onTrue(move(config::getRightCoral, "Twist.rightCoral"));
         twistL4L.onTrue(move(config::getLeftCoral, "Twist.leftCoral"));
 
         climbPrep.whileTrue(move(config::getClimbPrep, "Twist.climbPrep"));

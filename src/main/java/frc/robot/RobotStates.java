@@ -5,7 +5,6 @@ import static frc.robot.auton.Auton.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
@@ -26,7 +25,7 @@ public class RobotStates {
     private static final Operator operator = Robot.getOperator();
 
     @Getter private static double scoreTime = 1.0;
-    @Getter private static double stagingTime = 1.0;
+    @Getter private static double twistAtReefDelay = 0.2;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
@@ -104,7 +103,7 @@ public class RobotStates {
             ElevatorStates.isHome.and(ElbowStates.isHome, ShoulderStates.isHome);
 
     public static final Trigger twistStageComplete =
-            stagedCoral.and(
+            branch.and(
                     TwistStates.isLeft
                             .and(rightScore.not())
                             .or(TwistStates.isRight.and(rightScore)));
@@ -212,16 +211,11 @@ public class RobotStates {
         operator.rightScore.and(operator.staged).onTrue(rightScore.setTrue());
 
         // Set twist at reef if the arm is staged and at left or right
-        actionPrepState.and(twistStageComplete).onTrue(twistAtReef.setTrue());
+        actionPrepState
+                .and(twistStageComplete.debounce(getTwistAtReefDelay()))
+                .onTrue(twistAtReef.setTrue());
         actionState.onTrue(twistAtReef.setFalse());
-        reverse.onChange(
-                twistAtReef
-                        .setFalse()
-                        .andThen(
-                                new WaitCommand(getStagingTime()),
-                                twistAtReef
-                                        .setTrue()
-                                        .onlyIf(actionPrepState.and(twistStageComplete))));
+        reverse.onChange(twistAtReef.setFalse());
 
         // *********************************
         // Auton States
