@@ -227,13 +227,13 @@ public class Vision implements NTSendable, Subsystem {
                 limelight.setIMUmode(3);
             }
             try {
-                addMegaTag2_VisionInput(backLL);
+                addMegaTag2_VisionInputAuton(backLL);
             } catch (Exception e) {
                 Telemetry.print("REAR MT2: Vision pose not present but tried to access it");
             }
 
             try {
-                addMegaTag2_VisionInput(frontLL);
+                addMegaTag2_VisionInputAuton(frontLL);
             } catch (Exception e) {
                 Telemetry.print("FRONT MT2: Vision pose not present but tried to access it");
             }
@@ -396,6 +396,76 @@ public class Vision implements NTSendable, Subsystem {
             // if almost stationary and extremely close to tag
             if (robotSpeed.vxMetersPerSecond + robotSpeed.vyMetersPerSecond <= 0.2
                     && targetSize > 0.4) {
+                ll.sendValidStatus("Stationary close integration");
+                xyStds = 0.1;
+            } else if (multiTags && targetSize > 2) {
+                ll.sendValidStatus("Strong Multi integration");
+                xyStds = 0.1;
+            } else if (multiTags && targetSize > 0.1) {
+                ll.sendValidStatus("Multi integration");
+                xyStds = 0.25;
+            } else if (multiTags && targetSize > 2) {
+                ll.sendValidStatus("Strong Multi integration");
+                xyStds = 0.1;
+            } else if (targetSize > 0.8
+                    && (mt2PoseDifference < 0.5 || DriverStation.isDisabled())) {
+                // Integrate if the target is very big and we are close to pose or disabled
+                ll.sendValidStatus("Close integration");
+                xyStds = 0.5;
+            } else if (targetSize > 0.1
+                    && (mt2PoseDifference < 0.25 || DriverStation.isDisabled())) {
+                // Integrate if we are very close to pose or disabled and target is large enough
+                ll.sendValidStatus("Proximity integration");
+                xyStds = 0.0;
+            } else if (highestAmbiguity < 0.25 && targetSize >= 0.03) {
+                ll.sendValidStatus("Stable integration");
+                xyStds = 0.5;
+            } else {
+                // Shouldn't integrate
+                return;
+            }
+
+            Pose2d integratedPose =
+                    new Pose2d(megaTag2Pose2d.getTranslation(), megaTag2Pose2d.getRotation());
+            Robot.getSwerve()
+                    .addVisionMeasurement(
+                            integratedPose,
+                            Utils.fpgaToCurrentTime(ll.getMegaTag2PoseTimestamp()),
+                            VecBuilder.fill(xyStds, xyStds, degStds));
+        } else {
+            ll.setTagStatus("no tags");
+            ll.sendInvalidStatus("no tag found rejection");
+        }
+    }
+
+    @SuppressWarnings("all")
+    private void addMegaTag2_VisionInputAuton(Limelight ll) {
+        double xyStds;
+        double degStds = 99999;
+
+        // integrate vision
+        if (ll.targetInView()) {
+            boolean multiTags = ll.multipleTagsInView();
+            double targetSize = ll.getTargetSize();
+            Pose2d megaTag2Pose2d = ll.getMegaTag2_Pose2d();
+            double highestAmbiguity = 2;
+            ChassisSpeeds robotSpeed = Robot.getSwerve().getCurrentRobotChassisSpeeds();
+
+            // distance from current pose to vision estimated MT2 pose
+            double mt2PoseDifference =
+                    Robot.getSwerve()
+                            .getRobotPose()
+                            .getTranslation()
+                            .getDistance(megaTag2Pose2d.getTranslation());
+
+            /* rejections */
+            if (rejectionCheck(megaTag2Pose2d, targetSize)) {
+                return;
+            }
+
+            /* integrations */
+            // if almost stationary and extremely close to tag
+            if (targetSize > 0.2) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
             } else if (multiTags && targetSize > 2) {

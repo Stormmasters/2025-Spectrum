@@ -21,11 +21,35 @@
           "data": {
             "pathName": "2 - Source Only"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3L - Source Only"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 - Source Only"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3R - Source Only"
+          }
         }
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": null,
   "choreoAuto": false
 }
