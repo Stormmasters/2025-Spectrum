@@ -276,7 +276,7 @@ public class LedStates {
         ledCommand(
                 "left.SeesTagAndRightCoral",
                 left,
-                left.edges(Color.kYellow, 5).overlayOn(right.solid(Color.kGreen)),
+                left.edges(Color.kYellow, 5).overlayOn(left.solid(Color.kGreen)),
                 priority,
                 trigger);
     }
