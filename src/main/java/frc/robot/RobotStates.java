@@ -5,6 +5,7 @@ import static frc.robot.auton.Auton.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
@@ -12,6 +13,7 @@ import frc.robot.operator.Operator;
 import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
 import frc.robot.swerve.SwerveStates;
+import frc.robot.twist.TwistStates;
 import frc.robot.vision.VisionStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
@@ -23,6 +25,7 @@ public class RobotStates {
     private static final Operator operator = Robot.getOperator();
 
     @Getter private static double scoreTime = 1.0;
+    @Getter private static double stagingTime = 1.0;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
@@ -41,6 +44,7 @@ public class RobotStates {
     public static final SpectrumState actionState = new SpectrumState("actionState");
     public static final SpectrumState homeAll = new SpectrumState("homeAll");
     public static final SpectrumState autonStationIntake = new SpectrumState("autonStationIntake");
+    public static final SpectrumState twistAtReef = new SpectrumState("twistCoralReef");
 
     /**
      * Define Robot States here and how they can be triggered States should be triggers that command
@@ -82,6 +86,8 @@ public class RobotStates {
 
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
 
+    public static final Trigger toggleReverse = pilot.toggleReverse.or(operator.toggleReverse);
+
     // auton Triggers
     public static final Trigger shoulderL4 = autonShoulderL4;
     public static final Trigger twistL4R = autonTwistL4R;
@@ -95,6 +101,12 @@ public class RobotStates {
 
     public static final Trigger isAtHome =
             ElevatorStates.isHome.and(ElbowStates.isHome, ShoulderStates.isHome);
+
+    public static final Trigger twistStageComplete =
+            stagedCoral.and(
+                    TwistStates.isLeft
+                            .and(rightScore.not())
+                            .or(TwistStates.isRight.and(rightScore)));
 
     // reset triggers
     public static final Trigger homeElevator = operator.homeElevator_A;
@@ -198,6 +210,18 @@ public class RobotStates {
         operator.leftScore.and(operator.staged).onTrue(rightScore.setFalse());
         operator.rightScore.and(operator.staged).onTrue(rightScore.setTrue());
 
+        // Set twist at reef if the arm is staged and at left or right
+        actionPrepState.and(twistStageComplete).onTrue(twistAtReef.setTrue());
+        actionState.onTrue(twistAtReef.setFalse());
+        reverse.onChange(
+                twistAtReef
+                        .setFalse()
+                        .andThen(
+                                new WaitCommand(getStagingTime()),
+                                twistAtReef
+                                        .setTrue()
+                                        .onlyIf(actionPrepState.and(twistStageComplete))));
+
         // *********************************
         // Auton States
         autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
@@ -209,7 +233,7 @@ public class RobotStates {
 
         // *********************************
         // Reversal States
-        operator.toggleReverse.or(pilot.toggleReverse).onTrue(reverse.toggle());
+        toggleReverse.onTrue(reverse.toggle());
         stagedCoral
                 .or(L2Algae, L3Algae)
                 .and(VisionStates.usingRearTag, actionPrepState.not(), actionState.not())
@@ -218,13 +242,10 @@ public class RobotStates {
                 .or(L2Algae, L3Algae)
                 .and(VisionStates.usingRearTag.not(), actionPrepState.not(), actionState.not())
                 .onTrue(reverse.setFalse());
+        groundAlgae.or(groundCoral, processorAlgae).and(toggleReverse).onTrue(reverse.setTrue());
         groundAlgae
                 .or(groundCoral, processorAlgae)
-                .and(pilot.toggleReverse.or(operator.toggleReverse))
-                .onTrue(reverse.setTrue());
-        groundAlgae
-                .or(groundCoral, processorAlgae)
-                .and(pilot.toggleReverse.or(operator.toggleReverse).not())
+                .and(toggleReverse.not())
                 .onTrue(reverse.setFalse());
 
         // stationIntaking
@@ -269,7 +290,8 @@ public class RobotStates {
                         actionPrepState.setFalse(),
                         actionState.setFalse(),
                         homeAll.setFalse(),
-                        coastMode.setFalse())
+                        coastMode.setFalse(),
+                        twistAtReef.setFalse())
                 .withName("Clear States");
     }
 }

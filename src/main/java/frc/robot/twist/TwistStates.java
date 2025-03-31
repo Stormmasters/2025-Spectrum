@@ -3,6 +3,7 @@ package frc.robot.twist;
 import static frc.robot.RobotStates.*;
 
 import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.twist.Twist.TwistConfig;
 import frc.spectrumLib.Telemetry;
@@ -12,12 +13,26 @@ public class TwistStates {
     private static Twist twist = Robot.getTwist();
     private static TwistConfig config = Robot.getConfig().twist;
 
+    public static final Trigger isLeft =
+            twist.atDegrees(config::getLeftCoral, config::getTriggerTolerance)
+                    .and(reverse.not())
+                    .or(
+                            twist.atDegrees(config::getRightCoral, config::getTriggerTolerance)
+                                    .and(reverse));
+    public static final Trigger isRight =
+            twist.atDegrees(config::getRightCoral, config::getTriggerTolerance)
+                    .and(reverse.not())
+                    .or(
+                            twist.atDegrees(config::getLeftCoral, config::getTriggerTolerance)
+                                    .and(reverse));
+
     public static void setupDefaultCommand() {
         twist.setDefaultCommand(log(twist.runHoldTwist().withName("Twist.default")));
         // twist.runStop());
     }
 
     public static void setStates() {
+
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
@@ -41,10 +56,29 @@ public class TwistStates {
 
         netAlgae.whileTrue(move(config::getNet, "Twist.Net"));
 
-        branch.and((rightScore.or(Robot.getOperator().rightScore)), actionPrepState)
+        branch.and(
+                        (rightScore.or(Robot.getOperator().rightScore)),
+                        actionPrepState,
+                        twistAtReef.not())
                 .whileTrue(move(config::getRightCoral, config::getStageDelay, "Twist.rightCoral"));
-        branch.and((rightScore.not().or(Robot.getOperator().leftScore)), actionPrepState)
+        branch.and(
+                        (rightScore.or(Robot.getOperator().rightScore)),
+                        actionPrepState,
+                        twistAtReef.debounce(config.getTwistAtReefDelay()),
+                        toggleReverse.not())
+                .whileTrue(moveAwayFromBranch(config::getRightCoral, "Twist.rightCoralOverBranch"));
+
+        branch.and(
+                        (rightScore.not().or(Robot.getOperator().leftScore)),
+                        actionPrepState,
+                        twistAtReef.not())
                 .whileTrue(move(config::getLeftCoral, config::getStageDelay, "Twist.leftCoral"));
+        branch.and(
+                        (rightScore.not().or(Robot.getOperator().leftScore)),
+                        actionPrepState,
+                        twistAtReef.debounce(config.getTwistAtReefDelay()),
+                        toggleReverse.not())
+                .whileTrue(moveAwayFromBranch(config::getLeftCoral, "Twist.leftCoralOverBranch"));
 
         twistL4R.onTrue(move(config::getRightCoral, "Twist.RightCoral"));
         twistL4L.onTrue(move(config::getLeftCoral, "Twist.leftCoral"));
@@ -53,11 +87,26 @@ public class TwistStates {
     }
 
     public static Command move(DoubleSupplier degrees, String name) {
-        return twist.move(degrees).withName(name);
+        // return twist.move(degrees).withName(name);
+        return moveAwayFromElevator(degrees, name);
+    }
+
+    public static Command move(DoubleSupplier degrees, boolean clockwise, String name) {
+        return twist.move(degrees, clockwise).withName(name);
     }
 
     public static Command move(DoubleSupplier degrees, DoubleSupplier delay, String name) {
-        return new WaitCommand(delay.getAsDouble()).andThen(move(degrees, name).withName(name));
+        // return new WaitCommand(delay.getAsDouble()).andThen(move(degrees, name).withName(name));
+        return new WaitCommand(delay.getAsDouble())
+                .andThen(moveAwayFromElevator(degrees, name).withName(name));
+    }
+
+    public static Command moveAwayFromElevator(DoubleSupplier degrees, String name) {
+        return twist.moveAwayFromElevatorCheckReverse(degrees).withName(name);
+    }
+
+    public static Command moveAwayFromBranch(DoubleSupplier degrees, String name) {
+        return twist.moveAwayFromBranchCheckReversed(degrees).withName(name);
     }
 
     public static Command coastMode() {

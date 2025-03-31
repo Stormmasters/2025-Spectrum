@@ -149,7 +149,7 @@ public class Elbow extends Mechanism {
         this.config = config;
 
         if (isAttached()) {
-            if (config.isCANcoderAttached()) {
+            if (config.isCANcoderAttached() && !Robot.isSimulation()) {
                 canCoderConfig =
                         new SpectrumCANcoderConfig(
                                 config.getCANcoderRotorToSensorRatio(),
