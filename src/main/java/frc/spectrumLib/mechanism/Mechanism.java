@@ -451,8 +451,9 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
     }
 
     protected void setCurrentLimits(DoubleSupplier supplyLimit, DoubleSupplier statorLimit) {
-        toggleSupplyCurrentLimit(supplyLimit, true);
-        toggleTorqueCurrentLimit(statorLimit, true);
+        // toggleSupplyCurrentLimit(supplyLimit, true);
+        // toggleTorqueCurrentLimit(statorLimit, true);
+        applyCurrentLimit(supplyLimit, statorLimit);
     }
 
     protected void stop() {
@@ -660,6 +661,30 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
             } else {
                 config.configSupplyCurrentLimit(enabledLimit.getAsDouble(), false);
                 config.applyTalonConfig(motor);
+            }
+        }
+    }
+
+    public void applyCurrentLimit(DoubleSupplier supplyLimit, DoubleSupplier statorLimit) {
+        if (isAttached()) {
+            if (config.talonConfig.CurrentLimits.StatorCurrentLimit != statorLimit.getAsDouble()
+                    && config.talonConfig.CurrentLimits.SupplyCurrentLimit
+                            != supplyLimit.getAsDouble()) {
+                config.configSupplyCurrentLimit(supplyLimit.getAsDouble(), true);
+                config.configStatorCurrentLimit(statorLimit.getAsDouble(), true);
+                config.configForwardTorqueCurrentLimit(statorLimit.getAsDouble());
+                config.configReverseTorqueCurrentLimit(-1 * statorLimit.getAsDouble());
+                for (int i = 0; i < 10; i++) {
+                    StatusCode result = motor.getConfigurator().apply(config.talonConfig);
+                    if (!result.isOK()) {
+                        System.out.println(
+                                "Could not apply config changes to "
+                                        + config.getName()
+                                        + "\'s motor ");
+                    } else {
+                        break;
+                    }
+                }
             }
         }
     }

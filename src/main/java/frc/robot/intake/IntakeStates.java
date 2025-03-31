@@ -68,7 +68,7 @@ public class IntakeStates {
 
         algae.and(photon.not())
                 .whileTrue(
-                        intake.intakeAlage(
+                        intake.intakeAlgae(
                                         config::getAlgaeIntakeTorqueCurrent,
                                         config::getAlgaeIntakeSupplyCurrent)
                                 .withName("Intake.Algae"));

@@ -168,7 +168,7 @@ public class Intake extends Mechanism {
                 this);
     }
 
-    public Command intakeAlage(DoubleSupplier torque, DoubleSupplier current) {
+    public Command intakeAlgae(DoubleSupplier torque, DoubleSupplier current) {
         return new FunctionalCommand(
                 () -> setCurrentLimits(current, torque),
                 () -> {

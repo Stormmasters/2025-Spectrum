@@ -152,7 +152,7 @@ public class Shoulder extends Mechanism {
 
         if (isAttached()) { // && RobotStates.pm.and(RobotStates.photon,
             // RobotStates.sim).not().getAsBoolean()) {
-            if (config.isCANcoderAttached()) {
+            if (config.isCANcoderAttached() && !Robot.isSimulation()) {
                 canCoderConfig =
                         new SpectrumCANcoderConfig(
                                 config.getCANcoderRotorToSensorRatio(),
