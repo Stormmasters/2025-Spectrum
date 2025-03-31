@@ -33,8 +33,12 @@ public class Pilot extends Gamepad {
 
     public final Trigger actionReady_RB = rightBumper.and(teleop);
 
+    // Vision Triggers
+    public final Trigger tagsInView = new Trigger(() -> Robot.getVision().tagsInView());
+
     // vision Drive
-    public final Trigger reefAim_A = A.and(teleop);
+    public final Trigger reefAim_A = A.and(teleop, tagsInView.not());
+    public final Trigger reefVision_A = A.and(teleop, tagsInView);
     public final Trigger reefAim_B = B.and(teleop);
     // public final Trigger cageAim_B = B.and(teleop);
 

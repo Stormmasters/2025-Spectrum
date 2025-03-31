@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
+import frc.reefscape.HomeOffsets;
 import frc.reefscape.Zones;
 import frc.robot.Robot;
 import frc.robot.pilot.Pilot;
@@ -75,6 +77,7 @@ public class SwerveStates {
 
         // // vision aim
         pilot.reefAim_A.whileTrue(log(reefAimDrive()));
+        pilot.reefVision_A.whileTrue(log(reefAimDriveVision()));
 
         // Pose2d backReefOffset = Field.Reef.getOffsetPosition(21, Units.inchesToMeters(24));
         // pilot.cageAim_B.whileTrue(
@@ -120,9 +123,6 @@ public class SwerveStates {
     }
 
     public static Command reefAimDrive() {
-        if (Robot.getVision().tagsInView()) {
-            return reefAimDriveVision();
-        }
         return alignDrive(
                         () -> zones.getScoreReefPoseX(),
                         () -> zones.getScoreReefPoseY(),
@@ -179,7 +179,19 @@ public class SwerveStates {
     }
 
     private static double getTagDistanceVelocity() {
-        return swerve.calculateTagDistanceAlignController(() -> config.getHomeLlAimTAgoal());
+        double[][] tagAreaOffsets = HomeOffsets.getTagAreaOffsets();
+        int tagIndex = Robot.getVision().getClosestTagID();
+        if (tagIndex < 0) {
+            return 0.0;
+        } else if (tagIndex >= 17) {
+            tagIndex -= 17;
+        }
+
+        final double tagAreaOffset = tagAreaOffsets[tagIndex][1];
+
+        System.out.println("Tag Area Offset: " + tagAreaOffset);
+        SmartDashboard.putNumber("Tag Area Offset: ", tagAreaOffset);
+        return swerve.calculateTagDistanceAlignController(() -> tagAreaOffset);
     }
 
     private static DoubleSupplier getAlignToX(DoubleSupplier xGoalMeters) {
