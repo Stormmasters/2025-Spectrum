@@ -31,7 +31,6 @@ public class Twist extends Mechanism {
         @Getter private final int initializedPosition = 20;
 
         @Getter private final double stageDelay = 0.05;
-        @Getter private final double twistAtReefDelay = 0.3;
 
         /* twist positions in percentage of max rotation || 0 is horizontal */
 
@@ -50,7 +49,7 @@ public class Twist extends Mechanism {
 
         @Getter private final double initPosition = 0;
         @Getter private double triggerTolerance = 5;
-        @Getter private double twistTolerance = 8;
+        @Getter private double twistTolerance = 10;
 
         /* Twist config settings */
         @Getter private final double zeroSpeed = -0.1;
