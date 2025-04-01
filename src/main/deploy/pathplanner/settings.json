@@ -6,17 +6,13 @@
     "Blue Center Algae Rush",
     "Blue Left Preload-Source ",
     "Blue Left Source",
-    "Config Paths",
-    "Side Start Source L4"
+    "Config Paths"
   ],
   "autoFolders": [
-    "Algae Rush",
-    "Better Source L4",
     "Blue Center Origin",
     "Blue Left Origin",
     "Blue Right Origin",
-    "Config Autos",
-    "Source L4"
+    "Config Autos"
   ],
   "defaultMaxVel": 4.0,
   "defaultMaxAccel": 3.5,

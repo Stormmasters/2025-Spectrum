@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "3R - Source Only"
           }
         },
         {
@@ -61,7 +61,7 @@
       ]
     }
   },
-  "resetOdom": true,
-  "folder": "Better Source L4",
+  "resetOdom": false,
+  "folder": "Blue Left Origin",
   "choreoAuto": false
 }
