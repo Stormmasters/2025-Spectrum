@@ -207,7 +207,7 @@ public class Field {
             double zoneAngle = Math.PI / 3; // 60 degrees per zone
             int index = (int) ((angle + Math.PI) / zoneAngle); // Convert angle to zone index
 
-            return index % 6; // Modular for safety, definitely works without the modular just dont
+            return index % 6; // Modular for safety, definitely works without the modular just don't
             // remove it
         }
 
@@ -279,7 +279,7 @@ public class Field {
         }
 
         /**
-         * Converts a given Reef Tag Id into index form for centerfaces to pull from
+         * Converts a given Reef Tag Id into index form for center faces to pull from
          *
          * @param tagID
          * @return
