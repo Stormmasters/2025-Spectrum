@@ -23,7 +23,6 @@ import lombok.Setter;
 
 public class SwerveConfig {
 
-
     @Getter
     private final double scoreOffsetFromReef =
             Units.inchesToMeters(8.0 + 18.5); // Offset + half of robot length with bumpers
