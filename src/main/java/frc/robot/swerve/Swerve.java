@@ -33,6 +33,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
+import frc.reefscape.HomeOffsets;
+import frc.reefscape.StateChampsOffsets;
+import frc.reefscape.WorldsChampsOffsets;
 import frc.robot.Robot;
 import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.Telemetry;
@@ -55,6 +58,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     private TagDistanceAlignController tagDistanceAlignController;
     private TranslationXController xController;
     private TranslationYController yController;
+    private HomeOffsets homeOffsets;
+    private StateChampsOffsets stateChampsOffsets;
+    private WorldsChampsOffsets worldsChampsOffsets;
 
     @Getter
     protected SwerveModuleState[] setpoints =
@@ -138,6 +144,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
      */
     @Override
     public void initSendable(NTSendableBuilder builder) {
+        builder.addDoubleProperty("Pose X", () -> getRobotPose().getX(), null);
+        builder.addDoubleProperty("Pose Y", () -> getRobotPose().getY(), null);
+
         SmartDashboard.putData(
                 "Swerve Drive",
                 new Sendable() {
@@ -270,7 +279,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         return runOnce(
                 () -> {
                     double output;
-                    output = Field.flipTrueAngleIfRed(angleDegrees);
+                    output = Field.flipAngleIfRed(angleDegrees);
                     reorient(output);
                 });
     }
@@ -385,9 +394,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     // --------------------------------------------------------------------------------
     // Tag Center Align Controller
     // --------------------------------------------------------------------------------
-    void resetTagCenterAlignController(double currentMeters) {
-        tagCenterAlignController.reset(currentMeters);
-    }
+    // void resetTagCenterAlignController(double currentMeters) {
+    //     tagCenterAlignController.reset(currentMeters);
+    // }
 
     double calculateTagCenterAlignController(
             DoubleSupplier targetMeters, DoubleSupplier currentMeters) {
@@ -436,8 +445,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         xController.reset(getRobotPose().getX());
     }
 
-    double calculateXController(DoubleSupplier targetMeters) {
-        return xController.calculate(targetMeters.getAsDouble(), getRobotPose().getX());
+    DoubleSupplier calculateXController(DoubleSupplier targetMeters) {
+        return () -> xController.calculate(targetMeters.getAsDouble(), getRobotPose().getX());
     }
 
     // --------------------------------------------------------------------------------
@@ -447,8 +456,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         yController.reset(getRobotPose().getY());
     }
 
-    double calculateYController(DoubleSupplier targetMeters) {
-        return yController.calculate(targetMeters.getAsDouble(), getRobotPose().getY());
+    DoubleSupplier calculateYController(DoubleSupplier targetMeters) {
+        return () -> yController.calculate(targetMeters, getRobotPose()::getY);
     }
 
     // --------------------------------------------------------------------------------

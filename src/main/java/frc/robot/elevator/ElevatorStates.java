@@ -49,6 +49,9 @@ public class ElevatorStates {
                         "Elevator.stationIntake"));
         stationIntaking.onFalse(home());
 
+        groundAlgae.whileTrue(home());
+        groundCoral.whileTrue(home());
+
         Robot.getPilot()
                 .photonRemoveL2Algae
                 .whileTrue(move(config::getL2Algae, "Elevator.L2Algae"));
