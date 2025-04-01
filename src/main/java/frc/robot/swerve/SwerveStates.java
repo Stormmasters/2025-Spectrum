@@ -28,18 +28,18 @@ public class SwerveStates {
             log(pilotDrive().withName("SwerveCommands.pilotSteer").ignoringDisable(true));
     static SpectrumState steeringLock = new SpectrumState("SteeringLock");
 
-    // public static final Trigger isFrontClosestToLeftStation =
-    //         new Trigger(
-    //                 () ->
-    //                         swerve.frontClosestToAngle(
-    //                                 Field.flipTrueAngleIfRed(
-    //                                         Field.CoralStation.leftFaceRobotPovDegrees)));
-    // public static final Trigger isFrontClosestToRightStation =
-    //         new Trigger(
-    //                 () ->
-    //                         swerve.frontClosestToAngle(
-    //                                 Field.flipTrueAngleIfRed(
-    //                                         Field.CoralStation.rightFaceRobotPovDegrees)));
+    public static final Trigger isFrontClosestToLeftStation =
+            new Trigger(
+                    () ->
+                            swerve.frontClosestToAngle(
+                                    Field.flipAngleIfRed(
+                                            Field.CoralStation.leftFaceRobotPovDegrees)));
+    public static final Trigger isFrontClosestToRightStation =
+            new Trigger(
+                    () ->
+                            swerve.frontClosestToAngle(
+                                    Field.flipAngleIfRed(
+                                            Field.CoralStation.rightFaceRobotPovDegrees)));
 
     public static final Trigger isFrontClosestToNet =
             new Trigger(
