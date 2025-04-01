@@ -133,6 +133,8 @@ public class Field {
         public static final double faceToZoneLine =
                 Units.inchesToMeters(12); // Side of the reef to the inside of the reef zone line
 
+        public static final Trigger poseReversal = new Trigger(() -> reverseRotation());
+
         @SuppressWarnings("all")
         @Getter
         public static final Pose2d[] centerFaces =
@@ -329,28 +331,33 @@ public class Field {
          * Converts a target angle into a reverse rotation if the back is closer; otherwise, returns
          * the original target angle for front heading.
          *
-         * @param robotAngle The current angle of the robot in radians.
-         * @param reefRotation The rotation adjustment factor in radians.
-         * @param targetAngle The desired target angle in radians.
-         * @return The optimal rotation angle.
+         * <p>variable robotAngle The current angle of the robot in radians. variable reefRotation
+         * The rotation adjustment factor in radians. targetAngle The desired target angle in
+         * radians.
+         *
+         * @return true/false if robot heading is reversed to reef face
          */
         public static boolean reverseRotation() {
-            double robotAngle = Robot.getSwerve().getRobotPose().getRotation().getRadians();
+            Pose2d robotPose = Robot.getSwerve().getRobotPose();
 
-            int tagID = getReefZoneTagID(Robot.getSwerve().getRobotPose());
-            if (tagID < 0) {
+            int tagID = getReefZoneTagID(robotPose);
+            if (tagID < 0 || tagID == 16) {
                 return false;
-            } else if (isRed()) {
-                tagID = blueToRedTagID(tagID);
+            }
+            if (isBlue()) {
+                tagID = reefTagIDToIndex(tagID);
+            } else {
+                tagID = reefTagIDToIndex(blueToRedTagID(tagID));
             }
 
-            double reefRotation = centerFaces[reefTagIDToIndex(tagID)].getRotation().getRadians();
+            double reefRotation = centerFaces[tagID].getRotation().getRadians();
             double targetAngle = getTagAngleOffset(tagID);
 
             // Adjust target angle based on reef rotation and normalize
             double adjustedTargetAngle = normalizeAngle(reefRotation + targetAngle);
 
             // Calculate front and back heading differences
+            double robotAngle = robotPose.getRotation().getRadians();
             double robotTargetAngleToFront =
                     Math.abs(normalizeAngle(adjustedTargetAngle - robotAngle));
             double robotTargetAngleToBack =

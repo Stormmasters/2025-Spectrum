@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.reefscape.Field;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
@@ -86,6 +87,9 @@ public class RobotStates {
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
 
     public static final Trigger toggleReverse = pilot.toggleReverse.or(operator.toggleReverse);
+
+    // pose Triggers
+    public static final Trigger poseReversal = new Trigger(() -> Field.Reef.reverseRotation());
 
     // auton Triggers
     public static final Trigger shoulderL4 = autonShoulderL4;
@@ -229,16 +233,24 @@ public class RobotStates {
         // *********************************
         // Reversal States
         toggleReverse.onTrue(reverse.toggle());
-        pilot.poseReversal.onTrue(reverse.setTrue());
-        pilot.poseReversal.onFalse(reverse.setFalse());
 
+        poseReversal.and(stagedCoral.or(L2Algae, L3Algae)).onTrue(reverse.setTrue());
+        poseReversal.and(stagedCoral.or(L2Algae, L3Algae)).onFalse(reverse.setFalse());
         stagedCoral
                 .or(L2Algae, L3Algae)
-                .and(VisionStates.usingRearTag, actionPrepState.not(), actionState.not())
+                .and(
+                        VisionStates.usingRearTag,
+                        actionPrepState.not(),
+                        actionState.not(),
+                        poseReversal.not())
                 .onTrue(reverse.setTrue());
         stagedCoral
                 .or(L2Algae, L3Algae)
-                .and(VisionStates.usingRearTag.not(), actionPrepState.not(), actionState.not())
+                .and(
+                        VisionStates.usingRearTag.not(),
+                        actionPrepState.not(),
+                        actionState.not(),
+                        poseReversal.not())
                 .onTrue(reverse.setFalse());
         groundAlgae.or(groundCoral, processorAlgae).and(toggleReverse).onTrue(reverse.setTrue());
         groundAlgae
