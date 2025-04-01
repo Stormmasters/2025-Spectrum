@@ -1,6 +1,7 @@
 package frc.robot.pilot;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.reefscape.Field;
 import frc.robot.Robot;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
@@ -35,6 +36,7 @@ public class Pilot extends Gamepad {
 
     // Vision Triggers
     public final Trigger tagsInView = new Trigger(() -> Robot.getVision().tagsInView());
+    public final Trigger poseReversal = new Trigger(() -> Field.Reef.reverseRotation());
 
     // vision Drive
     public final Trigger reefAim_A = A.and(teleop, tagsInView.not());

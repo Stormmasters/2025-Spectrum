@@ -229,6 +229,9 @@ public class RobotStates {
         // *********************************
         // Reversal States
         toggleReverse.onTrue(reverse.toggle());
+        pilot.poseReversal.onTrue(reverse.setTrue());
+        pilot.poseReversal.onFalse(reverse.setFalse());
+
         stagedCoral
                 .or(L2Algae, L3Algae)
                 .and(VisionStates.usingRearTag, actionPrepState.not(), actionState.not())

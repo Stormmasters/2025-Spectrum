@@ -53,12 +53,12 @@
     },
     "###/SmartDashboard/Scheduler": {
       "Collapsed": "0",
-      "Pos": "943,647",
+      "Pos": "918,773",
       "Size": "372,548"
     },
     "###/SmartDashboard/States": {
       "Collapsed": "0",
-      "Pos": "941,664",
+      "Pos": "1457,670",
       "Size": "378,150"
     },
     "###/SmartDashboard/Swerve Field": {
@@ -73,7 +73,7 @@
     },
     "###/SmartDashboard/frontView": {
       "Collapsed": "0",
-      "Pos": "1107,654",
+      "Pos": "1810,767",
       "Size": "373,551"
     },
     "###Addressable LEDs": {
@@ -84,7 +84,7 @@
     "###FMS": {
       "Collapsed": "0",
       "Pos": "339,18",
-      "Size": "336,158"
+      "Size": "210,214"
     },
     "###Joysticks": {
       "Collapsed": "0",

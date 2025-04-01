@@ -143,6 +143,8 @@ public class Field {
                 new ArrayList<>(); // Starting at the right branch facing the driver station in
         // clockwise
 
+        static Zones zones = new Zones();
+
         static {
             // Initialize faces
             centerFaces[0] = // reef id 17
@@ -224,6 +226,7 @@ public class Field {
             return tag;
         }
 
+        /** */
         public static Pose2d getOffsetPosition(
                 int blueTagID, double offsetMeters, double offsetRadians) {
 
@@ -237,15 +240,17 @@ public class Field {
             Pose2d face = flipIfRed(centerFaces[faceIndex]);
 
             // currently, only heading is set to front for facing the reef face
-            double reefRotation = face.getRotation().getRadians();
-            double robotAngle = Robot.getSwerve().getRobotPose().getRotation().getRadians();
-
-            double rotation = reverseRotation(robotAngle, reefRotation, offsetRadians);
-            System.out.println("Rotation Target: " + rotation);
-
-            Rotation2d rotationOffset = face.getRotation().rotateBy(new Rotation2d(rotation));
+            double rotation = normalizeAngle(offsetRadians);
+            boolean reverseChecker = reverseRotation();
 
             double offsetChecker = 1;
+
+            if (reverseChecker) {
+                offsetChecker = -1;
+                rotation = normalizeAngle(offsetRadians - Math.PI);
+            }
+
+            Rotation2d rotationOffset = face.getRotation().rotateBy(new Rotation2d(rotation));
 
             // checks if the rotation is 0 since that means back is closer
             if (rotation == 0) {
@@ -329,8 +334,18 @@ public class Field {
          * @param targetAngle The desired target angle in radians.
          * @return The optimal rotation angle.
          */
-        public static double reverseRotation(
-                double robotAngle, double reefRotation, double targetAngle) {
+        public static boolean reverseRotation() {
+            double robotAngle = Robot.getSwerve().getRobotPose().getRotation().getRadians();
+
+            int tagID = getReefZoneTagID(Robot.getSwerve().getRobotPose());
+            if (tagID < 0) {
+                return false;
+            } else if (isRed()) {
+                tagID = blueToRedTagID(tagID);
+            }
+
+            double reefRotation = centerFaces[reefTagIDToIndex(tagID)].getRotation().getRadians();
+            double targetAngle = getTagAngleOffset(tagID);
 
             // Adjust target angle based on reef rotation and normalize
             double adjustedTargetAngle = normalizeAngle(reefRotation + targetAngle);
@@ -343,9 +358,9 @@ public class Field {
 
             // Return the optimal rotation
             if (robotTargetAngleToBack < robotTargetAngleToFront) {
-                return normalizeAngle(targetAngle - Math.PI);
+                return true;
             }
-            return normalizeAngle(targetAngle);
+            return false;
         }
 
         /**
@@ -393,11 +408,18 @@ public class Field {
                 return Robot.getSwerve().getRobotPose();
             }
 
-            Zones zones = new Zones();
             double offSetMeters = zones.getTagOffset(blueReefTagID);
             double offsetRadians = zones.getTagAngleOffset(blueReefTagID);
 
             return getOffsetPosition(blueReefTagID, offSetMeters, offsetRadians);
+        }
+
+        public static double offSetMeters(int tagID) {
+            return zones.getTagOffset(tagID);
+        }
+
+        public static double getTagAngleOffset(int tagID) {
+            return zones.getTagAngleOffset(tagID);
         }
     }
 
