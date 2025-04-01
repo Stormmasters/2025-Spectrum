@@ -7,6 +7,11 @@ public class PM2025 extends Config {
     public PM2025() {
         super();
         swerve.configEncoderOffsets(0.490967, 0.410400, -0.208252, 0.422607);
+        climb.configGearRatio(99.5555555555);
+        // climb.setMinRotations(-0.055);
+        // climb.setMaxRotations(0.45);
+        climb.configReverseSoftLimit(-0.045, true);
+        climb.configForwardSoftLimit(0.45, true);
 
         // Attached Mechanisms
         pilot.setAttached(true);
