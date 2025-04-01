@@ -23,9 +23,6 @@ import lombok.Setter;
 
 public class SwerveConfig {
 
-    // Make this number smaller to move further from reef, make it bigger to move closer
-    @Getter private final double homeLlAimTAgoal = 7.9;
-    @Getter private final double eventLlAimTAgoal = 8.1;
 
     @Getter
     private final double scoreOffsetFromReef =

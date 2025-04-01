@@ -24,12 +24,12 @@ public class HomeOffsets {
 
     // blue tag area goals
     // may be deprecated if not used
-    @Getter private static final double Tag17TAGoal = 8.0; // 7.8
-    @Getter private static final double Tag18TAGoal = 8.0; // 7.8
-    @Getter private static final double Tag19TAGoal = 8.0; // 7.8
+    @Getter private static final double Tag17TAGoal = 7.9; // 7.8
+    @Getter private static final double Tag18TAGoal = 7.9; // 7.8
+    @Getter private static final double Tag19TAGoal = 7.9; // 7.8
     @Getter private static final double Tag20TAGoal = 7.9; // 7.8
     @Getter private static final double Tag21TAGoal = 7.9; // 7.8
-    @Getter private static final double Tag22TAGoal = 8.0; // 7.8
+    @Getter private static final double Tag22TAGoal = 7.9; // 7.8
 
     // red tag area goals
     // may be deprecated if not used
