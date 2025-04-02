@@ -5,7 +5,7 @@ import static frc.robot.auton.Auton.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.reefscape.Zones;
+import frc.reefscape.Field;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
@@ -86,6 +86,9 @@ public class RobotStates {
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
 
     public static final Trigger toggleReverse = pilot.toggleReverse.or(operator.toggleReverse);
+
+    // pose Triggers
+    public static final Trigger poseReversal = new Trigger(() -> Field.Reef.reverseRotation());
 
     // auton Triggers
     public static final Trigger shoulderL4 = autonShoulderL4;
@@ -229,13 +232,24 @@ public class RobotStates {
         // *********************************
         // Reversal States
         toggleReverse.onTrue(reverse.toggle());
+
+        poseReversal.and(stagedCoral.or(L2Algae, L3Algae)).onTrue(reverse.setTrue());
+        poseReversal.and(stagedCoral.or(L2Algae, L3Algae)).onFalse(reverse.setFalse());
         stagedCoral
                 .or(L2Algae, L3Algae)
-                .and(VisionStates.usingRearTag, actionPrepState.not(), actionState.not())
+                .and(
+                        VisionStates.usingRearTag,
+                        actionPrepState.not(),
+                        actionState.not(),
+                        poseReversal.not())
                 .onTrue(reverse.setTrue());
         stagedCoral
                 .or(L2Algae, L3Algae)
-                .and(VisionStates.usingRearTag.not(), actionPrepState.not(), actionState.not())
+                .and(
+                        VisionStates.usingRearTag.not(),
+                        actionPrepState.not(),
+                        actionState.not(),
+                        poseReversal.not())
                 .onTrue(reverse.setFalse());
         groundAlgae.or(groundCoral, processorAlgae).and(toggleReverse).onTrue(reverse.setTrue());
         groundAlgae
@@ -243,18 +257,18 @@ public class RobotStates {
                 .and(toggleReverse.not())
                 .onTrue(reverse.setFalse());
 
-        stationIntaking
-                .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
-                .onTrue(reverse.setTrue());
-        stationIntaking
-                .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation)
-                .onTrue(reverse.setFalse());
-        stationIntaking
-                .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation.not())
-                .onTrue(reverse.setTrue());
-        stationIntaking
-                .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation)
-                .onTrue(reverse.setFalse());
+        // stationIntaking
+        //         .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
+        //         .onTrue(reverse.setTrue());
+        // stationIntaking
+        //         .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation)
+        //         .onTrue(reverse.setFalse());
+        // stationIntaking
+        //         .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation.not())
+        //         .onTrue(reverse.setTrue());
+        // stationIntaking
+        //         .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation)
+        //         .onTrue(reverse.setFalse());
 
         netAlgae.and(SwerveStates.isFrontClosestToNet.not()).onTrue(reverse.setTrue());
         netAlgae.and(SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
