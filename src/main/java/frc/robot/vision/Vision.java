@@ -238,13 +238,13 @@ public class Vision implements NTSendable, Subsystem {
             }
 
             try {
-                addMegaTag1_VisionInput(backLL, false);
+                addMegaTag1_VisionInputAuton(backLL, false);
             } catch (Exception e) {
                 Telemetry.print("REAR MT1: Vision pose not present but tried to access it");
             }
 
             try {
-                addMegaTag1_VisionInput(frontLL, false);
+                addMegaTag1_VisionInputAuton(frontLL, false);
             } catch (Exception e) {
                 Telemetry.print("FRONT MT1: Vision pose not present but tried to access it");
             }
@@ -303,6 +303,118 @@ public class Vision implements NTSendable, Subsystem {
             // if almost stationary and extremely close to tag
             if (robotSpeed.vxMetersPerSecond + robotSpeed.vyMetersPerSecond <= 0.2
                     && targetSize > 0.4) {
+                ll.sendValidStatus("Stationary close integration");
+                xyStds = 0.1;
+                degStds = 0.1;
+            } else if (multiTags && targetSize > 2) {
+                ll.sendValidStatus("Strong Multi integration");
+                xyStds = 0.1;
+                degStds = 0.1;
+            } else if (multiTags && targetSize > 0.2) {
+                ll.sendValidStatus("Multi integration");
+                xyStds = 0.25;
+                degStds = 8;
+            } else if (targetSize > 2 && (mt1PoseDifference < 0.5)) {
+                // Integrate if the target is very big and we are close to pose
+                ll.sendValidStatus("Close integration");
+                xyStds = 0.5;
+                degStds = 999999;
+            } else if (targetSize > 1 && (mt1PoseDifference < 0.25)) {
+                // Integrate if we are very close to pose and target is large enough
+                ll.sendValidStatus("Proximity integration");
+                xyStds = 1.0;
+                degStds = 999999;
+            } else if (highestAmbiguity < 0.25 && targetSize >= 0.03) {
+                ll.sendValidStatus("Stable integration");
+                xyStds = 1.5;
+                degStds = 999999;
+            } else {
+                // Shouldn't integrate
+                return;
+            }
+
+            // strict with degree std and ambiguity and rotation because this is megatag1
+            if (highestAmbiguity > 0.5) {
+                degStds = 15;
+            }
+
+            if (robotSpeed.omegaRadiansPerSecond >= 0.5) {
+                degStds = 50;
+            }
+
+            if (!integrateXY) {
+                xyStds = 999999;
+            }
+
+            if (integrateXY) { // If we are disabled just use this pose
+                xyStds = 0.01;
+                degStds = 0.01;
+            }
+
+            Pose2d integratedPose =
+                    new Pose2d(megaTag1Pose2d.getTranslation(), megaTag1Pose2d.getRotation());
+            Robot.getSwerve()
+                    .addVisionMeasurement(
+                            integratedPose,
+                            Utils.fpgaToCurrentTime(ll.getMegaTag1PoseTimestamp()),
+                            VecBuilder.fill(xyStds, xyStds, degStds));
+        } else {
+            ll.setTagStatus("no tags");
+            ll.sendInvalidStatus("no tag found rejection");
+        }
+    }
+
+    @SuppressWarnings("all")
+    private void addMegaTag1_VisionInputAuton(Limelight ll, boolean integrateXY) {
+        double xyStds;
+        double degStds;
+
+        // integrate vision
+        if (ll.targetInView()) {
+            boolean multiTags = ll.multipleTagsInView();
+            double targetSize = ll.getTargetSize();
+            Pose3d megaTag1Pose3d = ll.getMegaTag1_Pose3d();
+            Pose2d megaTag1Pose2d = megaTag1Pose3d.toPose2d();
+            RawFiducial[] tags = ll.getRawFiducial();
+            double highestAmbiguity = 2;
+            ChassisSpeeds robotSpeed = Robot.getSwerve().getCurrentRobotChassisSpeeds();
+
+            // distance from current pose to vision estimated MT2 pose
+            double mt1PoseDifference =
+                    Robot.getSwerve()
+                            .getRobotPose()
+                            .getTranslation()
+                            .getDistance(megaTag1Pose2d.getTranslation());
+
+            /* rejections */
+            // reject mt1 pose if individual tag ambiguity is too high
+            ll.setTagStatus("");
+            for (RawFiducial tag : tags) {
+                // search for highest ambiguity tag for later checks
+                if (highestAmbiguity == 2 || tag.ambiguity > highestAmbiguity) {
+                    highestAmbiguity = tag.ambiguity;
+                }
+                // ambiguity rejection check
+                if (tag.ambiguity > 0.9) {
+                    return;
+                }
+            }
+
+            /* rejections */
+            if (rejectionCheck(megaTag1Pose2d, targetSize)) {
+                return;
+            }
+
+            if (Math.abs(megaTag1Pose3d.getRotation().getX()) > 5
+                    || Math.abs(megaTag1Pose3d.getRotation().getY()) > 5) {
+                // reject if pose is 5 degrees titled in roll or pitch
+                ll.sendInvalidStatus("roll/pitch rejection");
+                return;
+            }
+
+            /* integrations */
+            // if almost stationary and extremely close to tag
+            if (targetSize > 0.2) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
                 degStds = 0.1;

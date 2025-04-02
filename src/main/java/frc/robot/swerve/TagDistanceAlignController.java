@@ -46,6 +46,7 @@ public class TagDistanceAlignController {
         System.out.println("At Goal: " + atGoal + " Goal: " + goal + " Current: " + current);
         return atGoal;
     }
+
     public void reset(double current) {
         // controller.reset(current);
     }

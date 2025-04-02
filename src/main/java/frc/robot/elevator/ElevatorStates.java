@@ -81,12 +81,14 @@ public class ElevatorStates {
                 .whileTrue(move(config::getL4Coral, config::getExl4Coral, "Elevator.L4Coral"));
         L4Coral.and(actionState)
                 .whileTrue(move(config::getL4Score, config::getExl4Score, "Elevator.L4CoralScore"));
+
         L4Coral.and(actionPrepState, Util.autoMode)
                 .whileTrue(slowMove(config::getL4Coral, config::getExl4Coral, "Elevator.L4Coral"));
-        L4Coral.and(actionState, Util.autoMode)
-                .whileTrue(
-                        slowMove(
-                                config::getL4Score, config::getExl4Score, "Elevator.L4CoralScore"));
+        // L4Coral.and(actionState, Util.autoMode)
+        //         .whileTrue(
+        //                 slowMove(
+        //                         config::getL4Score, config::getExl4Score,
+        // "Elevator.L4CoralScore"));
 
         processorAlgae
                 .and(actionPrepState)

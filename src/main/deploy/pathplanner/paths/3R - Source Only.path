@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 3.75,
-        "y": 5.28
+        "y": 5.29
       },
       "prevControl": {
         "x": 3.1500000000000012,
-        "y": 6.319230484541327
+        "y": 6.329230484541327
       },
       "nextControl": null,
       "isLocked": false,
@@ -36,7 +36,7 @@
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 3.5,
-        "maxAcceleration": 0.8,
+        "maxAcceleration": 1.1,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -59,8 +59,8 @@
       "command": null
     },
     {
-      "name": "right",
-      "waypointRelativePos": 0.20399373531714404,
+      "name": "home",
+      "waypointRelativePos": 0.20086139389192403,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -78,7 +78,13 @@
     },
     {
       "name": "actionOn",
-      "waypointRelativePos": 0.5971025841816656,
+      "waypointRelativePos": 0.5454189506656252,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "right",
+      "waypointRelativePos": 0.7960062646828401,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -99,7 +105,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -59.99999999999999
+    "rotation": -62.50000000000001
   },
   "reversed": false,
   "folder": "Blue Left Source",

@@ -59,15 +59,15 @@
       "command": null
     },
     {
-      "name": "poseUpdate",
-      "waypointRelativePos": 0.18206734534064695,
-      "endWaypointRelativePos": 1.0,
+      "name": "actionOn",
+      "waypointRelativePos": 0.49373531714957164,
+      "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "actionOn",
-      "waypointRelativePos": 0.5469851213782179,
-      "endWaypointRelativePos": null,
+      "name": "poseUpdate",
+      "waypointRelativePos": 0.5000000000000009,
+      "endWaypointRelativePos": 1.0,
       "command": null
     },
     {
@@ -79,7 +79,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -87,7 +87,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -122.50000000000001
   },
   "reversed": false,
   "folder": "Blue Left Source",
@@ -95,5 +95,5 @@
     "velocity": 0,
     "rotation": -119.99999999999999
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

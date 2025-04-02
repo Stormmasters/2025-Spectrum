@@ -96,13 +96,13 @@ public class ShoulderStates {
                                 "Shoulder.L4Coral.score"));
         L4Coral.and(actionPrepState, Util.autoMode)
                 .whileTrue(slowMove(config::getExl4Coral, "Shoulder.L4Coral.prescore"));
-        L4Coral.and(actionState, Util.autoMode)
-                .whileTrue(
-                        slowMove(
-                                config::getL4CoralScore,
-                                config::getExl4Score,
-                                config::getScoreDelay,
-                                "Shoulder.L4Coral.score"));
+        // L4Coral.and(actionState, Util.autoMode)
+        //         .whileTrue(
+        //                 slowMove(
+        //                         config::getL4CoralScore,
+        //                         config::getExl4Score,
+        //                         config::getScoreDelay,
+        //                         "Shoulder.L4Coral.score"));
 
         shoulderL4.whileTrue(
                 move(config::getL4Coral, config::getExl4Coral, "Shoulder.L4Coral.prescore"));

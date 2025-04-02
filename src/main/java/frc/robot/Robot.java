@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auton.Auton;
 import frc.robot.climb.Climb;
 import frc.robot.climb.Climb.ClimbConfig;
@@ -190,7 +191,6 @@ public class Robot extends SpectrumRobot {
 
     public void setupSmartDashboardData() {
         SmartDashboard.putData("Field2d", field2d);
-        SmartDashboard.putBoolean("Initialized?", commandInit);
     }
 
     @Override // Deprecated
@@ -233,7 +233,16 @@ public class Robot extends SpectrumRobot {
 
         if (!commandInit) {
             Command AutonStartCommand =
-                    FollowPathCommand.warmupCommand().andThen(PathfindingCommand.warmupCommand());
+                    (FollowPathCommand.warmupCommand()
+                                    .andThen(
+                                            PathfindingCommand.warmupCommand(),
+                                            auton.SpectrumAuton("Side Start L4", false)
+                                                    .withTimeout(.5),
+                                            new InstantCommand(
+                                                    () ->
+                                                            SmartDashboard.putBoolean(
+                                                                    "Initialized?", true))))
+                            .ignoringDisable(true);
             AutonStartCommand.schedule();
             commandInit = true;
         }
