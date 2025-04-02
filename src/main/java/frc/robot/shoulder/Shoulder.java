@@ -84,6 +84,8 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double mmCruiseVelocity = 10;
         @Getter @Setter private double mmAcceleration = 50;
         @Getter @Setter private double mmJerk = 0;
+        @Getter @Setter private double slowMmAcceleration = 5;
+        @Getter @Setter private double slowMmJerk = 50;
 
         @Getter @Setter private double sensorToMechanismRatio = 61.71428571; // 102.857;
         @Getter @Setter private double rotorToSensorRatio = 1;
@@ -339,6 +341,17 @@ public class Shoulder extends Mechanism {
                     }
                 })
                 .withName("Shoulder.move");
+    }
+
+    public Command slowMove(DoubleSupplier degrees) {
+        return run(
+                () -> {
+                    setDynMMPositionFoc(
+                            getOffsetRotations(degrees),
+                            () -> config.getMmCruiseVelocity(),
+                            () -> config.getSlowMmAcceleration(),
+                            () -> config.getSlowMmJerk());
+                });
     }
 
     public Command move(DoubleSupplier degrees) {

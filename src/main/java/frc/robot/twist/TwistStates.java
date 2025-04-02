@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.twist.Twist.TwistConfig;
 import frc.spectrumLib.Telemetry;
+import frc.spectrumLib.util.Util;
 import java.util.function.DoubleSupplier;
 
 public class TwistStates {
@@ -79,8 +80,14 @@ public class TwistStates {
                         toggleReverse.not())
                 .whileTrue(moveAwayFromBranch(config::getLeftCoral, "Twist.leftCoralOverBranch"));
 
-        twistL4R.onTrue(move(config::getRightCoral, "Twist.rightCoral"));
-        twistL4L.onTrue(move(config::getLeftCoral, "Twist.leftCoral"));
+        branch.and(rightScore, actionPrepState, twistAtReef.not(), Util.autoMode)
+                .whileTrue(moveAwayFromBranch(config::getRightCoral, "Twist.rightCoral"));
+
+        branch.and((rightScore.not()), actionPrepState, twistAtReef.not(), Util.autoMode)
+                .whileTrue(moveAwayFromBranch(config::getLeftCoral, "Twist.leftCoral"));
+
+        twistL4R.whileTrue(move(config::getRightCoral, "Twist.RightCoral"));
+        twistL4L.whileTrue(move(config::getLeftCoral, "Twist.leftCoral"));
 
         climbPrep.whileTrue(move(config::getClimbPrep, "Twist.climbPrep"));
     }

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.75,
-        "y": 5.28
+        "x": 3.77,
+        "y": 5.29
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3749999999999996,
-        "y": 5.929519052838329
+        "x": 3.3949999999999996,
+        "y": 5.939519052838329
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.2077949438202247,
-        "y": 7.048595505617977
+        "x": 1.167,
+        "y": 6.999297752808989
       },
       "prevControl": {
-        "x": 1.7521863589427333,
-        "y": 6.667408533012546
+        "x": 1.7113914151225087,
+        "y": 6.6181107802035575
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,12 +29,45 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.20086139389193194,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 2.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.8508222396241264,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "clearFeedBack",
-      "waypointRelativePos": 0.0,
+      "name": "poseUpdate",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.34964761158965735,
+      "command": null
+    },
+    {
+      "name": "home",
+      "waypointRelativePos": 0.04581049334377241,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -67,7 +100,7 @@
   "folder": "Blue Left Source",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -61.0
   },
   "useDefaultConstraints": true
 }

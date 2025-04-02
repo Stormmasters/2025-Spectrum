@@ -7,6 +7,7 @@ import frc.robot.RobotStates;
 import frc.robot.intake.IntakeStates;
 import frc.robot.vision.VisionStates;
 import frc.spectrumLib.Telemetry;
+import frc.spectrumLib.util.Util;
 
 /** This class should have any command calls that directly call the Pilot */
 public class PilotStates {
@@ -32,7 +33,9 @@ public class PilotStates {
 
     /** Command that can be used to rumble the pilot controller */
     public static Command rumble(double intensity, double durationSeconds) {
-        return pilot.rumbleCommand(intensity, durationSeconds).withName("Pilot.rumble");
+        return pilot.rumbleCommand(intensity, durationSeconds)
+                .withName("Pilot.rumble")
+                .onlyIf(Util.autoMode.not());
     }
 
     /**

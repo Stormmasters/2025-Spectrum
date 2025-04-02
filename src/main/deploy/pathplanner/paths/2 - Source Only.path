@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.71,
+        "x": 4.71,
         "y": 6.146025403784439
       },
       "isLocked": false,
@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.2077949438202247,
-        "y": 7.048595505617977
+        "x": 1.1667134831460673,
+        "y": 6.999297752808989
       },
       "prevControl": {
-        "x": 1.8026177305715654,
-        "y": 6.24473864500076
+        "x": 1.761536269897408,
+        "y": 6.195440892191772
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,24 +29,44 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.849256068911515,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "clearFeedBack",
+      "name": "poseUpdate",
       "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.49843382928738567,
+      "command": null
+    },
+    {
+      "name": "home",
+      "waypointRelativePos": 0.04894283476898669,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "clearStates",
-      "waypointRelativePos": 0.44361785434612305,
+      "waypointRelativePos": 0.5015661707126123,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "sourceIntakeOn",
-      "waypointRelativePos": 0.44831636648395057,
+      "waypointRelativePos": 0.5469851213782316,
       "endWaypointRelativePos": null,
       "command": null
     }

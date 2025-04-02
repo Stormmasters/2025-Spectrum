@@ -4,20 +4,15 @@
   "holonomicMode": true,
   "pathFolders": [
     "Blue Center Algae Rush",
-    "Side Start Source L4",
     "Blue Left Preload-Source ",
     "Blue Left Source",
-    "Config Paths",
-    "Photon"
+    "Config Paths"
   ],
   "autoFolders": [
     "Blue Center Origin",
     "Blue Left Origin",
     "Blue Right Origin",
-    "Config Autos",
-    "Algae Rush",
-    "Photon",
-    "Source L4"
+    "Config Autos"
   ],
   "defaultMaxVel": 4.0,
   "defaultMaxAccel": 3.5,
@@ -27,11 +22,11 @@
   "robotMass": 53.0,
   "robotMOI": 7.0,
   "robotTrackwidth": 0.604,
-  "driveWheelRadius": 0.04682,
+  "driveWheelRadius": 0.0488610656,
   "driveGearing": 6.746,
   "maxDriveSpeed": 4.0,
   "driveMotorType": "krakenX60FOC",
-  "driveCurrentLimit": 75.0,
+  "driveCurrentLimit": 64.0,
   "wheelCOF": 1.9,
   "flModuleX": 0.302,
   "flModuleY": 0.302,

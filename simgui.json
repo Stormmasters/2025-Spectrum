@@ -19,18 +19,12 @@
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto Chooser": "String Chooser",
-      "/SmartDashboard/Auto Visualizer": "Field2d",
       "/SmartDashboard/Field2d": "Field2d",
       "/SmartDashboard/LeftView": "Mechanism2d",
       "/SmartDashboard/Scheduler": "Scheduler",
       "/SmartDashboard/States": "Alerts",
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",
-      "/SmartDashboard/X controller": "ProfiledPIDController",
-      "/SmartDashboard/Y controller": "ProfiledPIDController",
       "/SmartDashboard/frontView": "Mechanism2d",
-      "/SmartDashboard/tagCenterController": "PIDController",
-      "/SmartDashboard/tagController": "PIDController",
-      "/SmartDashboard/tagDistanceController": "PIDController",
       "/SmartDashboard/vision": "Subsystem"
     },
     "windows": {
@@ -44,11 +38,36 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Auto Visualizer": {
+      "/SmartDashboard/Field2d": {
+        "Robot": {
+          "arrowColor": [
+            1.0,
+            1.0,
+            1.0,
+            255.0
+          ],
+          "color": [
+            0.32549020648002625,
+            0.10588235408067703,
+            0.7215686440467834,
+            255.0
+          ],
+          "length": 0.9269999861717224,
+          "style": "Box/Image",
+          "width": 0.9269999861717224
+        },
         "bottom": 1638,
         "builtin": "2025 Reefscape",
         "height": 8.051901817321777,
         "left": 534,
+        "limelight-back": {
+          "arrows": false,
+          "style": "Hidden"
+        },
+        "limelight-front": {
+          "arrows": false,
+          "style": "Hidden"
+        },
         "path": {
           "arrows": false,
           "color": [
@@ -59,22 +78,11 @@
           ],
           "selectable": false,
           "style": "Line",
-          "weight": 1.0
+          "weight": 2.0
         },
         "right": 3466,
         "top": 291,
         "width": 17.54825210571289,
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Field2d": {
-        "bottom": 1476,
-        "height": 8.210550308227539,
-        "left": 150,
-        "right": 2961,
-        "top": 79,
-        "width": 16.541748046875,
         "window": {
           "visible": true
         }
@@ -140,12 +148,6 @@
     }
   },
   "NetworkTables": {
-    "Retained Values": {
-      "open": false
-    },
-    "Transitory Values": {
-      "open": false
-    },
     "transitory": {
       "CameraPublisher": {
         "open": true

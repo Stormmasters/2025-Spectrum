@@ -4,13 +4,9 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
 import frc.reefscape.HomeOffsets;
@@ -95,25 +91,6 @@ public class SwerveStates {
      *
      * @return
      */
-    public static Command autonSwerveAlign(double alignTime) {
-        return (new PrintCommand("! starting align !")
-                        .andThen(
-                                new InstantCommand(
-                                        () -> {
-                                            PPHolonomicDriveController.overrideXFeedback(
-                                                    SwerveStates::getTagDistanceVelocity);
-                                            PPHolonomicDriveController.overrideYFeedback(
-                                                    SwerveStates::getTagTxVelocity);
-                                        }),
-                                new PrintCommand("! clearing align !"),
-                                new WaitCommand(alignTime),
-                                new InstantCommand(
-                                        PPHolonomicDriveController::clearFeedbackOverrides),
-                                new PrintCommand("! cleared align !")))
-                .withName("autonAlign")
-                .alongWith(new PrintCommand("!! autonAlign Ran !!"));
-    }
-
     public static Command reefAimDriveVision() {
         return fpvAimDrive(
                         SwerveStates::getTagDistanceVelocity,

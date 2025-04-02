@@ -74,6 +74,8 @@ public class Elevator extends Mechanism {
         @Getter private final double mmCruiseVelocity = 70;
         @Getter private final double mmAcceleration = 400;
         @Getter private final double mmJerk = 4500;
+        @Getter private final double slowMmAcceleration = 75;
+        @Getter private final double slowMmJerk = 750;
 
         @Getter private double currentLimit = 60;
         @Getter private double torqueCurrentLimit = 160;
@@ -217,6 +219,25 @@ public class Elevator extends Mechanism {
                         setMMPositionFoc(exRotations);
                     } else {
                         setMMPositionFoc(shrinkRotations);
+                    }
+                });
+    }
+
+    public Command slowMove(DoubleSupplier shrinkRotations, DoubleSupplier exRotations) {
+        return run(
+                () -> {
+                    if (!RobotStates.shrink.getAsBoolean()) {
+                        setDynMMPositionFoc(
+                                exRotations,
+                                () -> config.getMmCruiseVelocity(),
+                                () -> config.getSlowMmAcceleration(),
+                                () -> config.getSlowMmJerk());
+                    } else {
+                        setDynMMPositionFoc(
+                                shrinkRotations,
+                                () -> config.getMmCruiseVelocity(),
+                                () -> config.getSlowMmAcceleration(),
+                                () -> config.getSlowMmJerk());
                     }
                 });
     }
