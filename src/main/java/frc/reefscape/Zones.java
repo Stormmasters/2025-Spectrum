@@ -51,7 +51,7 @@ public class Zones {
      * @return
      */
     public double getTagOffset(int tag) {
-        double[][] tagOffsetsArray = homeOffsets.getReefTagOffsets();
+        double[][] tagOffsetsArray = stateChampsOffsets.getReefTagOffsets();
         int indexOfTag = tag;
         if (tag < 0 || tag > 22) {
             return 0;
@@ -70,7 +70,7 @@ public class Zones {
     }
 
     public double getTagAngleOffset(int tag) {
-        double[][] tagOffsetsArray = homeOffsets.getReefTagOffsets();
+        double[][] tagOffsetsArray = stateChampsOffsets.getReefTagOffsets();
         int indexOfTag = tag;
         if (tag < 0 || tag > 22) {
             return 0;

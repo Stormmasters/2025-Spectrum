@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
-import frc.reefscape.HomeOffsets;
+import frc.reefscape.StateChampsOffsets;
 import frc.reefscape.Zones;
 import frc.robot.Robot;
 import frc.robot.pilot.Pilot;
@@ -156,7 +156,7 @@ public class SwerveStates {
     }
 
     private static double getTagDistanceVelocity() {
-        double[][] tagAreaOffsets = HomeOffsets.getTagAreaOffsets();
+        double[][] tagAreaOffsets = StateChampsOffsets.getTagAreaOffsets();
         int tagIndex = Robot.getVision().getClosestTagID();
         if (tagIndex < 0) {
             return 0.0;
