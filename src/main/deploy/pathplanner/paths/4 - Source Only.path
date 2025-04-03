@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.167,
-        "y": 6.999297752808989
+        "x": 1.1174157303370789,
+        "y": 7.048595505617977
       },
       "prevControl": {
-        "x": 1.7113914151225087,
-        "y": 6.6181107802035575
+        "x": 1.6618071454595875,
+        "y": 6.667408533012546
       },
       "nextControl": null,
       "isLocked": false,
@@ -74,6 +74,12 @@
     {
       "name": "clearStates",
       "waypointRelativePos": 0.24784651527015533,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "reverse",
+      "waypointRelativePos": 0.3981989036804932,
       "endWaypointRelativePos": null,
       "command": null
     },

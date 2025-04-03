@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1667134831460673,
-        "y": 6.999297752808989
+        "x": 1.1174157303370789,
+        "y": 7.048595505617977
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8799709343996212,
-        "y": 6.587498371326244
+        "x": 1.8306731815906327,
+        "y": 6.636796124135232
       },
       "isLocked": false,
       "linkedName": "feeder"
     },
     {
       "anchor": {
-        "x": 3.77,
-        "y": 5.29
+        "x": 3.78,
+        "y": 5.3
       },
       "prevControl": {
-        "x": 3.1700000000000013,
-        "y": 6.329230484541327
+        "x": 3.180000000000001,
+        "y": 6.339230484541327
       },
       "nextControl": null,
       "isLocked": false,
@@ -53,14 +53,20 @@
       "command": null
     },
     {
-      "name": "L4",
-      "waypointRelativePos": 0.1961628817541183,
-      "endWaypointRelativePos": 1.0,
+      "name": "clearStates",
+      "waypointRelativePos": 0.20242756460454345,
+      "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "coral",
-      "waypointRelativePos": 0.20399373531715312,
+      "waypointRelativePos": 0.29953014878621353,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "L4",
+      "waypointRelativePos": 0.3042286609240332,
       "endWaypointRelativePos": null,
       "command": null
     },
