@@ -61,7 +61,7 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double exl2Score = 30;
         @Getter @Setter private double exl3Coral = -12.8; // -27;
         @Getter @Setter private double exl3Score = 30;
-        @Getter @Setter private double exl4Coral = 199.3; // 179;
+        @Getter @Setter private double exl4Coral = 190.3; // 179;
         @Getter @Setter private double exl4Score = 145.8; // 133;
 
         @Getter @Setter private double tolerance = 0.95;

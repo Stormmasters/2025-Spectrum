@@ -49,7 +49,7 @@ public class Twist extends Mechanism {
 
         @Getter private final double initPosition = 0;
         @Getter private double triggerTolerance = 5;
-        @Getter private double twistTolerance = 30;
+        @Getter private double twistTolerance = 45;
 
         /* Twist config settings */
         @Getter private final double zeroSpeed = -0.1;

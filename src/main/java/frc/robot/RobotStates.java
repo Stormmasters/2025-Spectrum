@@ -23,7 +23,7 @@ public class RobotStates {
     private static final Pilot pilot = Robot.getPilot();
     private static final Operator operator = Robot.getOperator();
 
-    @Getter private static double scoreTime = 1.0;
+    @Getter private static double scoreTime = 2.0;
     @Getter private static double twistAtReefDelay = 0.2;
 
     // Robot States
