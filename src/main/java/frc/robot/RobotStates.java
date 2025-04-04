@@ -88,7 +88,8 @@ public class RobotStates {
     public static final Trigger toggleReverse = pilot.toggleReverse.or(operator.toggleReverse);
 
     // pose Triggers
-    public static final Trigger poseReversal = new Trigger(() -> Field.Reef.reverseRotation());
+    public static final Trigger poseReversal =
+            new Trigger(() -> Field.Reef.reverseRotationBlue() == (Field.isBlue()));
 
     // auton Triggers
     public static final Trigger shoulderL4 = autonShoulderL4;

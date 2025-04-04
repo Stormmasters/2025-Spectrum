@@ -6,13 +6,15 @@
     "Blue Center Algae Rush",
     "Blue Left Preload-Source ",
     "Blue Left Source",
-    "Config Paths"
+    "Config Paths",
+    "Houston 2 Coral"
   ],
   "autoFolders": [
     "Blue Center Origin",
     "Blue Left Origin",
     "Blue Right Origin",
-    "Config Autos"
+    "Config Autos",
+    "Houston 2 Coral"
   ],
   "defaultMaxVel": 4.0,
   "defaultMaxAccel": 3.5,
@@ -50,6 +52,7 @@
     "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.09,\"y\":-0.35},\"end\":{\"x\":0.15,\"y\":-0.04},\"strokeWidth\":0.01}}",
     "{\"name\":\"Line\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.03,\"y\":-0.35},\"end\":{\"x\":0.15,\"y\":-0.04},\"strokeWidth\":0.01}}",
     "{\"name\":\"Arm Front\",\"type\":\"line\",\"data\":{\"start\":{\"x\":0.46,\"y\":0.0},\"end\":{\"x\":0.5743,\"y\":0.0},\"strokeWidth\":0.075}}",
-    "{\"name\":\"Arm Back\",\"type\":\"line\",\"data\":{\"start\":{\"x\":-0.5740000000000001,\"y\":0.0},\"end\":{\"x\":-0.46,\"y\":0.0},\"strokeWidth\":0.075}}"
+    "{\"name\":\"Arm Back\",\"type\":\"line\",\"data\":{\"start\":{\"x\":-0.5740000000000001,\"y\":0.0},\"end\":{\"x\":-0.46,\"y\":0.0},\"strokeWidth\":0.075}}",
+    "{\"name\":\"Elevator\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.0,\"y\":-0.41},\"size\":{\"width\":0.1,\"length\":0.51},\"borderRadius\":0.01,\"strokeWidth\":0.02,\"filled\":false}}"
   ]
 }
