@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 1.1174157303370789,
+        "x": 1.2077949438202247,
         "y": 7.048595505617977
       },
       "prevControl": {
-        "x": 1.7122385170884196,
+        "x": 1.8026177305715654,
         "y": 6.24473864500076
       },
       "nextControl": null,
@@ -60,13 +60,13 @@
     },
     {
       "name": "clearStates",
-      "waypointRelativePos": 0.5015661707126123,
+      "waypointRelativePos": 0.6472200469851144,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "reverse",
-      "waypointRelativePos": 0.6002349256068741,
+      "waypointRelativePos": 0.67,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -93,7 +93,7 @@
   "folder": "Blue Left Source",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -123.00000000000001
   },
   "useDefaultConstraints": true
 }

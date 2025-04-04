@@ -7,49 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 - Source Only"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "1 Alt - L4 Trough Rush"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 - Source Only"
+            "pathName": "2 Alt - L4 Trough Rush"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3L - Source Only"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "3L - L4 Trough Rush"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4 - Source Only"
+            "pathName": "4 - L4 Trough Rush"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3R - Source Only"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "5 - L4 Trough Rush"
           }
         }
       ]

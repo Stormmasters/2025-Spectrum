@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1174157303370789,
+        "x": 1.2077949438202247,
         "y": 7.048595505617977
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8306731815906327,
+        "x": 1.9210523950737786,
         "y": 6.636796124135232
       },
       "isLocked": false,
@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.78,
-        "y": 5.3
+        "x": 3.77,
+        "y": 5.25
       },
       "prevControl": {
-        "x": 3.180000000000001,
-        "y": 6.339230484541327
+        "x": 3.1700000000000013,
+        "y": 6.289230484541327
       },
       "nextControl": null,
       "isLocked": false,
@@ -84,7 +84,7 @@
     },
     {
       "name": "actionOff",
-      "waypointRelativePos": 0.999608457321848,
+      "waypointRelativePos": 0.99,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -99,7 +99,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -61.50000000000001
+    "rotation": -64.0
   },
   "reversed": false,
   "folder": "Blue Left Source",
