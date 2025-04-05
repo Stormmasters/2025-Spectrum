@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "clearStates",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": 0.04894283476898714,
       "command": null
     },
@@ -42,6 +42,12 @@
       "name": "home",
       "waypointRelativePos": 0.04894283476898937,
       "endWaypointRelativePos": 0.4984338292873802,
+      "command": null
+    },
+    {
+      "name": "reverse",
+      "waypointRelativePos": 0.2963978073609953,
+      "endWaypointRelativePos": null,
       "command": null
     },
     {

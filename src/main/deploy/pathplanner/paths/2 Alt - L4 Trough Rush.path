@@ -33,6 +33,12 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "clearStates",
+      "waypointRelativePos": 0.2478465152701622,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "reverse",
       "waypointRelativePos": 0.2979639780736014,
       "endWaypointRelativePos": null,

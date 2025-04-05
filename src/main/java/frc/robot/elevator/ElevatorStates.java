@@ -22,11 +22,11 @@ public class ElevatorStates {
     public static final Trigger isHome =
             elevator.atRotations(config::getHome, config::getTriggerTolerance);
     public static final Trigger isL2Coral =
-            elevator.atRotations(config::getL2Coral, config::getTriggerTolerance);
+            elevator.atRotations(config::getExl2Coral, config::getTriggerTolerance);
     public static final Trigger isL3Coral =
-            elevator.atRotations(config::getL3Coral, config::getTriggerTolerance);
+            elevator.atRotations(config::getExl3Coral, config::getTriggerTolerance);
     public static final Trigger isL4Coral =
-            elevator.atRotations(config::getL4Coral, config::getTriggerTolerance);
+            elevator.atRotations(config::getExl4Coral, config::getTriggerTolerance);
 
     public static void setupDefaultCommand() {
         elevator.setDefaultCommand(holdPosition().withName("Elevator.default"));

@@ -273,6 +273,8 @@ public class RobotStates {
 
         netAlgae.and(SwerveStates.isFrontClosestToNet.not()).onTrue(reverse.setTrue());
         netAlgae.and(SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
+
+        climbPrep.onTrue(reverse.setFalse());
     }
 
     private RobotStates() {

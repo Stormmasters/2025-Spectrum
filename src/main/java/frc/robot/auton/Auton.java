@@ -124,12 +124,11 @@ public class Auton {
                                 .andThen(
                                         Commands.waitSeconds(0.05),
                                         RobotStates.actionPrepState.setTrue(),
-                                        Commands.waitSeconds(1.1),
+                                        Commands.waitSeconds(0.9),
                                         RobotStates.actionPrepState.setFalse(),
                                         Commands.waitSeconds(0.5),
-                                        RobotStates.clearStates(),
-                                        RobotStates.homeAll.setTrue(),
-                                        Commands.waitSeconds(.5)));
+                                        RobotStates.homeAll.toggleToTrue(),
+                                        Commands.waitSeconds(0.5)));
     }
 
     /**
