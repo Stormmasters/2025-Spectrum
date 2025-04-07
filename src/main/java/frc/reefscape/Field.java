@@ -243,12 +243,12 @@ public class Field {
                 return Robot.getSwerve().getRobotPose();
             }
 
-            System.out.println("Tag ID getOffsetPosition" + tagID);
-            System.out.println("Index: " + faceIndex);
+            // System.out.println("Tag ID getOffsetPosition" + tagID);
+            // System.out.println("Index: " + faceIndex);
             Pose2d face = flipIfRed(centerFaces[faceIndex]);
-            System.out.println("FaceX: " + Units.metersToInches(face.getX()));
-            System.out.println("FaceY: " + Units.metersToInches(face.getY()));
-            System.out.println("FaceAngle: " + face.getRotation().getDegrees());
+            // System.out.println("FaceX: " + Units.metersToInches(face.getX()));
+            // System.out.println("FaceY: " + Units.metersToInches(face.getY()));
+            // System.out.println("FaceAngle: " + face.getRotation().getDegrees());
 
             // currently, only heading is set to front for facing the reef face
             double rotation = normalizeAngle(offsetRadians); // for angle values
@@ -287,9 +287,9 @@ public class Field {
 
             // Apply the offset to the face's position
             Translation2d newTranslation = face.getTranslation().plus(offsetTranslation);
-            System.out.println("NEWX: " + newTranslation.getX());
-            System.out.println("NEWY: " + newTranslation.getY());
-            System.out.println("NewAngle: " + rotationOffset);
+            // System.out.println("NEWX: " + newTranslation.getX());
+            // System.out.println("NEWY: " + newTranslation.getY());
+            // System.out.println("NewAngle: " + rotationOffset);
             return new Pose2d(newTranslation, rotationOffset);
         }
 

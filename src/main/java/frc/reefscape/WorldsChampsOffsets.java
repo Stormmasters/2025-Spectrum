@@ -7,19 +7,19 @@ import lombok.Getter;
 public class WorldsChampsOffsets {
 
     // blue tag offsets
-    @Getter private static final double Tag17Offset = meterConverter(11);
+    @Getter private static final double Tag17Offset = meterConverter(11.0);
     @Getter private static final double Tag18Offset = meterConverter(12.5);
     @Getter private static final double Tag19Offset = meterConverter(13.0);
     @Getter private static final double Tag20Offset = meterConverter(12.5);
     @Getter private static final double Tag21Offset = meterConverter(10.5);
     @Getter private static final double Tag22Offset = meterConverter(11.0);
     // red tag offsets
-    @Getter private static final double Tag6Offset = meterConverter(6);
-    @Getter private static final double Tag7Offset = meterConverter(6);
-    @Getter private static final double Tag8Offset = meterConverter(6);
-    @Getter private static final double Tag9Offset = meterConverter(6);
-    @Getter private static final double Tag10Offset = meterConverter(6);
-    @Getter private static final double Tag11Offset = meterConverter(6);
+    @Getter private static final double Tag6Offset = meterConverter(11.0);
+    @Getter private static final double Tag7Offset = meterConverter(12.5);
+    @Getter private static final double Tag8Offset = meterConverter(13.0);
+    @Getter private static final double Tag9Offset = meterConverter(12.5);
+    @Getter private static final double Tag10Offset = meterConverter(10.5);
+    @Getter private static final double Tag11Offset = meterConverter(11.0);
 
     // red tag angles offsets
     // original values: 60, 0, 300, 240, 180, 120

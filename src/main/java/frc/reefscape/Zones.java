@@ -51,7 +51,7 @@ public class Zones {
      * @return
      */
     public double getTagOffset(int tag) {
-        double[][] tagOffsetsArray = stateChampsOffsets.getReefTagOffsets();
+        double[][] tagOffsetsArray = homeOffsets.getReefTagOffsets();
         int indexOfTag = tag;
         if (tag < 0 || tag > 22) {
             return 0;
@@ -65,12 +65,12 @@ public class Zones {
             return 0;
         }
 
-        System.out.println("Tag Index: " + indexOfTag);
+        // System.out.println("Tag Index: " + indexOfTag);
         return tagOffsetsArray[indexOfTag][1];
     }
 
     public double getTagAngleOffset(int tag) {
-        double[][] tagOffsetsArray = stateChampsOffsets.getReefTagOffsets();
+        double[][] tagOffsetsArray = homeOffsets.getReefTagOffsets();
         int indexOfTag = tag;
         if (tag < 0 || tag > 22) {
             return 0;
