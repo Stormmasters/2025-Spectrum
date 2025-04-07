@@ -41,7 +41,7 @@ public class SwerveConfig {
 
     @Getter @Setter
     // Estimated at first, then fudge-factored to make odom match record
-    private Distance wheelRadius = Inches.of(3.815 / 2);
+    private Distance wheelRadius = Inches.of(3.815 / 2); // 0.0484505 m
 
     // Theoretical free speed (m/s) at 12v applied output;
     @Getter @Setter

@@ -108,7 +108,7 @@ public class Auton {
                                 SpectrumAuton("TroughRush", mirrored),
                                 aimL4score(2.5),
                                 SpectrumAuton("TroughRush2", mirrored)))
-                .withName("Blue Left - Source L4");
+                .withName("Houston 2 Coral");
     }
 
     public Command aimL4score(double alignTime) {

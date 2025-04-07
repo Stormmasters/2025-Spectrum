@@ -7,19 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 Alt - L4 Trough Rush"
+            "pathName": "1 - L4 Trough Rush"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 Alt - L4 Trough Rush"
+            "pathName": "2 - L4 Trough Rush"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "3L - L4 Trough Rush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4 - L4 Trough Rush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3R - L4 Trough Rush"
           }
         },
         {
