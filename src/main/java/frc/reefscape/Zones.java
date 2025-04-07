@@ -65,7 +65,7 @@ public class Zones {
             return 0;
         }
 
-        System.out.println("Tag Index: " + indexOfTag);
+        // System.out.println("Tag Index: " + indexOfTag);
         return tagOffsetsArray[indexOfTag][1];
     }
 

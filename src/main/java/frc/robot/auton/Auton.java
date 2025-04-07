@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.RobotStates;
+import frc.robot.swerve.SwerveStates;
 import frc.spectrumLib.Telemetry;
 import java.io.IOException;
 import org.json.simple.parser.ParseException;
@@ -66,8 +68,11 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption("Left | Side Start L4", SpectrumAuton("Side Start L4", false));
-        pathChooser.addOption("Right | Side Start L4", SpectrumAuton("Side Start L4", true));
+        pathChooser.addOption("Left | 2 L4 Coral", sourceL4(false));
+        pathChooser.addOption("Right | 2 L4 Coral", sourceL4(true));
+
+        pathChooser.addOption("Left | 3 L4 Coral", SpectrumAuton("Side Start L4", false));
+        pathChooser.addOption("Right | 3 L4 Coral", SpectrumAuton("Side Start L4", true));
 
         pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
 
@@ -92,6 +97,38 @@ public class Auton {
 
     public void exit() {
         printAutoDuration();
+    }
+
+    public Command sourceL4(boolean mirrored) {
+        return (RobotStates.homeAll
+                        .setFalse()
+                        .alongWith(SpectrumAuton("L4-SideStart", mirrored).withTimeout(2))
+                        .andThen(
+                                aimL4score(2.5),
+                                SpectrumAuton("TroughRush", mirrored),
+                                aimL4score(2.5),
+                                SpectrumAuton("TroughRush2", mirrored)))
+                .withName("Blue Left - Source L4");
+    }
+
+    public Command aimL4score(double alignTime) {
+        return SwerveStates.reefAimDriveVision().withTimeout(alignTime).alongWith(l4score());
+    }
+
+    public Command l4score() {
+        return Commands.waitSeconds(0.15)
+                .andThen(
+                        RobotStates.coral
+                                .setTrue()
+                                .alongWith(RobotStates.l4.setTrue(), RobotStates.homeAll.setFalse())
+                                .andThen(
+                                        Commands.waitSeconds(0.05),
+                                        RobotStates.actionPrepState.setTrue(),
+                                        Commands.waitSeconds(0.9),
+                                        RobotStates.actionPrepState.setFalse(),
+                                        Commands.waitSeconds(0.5),
+                                        RobotStates.homeAll.toggleToTrue(),
+                                        Commands.waitSeconds(0.5)));
     }
 
     /**

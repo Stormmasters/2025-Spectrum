@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
+import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
 import frc.robot.operator.Operator;
@@ -23,7 +24,7 @@ public class RobotStates {
     private static final Pilot pilot = Robot.getPilot();
     private static final Operator operator = Robot.getOperator();
 
-    @Getter private static double scoreTime = 1.0;
+    @Getter private static double scoreTime = 2.0;
     @Getter private static double twistAtReefDelay = 0.2;
 
     // Robot States
@@ -88,7 +89,8 @@ public class RobotStates {
     public static final Trigger toggleReverse = pilot.toggleReverse.or(operator.toggleReverse);
 
     // pose Triggers
-    public static final Trigger poseReversal = new Trigger(() -> Field.Reef.reverseRotation());
+    public static final Trigger poseReversal =
+            new Trigger(() -> Field.Reef.reverseRotationBlue() == (Field.isBlue()));
 
     // auton Triggers
     public static final Trigger shoulderL4 = autonShoulderL4;
@@ -257,21 +259,23 @@ public class RobotStates {
                 .and(toggleReverse.not())
                 .onTrue(reverse.setFalse());
 
-        // stationIntaking
-        //         .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
-        //         .onTrue(reverse.setTrue());
-        // stationIntaking
-        //         .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation)
-        //         .onTrue(reverse.setFalse());
-        // stationIntaking
-        //         .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation.not())
-        //         .onTrue(reverse.setTrue());
-        // stationIntaking
-        //         .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation)
-        //         .onTrue(reverse.setFalse());
+        stationIntaking
+                .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation.not())
+                .onTrue(reverse.setTrue());
+        stationIntaking
+                .and(Zones.bottomLeftZone, SwerveStates.isFrontClosestToLeftStation)
+                .onTrue(reverse.setFalse());
+        stationIntaking
+                .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation.not())
+                .onTrue(reverse.setTrue());
+        stationIntaking
+                .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation)
+                .onTrue(reverse.setFalse());
 
         netAlgae.and(SwerveStates.isFrontClosestToNet.not()).onTrue(reverse.setTrue());
         netAlgae.and(SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
+
+        climbPrep.onTrue(reverse.setFalse());
     }
 
     private RobotStates() {

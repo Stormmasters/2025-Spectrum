@@ -229,6 +229,7 @@ public class Robot extends SpectrumRobot {
     @Override
     public void disabledInit() {
         Telemetry.print("### Disabled Init Starting ### ");
+        clearCommandsAndButtons();
         resetCommandsAndButtons();
 
         if (!commandInit) {
@@ -239,9 +240,11 @@ public class Robot extends SpectrumRobot {
                                             auton.SpectrumAuton("Side Start L4", false)
                                                     .withTimeout(.5),
                                             new InstantCommand(
-                                                    () ->
-                                                            SmartDashboard.putBoolean(
-                                                                    "Initialized?", true))))
+                                                    () -> {
+                                                        SmartDashboard.putBoolean(
+                                                                "Initialized?", true);
+                                                        clearCommandsAndButtons();
+                                                    })))
                             .ignoringDisable(true);
             AutonStartCommand.schedule();
             commandInit = true;

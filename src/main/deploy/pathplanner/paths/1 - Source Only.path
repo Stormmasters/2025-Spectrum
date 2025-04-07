@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.21,
-        "y": 5.28
+        "x": 5.19,
+        "y": 5.3
       },
       "prevControl": {
-        "x": 5.559999999999995,
-        "y": 5.88621778264911
+        "x": 5.539999999999996,
+        "y": 5.90621778264911
       },
       "nextControl": null,
       "isLocked": false,
@@ -72,7 +72,7 @@
     },
     {
       "name": "actionOff",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.98,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -87,7 +87,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -122.50000000000001
+    "rotation": -123.00000000000001
   },
   "reversed": false,
   "folder": "Blue Left Source",

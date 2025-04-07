@@ -9,6 +9,7 @@ package frc.reefscape;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import java.util.ArrayList;
@@ -133,7 +134,7 @@ public class Field {
         public static final double faceToZoneLine =
                 Units.inchesToMeters(12); // Side of the reef to the inside of the reef zone line
 
-        public static final Trigger poseReversal = new Trigger(() -> reverseRotation());
+        public static final Trigger poseReversal = new Trigger(() -> reverseRotationBlue());
 
         @SuppressWarnings("all")
         @Getter
@@ -182,14 +183,15 @@ public class Field {
         }
 
         /**
-         * Returns the reef index zone based on the robot's pose
+         * Returns the reef index zone based on the robot's pose changed to blue pose including the
+         * center is consistently blue center
          *
          * @param pose
          * @return
          */
         public static int getReefZone(Pose2d pose) {
             Translation2d point = pose.getTranslation();
-            Translation2d relativePoint = point.minus(flipIfRed(center));
+            Translation2d relativePoint = point.minus(center);
             double angle = Math.atan2(relativePoint.getX(), relativePoint.getY()); // Standard atan2
             double distance = relativePoint.getNorm();
 
@@ -225,46 +227,69 @@ public class Field {
                 tag = blueToRedTagID(tag);
             }
 
+            SmartDashboard.putNumber("Target ID getReefZone: ", tag);
             return tag;
         }
 
         /** */
         public static Pose2d getOffsetPosition(
-                int blueTagID, double offsetMeters, double offsetRadians) {
+                int tagID, double offsetMeters, double offsetRadians) {
 
-            int faceIndex = reefTagIDToIndex(blueTagID);
+            // reefTagIDToIndex
+            int faceIndex = blueReefTagIDToIndex(redToBlueTagID(tagID));
 
             if (faceIndex < 0 || faceIndex >= centerFaces.length) {
                 System.out.println("Bad Face Index: " + faceIndex);
                 return Robot.getSwerve().getRobotPose();
             }
 
+            // System.out.println("Tag ID getOffsetPosition" + tagID);
+            // System.out.println("Index: " + faceIndex);
             Pose2d face = flipIfRed(centerFaces[faceIndex]);
+            // System.out.println("FaceX: " + Units.metersToInches(face.getX()));
+            // System.out.println("FaceY: " + Units.metersToInches(face.getY()));
+            // System.out.println("FaceAngle: " + face.getRotation().getDegrees());
 
             // currently, only heading is set to front for facing the reef face
-            double rotation = normalizeAngle(offsetRadians);
-            boolean reverseChecker = reverseRotation();
+            double rotation = normalizeAngle(offsetRadians); // for angle values
+            boolean reverseChecker = reverseRotationBlue();
 
-            double offsetChecker = 1;
+            double offsetChecker = 1; // for translation values
 
-            if (reverseChecker) {
+            if (isRed()) {
                 offsetChecker = -1;
-                rotation = normalizeAngle(offsetRadians - Math.PI);
+            }
+
+            if (reverseChecker && isBlue()) {
+                offsetChecker *= -1;
+                rotation = normalizeAngle(rotation - Math.PI);
+            }
+            // Red checkers for when reverse: both rotation and translation
+            if (reverseChecker && isRed()) {
+                offsetChecker *= -1;
+                rotation = normalizeAngle(rotation);
+            }
+            if (!reverseChecker && isRed()) {
+                offsetChecker = -1;
+                rotation = normalizeAngle(rotation - Math.PI);
             }
 
             Rotation2d rotationOffset = face.getRotation().rotateBy(new Rotation2d(rotation));
 
             // checks if the rotation is 0 since that means back is closer
-            if (rotation == 0) {
-                offsetChecker = -1;
-            }
+            // if (rotation == 0) {
+            //     offsetChecker = -1;
+            // }
 
             // Calculate the perpendicular offset
             Translation2d offsetTranslation =
-                    flipIfRed(new Translation2d(-offsetMeters * offsetChecker, rotationOffset));
+                    (new Translation2d(-offsetMeters * offsetChecker, rotationOffset));
 
             // Apply the offset to the face's position
             Translation2d newTranslation = face.getTranslation().plus(offsetTranslation);
+            // System.out.println("NEWX: " + newTranslation.getX());
+            // System.out.println("NEWY: " + newTranslation.getY());
+            // System.out.println("NewAngle: " + rotationOffset);
             return new Pose2d(newTranslation, rotationOffset);
         }
 
@@ -284,18 +309,10 @@ public class Field {
          * @param tagID
          * @return
          */
-        public static int reefTagIDToIndex(int tagID) {
-            // red reef indexer
-            if (isRed()) {
-                if (tagID < 6 || tagID > 11) {
-                    return -1;
-                }
-
-                return -1 * (tagID - 11);
-            }
+        public static int blueReefTagIDToIndex(int tagID) {
 
             // blue reef indexer
-            if (tagID < 17 || tagID > 22) {
+            if (tagID < 17 || tagID > 22 || tagID < 0) {
                 return -1;
             }
 
@@ -327,6 +344,25 @@ public class Field {
             }
         }
 
+        public static int redToBlueTagID(int redTagID) {
+            switch (redTagID) {
+                case 8:
+                    return 17;
+                case 7:
+                    return 18;
+                case 6:
+                    return 19;
+                case 11:
+                    return 20;
+                case 10:
+                    return 21;
+                case 9:
+                    return 22;
+                default:
+                    return redTagID;
+            }
+        }
+
         /**
          * Converts a target angle into a reverse rotation if the back is closer; otherwise, returns
          * the original target angle for front heading.
@@ -337,17 +373,18 @@ public class Field {
          *
          * @return true/false if robot heading is reversed to reef face
          */
-        public static boolean reverseRotation() {
+        public static boolean reverseRotationBlue() {
             Pose2d robotPose = Robot.getSwerve().getRobotPose();
 
             int tagID = getReefZoneTagID(robotPose);
             if (tagID < 0 || tagID == 16) {
                 return false;
             }
+
             if (isBlue()) {
-                tagID = reefTagIDToIndex(tagID);
+                tagID = blueReefTagIDToIndex(tagID);
             } else {
-                tagID = reefTagIDToIndex(blueToRedTagID(tagID));
+                tagID = blueReefTagIDToIndex(redToBlueTagID(tagID));
             }
 
             double reefRotation = centerFaces[tagID].getRotation().getRadians();
@@ -393,7 +430,7 @@ public class Field {
             if (faceIndex < 0) {
                 return Robot.getSwerve().getRobotPose();
             }
-            Pose2d reefFacePose = centerFaces[reefTagIDToIndex(faceIndex)];
+            Pose2d reefFacePose = centerFaces[blueReefTagIDToIndex(faceIndex)];
 
             if (isRed()) {
                 reefFacePose = flipIfRed(reefFacePose);
@@ -509,7 +546,7 @@ public class Field {
     // If we are red flip the y pose to the other side of the field
     public static double flipYifRed(double yCoordinate) {
         if (Field.isRed()) {
-            return Field.fieldWidth - yCoordinate;
+            return (Field.fieldWidth) - yCoordinate;
         }
         return yCoordinate;
     }

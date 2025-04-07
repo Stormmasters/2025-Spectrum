@@ -80,7 +80,8 @@ public class IntakeStates {
                         //         config::getCoralL1ScoreSupplyCurrent,
                         //         config::getCoralL1ScoreTorqueCurrent));
                         intake.runTorqueFOC(config::getCoralL1ScoreTorqueCurrent));
-        branch.and(actionState)
+
+        branch.and(actionState, L4Coral.not())
                 .whileTrue(
                         // runVoltageCurrentLimits(
                         //         config::getCoralScoreVoltage,
