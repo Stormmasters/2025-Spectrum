@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
+import frc.reefscape.FieldHelpers;
 import frc.robot.Robot;
 import frc.spectrumLib.SpectrumSubsystem;
 import frc.spectrumLib.Telemetry;
@@ -216,7 +217,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
      */
     public Trigger inXzoneAlliance(double minXmeter, double maxXmeter) {
         return new Trigger(
-                () -> Util.inRange(Field.flipXifRed(getRobotPose().getX()), minXmeter, maxXmeter));
+                () ->
+                        Util.inRange(
+                                FieldHelpers.flipXifRed(getRobotPose().getX()),
+                                minXmeter,
+                                maxXmeter));
     }
 
     /**
@@ -229,7 +234,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
      */
     public Trigger inYzoneAlliance(double minYmeter, double maxYmeter) {
         return new Trigger(
-                () -> Util.inRange(Field.flipYifRed(getRobotPose().getY()), minYmeter, maxYmeter));
+                () ->
+                        Util.inRange(
+                                FieldHelpers.flipYifRed(getRobotPose().getY()),
+                                minYmeter,
+                                maxYmeter));
     }
 
     // Used to set a control request to the swerve module, ignores disable so commands are
@@ -273,7 +282,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         return runOnce(
                 () -> {
                     double output;
-                    output = Field.flipAngleIfRed(angleDegrees);
+                    output = FieldHelpers.flipAngleIfRed(angleDegrees);
                     reorient(output);
                 });
     }

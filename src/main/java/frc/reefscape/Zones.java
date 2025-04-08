@@ -4,30 +4,33 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 import frc.robot.swerve.Swerve;
 
 public class Zones {
 
     private static final Swerve swerve = Robot.getSwerve();
-    private static final HomeOffsets homeOffsets = new HomeOffsets();
-    private static final StateChampsOffsets stateChampsOffsets = new StateChampsOffsets();
-    private static final WorldsChampsOffsets worldsChampsOffsets = new WorldsChampsOffsets();
+    private static final HomeOffsets offsets = new HomeOffsets();
 
     public static final Trigger blueFieldSide = swerve.inXzone(0, Field.getHalfLength());
 
     public static final Trigger topLeftZone =
-            swerve.inXzoneAlliance(Field.Reef.center.getX(), Field.getHalfLength())
-                    .and(swerve.inYzoneAlliance(Field.Reef.center.getY(), Field.getFieldWidth()));
+            swerve.inXzoneAlliance(Field.Reef.getCenter().getX(), Field.getHalfLength())
+                    .and(
+                            swerve.inYzoneAlliance(
+                                    Field.Reef.getCenter().getY(), Field.getFieldWidth()));
     public static final Trigger topRightZone =
-            swerve.inXzoneAlliance(Field.Reef.center.getX(), Field.getHalfLength())
-                    .and(swerve.inYzoneAlliance(0, Field.Reef.center.getY()));
+            swerve.inXzoneAlliance(Field.Reef.getCenter().getX(), Field.getHalfLength())
+                    .and(swerve.inYzoneAlliance(0, Field.Reef.getCenter().getY()));
     public static final Trigger bottomLeftZone =
-            swerve.inXzoneAlliance(0, Field.Reef.center.getX())
-                    .and(swerve.inYzoneAlliance(Field.Reef.center.getY(), Field.getFieldWidth()));
+            swerve.inXzoneAlliance(0, Field.Reef.getCenter().getX())
+                    .and(
+                            swerve.inYzoneAlliance(
+                                    Field.Reef.getCenter().getY(), Field.getFieldWidth()));
     public static final Trigger bottomRightZone =
-            swerve.inXzoneAlliance(0, Field.Reef.center.getX())
-                    .and(swerve.inYzoneAlliance(0, Field.Reef.center.getY()));
+            swerve.inXzoneAlliance(0, Field.Reef.getCenter().getX())
+                    .and(swerve.inYzoneAlliance(0, Field.Reef.getCenter().getY()));
 
     public static final Trigger bargeZone =
             swerve.inXzoneAlliance(
@@ -68,25 +71,25 @@ public class Zones {
         // // System.out.println("Tag Index: " + indexOfTag);
         // return tagOffsetsArray[indexOfTag][1];
 
-        return homeOffsets.getReefTagDistanceOffset(tag);
+        return offsets.getReefTagDistanceOffset(tag);
     }
 
     public double getTagAngleOffset(int tag) {
-        double[][] tagOffsetsArray = homeOffsets.getReefTagOffsets();
-        int indexOfTag = tag;
-        if (tag < 0 || tag > 22) {
-            return 0;
-        }
+        // double[][] tagOffsetsArray = offsets.getReefTagOffsets();
+        // int indexOfTag = tag;
+        // if (tag < 0 || tag > 22) {
+        //     return 0;
+        // }
 
-        if (tag >= 17) {
-            indexOfTag -= 17;
-        }
+        // if (tag >= 17) {
+        //     indexOfTag -= 17;
+        // }
 
-        if (indexOfTag < 0) {
-            return 0;
-        }
+        // if (indexOfTag < 0) {
+        //     return 0;
+        // }
 
-        return tagOffsetsArray[indexOfTag][5];
+        return offsets.getReefTagAngleOffset(tag);
     }
 
     /**
@@ -96,13 +99,13 @@ public class Zones {
      * @return Target Reef Pose
      */
     Pose2d getScoreReefPose() {
-        int reefTagID = Field.Reef.getReefZoneTagID(Robot.getSwerve().getRobotPose());
+        int reefTagID = FieldHelpers.getReefZoneTagID(Robot.getSwerve().getRobotPose());
         if (reefTagID < 0) {
             return Robot.getSwerve().getRobotPose();
         }
 
         SmartDashboard.putNumber("Target Reef ID: ", reefTagID);
-        return Field.Reef.getScorePoseFromTagID(reefTagID);
+        return FieldHelpers.getScorePoseFromTagID(reefTagID);
     }
 
     /**

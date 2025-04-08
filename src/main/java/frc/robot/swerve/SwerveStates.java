@@ -9,8 +9,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
-import frc.reefscape.HomeOffsets;
+import frc.reefscape.FieldHelpers;
 import frc.reefscape.Zones;
+import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
@@ -31,13 +32,13 @@ public class SwerveStates {
             new Trigger(
                     () ->
                             swerve.frontClosestToAngle(
-                                    Field.flipAngleIfRed(
+                                    FieldHelpers.flipAngleIfRed(
                                             Field.CoralStation.leftFaceRobotPovDegrees)));
     public static final Trigger isFrontClosestToRightStation =
             new Trigger(
                     () ->
                             swerve.frontClosestToAngle(
-                                    Field.flipAngleIfRed(
+                                    FieldHelpers.flipAngleIfRed(
                                             Field.CoralStation.rightFaceRobotPovDegrees)));
 
     public static final Trigger isFrontClosestToNet =
