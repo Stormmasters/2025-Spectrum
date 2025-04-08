@@ -220,10 +220,10 @@ public class Field {
          * @return
          */
         public static int getReefZoneTagID(Pose2d pose) {
-            pose = flipIfRed(pose);
+            pose = flipIfRedSide(pose);
             int tag = indexToReefTagID(getReefZone(pose));
 
-            if (isRed()) {
+            if (!Zones.blueFieldSide.getAsBoolean()) {
                 tag = blueToRedTagID(tag);
             }
 
@@ -377,14 +377,15 @@ public class Field {
             Pose2d robotPose = Robot.getSwerve().getRobotPose();
 
             int tagID = getReefZoneTagID(robotPose);
-            if (tagID < 0 || tagID == 16) {
-                return false;
-            }
 
             if (isBlue()) {
                 tagID = blueReefTagIDToIndex(tagID);
             } else {
                 tagID = blueReefTagIDToIndex(redToBlueTagID(tagID));
+            }
+
+            if (tagID < 0 || tagID == 16) {
+                return false;
             }
 
             double reefRotation = centerFaces[tagID].getRotation().getRadians();
@@ -509,6 +510,14 @@ public class Field {
     public static final Trigger red = new Trigger(Field::isRed);
     public static final Trigger blue = new Trigger(Field::isBlue);
 
+    public static double flipAngle(double angle) {
+        return (angle + 180) % 360;
+    }
+
+    public static Rotation2d flipAngle(Rotation2d angle) {
+        return angle.rotateBy(Rotation2d.fromDegrees(180));
+    }
+
     public static double flipAngleIfRed(double blue) {
         if (Field.isRed()) {
             return (blue + 180) % 360;
@@ -531,8 +540,25 @@ public class Field {
         return new Translation3d(flipXifRed(blue.getX()), flipYifRed(blue.getY()), blue.getZ());
     }
 
-    public static Pose2d flipIfRed(Pose2d blue) {
-        return new Pose2d(flipIfRed(blue.getTranslation()), flipAngleIfRed(blue.getRotation()));
+    public static Pose2d flipIfRed(Pose2d red) {
+        return new Pose2d(flipIfRed(red.getTranslation()), flipAngleIfRed(red.getRotation()));
+    }
+
+    public static Pose2d flipIfRedSide(Pose2d red) {
+        if (Zones.blueFieldSide.getAsBoolean()) {
+            return red;
+        }
+        return new Pose2d(
+                new Translation2d(flipX(red.getX()), flipY(red.getY())),
+                flipAngle(red.getRotation()));
+    }
+
+    public static double flipX(double xCoordinate) {
+        return Field.fieldLength - xCoordinate;
+    }
+
+    public static double flipY(double yCoordinate) {
+        return Field.fieldWidth - yCoordinate;
     }
 
     // If we are red flip the x pose to the other side of the field
@@ -546,7 +572,7 @@ public class Field {
     // If we are red flip the y pose to the other side of the field
     public static double flipYifRed(double yCoordinate) {
         if (Field.isRed()) {
-            return (Field.fieldWidth) - yCoordinate;
+            return Field.fieldWidth - yCoordinate;
         }
         return yCoordinate;
     }
