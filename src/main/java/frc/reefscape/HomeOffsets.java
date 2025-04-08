@@ -272,4 +272,12 @@ public class HomeOffsets {
         }
         return reefTagOffsets[offsetIndex][3];
     }
+
+    public static double getReefTagAngleOffset(int tagID) {
+        int offsetIndex = getReefTagIDToOffsetIndex(tagID);
+        if (offsetIndex == -1) {
+            return 0.0;
+        }
+        return reefTagOffsets[offsetIndex][5];
+    }
 }

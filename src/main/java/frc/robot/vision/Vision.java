@@ -64,7 +64,7 @@ public class Vision implements NTSendable, Subsystem {
 
         @Getter double visionStdDevX = 0.5;
         @Getter double visionStdDevY = 0.5;
-        @Getter double visionStdDevTheta = 0.5;
+        @Getter double visionStdDevTheta = 0.2;
 
         @Getter
         final Matrix<N3, N1> visionStdMatrix =
@@ -863,14 +863,16 @@ public class Vision implements NTSendable, Subsystem {
         }
         tagPose = tagLayout.getTagPose(tagID).get().toPose2d();
 
-        Rotation2d rotationOffsetParallel = tagPose.getRotation();
+        Rotation2d rotationOffsetParallel =
+                tagPose.getRotation()
+                        .plus(new Rotation2d(homeOffsets.getReefTagAngleOffset(tagID)));
         Rotation2d rotationOffsetPerpendicular = tagPose.getRotation().plus(new Rotation2d(90));
 
         Translation2d offsetPose =
                 tagPose.getTranslation()
                         .minus(new Translation2d(centerOffset, rotationOffsetPerpendicular));
 
-        offsetPose = offsetPose.plus(new Translation2d(distanceAway, rotationOffsetParallel));
+        offsetPose = offsetPose.minus(new Translation2d(distanceAway, rotationOffsetParallel));
         return new Pose2d(offsetPose, rotationOffsetParallel);
     }
 
