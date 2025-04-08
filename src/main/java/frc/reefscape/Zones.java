@@ -51,22 +51,24 @@ public class Zones {
      * @return
      */
     public double getTagOffset(int tag) {
-        double[][] tagOffsetsArray = homeOffsets.getReefTagOffsets();
-        int indexOfTag = tag;
-        if (tag < 0 || tag > 22) {
-            return 0;
-        }
+        // double[][] tagOffsetsArray = homeOffsets.getReefTagOffsets();
+        // int indexOfTag = tag;
+        // if (tag < 0 || tag > 22) {
+        //     return 0;
+        // }
 
-        if (tag >= 17) {
-            indexOfTag = indexOfTag - 17;
-        }
+        // if (tag >= 17) {
+        //     indexOfTag = indexOfTag - 17;
+        // }
 
-        if (indexOfTag < 0 || indexOfTag > 16) {
-            return 0;
-        }
+        // if (indexOfTag < 0 || indexOfTag > 16) {
+        //     return 0;
+        // }
 
-        // System.out.println("Tag Index: " + indexOfTag);
-        return tagOffsetsArray[indexOfTag][1];
+        // // System.out.println("Tag Index: " + indexOfTag);
+        // return tagOffsetsArray[indexOfTag][1];
+
+        return homeOffsets.getReefTagDistanceOffset(tag);
     }
 
     public double getTagAngleOffset(int tag) {
@@ -84,7 +86,7 @@ public class Zones {
             return 0;
         }
 
-        return tagOffsetsArray[indexOfTag][2];
+        return tagOffsetsArray[indexOfTag][5];
     }
 
     /**

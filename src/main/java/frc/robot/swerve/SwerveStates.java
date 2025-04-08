@@ -72,8 +72,9 @@ public class SwerveStates {
         pilot.rightReorient.onTrue(log(reorientRight()));
 
         // // vision aim
-        pilot.reefAim_A.whileTrue(log(reefAimDrive()));
-        pilot.reefVision_A.whileTrue(log(reefAimDriveVision()));
+        // pilot.reefAim_A.whileTrue(log(reefAimDrive()));
+        // pilot.reefVision_A.whileTrue(log(reefAimDriveVisionTA()));
+        pilot.reefVision_A.whileTrue(log(reefAimDriveVisionXY()));
 
         // Pose2d backReefOffset = Field.Reef.getOffsetPosition(21, Units.inchesToMeters(24));
         // pilot.cageAim_B.whileTrue(
@@ -91,12 +92,20 @@ public class SwerveStates {
      *
      * @return
      */
-    public static Command reefAimDriveVision() {
+    public static Command reefAimDriveVisionTA() {
         return fpvAimDrive(
                         SwerveStates::getTagDistanceVelocity,
                         SwerveStates::getTagTxVelocity,
                         Robot.getVision()::getReefTagAngle)
-                .withName("Swerve.reefAimDrive");
+                .withName("Swerve.reefAimDriveVisionTA");
+    }
+
+    public static Command reefAimDriveVisionXY() {
+        return alignDrive(
+                        Robot.getVision()::getReefOffsetFromTagX,
+                        Robot.getVision()::getReefOffsetFromTagY,
+                        Robot.getVision()::getReefTagAngle)
+                .withName("Swerve.reefAimDriveVisionXY");
     }
 
     public static Command reefAimDrive() {

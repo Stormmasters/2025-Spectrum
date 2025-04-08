@@ -98,10 +98,6 @@ public class RobotStates {
     public static final Trigger twistL4L = autonTwistL4L;
     public static final Trigger poseUpdate = autonPoseUpdate;
 
-    // TODO: Handoffs are disabled
-    // public static final Trigger algaeHandoff = operator.algaeHandoff_X;
-    // public static final Trigger coralHandoff = operator.coralHandoff_Y;
-
     public static final Trigger isAtHome =
             ElevatorStates.isHome.and(ElbowStates.isHome, ShoulderStates.isHome);
 

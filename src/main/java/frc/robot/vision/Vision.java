@@ -1,10 +1,14 @@
 package frc.robot.vision;
 
 import com.ctre.phoenix6.Utils;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -16,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.reefscape.Field;
+import frc.reefscape.HomeOffsets;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.spectrumLib.Telemetry;
@@ -24,6 +29,7 @@ import frc.spectrumLib.util.Util;
 import frc.spectrumLib.vision.Limelight;
 import frc.spectrumLib.vision.Limelight.LimelightConfig;
 import frc.spectrumLib.vision.LimelightHelpers.RawFiducial;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import lombok.Getter;
@@ -81,6 +87,9 @@ public class Vision implements NTSendable, Subsystem {
     int[] blueTags = {17, 18, 19, 20, 21, 22};
     int[] redTags = {6, 7, 8, 9, 10, 11};
 
+    private AprilTagFieldLayout tagLayout;
+    private static final HomeOffsets homeOffsets = new HomeOffsets();
+
     private VisionConfig config;
 
     public Vision(VisionConfig config) {
@@ -99,6 +108,15 @@ public class Vision implements NTSendable, Subsystem {
         for (Limelight limelight : allLimelights) {
             limelight.setLEDMode(false);
             limelight.setIMUmode(1);
+        }
+
+        /* Get the April Tag Field Layout */
+        try {
+            tagLayout =
+                    AprilTagFieldLayout.loadFromResource(
+                            AprilTagFields.k2025ReefscapeAndyMark.m_resourceFile);
+        } catch (IOException e) {
+            System.err.println(e);
         }
 
         this.register();
@@ -758,7 +776,7 @@ public class Vision implements NTSendable, Subsystem {
      *
      * @return
      */
-    public double getReefTagAngle() {
+    public double getReefTagAngle() { // TODO: put these in a constants file
         double[][] reefFrontAngles = {
             {17, 60}, {18, 0}, {19, -60}, {20, -120}, {21, 180}, {22, 120},
             {6, 120}, {7, 180}, {8, -120}, {9, -60}, {10, 0}, {11, 60}
@@ -767,16 +785,16 @@ public class Vision implements NTSendable, Subsystem {
         int closestTag = getClosestTagID();
         boolean rearTag = isRearTagClosest();
 
-        if (closestTag == -1) {
-            // Return current angle if no tag seen before going through the array
+        if (closestTag <= 0) {
             Pose2d currentPose = Robot.getSwerve().getRobotPose();
-            int tagID = Field.Reef.getReefZoneTagID(Field.flipIfRed(currentPose));
+            int tagID = Field.Reef.getReefZoneTagID(currentPose);
             closestTag = tagID;
+            rearTag = false;
         }
 
         for (int i = 0; i < reefFrontAngles.length; i++) {
             if (closestTag == reefFrontAngles[i][0]) {
-                if (rearTag) {
+                if (rearTag || !Robot.getSwerve().frontClosestToAngle(reefFrontAngles[i][1])) {
                     return Math.toRadians(reefFrontAngles[i][1] + 180);
                 }
                 return Math.toRadians(reefFrontAngles[i][1]);
@@ -835,6 +853,49 @@ public class Vision implements NTSendable, Subsystem {
         } else {
             return 0;
         }
+    }
+
+    public Pose2d getXYOffsetFromTag(int tagID, double distanceAway, double centerOffset) {
+        Pose2d tagPose;
+
+        if (tagLayout == null || tagID == -1) {
+            return Robot.getSwerve().getRobotPose(); // Pose to where we are if the tag is invalid
+        }
+        tagPose = tagLayout.getTagPose(tagID).get().toPose2d();
+
+        Rotation2d rotationOffsetParallel = tagPose.getRotation();
+        Rotation2d rotationOffsetPerpendicular = tagPose.getRotation().plus(new Rotation2d(90));
+
+        Translation2d offsetPose =
+                tagPose.getTranslation()
+                        .minus(new Translation2d(centerOffset, rotationOffsetPerpendicular));
+
+        offsetPose = offsetPose.plus(new Translation2d(distanceAway, rotationOffsetParallel));
+        return new Pose2d(offsetPose, rotationOffsetParallel);
+    }
+
+    public Pose2d getReefOffsetFromTag() {
+        int closestTagID = getClosestTagID();
+
+        if (closestTagID < 6 || closestTagID == 16 || closestTagID > 22) {
+            closestTagID = Field.Reef.getReefZoneTagID(Robot.getSwerve().getRobotPose());
+            if (closestTagID < 0) {
+                return Robot.getSwerve().getRobotPose();
+            }
+        }
+
+        double reefTagDistanceOffset = homeOffsets.getReefTagDistanceOffset(closestTagID);
+        double reefTagCenterOffset = homeOffsets.getReefTagCenterOffset(closestTagID);
+
+        return getXYOffsetFromTag(closestTagID, reefTagDistanceOffset, reefTagCenterOffset);
+    }
+
+    public double getReefOffsetFromTagX() {
+        return getReefOffsetFromTag().getX();
+    }
+
+    public double getReefOffsetFromTagY() {
+        return getReefOffsetFromTag().getY();
     }
 
     // ------------------------------------------------------------------------------
