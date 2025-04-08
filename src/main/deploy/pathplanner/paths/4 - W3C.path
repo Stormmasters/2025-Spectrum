@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.77,
-        "y": 5.29
+        "x": 3.75,
+        "y": 5.28
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3949999999999996,
-        "y": 5.939519052838329
+        "x": 3.3749999999999996,
+        "y": 5.929519052838329
       },
       "isLocked": false,
       "linkedName": null
@@ -32,20 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.20086139389193194,
-      "constraints": {
-        "maxVelocity": 4.0,
-        "maxAcceleration": 2.5,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8508222396241264,
+      "minWaypointRelativePos": 0.6033672670321052,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 4.0,
@@ -66,33 +53,21 @@
       "command": null
     },
     {
-      "name": "home",
-      "waypointRelativePos": 0.04581049334377241,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "clearStates",
-      "waypointRelativePos": 0.4498825371965495,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "reverse",
-      "waypointRelativePos": 0.48747063429913257,
+      "waypointRelativePos": 0.19616288175411215,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "sourceIntakeOn",
-      "waypointRelativePos": 0.5015661707126041,
+      "waypointRelativePos": 0.6989036805011735,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -103,10 +78,10 @@
     "rotation": -53.5
   },
   "reversed": false,
-  "folder": "Blue Left Source",
+  "folder": "Worlds 3 Coral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -63.50000000000001
+    "rotation": -59.99999999999999
   },
   "useDefaultConstraints": true
 }

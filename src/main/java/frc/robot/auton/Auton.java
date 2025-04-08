@@ -68,11 +68,11 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption("Left | 2 L4 Coral", sourceL4(false));
-        pathChooser.addOption("Right | 2 L4 Coral", sourceL4(true));
+        pathChooser.addOption("Left | 2 L4 Coral", houston2coral(false));
+        pathChooser.addOption("Right | 2 L4 Coral", houston2coral(true));
 
-        pathChooser.addOption("Left | 3 L4 Coral", SpectrumAuton("Side Start L4", false));
-        pathChooser.addOption("Right | 3 L4 Coral", SpectrumAuton("Side Start L4", true));
+        pathChooser.addOption("Left | 3 L4 Coral", worlds3coral(false));
+        pathChooser.addOption("Right | 3 L4 Coral", worlds3coral(true));
 
         pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
 
@@ -99,23 +99,51 @@ public class Auton {
         printAutoDuration();
     }
 
-    public Command sourceL4(boolean mirrored) {
-        return (RobotStates.homeAll
-                        .setFalse()
-                        .alongWith(SpectrumAuton("L4-SideStart", mirrored).withTimeout(2))
-                        .andThen(
-                                aimL4score(2.5),
-                                SpectrumAuton("TroughRush", mirrored),
-                                aimL4score(2.5),
-                                SpectrumAuton("TroughRush2", mirrored)))
+    public Command houston2coral(boolean mirrored) {
+        return Commands.sequence(
+                        SpectrumAuton("H2C-Start", mirrored, 2),
+                        oldAimL4score(1.5),
+                        SpectrumAuton("H2C-Leg1", mirrored),
+                        oldAimL4score(1.5),
+                        SpectrumAuton("H2C-Leg2", mirrored))
                 .withName("Houston 2 Coral");
     }
 
+    public Command worlds3coral(boolean mirrored) {
+        return Commands.sequence(
+                        SpectrumAuton("W3C-Start", mirrored, 2),
+                        aimL4score(1),
+                        SpectrumAuton("W3C-Leg1", mirrored),
+                        aimL4score(1),
+                        SpectrumAuton("W3C-Leg2", mirrored),
+                        aimL4score(1))
+                .withName("Worlds 3 Coral");
+    }
+
     public Command aimL4score(double alignTime) {
-        return SwerveStates.reefAimDriveVision().withTimeout(alignTime).alongWith(l4score());
+        return SwerveStates.reefAimDriveVision()
+                .withTimeout(alignTime)
+                .alongWith(l4score())
+                .withName("Auton.aimL4Score");
+    }
+
+    public Command oldAimL4score(double alignTime) {
+        return SwerveStates.reefAimDriveVision()
+                .withTimeout(alignTime)
+                .alongWith(oldl4score())
+                .withName("Auton.oldAimL4Score");
     }
 
     public Command l4score() {
+        return Commands.sequence(
+                        Commands.waitSeconds(0.15),
+                        RobotStates.actionPrepState.setFalse(),
+                        Commands.waitSeconds(0.5),
+                        RobotStates.homeAll.toggleToTrue())
+                .withName("Auton.L4Score");
+    }
+
+    public Command oldl4score() {
         return Commands.waitSeconds(0.15)
                 .andThen(
                         RobotStates.coral
@@ -144,6 +172,14 @@ public class Auton {
     public Command SpectrumAuton(String autoName, boolean mirrored) {
         Command autoCommand = new PathPlannerAuto(autoName, mirrored);
         return (Commands.waitSeconds(0.01).andThen(autoCommand)).withName(autoName);
+    }
+
+    public Command SpectrumAuton(String autoName, boolean mirrored, double duration) {
+        Command autoCommand = new PathPlannerAuto(autoName, mirrored);
+        return Commands.waitSeconds(0.01)
+                .andThen(autoCommand)
+                .withTimeout(duration)
+                .withName(autoName);
     }
 
     /**

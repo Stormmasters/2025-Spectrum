@@ -7,43 +7,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 - L4 Trough Rush"
+            "pathName": "1 - W3C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 - L4 Trough Rush"
+            "pathName": "2 - W3C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3L - L4 Trough Rush"
+            "pathName": "3L - W3C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4 - L4 Trough Rush"
+            "pathName": "4 - W3C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3R - L4 Trough Rush"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4 - L4 Trough Rush"
+            "pathName": "3R - W3C"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Blue Left Origin",
+  "folder": "Worlds 3 Coral",
   "choreoAuto": false
 }

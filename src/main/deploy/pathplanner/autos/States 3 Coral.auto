@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 - Source Only"
+            "pathName": "1 - S3C"
           }
         },
         {
@@ -19,13 +19,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 - Source Only"
+            "pathName": "2 - S3C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3L - Source Only"
+            "pathName": "3L - S3C"
           }
         },
         {
@@ -37,13 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4 - Source Only"
+            "pathName": "4 - S3C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3R - Source Only"
+            "pathName": "3R - S3C"
           }
         },
         {

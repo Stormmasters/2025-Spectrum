@@ -125,7 +125,7 @@ public class RobotStates {
         // HOME Commands and States
         pilot.home_select.or(operator.home_select).whileTrue(homeAll.toggleToTrue());
         pilot.home_select.or(operator.home_select).onFalse(clearStates());
-        autonClearStates.whileTrue(clearStates());
+        autonClearStates.onTrue(clearStates());
 
         actionState
                 .or(operator.staged)
