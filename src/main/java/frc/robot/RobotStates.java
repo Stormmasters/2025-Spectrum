@@ -272,8 +272,8 @@ public class RobotStates {
                 .and(Zones.bottomRightZone, SwerveStates.isFrontClosestToRightStation)
                 .onTrue(reverse.setFalse());
 
-        netAlgae.and(SwerveStates.isFrontClosestToNet.not()).onTrue(reverse.setTrue());
-        netAlgae.and(SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
+        // netAlgae.and(SwerveStates.isFrontClosestToNet.not()).onTrue(reverse.setTrue());
+        // netAlgae.and(SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
 
         climbPrep.onTrue(reverse.setFalse());
     }

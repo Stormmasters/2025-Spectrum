@@ -15,6 +15,8 @@ public class ShoulderStates {
     private static Shoulder shoulder = Robot.getShoulder();
     private static ShoulderConfig config = Robot.getConfig().shoulder;
     public static final Trigger isHome = shoulder.atDegrees(config::getHome, config::getTolerance);
+    public static final Trigger isNetPosition =
+            shoulder.atDegrees(config::getNetAlgae, config::getTolerance);
 
     public static void setupDefaultCommand() {
         shoulder.setDefaultCommand(

@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -331,22 +332,6 @@ public class Twist extends Mechanism {
     //     return move(targetDegrees, clockwise.getAsBoolean());
     // }
 
-    public Command move(DoubleSupplier degrees) {
-        return run(
-                () -> {
-                    if (RobotStates.reverse.getAsBoolean()) {
-                        if (degrees.getAsDouble() + 180 >= 180
-                                && degrees.getAsDouble() - 179.9 >= 0) {
-                            setDegrees(() -> degrees.getAsDouble() - 179.9);
-                        } else {
-                            setDegrees(() -> degrees.getAsDouble() + 179.9);
-                        }
-                    } else {
-                        setDegrees(degrees);
-                    }
-                });
-    }
-
     public Command moveAwayFromElevatorCheckReverse(DoubleSupplier degrees) {
         return Commands.either(
                         moveAwayFromElevatorReversed(() -> adjustTargetToReverse(degrees))
@@ -388,15 +373,16 @@ public class Twist extends Mechanism {
                                 RobotStates.reverse.getAsBoolean()));
     }
 
-    public Command netTurret() {
-        // uses the robot pose to always point the twist away from the driver station just worry
-        // about the fastest way to get there even if it overflows
-        return run(
-                () -> {
-                    double target =
-                            Robot.getSwerve().getRobotPose().getRotation().getDegrees() + 180;
-                    Telemetry.print("Target: " + target);
-                });
+    public double netTurretDegrees() {
+        // uses the robot pose to always point the twist away from the driver station
+        double target = -Robot.getSwerve().getRobotPose().getRotation().getDegrees() + 180;
+        SmartDashboard.putNumber("netTurretDegrees", target);
+        return target;
+    }
+
+    public boolean netTurretClockwise() {
+        boolean clockwise = true;
+        return clockwise;
     }
 
     public double adjustTargetToReverse(DoubleSupplier degrees) {
