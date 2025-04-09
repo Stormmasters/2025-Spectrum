@@ -103,8 +103,8 @@ public class SwerveStates {
 
     public static Command reefAimDriveVisionXY() {
         return alignDrive(
-                        Robot.getVision()::getReefOffsetFromTagX,
-                        Robot.getVision()::getReefOffsetFromTagY,
+                        FieldHelpers::getReefOffsetFromTagX,
+                        FieldHelpers::getReefOffsetFromTagY,
                         Robot.getVision()::getReefTagAngle)
                 .withName("Swerve.reefAimDriveVisionXY");
     }

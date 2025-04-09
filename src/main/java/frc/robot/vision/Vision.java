@@ -7,8 +7,6 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -87,7 +85,8 @@ public class Vision implements NTSendable, Subsystem {
     int[] blueTags = {17, 18, 19, 20, 21, 22};
     int[] redTags = {6, 7, 8, 9, 10, 11};
 
-    private AprilTagFieldLayout tagLayout;
+    @Getter private static AprilTagFieldLayout tagLayout;
+
     private static final HomeOffsets homeOffsets = new HomeOffsets();
 
     private VisionConfig config;
@@ -855,35 +854,6 @@ public class Vision implements NTSendable, Subsystem {
         }
     }
 
-    /**
-     * Method gets
-     *
-     * @param tagID
-     * @param distanceAway
-     * @param centerOffset
-     * @return
-     */
-    public Pose2d getXYOffsetFromTag(int tagID, double distanceAway, double centerOffset) {
-        Pose2d tagPose;
-
-        if (tagLayout == null || tagID == -1) {
-            return Robot.getSwerve().getRobotPose(); // Pose to where we are if the tag is invalid
-        }
-        tagPose = tagLayout.getTagPose(tagID).get().toPose2d();
-
-        Rotation2d rotationOffsetParallel =
-                tagPose.getRotation()
-                        .plus(new Rotation2d(homeOffsets.getReefTagAngleOffset(tagID)));
-        Rotation2d rotationOffsetPerpendicular = tagPose.getRotation().plus(new Rotation2d(90));
-
-        Translation2d offsetPose =
-                tagPose.getTranslation()
-                        .minus(new Translation2d(centerOffset, rotationOffsetPerpendicular));
-
-        offsetPose = offsetPose.minus(new Translation2d(distanceAway, rotationOffsetParallel));
-        return new Pose2d(offsetPose, rotationOffsetParallel);
-    }
-
     public Pose2d getReefOffsetFromTag() {
         int closestTagID = getClosestTagID();
 
@@ -897,15 +867,8 @@ public class Vision implements NTSendable, Subsystem {
         double reefTagDistanceOffset = homeOffsets.getReefTagDistanceOffset(closestTagID);
         double reefTagCenterOffset = homeOffsets.getReefTagCenterOffset(closestTagID);
 
-        return getXYOffsetFromTag(closestTagID, reefTagDistanceOffset, reefTagCenterOffset);
-    }
-
-    public double getReefOffsetFromTagX() {
-        return getReefOffsetFromTag().getX();
-    }
-
-    public double getReefOffsetFromTagY() {
-        return getReefOffsetFromTag().getY();
+        return FieldHelpers.getXYOffsetFromTag(
+                closestTagID, reefTagDistanceOffset, reefTagCenterOffset);
     }
 
     // ------------------------------------------------------------------------------
