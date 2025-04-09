@@ -5,7 +5,6 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
 import edu.wpi.first.networktables.NTSendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,8 +18,6 @@ import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.SpectrumCANcoderConfig;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
-
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import lombok.*;
 
@@ -378,8 +375,9 @@ public class Twist extends Mechanism {
         // uses the robot pose to always point the twist away from the driver station
         return -Robot.getSwerve().getRobotPose().getRotation().getDegrees() + 180;
     }
+
     public Command netTurret() {
-        return move(() -> netTurretDegrees(), netTurretClockwise());
+        return move(() -> adjustTargetToReverse(() -> netTurretDegrees()), netTurretClockwise());
     }
 
     public Boolean netTurretClockwise() {
@@ -389,17 +387,19 @@ public class Twist extends Mechanism {
         // Calculate the closest clockwise position
         double clockwiseOutput, counterclockwiseOutput;
         if (currentDegrees > target) {
-           clockwiseOutput = currentDegrees - (currentDegrees - target);
+            clockwiseOutput = currentDegrees - (currentDegrees - target);
         } else {
             clockwiseOutput = currentDegrees - (360 + currentDegrees - target);
         }
         if (currentDegrees < target) {
             counterclockwiseOutput = currentDegrees + (target - currentDegrees);
-        } else{
+        } else {
             counterclockwiseOutput = currentDegrees + (360 + target - currentDegrees);
         }
         // Compare the two outputs and set clockwise accordingly to get to the target faster
-        clockwise = Math.abs(currentDegrees - clockwiseOutput) < Math.abs(currentDegrees - counterclockwiseOutput);
+        clockwise =
+                Math.abs(currentDegrees - clockwiseOutput)
+                        < Math.abs(currentDegrees - counterclockwiseOutput);
         return clockwise;
     }
 

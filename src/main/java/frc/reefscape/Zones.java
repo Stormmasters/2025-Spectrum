@@ -15,6 +15,8 @@ public class Zones {
     private static final WorldsChampsOffsets worldsChampsOffsets = new WorldsChampsOffsets();
 
     public static final Trigger blueFieldSide = swerve.inXzone(0, Field.getHalfLength());
+    public static final Trigger opponentFieldSide =
+            new Trigger(() -> blueFieldSide.getAsBoolean() != Field.isBlue());
 
     public static final Trigger topLeftZone =
             swerve.inXzoneAlliance(Field.Reef.center.getX(), Field.getHalfLength())
