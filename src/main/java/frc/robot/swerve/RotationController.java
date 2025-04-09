@@ -76,8 +76,8 @@ public class RotationController {
     public boolean atGoal(double current) {
         double goal = controller.getGoal().position;
         boolean atGoal = Math.abs(current - goal) < config.getRotationTolerance();
-        System.out.println(
-                "Rotation At Goal: " + atGoal + " Goal: " + goal + " Current: " + current);
+        // System.out.println(
+        //         "Rotation At Goal: " + atGoal + " Goal: " + goal + " Current: " + current);
         return atGoal;
     }
 

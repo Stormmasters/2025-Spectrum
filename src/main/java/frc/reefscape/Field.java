@@ -128,6 +128,9 @@ public class Field {
     }
 
     public static class Reef {
+        @Getter static final double radius = Units.inchesToMeters(37.02);
+        @Getter static final double apothem = Units.inchesToMeters(32.06);
+
         @Getter
         private static final Translation2d center =
                 new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.501));

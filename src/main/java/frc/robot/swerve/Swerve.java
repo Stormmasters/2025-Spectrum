@@ -329,10 +329,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
 
         // Step 4: Find the nearest angle from the table
         double closestAngle = angleTable[0];
-        double minDifference = getAngleDifference(angleDegrees, closestAngle);
+        double minDifference = getRotationDifference(angleDegrees, closestAngle);
 
         for (double angle : angleTable) {
-            double difference = getAngleDifference(angleDegrees, angle);
+            double difference = getRotationDifference(angleDegrees, angle);
             if (difference < minDifference) {
                 minDifference = difference;
                 closestAngle = angle;
@@ -359,14 +359,14 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
         } else {
             flippedHeading = heading + 180;
         }
-        double frontDifference = getAngleDifference(heading, angleDegrees);
-        double flippedDifference = getAngleDifference(flippedHeading, angleDegrees);
+        double frontDifference = getRotationDifference(heading, angleDegrees);
+        double flippedDifference = getRotationDifference(flippedHeading, angleDegrees);
 
         return frontDifference < flippedDifference;
     }
 
     // Helper method to calculate the shortest angle difference
-    private double getAngleDifference(double angle1, double angle2) {
+    public double getRotationDifference(double angle1, double angle2) {
         double diff = Math.abs(angle1 - angle2) % 360;
         return diff > 180 ? 360 - diff : diff;
     }

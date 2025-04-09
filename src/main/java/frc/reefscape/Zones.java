@@ -1,17 +1,21 @@
 package frc.reefscape;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 import frc.robot.swerve.Swerve;
+import frc.robot.swerve.SwerveConfig;
 
 public class Zones {
 
     private static final Swerve swerve = Robot.getSwerve();
     private static final HomeOffsets offsets = new HomeOffsets();
+    private static final double reefRangeRadius =
+            Field.Reef.apothem + Field.Reef.faceToZoneLine + Units.inchesToMeters(30);
 
     public static final Trigger blueFieldSide = swerve.inXzone(0, Field.getHalfLength());
 
@@ -39,6 +43,9 @@ public class Zones {
                                     - Units.inchesToMeters(24)
                                     - swerve.getConfig().getRobotLength() / 2)
                     .and(topLeftZone);
+
+    public static final Trigger isCloseToReef =
+            new Trigger(() -> Zones.withinReefRange(reefRangeRadius));
 
     // -------------------------------------------------------------
     // Reef Offsets Helper
@@ -143,5 +150,59 @@ public class Zones {
 
         SmartDashboard.putNumber("TargetReefAngle", reefAngle);
         return reefAngle;
+    }
+
+    public static boolean atReef() {
+        SwerveConfig config = Robot.getSwerve().getConfig();
+        Pose2d robotPose = Robot.getSwerve().getRobotPose();
+        double heading = robotPose.getRotation().getDegrees();
+        double flippedHeading;
+        if (heading > 0) {
+            flippedHeading = heading - 180;
+        } else {
+            flippedHeading = heading + 180;
+        }
+
+        double goalX = FieldHelpers.getReefOffsetFromTagX();
+        double goalY = FieldHelpers.getReefOffsetFromTagY();
+        double goalAngle = Math.toDegrees(Robot.getVision().getReefTagAngle());
+
+        // System.out.println("Pose Angle: " + heading);
+        // System.out.println("Target Angle: " + goalAngle);
+        // System.out.println(
+        //         "Rotation diff: " + Robot.getSwerve().getRotationDifference(heading, goalAngle));
+        if (Robot.getSwerve().getRotationDifference(heading, goalAngle)
+                        > Math.toDegrees(config.getRotationTolerance())
+                && Robot.getSwerve().getRotationDifference(flippedHeading, goalAngle)
+                        > Math.toDegrees(config.getRotationTolerance())) {
+            return false;
+        }
+        // System.out.println("Rotation good");
+
+        // System.out.println("X diff: " + Math.abs(robotPose.getX() - goalX));
+        if (Math.abs(robotPose.getX() - goalX) > config.getTranslationTolerance()) {
+            return false;
+        }
+        // System.out.println("X good");
+
+        // System.out.println("Y diff: " + Math.abs(robotPose.getY() - goalY));
+        if (Math.abs(robotPose.getY() - goalY) > config.getTranslationTolerance()) {
+            return false;
+        }
+        // System.out.println("Y good");
+
+        return true;
+    }
+
+    public static boolean withinReefRange(double range) {
+        Translation2d reefCenter = Field.Reef.getCenter();
+        Pose2d robotPose = Robot.getSwerve().getRobotPose();
+
+        double distance = reefCenter.getDistance(robotPose.getTranslation());
+
+        if (distance < range) {
+            return true;
+        }
+        return false;
     }
 }

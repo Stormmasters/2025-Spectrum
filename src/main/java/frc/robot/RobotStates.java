@@ -46,6 +46,7 @@ public class RobotStates {
     public static final SpectrumState homeAll = new SpectrumState("homeAll");
     public static final SpectrumState autonStationIntake = new SpectrumState("autonStationIntake");
     public static final SpectrumState twistAtReef = new SpectrumState("twistCoralReef");
+    public static final SpectrumState aligned = new SpectrumState("aligned");
 
     /**
      * Define Robot States here and how they can be triggered States should be triggers that command
@@ -273,6 +274,13 @@ public class RobotStates {
         netAlgae.and(SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
 
         climbPrep.onTrue(reverse.setFalse());
+
+        // *********************************
+        // Align States
+        SwerveStates.isAlignedToReef.onTrue(aligned.setTrue());
+        SwerveStates.isAlignedToReef.onFalse(aligned.setFalse());
+        Zones.isCloseToReef.onTrue(actionPrepState.setTrue());
+        Zones.isCloseToReef.onFalse(actionPrepState.setFalse());
     }
 
     private RobotStates() {
@@ -301,7 +309,8 @@ public class RobotStates {
                         actionState.setFalse(),
                         homeAll.setFalse(),
                         coastMode.setFalse(),
-                        twistAtReef.setFalse())
+                        twistAtReef.setFalse(),
+                        aligned.setFalse())
                 .withName("Clear States");
     }
 }

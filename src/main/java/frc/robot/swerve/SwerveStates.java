@@ -47,6 +47,8 @@ public class SwerveStates {
                             swerve.frontClosestToAngle(Field.Barge.netRobotPovDegrees)
                                     == Zones.blueFieldSide.getAsBoolean());
 
+    public static final Trigger isAlignedToReef = new Trigger(() -> Zones.atReef());
+
     protected static void setupDefaultCommand() {
         swerve.setDefaultCommand(pilotSteerCommand);
     }
