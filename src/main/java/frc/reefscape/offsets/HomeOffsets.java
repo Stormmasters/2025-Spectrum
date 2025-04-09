@@ -1,4 +1,4 @@
-package frc.reefscape;
+package frc.reefscape.offsets;
 
 import edu.wpi.first.math.util.Units;
 import frc.robot.Robot;
@@ -9,34 +9,26 @@ import lombok.Getter;
 public class HomeOffsets {
 
     // blue tag distance offsets, in order of left branch to right branch
-    @Getter
-    private static final double[] Tag17Offset = {meterConverter(11.0), meterConverter(11.0)};
+    @Getter private static final double[] Tag17Offset = {meterOffset(11.0), meterOffset(11.0)};
 
-    @Getter
-    private static final double[] Tag18Offset = {meterConverter(12.5), meterConverter(12.5)};
+    @Getter private static final double[] Tag18Offset = {meterOffset(12.5), meterOffset(12.5)};
 
-    @Getter
-    private static final double[] Tag19Offset = {meterConverter(13.0), meterConverter(13.0)};
+    @Getter private static final double[] Tag19Offset = {meterOffset(13.0), meterOffset(13.0)};
 
-    @Getter
-    private static final double[] Tag20Offset = {meterConverter(12.5), meterConverter(12.5)};
+    @Getter private static final double[] Tag20Offset = {meterOffset(12.5), meterOffset(12.5)};
 
-    @Getter
-    private static final double[] Tag21Offset = {meterConverter(10.5), meterConverter(10.5)};
+    @Getter private static final double[] Tag21Offset = {meterOffset(10.5), meterOffset(10.5)};
 
-    @Getter
-    private static final double[] Tag22Offset = {meterConverter(11.0), meterConverter(11.0)};
+    @Getter private static final double[] Tag22Offset = {meterOffset(11.0), meterOffset(11.0)};
     // red tag distance offsets, in order of left branch to right branch
-    @Getter private static final double[] Tag6Offset = {meterConverter(11.0), meterConverter(11.0)};
-    @Getter private static final double[] Tag7Offset = {meterConverter(12.5), meterConverter(12.5)};
-    @Getter private static final double[] Tag8Offset = {meterConverter(13.0), meterConverter(13.0)};
-    @Getter private static final double[] Tag9Offset = {meterConverter(12.5), meterConverter(12.5)};
+    @Getter private static final double[] Tag6Offset = {meterOffset(11.0), meterOffset(11.0)};
+    @Getter private static final double[] Tag7Offset = {meterOffset(12.5), meterOffset(12.5)};
+    @Getter private static final double[] Tag8Offset = {meterOffset(13.0), meterOffset(13.0)};
+    @Getter private static final double[] Tag9Offset = {meterOffset(12.5), meterOffset(12.5)};
 
-    @Getter
-    private static final double[] Tag10Offset = {meterConverter(10.5), meterConverter(10.5)};
+    @Getter private static final double[] Tag10Offset = {meterOffset(10.5), meterOffset(10.5)};
 
-    @Getter
-    private static final double[] Tag11Offset = {meterConverter(11.0), meterConverter(11.0)};
+    @Getter private static final double[] Tag11Offset = {meterOffset(11.0), meterOffset(11.0)};
 
     // blue tag center offsets, in order of left branch to right branch
     @Getter
@@ -118,16 +110,16 @@ public class HomeOffsets {
     @Getter private static final double Tag11TAGoal = 7.9; // 7.8;
 
     // red tag angles offsets
-    // original values: 60, 0, 300, 240, 180, 120
-    @Getter private static final double Tag17Angle = radianConverter(180); // 60);
+    // original values: all 180
+    @Getter private static final double Tag17Angle = radianConverter(180);
     @Getter private static final double Tag18Angle = radianConverter(180);
-    @Getter private static final double Tag19Angle = radianConverter(180); // -60
+    @Getter private static final double Tag19Angle = radianConverter(180);
     @Getter private static final double Tag20Angle = radianConverter(180);
     @Getter private static final double Tag21Angle = radianConverter(180);
     @Getter private static final double Tag22Angle = radianConverter(180);
 
     // blue tag angles offsets
-    // original values: 120, 180, 240, 300, 0, 60
+    // original values: all 180
     @Getter private static final double Tag6Angle = radianConverter(180);
     @Getter private static final double Tag7Angle = radianConverter(180);
     @Getter private static final double Tag8Angle = radianConverter(180);
@@ -141,11 +133,21 @@ public class HomeOffsets {
      * @param offsetInches
      * @return
      */
-    private static double meterConverter(double offsetInches) {
+    private static double meterOffset(double offsetInches) {
         double meterConversion = Units.inchesToMeters(offsetInches);
-        double halfRobotLength = Robot.getSwerve().getConfig().getRobotLength() / 2;
 
-        return meterConversion + halfRobotLength;
+        return addRobotLength(meterConversion);
+    }
+
+    /**
+     * Adds robot length to the given offset meters
+     *
+     * @param offsetMeters
+     * @return
+     */
+    private static double addRobotLength(double offsetMeters) {
+        double halfRobotLength = Robot.getSwerve().getConfig().getRobotLength() / 2;
+        return halfRobotLength + offsetMeters;
     }
 
     /** @param degrees */
@@ -236,6 +238,10 @@ public class HomeOffsets {
         {10, Tag10TAGoal},
         {11, Tag11TAGoal}
     };
+
+    // ---------------------------------------------------------------
+    // Helper Methods
+    // ---------------------------------------------------------------
 
     public static int getReefTagIDToOffsetIndex(int tagID) {
         if (tagID < 6 || tagID == 16 || tagID > 22) {

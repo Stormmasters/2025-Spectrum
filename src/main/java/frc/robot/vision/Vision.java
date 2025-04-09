@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.reefscape.Field;
-import frc.reefscape.HomeOffsets;
+import frc.reefscape.FieldHelpers;
+import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.spectrumLib.Telemetry;
@@ -632,7 +632,7 @@ public class Vision implements NTSendable, Subsystem {
 
     private boolean rejectionCheck(Pose2d pose, double targetSize) {
         /* rejections */
-        if (Field.poseOutOfField(pose)) {
+        if (FieldHelpers.poseOutOfField(pose)) {
             return true;
         }
 
@@ -692,7 +692,7 @@ public class Vision implements NTSendable, Subsystem {
             Pose2d pose;
 
             // Check if the vision pose is bad and don't trust it
-            if (Field.poseOutOfField(botpose3D)) { // pose out of field
+            if (FieldHelpers.poseOutOfField(botpose3D)) { // pose out of field
                 Telemetry.log("Pose out of field", reject);
                 reject = true;
             } else if (Math.abs(botpose3D.getZ()) > 0.25) { // when in air
@@ -787,7 +787,7 @@ public class Vision implements NTSendable, Subsystem {
 
         if (closestTag <= 0) {
             Pose2d currentPose = Robot.getSwerve().getRobotPose();
-            int tagID = Field.Reef.getReefZoneTagID(currentPose);
+            int tagID = FieldHelpers.getReefZoneTagID(currentPose);
             closestTag = tagID;
             rearTag = false;
         }
@@ -855,6 +855,14 @@ public class Vision implements NTSendable, Subsystem {
         }
     }
 
+    /**
+     * Method gets
+     *
+     * @param tagID
+     * @param distanceAway
+     * @param centerOffset
+     * @return
+     */
     public Pose2d getXYOffsetFromTag(int tagID, double distanceAway, double centerOffset) {
         Pose2d tagPose;
 
@@ -880,7 +888,7 @@ public class Vision implements NTSendable, Subsystem {
         int closestTagID = getClosestTagID();
 
         if (closestTagID < 6 || closestTagID == 16 || closestTagID > 22) {
-            closestTagID = Field.Reef.getReefZoneTagID(Robot.getSwerve().getRobotPose());
+            closestTagID = FieldHelpers.getReefZoneTagID(Robot.getSwerve().getRobotPose());
             if (closestTagID < 0) {
                 return Robot.getSwerve().getRobotPose();
             }

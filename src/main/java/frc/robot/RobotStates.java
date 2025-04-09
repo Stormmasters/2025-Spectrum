@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
+import frc.reefscape.FieldHelpers;
 import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
 import frc.robot.elevator.ElevatorStates;
@@ -90,7 +91,7 @@ public class RobotStates {
 
     // pose Triggers
     public static final Trigger poseReversal =
-            new Trigger(() -> Field.Reef.reverseRotationBlue() == (Field.isBlue()));
+            new Trigger(() -> FieldHelpers.reverseRotationBlue() == (Field.isBlue()));
 
     // auton Triggers
     public static final Trigger shoulderL4 = autonShoulderL4;
