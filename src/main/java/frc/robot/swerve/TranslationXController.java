@@ -24,8 +24,7 @@ public class TranslationXController {
                         config.getKDTranslationController(),
                         config.getTranslationConstraints());
 
-        controller.setTolerance(config.getTranslationTolerance());
-        ;
+        controller.setTolerance(0.0);
         SmartDashboard.putData("X controller", controller);
     }
 

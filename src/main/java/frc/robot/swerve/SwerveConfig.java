@@ -49,16 +49,17 @@ public class SwerveConfig {
             MetersPerSecond.of((95 / driveGearRatio) * 2 * Math.PI * wheelRadius.in(Meters));
 
     @Getter private double kSdrive = 0.13;
+    @Getter private double kSsteer = 0.2;
 
     // -----------------------------------------------------------------------
     // PID Controller Constants
     // -----------------------------------------------------------------------
     @Getter private double maxAngularVelocity = 2 * Math.PI; // rad/s
     @Getter private double maxAngularAcceleration = Math.pow(maxAngularVelocity, 2); // rad/s^2
-    @Getter private double kPRotationController = 8.0;
+    @Getter private double kPRotationController = 6.5; // 8.0;
     @Getter private double kIRotationController = 0.0;
     @Getter private double kDRotationController = 0.2;
-    @Getter private double rotationTolerance = (Math.PI / 360); // rads
+    @Getter private double rotationTolerance = Units.degreesToRadians(0.3); // rads
 
     @Getter private double kPHoldController = 12.0;
     @Getter private double kIHoldController = 0.0;
@@ -67,7 +68,10 @@ public class SwerveConfig {
     @Getter private double kPTranslationController = 2;
     @Getter private double kITranslationController = 0.0;
     @Getter private double kDTranslationController = 0.0;
-    @Getter private double translationTolerance = Units.inchesToMeters(0.25);
+
+    @Getter
+    private double translationTolerance =
+            Units.inchesToMeters(0.55); // 0.5 // 1.0 //.39 // .15 //.25
 
     @Getter
     private Constraints translationConstraints =
