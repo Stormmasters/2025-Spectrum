@@ -388,6 +388,17 @@ public class Twist extends Mechanism {
                                 RobotStates.reverse.getAsBoolean()));
     }
 
+    public Command netTurret() {
+        // uses the robot pose to always point the twist away from the driver station just worry
+        // about the fastest way to get there even if it overflows
+        return run(
+                () -> {
+                    double target =
+                            Robot.getSwerve().getRobotPose().getRotation().getDegrees() + 180;
+                    Telemetry.print("Target: " + target);
+                });
+    }
+
     public double adjustTargetToReverse(DoubleSupplier degrees) {
         if (RobotStates.reverse.getAsBoolean()) {
             if (degrees.getAsDouble() + 180 > 270) {
