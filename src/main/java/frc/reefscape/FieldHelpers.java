@@ -95,6 +95,22 @@ public class FieldHelpers {
     }
 
     // -----------------------------------------------------------------------
+    // Cage Helper Methods
+    // -----------------------------------------------------------------------
+
+    public static int indexOfSmallest(double[] array) {
+        int indexOfSmallest = 0;
+        double smallestIndex = array[indexOfSmallest];
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] <= smallestIndex) {
+                smallestIndex = array[i];
+                indexOfSmallest = i;
+            }
+        }
+        return indexOfSmallest;
+    }
+
+    // -----------------------------------------------------------------------
     // Reef Helper Methods
     // -----------------------------------------------------------------------
 

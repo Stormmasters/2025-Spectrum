@@ -9,17 +9,19 @@ import lombok.Getter;
 public class HomeOffsets {
 
     // blue tag distance offsets, in order of left branch to right branch
-    @Getter private static final double[] Tag17Offset = {meterOffset(11.0), meterOffset(11.0)};
+    @Getter private static final double[] Tag17Offset = {meterOffset(11.5), meterOffset(11.0)};
+    // 11
+    @Getter private static final double[] Tag18Offset = {meterOffset(12.0), meterOffset(12.5)};
+    // 12.5
+    @Getter private static final double[] Tag19Offset = {meterOffset(12.0), meterOffset(13.0)};
+    // 13.0
+    @Getter private static final double[] Tag20Offset = {meterOffset(12.0), meterOffset(12.5)};
+    // 12.5
+    @Getter private static final double[] Tag21Offset = {meterOffset(11.5), meterOffset(10.5)};
+    // 10.5
+    @Getter private static final double[] Tag22Offset = {meterOffset(12.0), meterOffset(11.0)};
+    // 11.0
 
-    @Getter private static final double[] Tag18Offset = {meterOffset(12.5), meterOffset(12.5)};
-
-    @Getter private static final double[] Tag19Offset = {meterOffset(13.0), meterOffset(13.0)};
-
-    @Getter private static final double[] Tag20Offset = {meterOffset(12.5), meterOffset(12.5)};
-
-    @Getter private static final double[] Tag21Offset = {meterOffset(10.5), meterOffset(10.5)};
-
-    @Getter private static final double[] Tag22Offset = {meterOffset(11.0), meterOffset(11.0)};
     // red tag distance offsets, in order of left branch to right branch
     @Getter private static final double[] Tag6Offset = {meterOffset(11.0), meterOffset(11.0)};
     @Getter private static final double[] Tag7Offset = {meterOffset(12.5), meterOffset(12.5)};
@@ -111,9 +113,9 @@ public class HomeOffsets {
 
     // red tag angles offsets
     // original values: all 180
-    @Getter private static final double Tag17Angle = radianConverter(180);
-    @Getter private static final double Tag18Angle = radianConverter(180);
-    @Getter private static final double Tag19Angle = radianConverter(180);
+    @Getter private static final double Tag17Angle = radianConverter(175);
+    @Getter private static final double Tag18Angle = radianConverter(177);
+    @Getter private static final double Tag19Angle = radianConverter(177);
     @Getter private static final double Tag20Angle = radianConverter(180);
     @Getter private static final double Tag21Angle = radianConverter(180);
     @Getter private static final double Tag22Angle = radianConverter(180);
@@ -123,9 +125,9 @@ public class HomeOffsets {
     @Getter private static final double Tag6Angle = radianConverter(180);
     @Getter private static final double Tag7Angle = radianConverter(180);
     @Getter private static final double Tag8Angle = radianConverter(180);
-    @Getter private static final double Tag9Angle = radianConverter(180);
+    @Getter private static final double Tag9Angle = radianConverter(177);
     @Getter private static final double Tag10Angle = radianConverter(180);
-    @Getter private static final double Tag11Angle = radianConverter(180);
+    @Getter private static final double Tag11Angle = radianConverter(176);
 
     /**
      * Converts inches to meters and adds half the robot length to the offset

@@ -80,7 +80,7 @@ public class Field {
                                 FieldHelpers.flipYifRed(robotPose.getY())
                                         - FieldHelpers.flipYifRed(closeCage.getY()));
             }
-            index = indexOfSmallest(cageDiffs);
+            index = FieldHelpers.indexOfSmallest(cageDiffs);
 
             // R1 or B1
             if (index == 0) {
@@ -96,18 +96,6 @@ public class Field {
                 // Robot Y if no target zone found
                 return Robot.getSwerve().getRobotPose().getY();
             }
-        }
-
-        public static int indexOfSmallest(double[] array) {
-            int indexOfSmallest = 0;
-            double smallestIndex = array[indexOfSmallest];
-            for (int i = 0; i < array.length; i++) {
-                if (array[i] <= smallestIndex) {
-                    smallestIndex = array[i];
-                    indexOfSmallest = i;
-                }
-            }
-            return indexOfSmallest;
         }
     }
 
