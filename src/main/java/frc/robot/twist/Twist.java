@@ -14,12 +14,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.RobotStates;
-import frc.robot.twist.Twist.TwistConfig;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.SpectrumCANcoderConfig;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.mechanism.Mechanism;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import lombok.*;
 
@@ -372,16 +373,33 @@ public class Twist extends Mechanism {
                                 () -> adjustTargetToReverse(degrees),
                                 RobotStates.reverse.getAsBoolean()));
     }
-
+    // @deprecated
     public double netTurretDegrees() {
         // uses the robot pose to always point the twist away from the driver station
-        double target = -Robot.getSwerve().getRobotPose().getRotation().getDegrees() + 180;
-        SmartDashboard.putNumber("netTurretDegrees", target);
-        return target;
+        return -Robot.getSwerve().getRobotPose().getRotation().getDegrees() + 180;
+    }
+    public Command netTurret() {
+        return move(() -> netTurretDegrees(), netTurretClockwise());
     }
 
-    public boolean netTurretClockwise() {
-        boolean clockwise = true;
+    public Boolean netTurretClockwise() {
+        boolean clockwise = false;
+        double currentDegrees = getPositionDegrees();
+        double target = netTurretDegrees();
+        // Calculate the closest clockwise position
+        double clockwiseOutput, counterclockwiseOutput;
+        if (currentDegrees > target) {
+           clockwiseOutput = currentDegrees - (currentDegrees - target);
+        } else {
+            clockwiseOutput = currentDegrees - (360 + currentDegrees - target);
+        }
+        if (currentDegrees < target) {
+            counterclockwiseOutput = currentDegrees + (target - currentDegrees);
+        } else{
+            counterclockwiseOutput = currentDegrees + (360 + target - currentDegrees);
+        }
+        // Compare the two outputs and set clockwise accordingly to get to the target faster
+        clockwise = Math.abs(currentDegrees - clockwiseOutput) < Math.abs(currentDegrees - counterclockwiseOutput);
         return clockwise;
     }
 
