@@ -86,8 +86,6 @@ public class TwistStates {
         branch.and((rightScore.not()), actionPrepState, twistAtReef.not(), Util.autoMode)
                 .whileTrue(moveAwayFromBranch(config::getLeftCoral, "Twist.leftCoral"));
 
-        twistL4R.whileTrue(move(config::getRightCoral, "Twist.RightCoral"));
-        twistL4L.whileTrue(move(config::getLeftCoral, "Twist.leftCoral"));
         climbPrep.whileTrue(move(config::getClimbPrep, "Twist.climbPrep"));
     }
 

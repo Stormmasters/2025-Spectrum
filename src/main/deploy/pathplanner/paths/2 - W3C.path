@@ -53,6 +53,12 @@
       "command": null
     },
     {
+      "name": "home",
+      "waypointRelativePos": 0.09906029757243397,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "reverse",
       "waypointRelativePos": 0.29639780736101107,
       "endWaypointRelativePos": null,

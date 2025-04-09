@@ -136,7 +136,7 @@ public class ElevatorStates {
     }
 
     private static Command slowHome() {
-        return slowMove(() -> config.getHome(), "Elevator.slowHome");
+        return slowMove(config::getHome, "Elevator.slowHome");
     }
 
     private static Command coastMode() {

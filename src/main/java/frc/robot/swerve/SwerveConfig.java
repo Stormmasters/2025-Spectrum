@@ -178,8 +178,8 @@ public class SwerveConfig {
                     TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
             constantCreator;
 
-    private final double wheelBaseInches = 21.5;
-    private final double trackWidthInches = 18.5;
+    private final double wheelBaseInches = 23.75;
+    private final double trackWidthInches = 23.75;
 
     // Front Left
     @Getter private int frontLeftDriveMotorId = 1;

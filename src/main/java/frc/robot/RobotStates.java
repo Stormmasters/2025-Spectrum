@@ -71,7 +71,7 @@ public class RobotStates {
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
     public static final Trigger shrink = pilot.fn.or(shrinkState);
-    public static final Trigger processorAlgae = (l1.and(algae)).or(autonProcessor);
+    public static final Trigger processorAlgae = l1.and(algae);
     public static final Trigger L2Algae = (l2.and(algae)).or(autonLowAlgae);
     public static final Trigger L3Algae = (l3.and(algae)).or(autonHighAlgae);
     public static final Trigger netAlgae = (l4.and(algae)).or(autonNet);
@@ -93,9 +93,6 @@ public class RobotStates {
             new Trigger(() -> Field.Reef.reverseRotationBlue() == (Field.isBlue()));
 
     // auton Triggers
-    public static final Trigger shoulderL4 = autonShoulderL4;
-    public static final Trigger twistL4R = autonTwistL4R;
-    public static final Trigger twistL4L = autonTwistL4L;
     public static final Trigger poseUpdate = autonPoseUpdate;
 
     // TODO: Handoffs are disabled
@@ -193,7 +190,7 @@ public class RobotStates {
 
         // Set algae if we are staging algae
         operator.algaeStage
-                .or(autonHighAlgae, autonLowAlgae, autonProcessor, autonNet)
+                .or(autonHighAlgae, autonLowAlgae, autonNet)
                 .onTrue(algae.setTrue(), coral.setFalse());
 
         // Set Levels
@@ -225,7 +222,6 @@ public class RobotStates {
         // Auton States
         autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
         autonSourceIntakeOff.onTrue(autonStationIntake.setFalse());
-        autonHomeOff.onTrue(homeAll.setFalse());
         autonLeft.onTrue(rightScore.setFalse());
         autonRight.onTrue(rightScore.setTrue());
         autonHome.onTrue(homeAll.toggleToTrue());

@@ -31,26 +31,21 @@ public class Auton {
     public static final EventTrigger autonSourceIntakeOff = new EventTrigger("sourceIntakeOff");
     public static final EventTrigger autonLowAlgae = new EventTrigger("lowAlgae");
     public static final EventTrigger autonHighAlgae = new EventTrigger("highAlgae");
-    public static final EventTrigger autonPreScore = new EventTrigger("prescore");
-    public static final EventTrigger autonScore = new EventTrigger("score");
-    public static final EventTrigger autonLeft = new EventTrigger("left");
-    public static final EventTrigger autonRight = new EventTrigger("right");
-    public static final EventTrigger autonL1 = new EventTrigger("L1");
     public static final EventTrigger autonNet = new EventTrigger("net");
-    public static final EventTrigger autonProcessor = new EventTrigger("processor");
     public static final EventTrigger autonClearStates = new EventTrigger("clearStates");
-    public static final EventTrigger autonCoral = new EventTrigger("coral");
     public static final EventTrigger autonHome = new EventTrigger("home");
     public static final EventTrigger autonActionOn = new EventTrigger("actionOn");
     public static final EventTrigger autonActionOff = new EventTrigger("actionOff");
-    public static final EventTrigger autonCoralStage = new EventTrigger("coralStage");
     public static final EventTrigger autonShoulderL4 = new EventTrigger("shoulderL4");
     public static final EventTrigger autonTwistL4R = new EventTrigger("twistL4R");
     public static final EventTrigger autonTwistL4L = new EventTrigger("twistL4L");
-    public static final EventTrigger autonPoseUpdate = new EventTrigger("poseUpdate");
+    public static final EventTrigger autonLeft = new EventTrigger("left");
+    public static final EventTrigger autonRight = new EventTrigger("right");
+    public static final EventTrigger autonCoral = new EventTrigger("coral");
+    public static final EventTrigger autonL1 = new EventTrigger("L1");
     public static final EventTrigger autonL4 = new EventTrigger("L4");
-    public static final EventTrigger autonHomeOff = new EventTrigger("homeOff");
     public static final EventTrigger autonReverse = new EventTrigger("reverse");
+    public static final EventTrigger autonPoseUpdate = new EventTrigger("poseUpdate");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;
@@ -102,9 +97,9 @@ public class Auton {
     public Command houston2coral(boolean mirrored) {
         return Commands.sequence(
                         SpectrumAuton("H2C-Start", mirrored, 2),
-                        oldAimL4score(1.5),
+                        fullSequenceAimL4score(1.5),
                         SpectrumAuton("H2C-Leg1", mirrored),
-                        oldAimL4score(1.5),
+                        fullSequenceAimL4score(1.5),
                         SpectrumAuton("H2C-Leg2", mirrored))
                 .withName("Houston 2 Coral");
     }
@@ -112,38 +107,36 @@ public class Auton {
     public Command worlds3coral(boolean mirrored) {
         return Commands.sequence(
                         SpectrumAuton("W3C-Start", mirrored, 2),
-                        aimL4score(1),
+                        autonAimScore(1),
                         SpectrumAuton("W3C-Leg1", mirrored),
-                        aimL4score(1),
+                        autonAimScore(1),
                         SpectrumAuton("W3C-Leg2", mirrored),
-                        aimL4score(1))
+                        autonAimScore(1))
                 .withName("Worlds 3 Coral");
     }
 
-    public Command aimL4score(double alignTime) {
+    public Command autonAimScore(double alignTime) {
         return SwerveStates.reefAimDriveVision()
                 .withTimeout(alignTime)
-                .alongWith(l4score())
+                .alongWith(autonScore())
                 .withName("Auton.aimL4Score");
     }
 
-    public Command oldAimL4score(double alignTime) {
+    public Command fullSequenceAimL4score(double alignTime) {
         return SwerveStates.reefAimDriveVision()
                 .withTimeout(alignTime)
-                .alongWith(oldl4score())
+                .alongWith(fullSequenceL4score())
                 .withName("Auton.oldAimL4Score");
     }
 
-    public Command l4score() {
+    public Command autonScore() {
         return Commands.sequence(
-                        Commands.waitSeconds(0.15),
-                        RobotStates.actionPrepState.setFalse(),
-                        Commands.waitSeconds(0.5),
-                        RobotStates.homeAll.toggleToTrue())
+                        Commands.waitSeconds(0.6),
+                        RobotStates.actionPrepState.setFalse())
                 .withName("Auton.L4Score");
     }
 
-    public Command oldl4score() {
+    public Command fullSequenceL4score() {
         return Commands.waitSeconds(0.15)
                 .andThen(
                         RobotStates.coral
