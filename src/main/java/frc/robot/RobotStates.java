@@ -5,7 +5,6 @@ import static frc.robot.auton.Auton.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.reefscape.Field;
 import frc.reefscape.FieldHelpers;
 import frc.reefscape.Zones;
 import frc.robot.elbow.ElbowStates;
@@ -93,7 +92,7 @@ public class RobotStates {
 
     // pose Triggers
     public static final Trigger poseReversal =
-            new Trigger(() -> FieldHelpers.reverseRotationBlue() == (Field.isBlue()));
+            new Trigger(() -> FieldHelpers.reverseRotationBlue()); // == Field.isBlue());
 
     // auton Triggers
     public static final Trigger shoulderL4 = autonShoulderL4;
@@ -295,7 +294,9 @@ public class RobotStates {
                         actionState
                                 .setTrueForTime(RobotStates::getScoreTime)
                                 .andThen(autoScoreMode.setFalse()));
-        pilot.reefAlignScore_A.and(stagedCoral.or(L2Algae, L3Algae)).onTrue(autoScoreMode.toggleToTrue());
+        pilot.reefAlignScore_A
+                .and(stagedCoral.or(L2Algae, L3Algae))
+                .onTrue(autoScoreMode.toggleToTrue());
         pilot.reefAlignScore_A
                 .not()
                 .and(actionPrepState.not(), autoScoreMode)

@@ -234,6 +234,7 @@ public class FieldHelpers {
 
         // Check if the point is within the 4.5 meters radius
         if (distance > 4.5) {
+            // System.out.println("Distance Error");
             return -1; // Outside the zones
         }
 
@@ -319,7 +320,7 @@ public class FieldHelpers {
 
         int tagID = getReefZoneTagID(robotPose);
 
-        if (Field.isBlue()) {
+        if (Zones.blueFieldSide.getAsBoolean()) { // (Field.isBlue()) {
             tagID = blueReefTagIDToIndex(tagID);
         } else {
             tagID = blueReefTagIDToIndex(redToBlueTagID(tagID));
@@ -341,10 +342,17 @@ public class FieldHelpers {
         double robotTargetAngleToBack =
                 Math.abs(normalizeAngle(adjustedTargetAngle - (robotAngle + Math.PI)));
 
+        // System.out.println("Back: " + robotTargetAngleToBack);
+        // System.out.println("Front: " + robotTargetAngleToFront);
         // Return the optimal rotation
         if (robotTargetAngleToBack < robotTargetAngleToFront) {
+            // System.out.println("SIDeBLUE: " + Zones.blueFieldSide.getAsBoolean());
+            // System.out.println(true == Zones.blueFieldSide.getAsBoolean());
+            System.out.println(true);
             return true;
         }
+        // System.out.println(false == Zones.blueFieldSide.getAsBoolean());
+        System.out.println(false);
         return false;
     }
 
