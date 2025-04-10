@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
 import frc.robot.RobotSim;
 import frc.robot.RobotStates;
-import frc.robot.twist.Twist.TwistConfig;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumCANcoder;
 import frc.spectrumLib.SpectrumCANcoderConfig;
@@ -331,22 +330,6 @@ public class Twist extends Mechanism {
     //     return move(targetDegrees, clockwise.getAsBoolean());
     // }
 
-    public Command move(DoubleSupplier degrees) {
-        return run(
-                () -> {
-                    if (RobotStates.reverse.getAsBoolean()) {
-                        if (degrees.getAsDouble() + 180 >= 180
-                                && degrees.getAsDouble() - 179.9 >= 0) {
-                            setDegrees(() -> degrees.getAsDouble() - 179.9);
-                        } else {
-                            setDegrees(() -> degrees.getAsDouble() + 179.9);
-                        }
-                    } else {
-                        setDegrees(degrees);
-                    }
-                });
-    }
-
     public Command moveAwayFromElevatorCheckReverse(DoubleSupplier degrees) {
         return Commands.either(
                         moveAwayFromElevatorReversed(() -> adjustTargetToReverse(degrees))
@@ -386,6 +369,38 @@ public class Twist extends Mechanism {
                         checkClockwiseAwayFromBranch(
                                 () -> adjustTargetToReverse(degrees),
                                 RobotStates.reverse.getAsBoolean()));
+    }
+    // @deprecated
+    public double netTurretDegrees() {
+        // uses the robot pose to always point the twist away from the driver station
+        return -Robot.getSwerve().getRobotPose().getRotation().getDegrees() + 180;
+    }
+
+    public Command netTurret() {
+        return move(() -> adjustTargetToReverse(() -> netTurretDegrees()), netTurretClockwise());
+    }
+
+    public Boolean netTurretClockwise() {
+        boolean clockwise = false;
+        double currentDegrees = getPositionDegrees();
+        double target = netTurretDegrees();
+        // Calculate the closest clockwise position
+        double clockwiseOutput, counterclockwiseOutput;
+        if (currentDegrees > target) {
+            clockwiseOutput = currentDegrees - (currentDegrees - target);
+        } else {
+            clockwiseOutput = currentDegrees - (360 + currentDegrees - target);
+        }
+        if (currentDegrees < target) {
+            counterclockwiseOutput = currentDegrees + (target - currentDegrees);
+        } else {
+            counterclockwiseOutput = currentDegrees + (360 + target - currentDegrees);
+        }
+        // Compare the two outputs and set clockwise accordingly to get to the target faster
+        clockwise =
+                Math.abs(currentDegrees - clockwiseOutput)
+                        < Math.abs(currentDegrees - counterclockwiseOutput);
+        return clockwise;
     }
 
     public double adjustTargetToReverse(DoubleSupplier degrees) {

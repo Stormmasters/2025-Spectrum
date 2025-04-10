@@ -49,7 +49,7 @@ public class ElevatorStates {
                         "Elevator.stationIntake"));
         stationIntaking.onFalse(home());
 
-        groundAlgae.whileTrue(home());
+        groundAlgae.whileTrue(move(config::getClawGroundAlgaeIntake, "Ground Algae"));
         groundCoral.whileTrue(home());
 
         Robot.getPilot()

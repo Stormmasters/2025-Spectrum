@@ -30,7 +30,7 @@ public class Elevator extends Mechanism {
         @Getter @Setter private double fullExtend = maxRotations * .999;
         @Getter @Setter private double home = 0;
 
-        @Getter @Setter private double clawGroundAlgaeIntake = 0;
+        @Getter @Setter private double clawGroundAlgaeIntake = 4.5;
         @Getter @Setter private double clawGroundCoralIntake = 0;
 
         @Getter @Setter private double stationIntake = 0;
