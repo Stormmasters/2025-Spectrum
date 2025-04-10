@@ -28,6 +28,7 @@ public class PilotStates {
         // IntakeStates.hasCoral.onTrue(log(rumble(1, 0.5).withName("Pilot.hasCoralRumble")));
         // IntakeStates.hasAlgae.onTrue(log(rumble(1, 0.5).withName("Pilot.hasAlgaeRumble")));
         RobotStates.staged.onTrue(log(rumble(1, 0.5).withName("Pilot.stagedRumble")));
+        RobotStates.aligned.onTrue(log(rumble(1, 0.5).withName("Pilot.alignRumble")));
     }
 
     /** Command that can be used to rumble the pilot controller */

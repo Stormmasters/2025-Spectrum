@@ -195,7 +195,7 @@ public class Zones {
     }
 
     public static boolean withinReefRange(double range) {
-        Translation2d reefCenter = Field.Reef.getCenter();
+        Translation2d reefCenter = FieldHelpers.flipIfRedSide(Field.Reef.getCenter());
         Pose2d robotPose = Robot.getSwerve().getRobotPose();
 
         double distance = reefCenter.getDistance(robotPose.getTranslation());
