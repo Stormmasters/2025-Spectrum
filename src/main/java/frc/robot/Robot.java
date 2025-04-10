@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auton.Auton;
 import frc.robot.climb.Climb;
@@ -233,20 +234,14 @@ public class Robot extends SpectrumRobot {
         resetCommandsAndButtons();
 
         if (!commandInit) {
-            Command AutonStartCommand =
-                    (FollowPathCommand.warmupCommand()
-                                    .andThen(
-                                            PathfindingCommand.warmupCommand(),
-                                            auton.SpectrumAuton("Side Start L4", false)
-                                                    .withTimeout(.5),
-                                            new InstantCommand(
-                                                    () -> {
-                                                        SmartDashboard.putBoolean(
-                                                                "Initialized?", true);
-                                                        clearCommandsAndButtons();
-                                                    })))
+            Command autonStartCommand =
+                    Commands.sequence(
+                                    FollowPathCommand.warmupCommand(),
+                                    PathfindingCommand.warmupCommand(),
+                                    new InstantCommand(
+                                            () -> SmartDashboard.putBoolean("Initialized?", true)))
                             .ignoringDisable(true);
-            AutonStartCommand.schedule();
+            autonStartCommand.schedule();
             commandInit = true;
         }
 
@@ -301,7 +296,6 @@ public class Robot extends SpectrumRobot {
     public void autonomousInit() {
         try {
             Telemetry.print("@@@ Auton Init Starting @@@ ");
-            clearCommandsAndButtons();
 
             auton.init();
 

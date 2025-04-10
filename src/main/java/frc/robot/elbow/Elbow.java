@@ -84,7 +84,7 @@ public class Elbow extends Mechanism {
         @Getter private final double mmCruiseVelocity = 10;
         @Getter private final double mmAcceleration = 20;
         @Getter private final double mmJerk = 100;
-        @Getter private final double slowMmAcceleration = 7;
+        @Getter private final double slowMmAcceleration = 5;
         @Getter private final double slowMmJerk = 60;
 
         @Getter @Setter private double sensorToMechanismRatio = 61.71428571; // 102.857;

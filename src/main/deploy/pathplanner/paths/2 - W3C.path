@@ -65,6 +65,12 @@
       "command": null
     },
     {
+      "name": "clearStates",
+      "waypointRelativePos": 0.6487862176977188,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "sourceIntakeOn",
       "waypointRelativePos": 0.7036021926389873,
       "endWaypointRelativePos": null,
@@ -73,7 +79,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 5.0,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

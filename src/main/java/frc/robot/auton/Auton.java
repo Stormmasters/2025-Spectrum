@@ -63,6 +63,8 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
+        pathChooser.addOption("test", test(false));
+
         pathChooser.addOption("Left | 2 L4 Coral", houston2coral(false));
         pathChooser.addOption("Right | 2 L4 Coral", houston2coral(true));
 
@@ -92,6 +94,10 @@ public class Auton {
 
     public void exit() {
         printAutoDuration();
+    }
+
+    public Command test(boolean mirrored) {
+        return Commands.sequence(SpectrumAuton("W3C-Start", mirrored), autonAimScore(1));
     }
 
     public Command houston2coral(boolean mirrored) {
@@ -130,9 +136,7 @@ public class Auton {
     }
 
     public Command autonScore() {
-        return Commands.sequence(
-                        Commands.waitSeconds(0.6),
-                        RobotStates.actionPrepState.setFalse())
+        return Commands.sequence(Commands.waitSeconds(0.6), RobotStates.actionPrepState.setFalse())
                 .withName("Auton.L4Score");
     }
 
