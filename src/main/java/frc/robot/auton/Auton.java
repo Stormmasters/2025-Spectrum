@@ -97,7 +97,7 @@ public class Auton {
     }
 
     public Command test(boolean mirrored) {
-        return Commands.sequence(SpectrumAuton("W3C-Start", mirrored), autonAimScore(1));
+        return Commands.sequence(SpectrumAuton("W3C-Start", mirrored), autonAimScore(1), RobotStates.homeAll.toggleToTrue());
     }
 
     public Command houston2coral(boolean mirrored) {
