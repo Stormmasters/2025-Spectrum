@@ -8,7 +8,7 @@ public class TagProperties {
     @Getter private final double[] offset = new double[2];
     @Getter private final double[] centerOffset = new double[2];
     @Getter private final double taGoal;
-    @Getter private final double angle; 
+    @Getter private final double angle;
 
     /**
      * @param offsetInchesLeft
@@ -18,18 +18,21 @@ public class TagProperties {
      * @param taGoal
      * @param angle
      */
-    public TagProperties(double offsetInchesLeft, double offsetInchesRight, double centerOffsetInchesLeft, double centerOffsetInchesRight, double taGoal, double angleDegrees) {
-        
+    public TagProperties(
+            double offsetInchesLeft,
+            double offsetInchesRight,
+            double centerOffsetInchesLeft,
+            double centerOffsetInchesRight,
+            double taGoal,
+            double angleDegrees) {
+
         offset[0] = meterOffsetWithRobot(offsetInchesLeft);
         offset[1] = meterOffsetWithRobot(offsetInchesRight);
         centerOffset[0] = Units.inchesToMeters(centerOffsetInchesLeft);
         centerOffset[1] = Units.inchesToMeters(centerOffsetInchesRight);
         this.taGoal = taGoal;
         this.angle = radianConverter(angleDegrees);
-
     }
-
-    
 
     private static double meterOffsetWithRobot(double offsetInches) {
         double meterConversion = Units.inchesToMeters(offsetInches);
@@ -43,7 +46,6 @@ public class TagProperties {
         return meterOffset + halfRobotLength;
     }
 
-    
     private static double radianConverter(double offsetDegrees) {
         return Units.degreesToRadians(offsetDegrees);
     }

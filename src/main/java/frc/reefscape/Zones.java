@@ -10,6 +10,7 @@ import frc.robot.swerve.Swerve;
 
 public class Zones {
 
+    //TODO: Change HomeOffsets to WorldsChampsOffsets at Worlds
     private static final Swerve swerve = Robot.getSwerve();
     private static final HomeOffsets offsets = new HomeOffsets();
 

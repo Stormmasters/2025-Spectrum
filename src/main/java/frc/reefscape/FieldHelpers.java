@@ -1,17 +1,22 @@
 package frc.reefscape;
 
+import java.util.Arrays;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.reefscape.Field.Reef;
+import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 
 public class FieldHelpers {
 
     private static Zones zones = new Zones();
+    private static HomeOffsets offsets;
 
     // -----------------------------------------------------------------------
     // Field Helper Methods
@@ -394,4 +399,48 @@ public class FieldHelpers {
     public static double getTagAngleOffset(int tagID) {
         return zones.getTagAngleOffset(tagID);
     }
+
+    // ------------------------------------------------------------------------------
+    // Calculation Functions
+    // ------------------------------------------------------------------------------
+
+    /**
+     * Get the angle the robot should turn to based on the id the limelight is seeing.
+     *
+     * @return
+     */
+    public static double getReefTagAngle() { // TODO: put these in a constants file
+        double[][] reefFrontAngles = {
+            {17, 60}, {18, 0}, {19, -60}, {20, -120}, {21, 180}, {22, 120},
+            {6, 120}, {7, 180}, {8, -120}, {9, -60}, {10, 0}, {11, 60}
+        };
+
+        int closestTag = Robot.getVision().getClosestTagID();
+        boolean rearTag = Robot.getVision().isRearTagClosest();
+
+        if (closestTag <= 0) {
+            Pose2d currentPose = Robot.getSwerve().getRobotPose();
+            int tagID = FieldHelpers.getReefZoneTagID(currentPose);
+            closestTag = tagID;
+            rearTag = false;
+        }
+
+        for (int i = 0; i < reefFrontAngles.length; i++) {
+            if (closestTag == reefFrontAngles[i][0]) {
+                if (rearTag || !Robot.getSwerve().frontClosestToAngle(reefFrontAngles[i][1])) {
+                    return Math.toRadians(reefFrontAngles[i][1] + 180);
+                }
+                return Math.toRadians(reefFrontAngles[i][1]);
+            }
+        }
+
+        // Return current angle if no tag is found
+        return Robot.getSwerve().getRobotPose().getRotation().getRadians();
+    }
+
+    
 }
+
+    
+
+    

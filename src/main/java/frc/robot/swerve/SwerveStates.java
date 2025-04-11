@@ -98,7 +98,7 @@ public class SwerveStates {
         return fpvAimDrive(
                         SwerveStates::getTagDistanceVelocity,
                         SwerveStates::getTagTxVelocity,
-                        Robot.getVision()::getReefTagAngle)
+                        () -> FieldHelpers.getReefTagAngle())
                 .withName("Swerve.reefAimDriveVisionTA");
     }
 
@@ -106,7 +106,7 @@ public class SwerveStates {
         return alignDrive(
                         Robot.getVision()::getReefOffsetFromTagX,
                         Robot.getVision()::getReefOffsetFromTagY,
-                        Robot.getVision()::getReefTagAngle)
+                        () -> FieldHelpers.getReefTagAngle())
                 .withName("Swerve.reefAimDriveVisionXY");
     }
 

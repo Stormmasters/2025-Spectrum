@@ -74,6 +74,8 @@ public class Vision implements NTSendable, Subsystem {
     /** Limelights */
     @Getter public final Limelight frontLL;
 
+    private static HomeOffsets offsets;
+
     public final Limelight backLL;
 
     public final Limelight[] allLimelights;
@@ -767,44 +769,6 @@ public class Vision implements NTSendable, Subsystem {
         return closetTag != -1 && closestTagIDBack == closetTag;
     }
 
-    // ------------------------------------------------------------------------------
-    // Calculation Functions
-    // ------------------------------------------------------------------------------
-
-    /**
-     * Get the angle the robot should turn to based on the id the limelight is seeing.
-     *
-     * @return
-     */
-    public double getReefTagAngle() { // TODO: put these in a constants file
-        double[][] reefFrontAngles = {
-            {17, 60}, {18, 0}, {19, -60}, {20, -120}, {21, 180}, {22, 120},
-            {6, 120}, {7, 180}, {8, -120}, {9, -60}, {10, 0}, {11, 60}
-        };
-
-        int closestTag = getClosestTagID();
-        boolean rearTag = isRearTagClosest();
-
-        if (closestTag <= 0) {
-            Pose2d currentPose = Robot.getSwerve().getRobotPose();
-            int tagID = FieldHelpers.getReefZoneTagID(currentPose);
-            closestTag = tagID;
-            rearTag = false;
-        }
-
-        for (int i = 0; i < reefFrontAngles.length; i++) {
-            if (closestTag == reefFrontAngles[i][0]) {
-                if (rearTag || !Robot.getSwerve().frontClosestToAngle(reefFrontAngles[i][1])) {
-                    return Math.toRadians(reefFrontAngles[i][1] + 180);
-                }
-                return Math.toRadians(reefFrontAngles[i][1]);
-            }
-        }
-
-        // Return current angle if no tag is found
-        return Robot.getSwerve().getRobotPose().getRotation().getRadians();
-    }
-
     public boolean tagsInView() {
 
         DriverStation.Alliance alliance =
@@ -855,6 +819,10 @@ public class Vision implements NTSendable, Subsystem {
         }
     }
 
+    // ----------------------------------------------------------------
+    // Calculation Functions
+    // ----------------------------------------------------------------
+
     /**
      * Method gets
      *
@@ -865,6 +833,7 @@ public class Vision implements NTSendable, Subsystem {
      */
     public Pose2d getXYOffsetFromTag(int tagID, double distanceAway, double centerOffset) {
         Pose2d tagPose;
+        
 
         if (tagLayout == null || tagID == -1) {
             return Robot.getSwerve().getRobotPose(); // Pose to where we are if the tag is invalid
@@ -873,7 +842,7 @@ public class Vision implements NTSendable, Subsystem {
 
         Rotation2d rotationOffsetParallel =
                 tagPose.getRotation()
-                        .plus(new Rotation2d(homeOffsets.getReefTagAngleOffset(tagID)));
+                        .plus(new Rotation2d(offsets.getReefTagAngleOffset(tagID)));
         Rotation2d rotationOffsetPerpendicular = tagPose.getRotation().plus(new Rotation2d(90));
 
         Translation2d offsetPose =
@@ -884,8 +853,16 @@ public class Vision implements NTSendable, Subsystem {
         return new Pose2d(offsetPose, rotationOffsetParallel);
     }
 
+    public double getReefOffsetFromTagX() {
+        return getReefOffsetFromTag().getX();
+    }
+
+    public double getReefOffsetFromTagY() {
+        return getReefOffsetFromTag().getY();
+    }
+
     public Pose2d getReefOffsetFromTag() {
-        int closestTagID = getClosestTagID();
+        int closestTagID = Robot.getVision().getClosestTagID();
 
         if (closestTagID < 6 || closestTagID == 16 || closestTagID > 22) {
             closestTagID = FieldHelpers.getReefZoneTagID(Robot.getSwerve().getRobotPose());
@@ -894,18 +871,10 @@ public class Vision implements NTSendable, Subsystem {
             }
         }
 
-        double reefTagDistanceOffset = homeOffsets.getReefTagDistanceOffset(closestTagID);
-        double reefTagCenterOffset = homeOffsets.getReefTagCenterOffset(closestTagID);
+        double reefTagDistanceOffset = offsets.getReefTagDistanceOffset(closestTagID);
+        double reefTagCenterOffset = offsets.getReefTagCenterOffset(closestTagID);
 
         return getXYOffsetFromTag(closestTagID, reefTagDistanceOffset, reefTagCenterOffset);
-    }
-
-    public double getReefOffsetFromTagX() {
-        return getReefOffsetFromTag().getX();
-    }
-
-    public double getReefOffsetFromTagY() {
-        return getReefOffsetFromTag().getY();
     }
 
     // ------------------------------------------------------------------------------
