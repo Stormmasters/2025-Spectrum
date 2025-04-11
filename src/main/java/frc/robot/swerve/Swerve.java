@@ -140,6 +140,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
     public void initSendable(NTSendableBuilder builder) {
         builder.addDoubleProperty("Pose X", () -> getRobotPose().getX(), null);
         builder.addDoubleProperty("Pose Y", () -> getRobotPose().getY(), null);
+        builder.addDoubleProperty(
+                "Pose Rotation Degrees", () -> getRobotPose().getRotation().getDegrees(), null);
 
         SmartDashboard.putData(
                 "Swerve Drive",

@@ -20,12 +20,12 @@ public class FM2025 extends Config {
         climb.setAttached(true);
 
         shoulder.setCANcoderAttached(true);
-        shoulder.setCANcoderOffset(-0.169026333); // add -0.208333333 to the inverse of the position
-
-        // elbow.setCANcoderAttached(true);
-        // elbow.setCANcoderOffset(0.251953 + 0.208333333333); // 0.45125333333);
-        // 0.460042333); // add 0.208333333 to the inverse of the position
+        shoulder.setCANcoderOffset(
+                -0.237305 - 0.208333333); // add -0.208333333 to the inverse of the position
+        elbow.setCANcoderAttached(true);
+        elbow.setCANcoderOffset(
+                -0.131836 + 0.208333333333); // add 0.208333333 to the inverse of the position
         twist.setCANcoderAttached(true);
-        twist.setCANcoderOffset(0.269287); // 0.271484);
+        twist.setCANcoderOffset(0.267578);
     }
 }
