@@ -85,12 +85,19 @@ public class SwerveStates {
     }
 
     /** Pilot Commands ************************************************************************ */
-    /**
-     * Drive the robot using left stick and control orientation using the right stick Only Cardinal
-     * directions are allowed
-     *
-     * @return
-     */
+    /** Drive the robot using left stick and control orientation using the right stick. */
+    protected static Command pilotDrive() {
+        return drive(
+                        pilot::getDriveFwdPositive,
+                        pilot::getDriveLeftPositive,
+                        pilot::getDriveCCWPositive)
+                .withName("Swerve.PilotDrive");
+    }
+
+    public static Command autonAlgaeDriveIntake(double timeout) {
+        return fpvDrive(() -> .15, () -> 0, () -> 0).withTimeout(timeout);
+    }
+
     public static Command reefAimDriveVision() {
         return fpvAimDrive(
                         SwerveStates::getTagDistanceVelocity,
@@ -200,14 +207,6 @@ public class SwerveStates {
                         pilot::getDriveLeftPositive,
                         pilot::chooseCardinalDirections)
                 .withName("Swerve.PilotStickSteer");
-    }
-
-    protected static Command pilotDrive() {
-        return drive(
-                        pilot::getDriveFwdPositive,
-                        pilot::getDriveLeftPositive,
-                        pilot::getDriveCCWPositive)
-                .withName("Swerve.PilotDrive");
     }
 
     protected static Command fpvDrive() {

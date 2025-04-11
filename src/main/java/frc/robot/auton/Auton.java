@@ -155,7 +155,8 @@ public class Auton {
                         RobotStates.algae.setTrue(),
                         Commands.waitSeconds(0.05),
                         RobotStates.actionPrepState.setTrue(),
-                        Commands.waitSeconds(1))
+                        Commands.waitSeconds(.5),
+                        SwerveStates.autonAlgaeDriveIntake(0.2))
                 .withName("Auton.aimL4ScoreThenAlgae");
     }
 
