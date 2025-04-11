@@ -1,78 +1,116 @@
 package frc.reefscape.offsets;
 
-import edu.wpi.first.math.util.Units;
-import frc.robot.Robot;
+import frc.reefscape.TagProperties;
+import frc.robot.RobotStates;
 import lombok.Getter;
 
 public class WorldsChampsOffsets {
 
-    // blue tag offsets
-    @Getter private static final double Tag17Offset = meterConverter(11.0);
-    @Getter private static final double Tag18Offset = meterConverter(12.5);
-    @Getter private static final double Tag19Offset = meterConverter(13.0);
-    @Getter private static final double Tag20Offset = meterConverter(12.5);
-    @Getter private static final double Tag21Offset = meterConverter(10.5);
-    @Getter private static final double Tag22Offset = meterConverter(11.0);
-    // red tag offsets
-    @Getter private static final double Tag6Offset = meterConverter(11.0);
-    @Getter private static final double Tag7Offset = meterConverter(12.5);
-    @Getter private static final double Tag8Offset = meterConverter(13.0);
-    @Getter private static final double Tag9Offset = meterConverter(12.5);
-    @Getter private static final double Tag10Offset = meterConverter(10.5);
-    @Getter private static final double Tag11Offset = meterConverter(11.0);
+    // TODO: Upload new world champs offsets when at worlds
 
-    // red tag angles offsets
-    // original values: 60, 0, 300, 240, 180, 120
-    @Getter private static final double Tag17Angle = radianConverter(180); // 60);
-    @Getter private static final double Tag18Angle = radianConverter(180);
-    @Getter private static final double Tag19Angle = radianConverter(180); // -60
-    @Getter private static final double Tag20Angle = radianConverter(180);
-    @Getter private static final double Tag21Angle = radianConverter(180);
-    @Getter private static final double Tag22Angle = radianConverter(180);
+    // Blue Tags (17–22)
+    private static final TagProperties tag17Offset =
+            new TagProperties(11.5, 11.0, 0.0, 0.0, 7.9, 175);
 
-    // blue tag angles offsets
-    // original values: 120, 180, 240, 300, 0, 60
-    @Getter private static final double Tag6Angle = radianConverter(180);
-    @Getter private static final double Tag7Angle = radianConverter(180);
-    @Getter private static final double Tag8Angle = radianConverter(180);
-    @Getter private static final double Tag9Angle = radianConverter(180);
-    @Getter private static final double Tag10Angle = radianConverter(180);
-    @Getter private static final double Tag11Angle = radianConverter(180);
+    private static final TagProperties tag18Offset =
+            new TagProperties(12.0, 12.5, 0.0, 0.0, 7.9, 177);
 
-    /**
-     * Converts inches to meters and adds half the robot length to the offset
-     *
-     * @param offsetInches
-     * @return
-     */
-    private static double meterConverter(double offsetInches) {
-        double meterConversion = Units.inchesToMeters(offsetInches);
-        double halfRobotLength = Robot.getSwerve().getConfig().getRobotLength() / 2;
+    private static final TagProperties tag19Offset =
+            new TagProperties(12.0, 13.0, 0.0, 0.0, 7.9, 177);
 
-        return meterConversion + halfRobotLength;
-    }
+    private static final TagProperties tag20Offset =
+            new TagProperties(12.0, 12.5, 0.0, 0.0, 7.9, 180);
 
-    /** @param degrees */
-    private static double radianConverter(double offsetDegrees) {
-        double radianConversion = Units.degreesToRadians(offsetDegrees);
+    private static final TagProperties tag21Offset =
+            new TagProperties(11.5, 10.5, 0.0, 0.0, 7.9, 180);
 
-        return radianConversion;
-    }
+    private static final TagProperties tag22Offset =
+            new TagProperties(12.0, 11.0, 0.0, 0.0, 7.9, 180);
+
+    // Red Tags (6–11)
+    private static final TagProperties tag6Offset =
+            new TagProperties(11.0, 11.0, 0.0, 0.0, 7.9, 180);
+
+    private static final TagProperties tag7Offset =
+            new TagProperties(12.5, 12.5, 0.0, 0.0, 7.9, 180);
+
+    private static final TagProperties tag8Offset =
+            new TagProperties(13.0, 13.0, 0.0, 0.0, 7.9, 180);
+
+    private static final TagProperties tag9Offset =
+            new TagProperties(12.5, 12.5, 0.0, 0.0, 7.9, 177);
+
+    private static final TagProperties tag10Offset =
+            new TagProperties(10.5, 10.5, 0.0, 0.0, 7.9, 180);
+
+    private static final TagProperties tag11Offset =
+            new TagProperties(11.0, 11.0, 0.0, 0.0, 7.9, 176);
 
     // tag offsets ordered from blue tags to red tags due to centerFaces index values
+
     @Getter
-    private static final double[][] reefTagOffsets = {
-        {17, Tag17Offset, Tag17Angle},
-        {18, Tag18Offset, Tag18Angle},
-        {19, Tag19Offset, Tag19Angle},
-        {20, Tag20Offset, Tag20Angle},
-        {21, Tag21Offset, Tag21Angle},
-        {22, Tag22Offset, Tag22Angle},
-        {6, Tag6Offset, Tag6Angle},
-        {7, Tag7Offset, Tag7Angle},
-        {8, Tag8Offset, Tag8Angle},
-        {9, Tag9Offset, Tag9Angle},
-        {10, Tag10Offset, Tag10Angle},
-        {11, Tag11Offset, Tag11Angle}
+    private static final TagProperties[] reefTagOffsets = {
+        tag17Offset,
+        tag18Offset,
+        tag19Offset,
+        tag20Offset,
+        tag21Offset,
+        tag22Offset,
+        tag6Offset,
+        tag7Offset,
+        tag8Offset,
+        tag9Offset,
+        tag10Offset,
+        tag11Offset
     };
+
+    // ---------------------------------------------------------------
+    // Helper Methods
+    // ---------------------------------------------------------------
+
+    public static int getReefTagIDToOffsetIndex(int tagID) {
+        if (tagID < 6 || tagID == 16 || tagID > 22) {
+            return -1;
+        }
+
+        int offsetIndex = tagID;
+
+        if (offsetIndex >= 17) {
+            offsetIndex -= 17;
+        }
+
+        return offsetIndex;
+    }
+
+    public static double getReefTagDistanceOffset(int tagID) {
+        int offsetIndex = getReefTagIDToOffsetIndex(tagID);
+        if (offsetIndex == -1) {
+            return 0.0;
+        }
+
+        if (RobotStates.rightScore.getAsBoolean()) {
+            return reefTagOffsets[offsetIndex].getCenterOffset()[1];
+        }
+        return reefTagOffsets[offsetIndex].getCenterOffset()[0];
+    }
+
+    public static double getReefTagCenterOffset(int tagID) {
+        int offsetIndex = getReefTagIDToOffsetIndex(tagID);
+        if (offsetIndex == -1) {
+            return 0.0;
+        }
+        if (RobotStates.rightScore.getAsBoolean()) {
+            return reefTagOffsets[offsetIndex].getOffset()[1];
+        }
+        return reefTagOffsets[offsetIndex].getOffset()[0];
+    }
+
+    public static double getReefTagAngleOffset(int tagID) {
+        int offsetIndex = getReefTagIDToOffsetIndex(tagID);
+        if (offsetIndex == -1) {
+            return 0.0;
+        }
+
+        return reefTagOffsets[offsetIndex].getTaGoal();
+    }
 }
