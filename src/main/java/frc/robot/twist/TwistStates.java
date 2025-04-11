@@ -5,6 +5,7 @@ import static frc.robot.RobotStates.*;
 import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.shoulder.ShoulderStates;
 import frc.robot.twist.Twist.TwistConfig;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.Util;
@@ -54,7 +55,8 @@ public class TwistStates {
 
         processorAlgae.whileTrue(move(config::getProcessorAlgae, "Twist.l1Algae"));
 
-        netAlgae.whileTrue(move(config::getNet, "Twist.Net"));
+        netAlgae.and(ShoulderStates.isNetPosition)
+                .whileTrue(twist.netTurret().withName("Twist.NetAlgae"));
 
         branch.and(
                         (rightScore.or(Robot.getOperator().rightScore)),
