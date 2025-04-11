@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 - W3C"
+            "pathName": "1 - Center 3 Algae"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Worlds 3 Algae",
   "choreoAuto": false
 }

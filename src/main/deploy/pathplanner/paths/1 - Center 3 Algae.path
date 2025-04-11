@@ -1,0 +1,79 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.139957865168539,
+        "y": 4.02
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.858806510162997,
+        "y": 4.011679559336921
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.932,
+        "y": 4.02
+      },
+      "prevControl": {
+        "x": 6.180757608619346,
+        "y": 4.044892813299917
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "poseUpdate",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "L4",
+      "waypointRelativePos": 0.09592795614721872,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "coral",
+      "waypointRelativePos": 0.09749412685982321,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "actionOn",
+      "waypointRelativePos": 0.20399373531715964,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Blue Center Algae Rush",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}

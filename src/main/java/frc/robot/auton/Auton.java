@@ -42,7 +42,10 @@ public class Auton {
     public static final EventTrigger autonLeft = new EventTrigger("left");
     public static final EventTrigger autonRight = new EventTrigger("right");
     public static final EventTrigger autonCoral = new EventTrigger("coral");
+    public static final EventTrigger autonAlgae = new EventTrigger("algae");
     public static final EventTrigger autonL1 = new EventTrigger("L1");
+    public static final EventTrigger autonL2 = new EventTrigger("L2");
+    public static final EventTrigger autonL3 = new EventTrigger("L3");
     public static final EventTrigger autonL4 = new EventTrigger("L4");
     public static final EventTrigger autonReverse = new EventTrigger("reverse");
     public static final EventTrigger autonPoseUpdate = new EventTrigger("poseUpdate");
@@ -63,13 +66,14 @@ public class Auton {
         // pathChooser.addOption("3 Meter", SpectrumAuton("3 Meter", false));
         // pathChooser.addOption("5 Meter", SpectrumAuton("5 Meter", false));
 
-        pathChooser.addOption("test", test(false));
-
-        pathChooser.addOption("Left | 2 L4 Coral", houston2coral(false));
-        pathChooser.addOption("Right | 2 L4 Coral", houston2coral(true));
+        // pathChooser.addOption("Left | 2 L4 Coral", houston2coral(false));
+        // pathChooser.addOption("Right | 2 L4 Coral", houston2coral(true));
 
         pathChooser.addOption("Left | 3 L4 Coral", worlds3coral(false));
         pathChooser.addOption("Right | 3 L4 Coral", worlds3coral(true));
+
+        pathChooser.addOption("Left | 3 Net Algae", worlds3algaeLeft(false));
+        pathChooser.addOption("Right | 3 Net Algae", worlds3algaeRight(false));
 
         pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
 
@@ -96,10 +100,6 @@ public class Auton {
         printAutoDuration();
     }
 
-    public Command test(boolean mirrored) {
-        return Commands.sequence(SpectrumAuton("W3C-Start", mirrored), autonAimScore(1), RobotStates.homeAll.toggleToTrue());
-    }
-
     public Command houston2coral(boolean mirrored) {
         return Commands.sequence(
                         SpectrumAuton("H2C-Start", mirrored, 2),
@@ -121,11 +121,42 @@ public class Auton {
                 .withName("Worlds 3 Coral");
     }
 
+    public Command worlds3algaeLeft(boolean mirrored) {
+        return Commands.sequence(
+                        SpectrumAuton("W3A-Start", mirrored),
+                        autonAimScoreThenAlgae(1),
+                        SpectrumAuton("W3A-L-End", mirrored))
+                .withName("W3A-L-Full");
+    }
+
+    public Command worlds3algaeRight(boolean mirrored) {
+        return Commands.sequence(
+                        SpectrumAuton("W3A-Start", mirrored),
+                        autonAimScoreThenAlgae(1),
+                        SpectrumAuton("W3A-R-End", mirrored))
+                .withName("W3A-R-Full");
+    }
+
     public Command autonAimScore(double alignTime) {
         return SwerveStates.reefAimDriveVision()
                 .withTimeout(alignTime)
                 .alongWith(autonScore())
                 .withName("Auton.aimL4Score");
+    }
+
+    public Command autonAimScoreThenAlgae(double alignTime) {
+        return Commands.sequence(
+                        SwerveStates.reefAimDriveVision()
+                                .withTimeout(alignTime)
+                                .alongWith(autonScore()),
+                        Commands.waitSeconds(0.5),
+                        RobotStates.clearStates(),
+                        RobotStates.l2.setTrue(),
+                        RobotStates.algae.setTrue(),
+                        Commands.waitSeconds(0.05),
+                        RobotStates.actionPrepState.setTrue(),
+                        Commands.waitSeconds(1))
+                .withName("Auton.aimL4ScoreThenAlgae");
     }
 
     public Command fullSequenceAimL4score(double alignTime) {

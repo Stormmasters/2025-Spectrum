@@ -7,43 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 - Blue Center Algae"
+            "pathName": "2 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2 - Blue Center Algae"
+            "pathName": "3 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3 - Blue Center Algae"
+            "pathName": "4 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4 - Blue Center Algae"
+            "pathName": "5 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "5 - Blue Center Algae"
+            "pathName": "6 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "6 - Blue Center Algae"
+            "pathName": "7R - 3 Center Algae"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Blue Center Origin",
+  "folder": "Worlds 3 Algae",
   "choreoAuto": false
 }

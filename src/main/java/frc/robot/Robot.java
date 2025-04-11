@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -52,6 +53,7 @@ import frc.spectrumLib.util.CrashTracker;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import org.json.simple.parser.ParseException;
@@ -254,14 +256,27 @@ public class Robot extends SpectrumRobot {
         String newAutoName;
         List<PathPlannerPath> pathPlannerPaths = new ArrayList<>();
         newAutoName = (auton.getAutonomousCommand()).getName();
+
         if (!autoName.equals(newAutoName)) {
             autoName = newAutoName;
+
             if (AutoBuilder.getAllAutoNames().contains(autoName)) {
                 try {
                     pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
                 } catch (IOException | ParseException e) {
                     Telemetry.print("Could not load path planner paths");
                 }
+
+                // Flip the paths if on red alliance
+                Optional<Alliance> alliance = DriverStation.getAlliance();
+                if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+                    pathPlannerPaths =
+                            pathPlannerPaths.stream()
+                                    .map(PathPlannerPath::flipPath)
+                                    .collect(Collectors.toList());
+                }
+
+                // Convert path points to poses
                 List<Pose2d> poses = new ArrayList<>();
                 for (PathPlannerPath path : pathPlannerPaths) {
                     poses.addAll(

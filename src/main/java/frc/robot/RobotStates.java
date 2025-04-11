@@ -122,7 +122,7 @@ public class RobotStates {
         // HOME Commands and States
         pilot.home_select.or(operator.home_select).whileTrue(homeAll.toggleToTrue());
         pilot.home_select.or(operator.home_select).onFalse(clearStates());
-        autonClearStates.onTrue(clearStates());
+        autonClearStates.onTrue(autonClearStates());
 
         actionState
                 .or(operator.staged)
@@ -189,19 +189,17 @@ public class RobotStates {
         operator.coralStage.or(autonCoral).onTrue(coral.setTrue(), algae.setFalse());
 
         // Set algae if we are staging algae
-        operator.algaeStage
-                .or(autonHighAlgae, autonLowAlgae, autonNet)
-                .onTrue(algae.setTrue(), coral.setFalse());
+        operator.algaeStage.or(autonAlgae).onTrue(algae.setTrue(), coral.setFalse());
 
         // Set Levels
         (operator.L1.and(operator.staged))
                 .or(autonL1)
                 .onTrue(l1.setTrue(), l2.setFalse(), l3.setFalse(), l4.setFalse());
-        operator.L2
-                .and(operator.staged)
+        (operator.L2.and(operator.staged))
+                .or(autonL2)
                 .onTrue(l2.setTrue(), l1.setFalse(), l3.setFalse(), l4.setFalse());
-        operator.L3
-                .and(operator.staged)
+        (operator.L3.and(operator.staged))
+                .or(autonL3)
                 .onTrue(l3.setTrue(), l1.setFalse(), l2.setFalse(), l4.setFalse());
         (operator.L4.and(operator.staged))
                 .or(autonL4)
@@ -302,5 +300,16 @@ public class RobotStates {
                         coastMode.setFalse(),
                         twistAtReef.setFalse())
                 .withName("Clear States");
+    }
+
+    public static Command autonClearStates() {
+        return clearStaged()
+                .alongWith(
+                        reverse.setFalse(),
+                        actionPrepState.setFalse(),
+                        actionState.setFalse(),
+                        coastMode.setFalse(),
+                        twistAtReef.setFalse())
+                .withName("Auton Clear States");
     }
 }

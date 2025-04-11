@@ -7,55 +7,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "2 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "3 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "4 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "5 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "6 - Center 3 Algae"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.5
+            "pathName": "7L - 3 Center Algae"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Blue Left Origin",
+  "folder": "Worlds 3 Algae",
   "choreoAuto": false
 }

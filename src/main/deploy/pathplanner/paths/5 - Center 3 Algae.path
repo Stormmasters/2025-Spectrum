@@ -1,0 +1,107 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.45,
+        "y": 5.4
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.074227528089887,
+        "y": 5.095926966292136
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.581249999999999,
+        "y": 3.8031601123595498
+      },
+      "prevControl": {
+        "x": 6.762008426966291,
+        "y": 4.238623595505615
+      },
+      "nextControl": {
+        "x": 6.408235780450315,
+        "y": 3.3863531288989477
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.21,
+        "y": 2.77
+      },
+      "prevControl": {
+        "x": 5.720095790395116,
+        "y": 1.8864881743086532
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "home",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "poseUpdate",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 2.0,
+      "command": null
+    },
+    {
+      "name": "clearStates",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "algae",
+      "waypointRelativePos": 0.20125293657009002,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "L3",
+      "waypointRelativePos": 0.20438527799530076,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "actionOn",
+      "waypointRelativePos": 1.400939702427577,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "reversed": false,
+  "folder": "Blue Center Algae Rush",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}
