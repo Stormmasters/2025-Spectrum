@@ -351,6 +351,7 @@ public class RobotStates {
     public static Command clearStates() {
         return clearStaged()
                 .alongWith(
+                        reverse.setFalse(),
                         actionPrepState.setFalse(),
                         actionState.setFalse(),
                         homeAll.setFalse(),
@@ -358,7 +359,6 @@ public class RobotStates {
                         twistAtReef.setFalse(),
                         aligned.setFalse(),
                         autoScoreMode.setFalse())
-                .andThen(new WaitCommand(0.5), reverse.setFalse())
                 .withName("Clear States");
     }
 }

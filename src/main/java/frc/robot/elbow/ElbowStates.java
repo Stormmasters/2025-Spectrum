@@ -72,7 +72,7 @@ public class ElbowStates {
         coastMode.onTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));
 
-        homeAll.whileTrue(home());
+        homeAll.and(Util.autoMode.not()).whileTrue(home());
         homeAll.and(Util.autoMode).whileTrue(slowHome());
 
         stationIntaking

@@ -1,16 +1,12 @@
 package frc.reefscape;
 
-import java.util.Arrays;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.reefscape.Field.Reef;
-import frc.reefscape.offsets.HomeOffsets;
 import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 
@@ -490,10 +486,4 @@ public class FieldHelpers {
         // Return current angle if no tag is found
         return Robot.getSwerve().getRobotPose().getRotation().getRadians();
     }
-
-    
 }
-
-    
-
-    

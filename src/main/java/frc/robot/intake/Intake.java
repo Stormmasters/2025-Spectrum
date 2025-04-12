@@ -23,7 +23,7 @@ public class Intake extends Mechanism {
 
         @Getter private double hasGamePieceVelocity = 50;
         @Getter private double hasGamePieceCurrent = 50;
-        @Getter private double scoreDelay = 0.3;
+        @Getter private double scoreDelay = 0.2;
 
         // Algae Voltages and Current
         @Getter @Setter private double algaeIntakeVoltage = -9.0;
