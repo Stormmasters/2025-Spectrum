@@ -14,7 +14,7 @@ public class Zones {
     @Getter private static final double atReefXYTolerance = Units.inchesToMeters(0.7); // 0.55
 
     @Getter
-    private static final double atReefRotationTolerance = Units.degreesToRadians(0.5); // rads
+    private static final double atReefRotationTolerance = Units.degreesToRadians(0.35); // rads
 
     private static final Swerve swerve = Robot.getSwerve();
     private static final HomeOffsets offsets = new HomeOffsets();

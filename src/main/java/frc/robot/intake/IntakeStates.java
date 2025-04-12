@@ -74,12 +74,14 @@ public class IntakeStates {
                         intake.runTorqueFOC(config::getAlgaeIntakeTorqueCurrent));
 
         L1Coral.and(actionState)
-                .whileTrue(
-                        // runVoltageCurrentLimits(
-                        //         config::getCoralL1ScoreVoltage,
-                        //         config::getCoralL1ScoreSupplyCurrent,
-                        //         config::getCoralL1ScoreTorqueCurrent));
-                        intake.runTorqueFOC(config::getCoralL1ScoreTorqueCurrent));
+                .onTrue(
+                        new WaitCommand(config.getScoreDelay())
+                                .andThen(
+                                        // runVoltageCurrentLimits(
+                                        //         config::getCoralL1ScoreVoltage,
+                                        //         config::getCoralL1ScoreSupplyCurrent,
+                                        //         config::getCoralL1ScoreTorqueCurrent));
+                                        intake.runTorqueFOC(config::getCoralL1ScoreTorqueCurrent)));
 
         branch.and(actionState, L4Coral.not())
                 .whileTrue(
