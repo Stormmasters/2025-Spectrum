@@ -39,7 +39,7 @@ public class Elbow extends Mechanism {
 
         @Getter private final double stationIntake = -158.7;
         @Getter private final double stationExtendedIntake = -154.4;
-        @Getter private final double groundAlgaeIntake = 78;
+        @Getter private final double groundAlgaeIntake = 64;
         @Getter private final double groundCoralIntake = 77;
 
         @Getter private final double stage = 180; // -160;
@@ -62,7 +62,7 @@ public class Elbow extends Mechanism {
         @Getter private final double processorAlgae = 64.072;
         @Getter private final double l2Algae = -86.0;
         @Getter private final double l3Algae = -86.0;
-        @Getter private final double net = -170.0;
+        @Getter private final double net = -180; // -170.0;
 
         @Getter private final double tolerance = 0.95;
 
