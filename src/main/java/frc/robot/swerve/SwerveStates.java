@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.Field;
 import frc.reefscape.FieldHelpers;
+import frc.reefscape.TagProperties;
 import frc.reefscape.Zones;
 import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
@@ -100,15 +101,15 @@ public class SwerveStates {
         return fpvAimDrive(
                         SwerveStates::getTagDistanceVelocity,
                         SwerveStates::getTagTxVelocity,
-                        Robot.getVision()::getReefTagAngle)
+                        () -> FieldHelpers.getReefTagAngle())
                 .withName("Swerve.reefAimDriveVisionTA");
     }
 
     public static Command reefAimDriveVisionXY() {
         return alignDrive(
-                        FieldHelpers::getReefOffsetFromTagX,
-                        FieldHelpers::getReefOffsetFromTagY,
-                        Robot.getVision()::getReefTagAngle)
+                        Robot.getVision()::getReefOffsetFromTagX,
+                        Robot.getVision()::getReefOffsetFromTagY,
+                        () -> FieldHelpers.getReefTagAngle())
                 .withName("Swerve.reefAimDriveVisionXY");
     }
 
@@ -180,7 +181,7 @@ public class SwerveStates {
     }
 
     private static double getTagDistanceVelocity() {
-        double[][] tagAreaOffsets = HomeOffsets.getTagAreaOffsets();
+        TagProperties[] tagAreaOffsets = HomeOffsets.getReefTagOffsets();
         int tagIndex = Robot.getVision().getClosestTagID();
         if (tagIndex < 0) {
             return 0.0;
@@ -188,7 +189,7 @@ public class SwerveStates {
             tagIndex -= 17;
         }
 
-        final double tagAreaOffset = tagAreaOffsets[tagIndex][1];
+        final double tagAreaOffset = tagAreaOffsets[tagIndex].getTaGoal();
 
         System.out.println("Tag Area Offset: " + tagAreaOffset);
         SmartDashboard.putNumber("Tag Area Offset: ", tagAreaOffset);
