@@ -40,7 +40,7 @@ public class Elbow extends Mechanism {
         @Getter private final double stationIntake = -158.7;
         @Getter private final double stationExtendedIntake = -154.4;
         @Getter private final double groundAlgaeIntake = 64;
-        @Getter private final double groundCoralIntake = 77;
+        @Getter private final double groundCoralIntake = 79;
 
         @Getter private final double stage = 180; // -160;
         @Getter private final double l1Coral = -121.4;
@@ -81,9 +81,9 @@ public class Elbow extends Mechanism {
         @Getter private final double positionKs = 0.6;
         @Getter private final double positionKa = 0.002;
         @Getter private final double positionKg = 14; // 7 * 1.6666
-        @Getter private final double mmCruiseVelocity = 10;
-        @Getter private final double mmAcceleration = 20;
-        @Getter private final double mmJerk = 100;
+        @Getter private final double mmCruiseVelocity = 1.7;
+        @Getter private final double mmAcceleration = 15;
+        @Getter private final double mmJerk = 60;
         @Getter private final double slowMmAcceleration = 7;
         @Getter private final double slowMmJerk = 60;
 
