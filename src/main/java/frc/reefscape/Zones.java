@@ -172,7 +172,7 @@ public class Zones {
 
         double goalX = FieldHelpers.getReefOffsetFromTagX();
         double goalY = FieldHelpers.getReefOffsetFromTagY();
-        double goalAngle = Math.toDegrees(Robot.getVision().getReefTagAngle());
+        double goalAngle = Math.toDegrees(FieldHelpers.getReefTagAngle());
 
         // System.out.println("Pose Angle: " + heading);
         // System.out.println("Target Angle: " + goalAngle);
