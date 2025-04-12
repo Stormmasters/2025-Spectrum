@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 7.2604202856646785,
-        "y": 3.9248400127217695
+        "y": 3.924840012721769
       },
       "isLocked": false,
       "linkedName": null
@@ -58,7 +58,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Blue Center Algae Rush",
+  "folder": "Worlds 3 Algae",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

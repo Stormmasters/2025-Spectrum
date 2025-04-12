@@ -55,8 +55,10 @@ public class TwistStates {
 
         processorAlgae.whileTrue(move(config::getProcessorAlgae, "Twist.l1Algae"));
 
-        netAlgae.and(ShoulderStates.isNetPosition)
+        netAlgae.and(ShoulderStates.isNetPosition, Util.teleop)
                 .whileTrue(twist.netTurret().withName("Twist.NetAlgae"));
+        netAlgae.and(ShoulderStates.isNetPosition, Util.autoMode)
+                .whileTrue(move(config::getNet, "Twist.NetAlgae"));
 
         branch.and(
                         (rightScore.or(Robot.getOperator().rightScore)),

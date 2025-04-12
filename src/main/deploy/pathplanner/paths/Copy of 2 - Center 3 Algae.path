@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.139957865168539,
+        "x": 5.932162921348315,
         "y": 4.02
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.858806510162997,
-        "y": 4.011679559336921
+        "x": 6.318328651685394,
+        "y": 4.320786516853933
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.932,
-        "y": 4.02
+        "x": 7.156390449438202,
+        "y": 5.134199438202248
       },
       "prevControl": {
-        "x": 6.180757608619346,
-        "y": 4.044892813299917
+        "x": 6.556601123595506,
+        "y": 5.060252808988764
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,33 +33,33 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "L4",
-      "waypointRelativePos": 0.09592795614721872,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "coral",
-      "waypointRelativePos": 0.09749412685982321,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "actionOn",
-      "waypointRelativePos": 0.10219263899765466,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "poseUpdate",
-      "waypointRelativePos": 0.40289741581832544,
-      "endWaypointRelativePos": 1.0,
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.47180892717306544,
+      "command": null
+    },
+    {
+      "name": "L4",
+      "waypointRelativePos": 0.40133124510571916,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "reverse",
+      "waypointRelativePos": 0.75,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "actionOff",
+      "waypointRelativePos": 0.89937353171496,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 1.5,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -72,7 +72,7 @@
   "reversed": false,
   "folder": "Worlds 3 Algae",
   "idealStartingState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 180.0
   },
   "useDefaultConstraints": false

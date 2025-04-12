@@ -69,6 +69,8 @@ public class Auton {
         // pathChooser.addOption("Left | 2 L4 Coral", houston2coral(false));
         // pathChooser.addOption("Right | 2 L4 Coral", houston2coral(true));
 
+        pathChooser.addOption("test", test());
+
         pathChooser.addOption("Left | 3 L4 Coral", worlds3coral(false));
         pathChooser.addOption("Right | 3 L4 Coral", worlds3coral(true));
 
@@ -98,6 +100,13 @@ public class Auton {
 
     public void exit() {
         printAutoDuration();
+    }
+
+    public Command test() {
+        return Commands.sequence(
+                SpectrumAuton("W3A-Start", false),
+                autonAimScoreThenAlgae(1),
+                SpectrumAuton("test2", false));
     }
 
     public Command houston2coral(boolean mirrored) {
@@ -155,8 +164,8 @@ public class Auton {
                         RobotStates.algae.setTrue(),
                         Commands.waitSeconds(0.05),
                         RobotStates.actionPrepState.setTrue(),
-                        Commands.waitSeconds(.5),
-                        SwerveStates.autonAlgaeDriveIntake(0.2))
+                        SwerveStates.reefAimDriveVision().withTimeout(.25),
+                        SwerveStates.autonAlgaeDriveIntake(.15))
                 .withName("Auton.aimL4ScoreThenAlgae");
     }
 

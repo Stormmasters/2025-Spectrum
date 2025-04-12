@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.21,
-        "y": 5.28
+        "x": 5.2,
+        "y": 5.23
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.948605814759156,
-        "y": 5.410236133250198
+        "x": 5.938605814759156,
+        "y": 5.360236133250198
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.45,
-        "y": 5.4
+        "x": 7.54,
+        "y": 5.6000000000000005
       },
       "prevControl": {
-        "x": 6.7,
-        "y": 5.4
+        "x": 6.79,
+        "y": 5.6000000000000005
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.697337509788565,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
@@ -53,7 +67,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -64,10 +78,10 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Blue Center Algae Rush",
+  "folder": "Worlds 3 Algae",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -119.99999999999999
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
