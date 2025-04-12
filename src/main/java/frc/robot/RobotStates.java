@@ -92,7 +92,8 @@ public class RobotStates {
 
     // pose Triggers
     public static final Trigger poseReversal =
-            new Trigger(() -> FieldHelpers.reverseRotationBlue()); // == Field.isBlue());
+            new Trigger(
+                    () -> FieldHelpers.reverseRotationBlue() == Zones.blueFieldSide.getAsBoolean());
 
     // auton Triggers
     public static final Trigger shoulderL4 = autonShoulderL4;

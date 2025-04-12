@@ -319,18 +319,19 @@ public class FieldHelpers {
         Pose2d robotPose = Robot.getSwerve().getRobotPose();
 
         int tagID = getReefZoneTagID(robotPose);
+        int tagIndex;
 
         if (Zones.blueFieldSide.getAsBoolean()) { // (Field.isBlue()) {
-            tagID = blueReefTagIDToIndex(tagID);
+            tagIndex = blueReefTagIDToIndex(tagID);
         } else {
-            tagID = blueReefTagIDToIndex(redToBlueTagID(tagID));
+            tagIndex = blueReefTagIDToIndex(redToBlueTagID(tagID));
         }
 
         if (tagID < 0 || tagID == 16) {
             return false;
         }
 
-        double reefRotation = Reef.centerFaces[tagID].getRotation().getRadians();
+        double reefRotation = Reef.centerFaces[tagIndex].getRotation().getRadians();
         double targetAngle = getTagAngleOffset(tagID);
 
         // Adjust target angle based on reef rotation and normalize
@@ -342,17 +343,10 @@ public class FieldHelpers {
         double robotTargetAngleToBack =
                 Math.abs(normalizeAngle(adjustedTargetAngle - (robotAngle + Math.PI)));
 
-        // System.out.println("Back: " + robotTargetAngleToBack);
-        // System.out.println("Front: " + robotTargetAngleToFront);
         // Return the optimal rotation
         if (robotTargetAngleToBack < robotTargetAngleToFront) {
-            // System.out.println("SIDeBLUE: " + Zones.blueFieldSide.getAsBoolean());
-            // System.out.println(true == Zones.blueFieldSide.getAsBoolean());
-            System.out.println(true);
             return true;
         }
-        // System.out.println(false == Zones.blueFieldSide.getAsBoolean());
-        System.out.println(false);
         return false;
     }
 
