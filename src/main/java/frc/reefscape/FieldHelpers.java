@@ -343,7 +343,7 @@ public class FieldHelpers {
             tagIndex = blueReefTagIDToIndex(redToBlueTagID(tagID));
         }
 
-        if (tagID < 0 || tagID == 16) {
+        if (tagID < 0 || tagID == 16 || tagIndex < 0) {
             return false;
         }
 

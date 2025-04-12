@@ -74,22 +74,22 @@ public class IntakeStates {
                         intake.runTorqueFOC(config::getAlgaeIntakeTorqueCurrent));
 
         L1Coral.and(actionState)
+                .whileTrue(
+                        // runVoltageCurrentLimits(
+                        //         config::getCoralL1ScoreVoltage,
+                        //         config::getCoralL1ScoreSupplyCurrent,
+                        //         config::getCoralL1ScoreTorqueCurrent));
+                        intake.runTorqueFOC(config::getCoralL1ScoreTorqueCurrent));
+
+        branch.and(actionState, L4Coral.not())
                 .onTrue(
                         new WaitCommand(config.getScoreDelay())
                                 .andThen(
                                         // runVoltageCurrentLimits(
-                                        //         config::getCoralL1ScoreVoltage,
-                                        //         config::getCoralL1ScoreSupplyCurrent,
-                                        //         config::getCoralL1ScoreTorqueCurrent));
-                                        intake.runTorqueFOC(config::getCoralL1ScoreTorqueCurrent)));
-
-        branch.and(actionState, L4Coral.not())
-                .whileTrue(
-                        // runVoltageCurrentLimits(
-                        //         config::getCoralScoreVoltage,
-                        //         config::getCoralScoreSupplyCurrent,
-                        //         config::getCoralScoreTorqueCurrent));
-                        intake.runTorqueFOC(config::getCoralScoreTorqueCurrent));
+                                        //         config::getCoralScoreVoltage,
+                                        //         config::getCoralScoreSupplyCurrent,
+                                        //         config::getCoralScoreTorqueCurrent));
+                                        intake.runTorqueFOC(config::getCoralScoreTorqueCurrent)));
 
         autonScore
                 .and(photon)
