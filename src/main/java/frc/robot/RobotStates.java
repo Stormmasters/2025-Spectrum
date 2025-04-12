@@ -15,6 +15,7 @@ import frc.robot.pilot.Pilot;
 import frc.robot.shoulder.ShoulderStates;
 import frc.robot.swerve.SwerveStates;
 import frc.robot.twist.TwistStates;
+import frc.robot.vision.VisionStates;
 import frc.spectrumLib.Rio;
 import frc.spectrumLib.SpectrumState;
 import frc.spectrumLib.util.Util;
@@ -255,22 +256,22 @@ public class RobotStates {
 
         poseReversal.and(stagedCoral.or(L2Algae, L3Algae)).onTrue(reverse.setTrue());
         poseReversal.not().and(stagedCoral.or(L2Algae, L3Algae)).onTrue(reverse.setFalse());
-        // stagedCoral
-        //         .or(L2Algae, L3Algae)
-        //         .and(
-        //                 VisionStates.usingRearTag,
-        //                 actionPrepState.not(),
-        //                 actionState.not(),
-        //                 poseReversal.not())
-        //         .onTrue(reverse.setTrue());
-        // stagedCoral
-        //         .or(L2Algae, L3Algae)
-        //         .and(
-        //                 VisionStates.usingRearTag.not(),
-        //                 actionPrepState.not(),
-        //                 actionState.not(),
-        //                 poseReversal.not())
-        //         .onTrue(reverse.setFalse());
+        stagedCoral
+                .or(L2Algae, L3Algae)
+                .and(
+                        VisionStates.usingRearTag,
+                        actionPrepState.not(),
+                        actionState.not(),
+                        poseReversal.not())
+                .onTrue(reverse.setTrue());
+        stagedCoral
+                .or(L2Algae, L3Algae)
+                .and(
+                        VisionStates.usingRearTag.not(),
+                        actionPrepState.not(),
+                        actionState.not(),
+                        poseReversal.not())
+                .onTrue(reverse.setFalse());
         groundAlgae.or(groundCoral, processorAlgae).and(toggleReverse).onTrue(reverse.setTrue());
         groundAlgae
                 .or(groundCoral, processorAlgae)
@@ -300,13 +301,13 @@ public class RobotStates {
         // *********************************
         // Autoscore States
         Zones.isCloseToReef
-                .and(pilot.reefAlignScore_A, stagedCoral.or(L2Algae, L3Algae))
+                .and(pilot.reefAlignScore_B, stagedCoral.or(L2Algae, L3Algae))
                 .onTrue(actionPrepState.setTrue());
         Zones.isCloseToReef
-                .and(pilot.reefAlignScore_A, stagedCoral.or(L2Algae, L3Algae))
+                .and(pilot.reefAlignScore_B, stagedCoral.or(L2Algae, L3Algae))
                 .onFalse(actionPrepState.setFalse());
-        SwerveStates.isAlignedToReef.and(pilot.reefAlignScore_A).onTrue(aligned.setTrue());
-        SwerveStates.isAlignedToReef.and(pilot.reefAlignScore_A).onFalse(aligned.setFalse());
+        SwerveStates.isAlignedToReef.and(pilot.reefAlignScore_B).onTrue(aligned.setTrue());
+        SwerveStates.isAlignedToReef.and(pilot.reefAlignScore_B).onFalse(aligned.setFalse());
 
         aligned.debounce(scoreAfterAlignTime)
                 .and(autoScoreMode, actionPrepState, completeStagedCoral.or(completeStagedAlgae))
@@ -315,14 +316,14 @@ public class RobotStates {
                         actionState
                                 .setTrueForTime(RobotStates::getScoreTime)
                                 .andThen(autoScoreMode.setFalse()));
-        pilot.reefAlignScore_A
+        pilot.reefAlignScore_B
                 .and(stagedCoral.or(L2Algae, L3Algae))
                 .onTrue(autoScoreMode.toggleToTrue());
-        pilot.reefAlignScore_A
+        pilot.reefAlignScore_B
                 .not()
                 .and(actionPrepState.not(), autoScoreMode)
                 .onTrue(autoScoreMode.toggleToFalse());
-        pilot.reefAlignScore_A
+        pilot.reefAlignScore_B
                 .not()
                 .and(actionPrepState, autoScoreMode)
                 .debounce(scoreTime)
