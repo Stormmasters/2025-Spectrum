@@ -36,15 +36,15 @@ public class Intake extends Mechanism {
         // Coral Voltages and Current
         @Getter @Setter private double coralHoldVoltage = 9.0;
         @Getter @Setter private double coralHoldSupplyCurrent = 30.0;
-        @Getter @Setter private double coralHoldTorqueCurrent = 40.0;
+        @Getter @Setter private double coralHoldTorqueCurrent = 28.0;
 
         @Getter @Setter private double coralIntakeVoltage = 12.0;
         @Getter @Setter private double coralIntakeSupplyCurrent = 30.0;
-        @Getter @Setter private double coralIntakeTorqueCurrent = 200.0;
+        @Getter @Setter private double coralIntakeTorqueCurrent = 100.0;
 
         @Getter @Setter private double coralGroundVoltage = 12.0;
         @Getter @Setter private double coralGroundSupplyCurrent = 40.0;
-        @Getter @Setter private double coralGroundTorqueCurrent = 2038470.0;
+        @Getter @Setter private double coralGroundTorqueCurrent = 100.0;
 
         @Getter @Setter private double coralScoreVoltage = -1;
         @Getter @Setter private double coralScoreSupplyCurrent = 12.0;
