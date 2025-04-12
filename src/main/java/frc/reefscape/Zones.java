@@ -8,9 +8,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 import frc.robot.swerve.Swerve;
-import frc.robot.swerve.SwerveConfig;
+import lombok.Getter;
 
 public class Zones {
+    @Getter private static final double atReefXYTolerance = Units.inchesToMeters(0.7); // 0.55
+
+    @Getter
+    private static final double atReefRotationTolerance = Units.degreesToRadians(0.5); // rads
 
     private static final Swerve swerve = Robot.getSwerve();
     private static final HomeOffsets offsets = new HomeOffsets();
@@ -155,7 +159,7 @@ public class Zones {
     }
 
     public static boolean atReef() {
-        SwerveConfig config = Robot.getSwerve().getConfig();
+        // SwerveConfig config = Robot.getSwerve().getConfig();
         Pose2d robotPose = Robot.getSwerve().getRobotPose();
         double heading = robotPose.getRotation().getDegrees();
         double flippedHeading;
@@ -174,21 +178,21 @@ public class Zones {
         // System.out.println(
         //         "Rotation diff: " + Robot.getSwerve().getRotationDifference(heading, goalAngle));
         if (Robot.getSwerve().getRotationDifference(heading, goalAngle)
-                        > Math.toDegrees(config.getRotationTolerance())
+                        > Math.toDegrees(getAtReefRotationTolerance())
                 && Robot.getSwerve().getRotationDifference(flippedHeading, goalAngle)
-                        > Math.toDegrees(config.getRotationTolerance())) {
+                        > Math.toDegrees(getAtReefRotationTolerance())) {
             return false;
         }
         // System.out.println("Rotation good");
 
         // System.out.println("X diff: " + Math.abs(robotPose.getX() - goalX));
-        if (Math.abs(robotPose.getX() - goalX) > config.getTranslationTolerance()) {
+        if (Math.abs(robotPose.getX() - goalX) > getAtReefXYTolerance()) {
             return false;
         }
         // System.out.println("X good");
 
         // System.out.println("Y diff: " + Math.abs(robotPose.getY() - goalY));
-        if (Math.abs(robotPose.getY() - goalY) > config.getTranslationTolerance()) {
+        if (Math.abs(robotPose.getY() - goalY) > getAtReefXYTolerance()) {
             return false;
         }
         // System.out.println("Y good");

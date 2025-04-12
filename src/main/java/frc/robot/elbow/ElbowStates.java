@@ -24,6 +24,44 @@ public class ElbowStates {
     public static final Trigger scoreL4 =
             elbow.atDegrees(() -> (config.getL4Coral() - 12), config::getTolerance);
 
+    public static final Trigger isL1Coral =
+            elbow.atDegrees(config::getExL1Coral, config::getTolerance)
+                    .and(reverse.not())
+                    .or(
+                            elbow.atDegrees(() -> -config.getExL1Coral(), config::getTolerance)
+                                    .and(reverse));
+    public static final Trigger isL2Coral =
+            elbow.atDegrees(config::getExL2Coral, config::getTolerance)
+                    .and(reverse.not())
+                    .or(
+                            elbow.atDegrees(() -> -config.getExL2Coral(), config::getTolerance)
+                                    .and(reverse));
+    public static final Trigger isL3Coral =
+            elbow.atDegrees(config::getExL3Coral, config::getTolerance)
+                    .and(reverse.not())
+                    .or(
+                            elbow.atDegrees(() -> -config.getExL3Coral(), config::getTolerance)
+                                    .and(reverse));
+    public static final Trigger isL4Coral =
+            elbow.atDegrees(config::getExL4Coral, config::getTolerance)
+                    .and(reverse.not())
+                    .or(
+                            elbow.atDegrees(() -> -config.getExL4Coral(), config::getTolerance)
+                                    .and(reverse));
+
+    public static final Trigger isL2Algae =
+            elbow.atDegrees(config::getL2Algae, config::getTolerance)
+                    .and(reverse.not())
+                    .or(
+                            elbow.atDegrees(() -> -config.getL2Algae(), config::getTolerance)
+                                    .and(reverse));
+    public static final Trigger isL3Algae =
+            elbow.atDegrees(config::getL3Algae, config::getTolerance)
+                    .and(reverse.not())
+                    .or(
+                            elbow.atDegrees(() -> -config.getL3Algae(), config::getTolerance)
+                                    .and(reverse));
+
     public static final Trigger atTarget = elbow.atTargetPosition(() -> 0.001);
 
     public static void setupDefaultCommand() {

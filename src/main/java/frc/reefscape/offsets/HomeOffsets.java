@@ -9,26 +9,26 @@ import lombok.Getter;
 public class HomeOffsets {
 
     // blue tag distance offsets, in order of left branch to right branch
-    @Getter private static final double[] Tag17Offset = {meterOffset(11.0), meterOffset(11.0)};
+    @Getter private static final double[] Tag17Offset = {meterOffset(10.33), meterOffset(10.33)};
 
-    @Getter private static final double[] Tag18Offset = {meterOffset(12.5), meterOffset(12.5)};
+    @Getter private static final double[] Tag18Offset = {meterOffset(10.33), meterOffset(10.33)};
 
-    @Getter private static final double[] Tag19Offset = {meterOffset(13.0), meterOffset(13.0)};
+    @Getter private static final double[] Tag19Offset = {meterOffset(10.33), meterOffset(10.33)};
 
-    @Getter private static final double[] Tag20Offset = {meterOffset(12.5), meterOffset(12.5)};
+    @Getter private static final double[] Tag20Offset = {meterOffset(10.33), meterOffset(10.33)};
 
-    @Getter private static final double[] Tag21Offset = {meterOffset(10.5), meterOffset(10.5)};
+    @Getter private static final double[] Tag21Offset = {meterOffset(10.33), meterOffset(10.33)};
 
-    @Getter private static final double[] Tag22Offset = {meterOffset(11.0), meterOffset(11.0)};
+    @Getter private static final double[] Tag22Offset = {meterOffset(10.33), meterOffset(10.33)};
     // red tag distance offsets, in order of left branch to right branch
-    @Getter private static final double[] Tag6Offset = {meterOffset(11.0), meterOffset(11.0)};
-    @Getter private static final double[] Tag7Offset = {meterOffset(12.5), meterOffset(12.5)};
-    @Getter private static final double[] Tag8Offset = {meterOffset(13.0), meterOffset(13.0)};
-    @Getter private static final double[] Tag9Offset = {meterOffset(12.5), meterOffset(12.5)};
+    @Getter private static final double[] Tag6Offset = {meterOffset(10.33), meterOffset(10.33)};
+    @Getter private static final double[] Tag7Offset = {meterOffset(10.33), meterOffset(10.33)};
+    @Getter private static final double[] Tag8Offset = {meterOffset(10.33), meterOffset(10.33)};
+    @Getter private static final double[] Tag9Offset = {meterOffset(10.33), meterOffset(10.33)};
 
-    @Getter private static final double[] Tag10Offset = {meterOffset(10.5), meterOffset(10.5)};
+    @Getter private static final double[] Tag10Offset = {meterOffset(10.33), meterOffset(10.33)};
 
-    @Getter private static final double[] Tag11Offset = {meterOffset(11.0), meterOffset(11.0)};
+    @Getter private static final double[] Tag11Offset = {meterOffset(10.33), meterOffset(10.33)};
 
     // blue tag center offsets, in order of left branch to right branch
     @Getter

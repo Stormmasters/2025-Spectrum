@@ -55,7 +55,7 @@ public class TwistStates {
 
         processorAlgae.whileTrue(move(config::getProcessorAlgae, "Twist.l1Algae"));
 
-        netAlgae.and(ShoulderStates.isNetPosition)
+        netAlgae.and(ShoulderStates.isAboveHalfway)
                 .whileTrue(twist.netTurret().withName("Twist.NetAlgae"));
 
         branch.and(
