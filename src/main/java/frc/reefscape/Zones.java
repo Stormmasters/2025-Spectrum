@@ -16,6 +16,9 @@ public class Zones {
     @Getter
     private static final double atReefRotationTolerance = Units.degreesToRadians(0.35); // rads
 
+    @Getter private static final double netAlgaeX = 9.618; // red coordinates
+    @Getter private static final double netAlgaeZoneTolerance = 0.3;
+
     // TODO: Change HomeOffsets to WorldsChampsOffsets at Worlds
     private static final Swerve swerve = Robot.getSwerve();
     private static final HomeOffsets offsets = new HomeOffsets();
@@ -43,13 +46,18 @@ public class Zones {
             swerve.inXzoneAlliance(0, Field.Reef.getCenter().getX())
                     .and(swerve.inYzoneAlliance(0, Field.Reef.getCenter().getY()));
 
-    public static final Trigger bargeZone =
-            swerve.inXzoneAlliance(
-                            3 * Field.getHalfLength() / 4,
-                            Field.getHalfLength()
-                                    - Units.inchesToMeters(24)
-                                    - swerve.getConfig().getRobotLength() / 2)
-                    .and(topLeftZone);
+    public static final Trigger netAlgaeZone =
+            // swerve.inXzoneAlliance(
+            //                 3 * Field.getHalfLength() / 4,
+            //                 Field.getHalfLength()
+            //                         - Units.inchesToMeters(24)
+            //                         - swerve.getConfig().getRobotLength() / 2)
+            //         .and(topLeftZone);
+            swerve.inXzone(netAlgaeX - netAlgaeZoneTolerance, netAlgaeX + netAlgaeZoneTolerance)
+                    .or(
+                            swerve.inXzone(
+                                    (Field.getFieldLength() - netAlgaeX) - netAlgaeZoneTolerance,
+                                    (Field.getFieldLength() - netAlgaeX) + netAlgaeZoneTolerance));
 
     public static final Trigger isCloseToReef =
             new Trigger(() -> Zones.withinReefRange(reefRangeRadius));
