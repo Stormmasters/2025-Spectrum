@@ -42,6 +42,7 @@ public class Auton {
     public static final EventTrigger autonLeft = new EventTrigger("left");
     public static final EventTrigger autonRight = new EventTrigger("right");
     public static final EventTrigger autonCoral = new EventTrigger("coral");
+    public static final EventTrigger autonCoralStage = new EventTrigger("coralStage");
     public static final EventTrigger autonAlgae = new EventTrigger("algae");
     public static final EventTrigger autonL1 = new EventTrigger("L1");
     public static final EventTrigger autonL2 = new EventTrigger("L2");
@@ -174,8 +175,9 @@ public class Auton {
                         RobotStates.l2.setTrue(),
                         RobotStates.algae.setTrue(),
                         Commands.waitSeconds(0.05),
-                        RobotStates.actionPrepState.setTrue(),
                         SwerveStates.reefAimDriveVision().withTimeout(.25),
+                        RobotStates.actionPrepState.setTrue(),
+                        Commands.waitSeconds(0.2),
                         SwerveStates.autonAlgaeDriveIntake(.25))
                 .withName("Auton.aimL4ScoreThenAlgae");
     }

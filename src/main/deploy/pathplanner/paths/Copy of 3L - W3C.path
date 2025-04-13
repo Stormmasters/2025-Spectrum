@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2077949438202247,
-        "y": 7.048595505617977
+        "x": 1.6,
+        "y": 7.319733146067415
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9210523950737786,
-        "y": 6.636796124135232
+        "x": 2.313257451253552,
+        "y": 6.90793376458467
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 5.28
       },
       "prevControl": {
-        "x": 3.1500000000000012,
-        "y": 6.319230484541327
+        "x": 2.7500000000000018,
+        "y": 7.012050807568879
       },
       "nextControl": null,
       "isLocked": false,
@@ -65,21 +65,33 @@
       "command": null
     },
     {
+      "name": "right",
+      "waypointRelativePos": 0.30109631949882065,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "L4",
       "waypointRelativePos": 0.3042286609240332,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
+      "name": "poseUpdate",
+      "waypointRelativePos": 0.4545810493343781,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
       "name": "actionOn",
-      "waypointRelativePos": 0.5532498042286635,
+      "waypointRelativePos": 0.7474549725920124,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "poseUpdate",
-      "waypointRelativePos": 0.600234925606883,
-      "endWaypointRelativePos": 1.0,
+      "name": "left",
+      "waypointRelativePos": 0.849256068911499,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],
@@ -88,7 +100,7 @@
     "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 12.0,
+    "nominalVoltage": 11.0,
     "unlimited": false
   },
   "goalEndState": {

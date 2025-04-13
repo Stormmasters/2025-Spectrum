@@ -82,7 +82,8 @@ public class RobotStates {
     public static final Trigger L3Coral = l3.and(coral);
     public static final Trigger L4Coral = (l4.and(coral));
     public static final Trigger branch = L2Coral.or(L3Coral, L4Coral);
-    public static final Trigger stagedCoral = L1Coral.or(L2Coral, L3Coral, L4Coral);
+    public static final Trigger stagedCoral =
+            L1Coral.or(L2Coral, L3Coral, L4Coral, autonCoralStage);
 
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
 

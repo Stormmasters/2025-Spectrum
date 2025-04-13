@@ -348,7 +348,7 @@ public class Elbow extends Mechanism {
         return run(
                 () ->
                         setDynMMPositionFoc(
-                                getOffsetRotations(degrees),
+                                getIfReversedOffsetInRotations(degrees),
                                 config::getMmCruiseVelocity,
                                 config::getSlowMmAcceleration,
                                 config::getSlowMmJerk));
