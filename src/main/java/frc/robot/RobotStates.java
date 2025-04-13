@@ -172,7 +172,7 @@ public class RobotStates {
 
         operator.algaeStage.or(operator.coralStage).onTrue(actionState.setFalse());
 
-        (L2Algae.or(L3Algae)).and(actionState).onTrue(actionState.setFalse());
+        (L2Algae.or(L3Algae, processorAlgae)).and(actionState).onTrue(actionState.setFalse());
 
         // *********************************
         // Intaking States
@@ -300,8 +300,7 @@ public class RobotStates {
 
         // netAlgae.and(SwerveStates.isFrontClosestToNet.not()).onTrue(reverse.setTrue());
         // netAlgae.and(SwerveStates.isFrontClosestToNet).onTrue(reverse.setFalse());
-        netAlgae.and(Zones.opponentFieldSide).onTrue(reverse.setTrue());
-        netAlgae.and(Zones.opponentFieldSide.not()).onTrue(reverse.setFalse());
+        netAlgae.onTrue(reverse.setFalse());
 
         climbPrep.onTrue(reverse.setFalse());
 
