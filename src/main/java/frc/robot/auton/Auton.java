@@ -150,7 +150,7 @@ public class Auton {
     }
 
     public Command autonAimScore(double alignTime) {
-        return SwerveStates.reefAimDriveVision()
+        return SwerveStates.reefAimDriveVisionXY()
                 .withTimeout(alignTime)
                 .alongWith(autonScore())
                 .withName("Auton.aimL4Score");
@@ -158,7 +158,7 @@ public class Auton {
 
     public Command autonAimScoreThenAlgae(double alignTime) {
         return Commands.sequence(
-                        SwerveStates.reefAimDriveVision()
+                        SwerveStates.reefAimDriveVisionXY()
                                 .withTimeout(alignTime)
                                 .alongWith(autonScore()),
                         Commands.waitSeconds(0.5),
@@ -166,7 +166,7 @@ public class Auton {
                         RobotStates.l2.setTrue(),
                         RobotStates.algae.setTrue(),
                         Commands.waitSeconds(0.05),
-                        SwerveStates.reefAimDriveVision().withTimeout(.25),
+                        SwerveStates.reefAimDriveVisionXY().withTimeout(.25),
                         RobotStates.actionPrepState.setTrue(),
                         Commands.waitSeconds(0.2),
                         SwerveStates.autonAlgaeDriveIntake(.25))
@@ -174,7 +174,7 @@ public class Auton {
     }
 
     public Command fullSequenceAimL4score(double alignTime) {
-        return SwerveStates.reefAimDriveVision()
+        return SwerveStates.reefAimDriveVisionXY()
                 .withTimeout(alignTime)
                 .alongWith(fullSequenceL4score())
                 .withName("Auton.oldAimL4Score");
