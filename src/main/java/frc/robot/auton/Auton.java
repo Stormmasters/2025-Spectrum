@@ -104,9 +104,10 @@ public class Auton {
 
     public Command test() {
         return Commands.sequence(
-                SpectrumAuton("W3A-Start", false),
-                autonAimScoreThenAlgae(1),
-                SpectrumAuton("test2", false));
+                        SpectrumAuton("W3A-Start", false),
+                        autonAimScoreThenAlgae(0.75),
+                        SpectrumAuton("W3A-Home-Field", false))
+                .withName("W3A-L-Full");
     }
 
     public Command houston2coral(boolean mirrored) {

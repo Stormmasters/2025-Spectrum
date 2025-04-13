@@ -17,6 +17,8 @@ public class ShoulderStates {
     public static final Trigger isHome = shoulder.atDegrees(config::getHome, config::getTolerance);
     public static final Trigger isNetPosition =
             shoulder.atDegrees(config::getNetAlgae, config::getTolerance);
+    public static final Trigger isAutonNetPosition =
+            shoulder.aboveDegrees(config::getAutonShoulderNetChecker, config::getTolerance);
 
     public static void setupDefaultCommand() {
         shoulder.setDefaultCommand(

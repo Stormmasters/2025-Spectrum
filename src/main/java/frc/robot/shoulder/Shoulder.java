@@ -47,6 +47,7 @@ public class Shoulder extends Mechanism {
         @Getter @Setter private double l2Algae = 160; // -32;
         @Getter @Setter private double l3Algae = 160; // -32;
         @Getter @Setter private double netAlgae = 180;
+        @Getter @Setter private double autonShoulderNetChecker = 60;
 
         @Getter @Setter private double l1Coral = 51.5;
         @Getter @Setter private double l2Coral = 15.3;
@@ -240,7 +241,7 @@ public class Shoulder extends Mechanism {
     public Trigger aboveDegrees(DoubleSupplier degrees, DoubleSupplier tolerance) {
         return new Trigger(
                 () ->
-                        (getPositionDegrees() - config.getOffset())
+                        Math.abs(getPositionDegrees() - config.getOffset())
                                 > (degrees.getAsDouble() + tolerance.getAsDouble()));
     }
 

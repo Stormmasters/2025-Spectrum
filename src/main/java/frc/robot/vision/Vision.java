@@ -192,7 +192,7 @@ public class Vision implements NTSendable, Subsystem {
     private void enabledLimelightUpdates() {
         if (Util.teleop.getAsBoolean()) {
             for (Limelight limelight : allLimelights) {
-                limelight.setIMUmode(3);
+                limelight.setIMUmode(1);
             }
             try {
                 addMegaTag2_VisionInput(backLL);

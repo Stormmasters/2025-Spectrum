@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.932162921348315,
-        "y": 4.02
+        "x": 7.2,
+        "y": 5.6000000000000005
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.334761235955056,
-        "y": 4.312570224719101
+        "x": 6.7,
+        "y": 5.6000000000000005
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.2,
-        "y": 5.13
+        "x": 6.614115168539326,
+        "y": 4.090730337078651
       },
       "prevControl": {
-        "x": 6.2,
-        "y": 5.13
+        "x": 6.614115168539326,
+        "y": 4.840730337078651
+      },
+      "nextControl": {
+        "x": 6.614115168539326,
+        "y": 3.340730337078651
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.1617207502898586,
+        "y": 2.862912204604304
+      },
+      "prevControl": {
+        "x": 5.671816540684975,
+        "y": 1.979400378912957
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,11 +48,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6989036805011707,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 1.507439310884882,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 4.0,
-        "maxAcceleration": 1.0,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,33 +63,45 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "poseUpdate",
+      "name": "home",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.47180892717306544,
-      "command": null
-    },
-    {
-      "name": "L4",
-      "waypointRelativePos": 0.25,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "reverse",
-      "waypointRelativePos": 0.35,
+      "name": "clearStates",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "actionOff",
-      "waypointRelativePos": 0.9,
+      "name": "algae",
+      "waypointRelativePos": 0.20125293657009002,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "L3",
+      "waypointRelativePos": 0.20438527799530076,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "poseUpdate",
+      "waypointRelativePos": 1.0031323414252336,
+      "endWaypointRelativePos": 2.0,
+      "command": null
+    },
+    {
+      "name": "actionOn",
+      "waypointRelativePos": 1.400939702427577,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -81,7 +109,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 119.99999999999999
   },
   "reversed": false,
   "folder": "Worlds 3 Algae",

@@ -304,6 +304,7 @@ public class RobotStates {
                 .withName("Clear States");
     }
 
+    // clears states without stopping homing sequence
     public static Command autonClearStates() {
         return clearStaged()
                 .alongWith(

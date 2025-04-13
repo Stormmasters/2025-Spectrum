@@ -57,7 +57,7 @@ public class TwistStates {
 
         netAlgae.and(ShoulderStates.isNetPosition, Util.teleop)
                 .whileTrue(twist.netTurret().withName("Twist.NetAlgae"));
-        netAlgae.and(ShoulderStates.isNetPosition, Util.autoMode)
+        netAlgae.and(ShoulderStates.isAutonNetPosition, Util.autoMode)
                 .whileTrue(move(config::getNet, "Twist.NetAlgae"));
 
         branch.and(
