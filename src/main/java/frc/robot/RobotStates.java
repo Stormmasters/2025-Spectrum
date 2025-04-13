@@ -86,8 +86,7 @@ public class RobotStates {
     public static final Trigger L3Coral = l3.and(coral);
     public static final Trigger L4Coral = (l4.and(coral));
     public static final Trigger branch = L2Coral.or(L3Coral, L4Coral);
-    public static final Trigger stagedCoral =
-            L1Coral.or(L2Coral, L3Coral, L4Coral, autonCoralStage);
+    public static final Trigger stagedCoral = L1Coral.or(L2Coral, L3Coral, L4Coral);
 
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
 
@@ -98,7 +97,8 @@ public class RobotStates {
     public static final Trigger atL3Coral =
             ElbowStates.isL3Coral.and(ShoulderStates.isL3Coral, ElevatorStates.isL3Coral);
     public static final Trigger atL4Coral =
-            ElbowStates.isL4Coral.and(ShoulderStates.isL4Coral, ElevatorStates.isL4Coral);
+            (ElbowStates.isL4Coral.and(ShoulderStates.isL4Coral, ElevatorStates.isL4Coral))
+                    .or(autonAtL4Coral);
 
     public static final Trigger atL2Algae =
             ElbowStates.isL2Algae.and(ShoulderStates.isL2Algae, ElevatorStates.isL2Algae);

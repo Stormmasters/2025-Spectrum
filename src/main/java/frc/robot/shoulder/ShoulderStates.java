@@ -221,14 +221,14 @@ public class ShoulderStates {
 
     public static Command move(
             DoubleSupplier degrees, DoubleSupplier exDegrees, DoubleSupplier delay, String name) {
-        return new WaitCommand(delay.getAsDouble())
-                .andThen(move(degrees, exDegrees, name).withName(name));
+        return (new WaitCommand(delay.getAsDouble())
+                .andThen(move(degrees, exDegrees, name))
+                .withName(name));
     }
 
     public static Command slowMove(
             DoubleSupplier degrees, DoubleSupplier exDegrees, DoubleSupplier delay, String name) {
-        return new WaitCommand(delay.getAsDouble())
-                .andThen(move(degrees, exDegrees, name).withName(name));
+        return new WaitCommand(delay.getAsDouble()).andThen(slowMove(degrees, name).withName(name));
     }
 
     public static Command coastMode() {
