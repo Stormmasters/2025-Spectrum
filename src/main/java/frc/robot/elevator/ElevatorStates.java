@@ -110,8 +110,8 @@ public class ElevatorStates {
         L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Elevator.L3Algae"));
         L3Algae.and(actionState).whileTrue(move(config::getHome, "Elevator.L3AlgaeHome"));
         netAlgae.and(actionPrepState).whileTrue(move(config::getNetAlgae, "Elevator.NetAlgae"));
-        netAlgae.and(actionPrepState, Util.autoMode)
-                .whileTrue(slowMove(config::getNetAlgae, "Elevator.NetAlgae"));
+        // netAlgae.and(actionPrepState, Util.autoMode)
+        //         .whileTrue(slowMove(config::getNetAlgae, "Elevator.NetAlgae"));
 
         Robot.getPilot().reZero_start.onTrue(elevator.resetToInitialPos());
     }

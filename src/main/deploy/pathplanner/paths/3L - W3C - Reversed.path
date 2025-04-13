@@ -71,6 +71,12 @@
       "command": null
     },
     {
+      "name": "sourceIntakeOff",
+      "waypointRelativePos": 0.10219263899765035,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "poseUpdate",
       "waypointRelativePos": 0.4545810493343781,
       "endWaypointRelativePos": 1.0,

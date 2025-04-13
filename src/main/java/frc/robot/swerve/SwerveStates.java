@@ -101,8 +101,7 @@ public class SwerveStates {
     }
 
     public static Command autonAlgaeDriveIntake(double timeout) {
-        return fpvAimDrive(() -> 1, () -> 0, FieldHelpers::getReefTagAngle)
-                .withTimeout(timeout);
+        return fpvAimDrive(() -> 0.75, () -> 0, FieldHelpers::getReefTagAngle).withTimeout(timeout);
     }
 
     public static Command reefAimDriveVisionTA() {
@@ -111,6 +110,14 @@ public class SwerveStates {
                         SwerveStates::getTagTxVelocity,
                         () -> FieldHelpers.getReefTagAngle())
                 .withName("Swerve.reefAimDriveVisionTA");
+    }
+
+    public static Command autonAlgaeReefAimDriveVisionXY() {
+        return alignDrive(
+                        () -> FieldHelpers.getReefOffsetFromTagX() + 0.05,
+                        () -> FieldHelpers.getReefOffsetFromTagY(),
+                        () -> FieldHelpers.getReefTagAngle())
+                .withName("Swerve.reefAimDriveVisionXY");
     }
 
     public static Command reefAimDriveVisionXY() {
