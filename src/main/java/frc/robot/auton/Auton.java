@@ -75,8 +75,7 @@ public class Auton {
         pathChooser.addOption("Left | 3 L4 Coral", worlds3coral(false));
         pathChooser.addOption("Right | 3 L4 Coral", worlds3coral(true));
 
-        pathChooser.addOption("Left | 3 Net Algae", worlds3algaeLeft(false));
-        pathChooser.addOption("Right | 3 Net Algae", worlds3algaeRight(false));
+        pathChooser.addOption("Center | 3 Net Algae", worlds3algae(false));
 
         pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
 
@@ -132,30 +131,22 @@ public class Auton {
                 .withName("Worlds 3 Coral");
     }
 
-    public Command worlds3algaeLeft(boolean mirrored) {
+    public Command worlds3algae(boolean mirrored) {
         return Commands.sequence(
                         SpectrumAuton("W3A-Start", mirrored),
-                        autonAimScoreThenAlgae(1),
-                        SpectrumAuton("W3A-L-End", mirrored))
+                        autonAimScoreThenAlgae(1.5),
+                        SpectrumAuton("W3A-End", mirrored))
                 .withName("W3A-L-Full");
-    }
-
-    public Command worlds3algaeRight(boolean mirrored) {
-        return Commands.sequence(
-                        SpectrumAuton("W3A-Start", mirrored),
-                        autonAimScoreThenAlgae(1),
-                        SpectrumAuton("W3A-R-End", mirrored))
-                .withName("W3A-R-Full");
     }
 
     public Command practiceAuto() {
         return Commands.sequence(
-                SpectrumAuton("1", false),
-                autonAimScoreThenAlgae(0.75),
-                SpectrumAuton("2", false),
-                autonAimScore(1));
-        // SpectrumAuton("3", false),
-        // autonAimScore(1));
+                        SpectrumAuton("1", false),
+                        autonAimScoreThenAlgae(0.75),
+                        SpectrumAuton("2", false),
+                        autonAimScore(1.5),
+                        SpectrumAuton("3", false))
+                .withName("test");
     }
 
     public Command autonAimScore(double alignTime) {

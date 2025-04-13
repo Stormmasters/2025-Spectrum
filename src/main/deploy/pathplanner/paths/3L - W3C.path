@@ -82,7 +82,7 @@
     "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 11.0,
+    "nominalVoltage": 10.0,
     "unlimited": false
   },
   "goalEndState": {
@@ -93,7 +93,7 @@
   "folder": "Worlds 3 Coral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -53.5
+    "rotation": 126.5
   },
   "useDefaultConstraints": true
 }

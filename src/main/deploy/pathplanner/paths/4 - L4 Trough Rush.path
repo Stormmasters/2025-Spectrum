@@ -62,12 +62,12 @@
     "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 11.0,
+    "nominalVoltage": 10.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.5
+    "rotation": 126.5
   },
   "reversed": false,
   "folder": "Houston 2 Coral",

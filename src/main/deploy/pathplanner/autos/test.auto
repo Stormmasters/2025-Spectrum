@@ -7,37 +7,43 @@
         {
           "type": "path",
           "data": {
+            "pathName": "1 - Center 3 Algae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "2 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3 - Center 3 Algae"
+            "pathName": "Barage to Source"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4 - Center 3 Algae"
+            "pathName": "3L - W3C - Reversed"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "5 - Center 3 Algae"
+            "pathName": "4 - W3C - Reversed"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "6 - Center 3 Algae"
+            "pathName": "Feeder to IJ"
           }
         }
       ]
     }
   },
-  "resetOdom": false,
-  "folder": "Worlds 3 Algae",
+  "resetOdom": true,
+  "folder": "118 Practice Field Test",
   "choreoAuto": false
 }

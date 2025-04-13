@@ -52,33 +52,70 @@
       "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 4.0,
-        "maxAcceleration": 1.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
+        "nominalVoltage": 10.0,
         "unlimited": false
       }
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "sourceIntakeOff",
+      "waypointRelativePos": 0.05090054815974765,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "coral",
+      "waypointRelativePos": 0.2952231793265444,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "L4",
+      "waypointRelativePos": 0.2952231793265514,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "right",
+      "waypointRelativePos": 0.3014878621769651,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "poseUpdate",
+      "waypointRelativePos": 0.9968676585747822,
+      "endWaypointRelativePos": 2.0,
+      "command": null
+    },
+    {
+      "name": "actionOn",
+      "waypointRelativePos": 1.4949099451840144,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
-    "nominalVoltage": 11.0,
+    "nominalVoltage": 10.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 59.99999999999999
   },
   "reversed": false,
   "folder": "118 Practice Field Test",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -53.5
+    "rotation": 126.5
   },
   "useDefaultConstraints": true
 }
