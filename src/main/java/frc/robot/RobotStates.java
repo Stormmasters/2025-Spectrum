@@ -164,7 +164,9 @@ public class RobotStates {
 
         actionPrepState.or(autonActionOn).onTrue(actionState.setFalse());
         actionPrepState.onChangeToFalse(
-                actionState.setTrueForTime(RobotStates::getScoreTime).onlyIf(autoScoreMode.not()));
+                actionState
+                        .setTrueForTimeWithCancel(RobotStates::getScoreTime, actionPrepState)
+                        .onlyIf(autoScoreMode.not()));
 
         autonActionOff.onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
 
