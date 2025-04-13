@@ -22,7 +22,8 @@ public class Intake extends Mechanism {
     public static class IntakeConfig extends Config {
 
         @Getter private double hasGamePieceVelocity = 50;
-        @Getter private double hasGamePieceCurrent = 50;
+        @Getter private double hasGamePieceCurrent = 80;
+        @Getter private double hasAlgaeCurrent = 80;
         @Getter private double scoreDelay = 0.2;
 
         // Algae Voltages and Current
