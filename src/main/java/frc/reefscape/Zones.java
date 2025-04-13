@@ -23,6 +23,8 @@ public class Zones {
             Field.Reef.apothem + Field.Reef.faceToZoneLine + Units.inchesToMeters(30);
 
     public static final Trigger blueFieldSide = swerve.inXzone(0, Field.getHalfLength());
+    public static final Trigger opponentFieldSide =
+            new Trigger(() -> blueFieldSide.getAsBoolean() != Field.isBlue());
 
     public static final Trigger topLeftZone =
             swerve.inXzoneAlliance(Field.Reef.getCenter().getX(), Field.getHalfLength())
@@ -156,9 +158,6 @@ public class Zones {
         SmartDashboard.putNumber("TargetReefAngle", reefAngle);
         return reefAngle;
     }
-
-    public static final Trigger opponentFieldSide =
-            new Trigger(() -> blueFieldSide.getAsBoolean() != Field.isBlue());
 
     public static boolean atReef() {
         // SwerveConfig config = Robot.getSwerve().getConfig();
