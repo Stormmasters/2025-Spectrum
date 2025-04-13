@@ -95,7 +95,7 @@ public class SwerveStates {
     }
 
     public static Command autonAlgaeDriveIntake(double timeout) {
-        return fpvAimDrive(() -> .75, () -> 0, Robot.getVision()::getReefTagAngle)
+        return fpvAimDrive(() -> 1, () -> 0, Robot.getVision()::getReefTagAngle)
                 .withTimeout(timeout);
     }
 
