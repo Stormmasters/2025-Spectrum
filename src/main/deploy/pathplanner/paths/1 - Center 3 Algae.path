@@ -60,7 +60,7 @@
     },
     {
       "name": "actionOn",
-      "waypointRelativePos": 0.10219263899765466,
+      "waypointRelativePos": 0.15,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -68,6 +68,12 @@
       "name": "poseUpdate",
       "waypointRelativePos": 0.40289741581832544,
       "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "atL4Coral",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],

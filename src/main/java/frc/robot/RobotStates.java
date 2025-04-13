@@ -86,8 +86,7 @@ public class RobotStates {
     public static final Trigger L3Coral = l3.and(coral);
     public static final Trigger L4Coral = (l4.and(coral));
     public static final Trigger branch = L2Coral.or(L3Coral, L4Coral);
-    public static final Trigger stagedCoral =
-            L1Coral.or(L2Coral, L3Coral, L4Coral, autonCoralStage);
+    public static final Trigger stagedCoral = L1Coral.or(L2Coral, L3Coral, L4Coral);
 
     public static final Trigger staged = stagedAlgae.or(stagedCoral);
 
@@ -98,7 +97,8 @@ public class RobotStates {
     public static final Trigger atL3Coral =
             ElbowStates.isL3Coral.and(ShoulderStates.isL3Coral, ElevatorStates.isL3Coral);
     public static final Trigger atL4Coral =
-            ElbowStates.isL4Coral.and(ShoulderStates.isL4Coral, ElevatorStates.isL4Coral);
+            (ElbowStates.isL4Coral.and(ShoulderStates.isL4Coral, ElevatorStates.isL4Coral))
+                    .or(autonAtL4Coral);
 
     public static final Trigger atL2Algae =
             ElbowStates.isL2Algae.and(ShoulderStates.isL2Algae, ElevatorStates.isL2Algae);
@@ -165,7 +165,8 @@ public class RobotStates {
         actionPrepState.or(autonActionOn).onTrue(actionState.setFalse());
         actionPrepState.onChangeToFalse(
                 actionState
-                        .setTrueForTimeWithCancel(RobotStates::getScoreTime, actionPrepState)
+                        .setTrueForTimeWithCancel(
+                                RobotStates::getScoreTime, actionPrepState)
                         .onlyIf(autoScoreMode.not()));
 
         autonActionOff.onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
@@ -244,6 +245,7 @@ public class RobotStates {
         actionPrepState.and(L3Coral, atL3Coral).onTrue(coralScoring.setTrue());
         actionPrepState.and(L4Coral, atL4Coral).onTrue(coralScoring.setTrue());
         algae.onTrue(coralScoring.setFalse());
+        homeAll.onTrue(coralScoring.setFalse());
 
         // *********************************
         // Auton States
@@ -308,9 +310,13 @@ public class RobotStates {
                 .onTrue(actionPrepState.setTrue());
         Zones.isCloseToReef
                 .and(pilot.reefAlignScore_B, stagedCoral)
-                .onFalse(actionPrepState.setFalse());
-        SwerveStates.isAlignedToReef.and(pilot.reefAlignScore_B).onTrue(aligned.setTrue());
-        SwerveStates.isAlignedToReef.and(pilot.reefAlignScore_B).onFalse(aligned.setFalse());
+                .onFalse(actionPrepState.setFalse().onlyIf(pilot.actionReady_RB.not()));
+        SwerveStates.isAlignedToReef
+                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A))
+                .onTrue(aligned.setTrue());
+        SwerveStates.isAlignedToReef
+                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A))
+                .onFalse(aligned.setFalse());
 
         aligned.debounce(scoreAfterAlignTime)
                 .and(
@@ -334,6 +340,12 @@ public class RobotStates {
                 .and(actionPrepState, autoScoreMode)
                 .debounce(scoreTime)
                 .onTrue(autoScoreMode.setFalse());
+        pilot.actionReady_RB.onTrue(autoScoreMode.setFalse());
+        // pilot.reefAlignScore_B
+        //         .not()
+        //         .onTrue(
+        //                 homeAll.toggleToTrue()
+        //                         .onlyIf(pilot.actionReady_RB.not().and(actionState.not())));
     }
 
     private RobotStates() {
