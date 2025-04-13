@@ -165,7 +165,9 @@ public class RobotStates {
 
         actionPrepState.or(autonActionOn).onTrue(actionState.setFalse());
         actionPrepState.onChangeToFalse(
-                actionState.setTrueForTime(RobotStates::getScoreTime).onlyIf(autoScoreMode.not()));
+                actionState
+                        .setTrueForTimeWithCancel(RobotStates::getScoreTime, actionPrepState)
+                        .onlyIf(autoScoreMode.not()));
 
         autonActionOff.onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
 
@@ -313,20 +315,20 @@ public class RobotStates {
                 .onTrue(
                         actionPrepState.setFalse(),
                         actionState
-                                .setTrueForTime(RobotStates::getScoreTime)
-                                .andThen(autoScoreMode.setFalse()));
+                                .setTrueForTimeWithCancel(RobotStates::getScoreTime, actionPrepState)
+                                .andThen(autoScoreMode.setFalse().onlyIf(actionPrepState.not())));
         pilot.reefAlignScore_B
                 .and(stagedCoral.or(L2Algae, L3Algae))
-                .onTrue(autoScoreMode.toggleToTrue());
+                .onTrue(autoScoreMode.setTrue());
         pilot.reefAlignScore_B
                 .not()
                 .and(actionPrepState.not(), autoScoreMode)
-                .onTrue(autoScoreMode.toggleToFalse());
+                .onTrue(autoScoreMode.setFalse());
         pilot.reefAlignScore_B
                 .not()
                 .and(actionPrepState, autoScoreMode)
                 .debounce(scoreTime)
-                .onTrue(autoScoreMode.toggleToFalse());
+                .onTrue(autoScoreMode.setFalse());
     }
 
     private RobotStates() {

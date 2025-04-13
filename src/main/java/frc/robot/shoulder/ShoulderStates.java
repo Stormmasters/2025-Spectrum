@@ -94,7 +94,9 @@ public class ShoulderStates {
                 .or(Robot.getPilot().photonRemoveL3Algae)
                 .onFalse(home());
 
-        stagedCoral.and(actionState.not()).whileTrue(move(config::getHome, "Shoulder.Stage"));
+        stagedCoral
+                .and(actionState.not(), actionPrepState.not())
+                .whileTrue(move(config::getHome, "Shoulder.Stage"));
 
         L1Coral.and(actionState.or(actionPrepState))
                 .whileTrue(move(config::getL1Coral, config::getExL1Coral, "Shoulder.L1Coral"));

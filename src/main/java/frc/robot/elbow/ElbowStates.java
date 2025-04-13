@@ -96,7 +96,7 @@ public class ElbowStates {
         Robot.getOperator().antiSecretClimb_LTRSup.whileTrue(home()); // Stick the Elbow Vertical
 
         // stages elbow
-        stagedCoral.whileTrue(move(config::getStage, "Elbow.Stage"));
+        stagedCoral.and(actionPrepState.not(), actionState.not()).whileTrue(move(config::getStage, "Elbow.Stage"));
 
         L1Coral.and(actionPrepState)
                 .whileTrue(move(config::getL1Coral, config::getExL1Coral, "Elbow.L1Coral"));

@@ -72,7 +72,7 @@ public class ElevatorStates {
                 .onFalse(home());
 
         (stagedCoral.or(stagedAlgae))
-                .and(actionState.not())
+                .and(actionState.not(), actionPrepState.not())
                 .whileTrue(move(config::getHome, "Elevator.Stage"));
 
         L1Coral.and(actionPrepState)
