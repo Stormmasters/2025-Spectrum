@@ -48,6 +48,7 @@ public class RobotStates {
     public static final SpectrumState twistAtReef = new SpectrumState("twistCoralReef");
     public static final SpectrumState aligned = new SpectrumState("aligned");
     public static final SpectrumState autoScoreMode = new SpectrumState("autoScoreMode");
+    public static final SpectrumState coralScoring = new SpectrumState("coralScoring");
 
     /**
      * Define Robot States here and how they can be triggered States should be triggers that command
@@ -165,9 +166,7 @@ public class RobotStates {
 
         actionPrepState.or(autonActionOn).onTrue(actionState.setFalse());
         actionPrepState.onChangeToFalse(
-                actionState
-                        .setTrueForTimeWithCancel(RobotStates::getScoreTime, actionPrepState)
-                        .onlyIf(autoScoreMode.not()));
+                actionState.setTrueForTime(RobotStates::getScoreTime).onlyIf(autoScoreMode.not()));
 
         autonActionOff.onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
 
@@ -241,6 +240,13 @@ public class RobotStates {
         actionState.onTrue(twistAtReef.setFalse());
         reverse.onChange(twistAtReef.setFalse());
 
+        // Set coralScoring when we try to score, turn off when homed
+        actionPrepState.and(L1Coral, atL1Coral).onTrue(coralScoring.setTrue());
+        actionPrepState.and(L2Coral, atL2Coral).onTrue(coralScoring.setTrue());
+        actionPrepState.and(L3Coral, atL3Coral).onTrue(coralScoring.setTrue());
+        actionPrepState.and(L4Coral, atL4Coral).onTrue(coralScoring.setTrue());
+        algae.onTrue(coralScoring.setFalse());
+
         // *********************************
         // Auton States
         autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
@@ -302,24 +308,27 @@ public class RobotStates {
         // *********************************
         // Autoscore States
         Zones.isCloseToReef
-                .and(pilot.reefAlignScore_B, stagedCoral.or(L2Algae, L3Algae))
+                .and(pilot.reefAlignScore_B, stagedCoral)
                 .onTrue(actionPrepState.setTrue());
         Zones.isCloseToReef
-                .and(pilot.reefAlignScore_B, stagedCoral.or(L2Algae, L3Algae))
+                .and(pilot.reefAlignScore_B, stagedCoral)
                 .onFalse(actionPrepState.setFalse());
         SwerveStates.isAlignedToReef.and(pilot.reefAlignScore_B).onTrue(aligned.setTrue());
         SwerveStates.isAlignedToReef.and(pilot.reefAlignScore_B).onFalse(aligned.setFalse());
 
         aligned.debounce(scoreAfterAlignTime)
-                .and(autoScoreMode, actionPrepState, completeStagedCoral.or(completeStagedAlgae))
+                .and(
+                        autoScoreMode,
+                        actionPrepState,
+                        completeStagedCoral.or(completeStagedAlgae),
+                        pilot.actionReady_RB.not())
                 .onTrue(
                         actionPrepState.setFalse(),
                         actionState
-                                .setTrueForTimeWithCancel(RobotStates::getScoreTime, actionPrepState)
+                                .setTrueForTimeWithCancel(
+                                        RobotStates::getScoreTime, actionPrepState)
                                 .andThen(autoScoreMode.setFalse().onlyIf(actionPrepState.not())));
-        pilot.reefAlignScore_B
-                .and(stagedCoral.or(L2Algae, L3Algae))
-                .onTrue(autoScoreMode.setTrue());
+        pilot.reefAlignScore_B.and(stagedCoral).onTrue(autoScoreMode.setTrue());
         pilot.reefAlignScore_B
                 .not()
                 .and(actionPrepState.not(), autoScoreMode)
@@ -359,7 +368,8 @@ public class RobotStates {
                         coastMode.setFalse(),
                         twistAtReef.setFalse(),
                         aligned.setFalse(),
-                        autoScoreMode.setFalse())
+                        autoScoreMode.setFalse(),
+                        coralScoring.setFalse())
                 .withName("Clear States");
     }
 }

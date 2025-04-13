@@ -32,6 +32,7 @@ public class Shoulder extends Mechanism {
         @Getter private final int initializedPosition = 0;
 
         @Getter private final double scoreDelay = 0.3;
+        @Getter private final double prescoreDelay = 0.3;
 
         /* Shoulder positions in degrees || 0 is vertical down || positions should be towards front of robot */
 

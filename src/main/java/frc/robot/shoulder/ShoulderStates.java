@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Robot;
+import frc.robot.elevator.ElevatorStates;
 import frc.robot.shoulder.Shoulder.ShoulderConfig;
 import frc.spectrumLib.Telemetry;
 import frc.spectrumLib.util.Util;
@@ -100,12 +101,19 @@ public class ShoulderStates {
 
         L1Coral.and(actionState.or(actionPrepState))
                 .whileTrue(move(config::getL1Coral, config::getExL1Coral, "Shoulder.L1Coral"));
-        L2Coral.and(actionPrepState)
+        L2Coral.and(actionPrepState, coralScoring.not())
                 .whileTrue(
                         move(
                                 config::getL2Coral,
                                 config::getExL2Coral,
-                                "Shoulder.L2Coral.prescore"));
+                                "Shoulder.L2Coral.prescoreInitial"));
+        L2Coral.and(actionPrepState, coralScoring, ElevatorStates.isL2Coral)
+                .whileTrue(
+                        move(
+                                config::getL2Coral,
+                                config::getExL2Coral,
+                                config::getPrescoreDelay,
+                                "Shoulder.L2Coral.prescoreRepeat"));
         L2Coral.and(actionState)
                 .whileTrue(
                         move(
@@ -113,12 +121,19 @@ public class ShoulderStates {
                                 config::getExL2Score,
                                 config::getScoreDelay,
                                 "Shoulder.L2Coral.score"));
-        L3Coral.and(actionPrepState)
+        L3Coral.and(actionPrepState, coralScoring.not())
                 .whileTrue(
                         move(
                                 config::getL3Coral,
                                 config::getExL3Coral,
-                                "Shoulder.L3Coral.prescore"));
+                                "Shoulder.L3Coral.prescoreInitial"));
+        L3Coral.and(actionPrepState, coralScoring, ElevatorStates.isL3Coral)
+                .whileTrue(
+                        move(
+                                config::getL3Coral,
+                                config::getExL3Coral,
+                                config::getPrescoreDelay,
+                                "Shoulder.L3Coral.prescoreRepeat"));
         L3Coral.and(actionState)
                 .whileTrue(
                         move(
@@ -126,12 +141,19 @@ public class ShoulderStates {
                                 config::getExL3Score,
                                 config::getScoreDelay,
                                 "Shoulder.L3Coral.score"));
-        L4Coral.and(actionPrepState)
+        L4Coral.and(actionPrepState, coralScoring.not())
                 .whileTrue(
                         move(
                                 config::getL4Coral,
                                 config::getExL4Coral,
-                                "Shoulder.L4Coral.prescore"));
+                                "Shoulder.L4Coral.prescoreInitial"));
+        L4Coral.and(actionPrepState, coralScoring, ElevatorStates.isL4Coral)
+                .whileTrue(
+                        move(
+                                config::getL4Coral,
+                                config::getExL4Coral,
+                                config::getPrescoreDelay,
+                                "Shoulder.L4Coral.prescoreRepeat"));
         L4Coral.and(actionState)
                 .whileTrue(
                         move(
