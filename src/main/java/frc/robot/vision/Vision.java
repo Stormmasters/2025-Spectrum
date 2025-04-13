@@ -192,7 +192,7 @@ public class Vision implements NTSendable, Subsystem {
     private void enabledLimelightUpdates() {
         if (Util.teleop.getAsBoolean()) {
             for (Limelight limelight : allLimelights) {
-                limelight.setIMUmode(3);
+                limelight.setIMUmode(1);
             }
             try {
                 addMegaTag2_VisionInput(backLL);
@@ -223,7 +223,7 @@ public class Vision implements NTSendable, Subsystem {
     private void autonLimelightUpdates() {
         if (Util.autoMode.getAsBoolean() && RobotStates.poseUpdate.getAsBoolean()) {
             for (Limelight limelight : allLimelights) {
-                limelight.setIMUmode(3);
+                limelight.setIMUmode(1);
             }
             try {
                 addMegaTag2_VisionInputAuton(backLL);
@@ -302,7 +302,7 @@ public class Vision implements NTSendable, Subsystem {
             /* integrations */
             // if almost stationary and extremely close to tag
             if (robotSpeed.vxMetersPerSecond + robotSpeed.vyMetersPerSecond <= 0.2
-                    && targetSize > 0.4) {
+                    && targetSize > 4) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
                 degStds = 0.1;
@@ -414,7 +414,7 @@ public class Vision implements NTSendable, Subsystem {
 
             /* integrations */
             // if almost stationary and extremely close to tag
-            if (targetSize > 0.2) {
+            if (targetSize > 4) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
                 degStds = 0.1;
@@ -504,7 +504,7 @@ public class Vision implements NTSendable, Subsystem {
             /* integrations */
             // if almost stationary and extremely close to tag
             if (robotSpeed.vxMetersPerSecond + robotSpeed.vyMetersPerSecond <= 0.2
-                    && targetSize > 0.4) {
+                    && targetSize > 4) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
             } else if (multiTags && targetSize > 2) {
@@ -569,7 +569,7 @@ public class Vision implements NTSendable, Subsystem {
 
             /* integrations */
             // if almost stationary and extremely close to tag
-            if (targetSize > 0.2) {
+            if (targetSize > 4) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
             } else if (multiTags && targetSize > 2) {
@@ -578,9 +578,6 @@ public class Vision implements NTSendable, Subsystem {
             } else if (multiTags && targetSize > 0.1) {
                 ll.sendValidStatus("Multi integration");
                 xyStds = 0.25;
-            } else if (multiTags && targetSize > 2) {
-                ll.sendValidStatus("Strong Multi integration");
-                xyStds = 0.1;
             } else if (targetSize > 0.8
                     && (mt2PoseDifference < 0.5 || DriverStation.isDisabled())) {
                 // Integrate if the target is very big and we are close to pose or disabled
