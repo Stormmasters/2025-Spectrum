@@ -375,8 +375,12 @@ public class Twist extends Mechanism {
     public double netTurretDegrees() {
         // uses the robot pose to always point the twist away from the driver station
         double offset = 180;
-        if (!Field.isBlue()) offset += 180;
-        // if (Zones.opponentFieldSide().getAsBoolean())
+        if (!Field.isBlue()) {
+            offset += 180;
+        }
+        if (Field.isBlue() != Robot.getSwerve().inXzone(0, Field.getHalfLength()).getAsBoolean()) {
+            offset += 180;
+        }
         return (-Robot.getSwerve().getRobotPose().getRotation().getDegrees() + offset) % 360;
     }
 
