@@ -85,7 +85,7 @@ public class SpectrumState extends Trigger {
                 .alongWith(new WaitCommand(time.getAsDouble()).onlyWhile(cancelCondition.not()))
                 .andThen(
                         () -> {
-                            if (cancelCondition.not().getAsBoolean()) setState(false);
+                            setState(false);
                         })
                 .ignoringDisable(true)
                 .withName(name + " state: SetTrueForTimeWithCancel->" + time.getAsDouble());
