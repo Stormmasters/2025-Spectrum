@@ -134,7 +134,7 @@ public class Auton {
     public Command worlds3algae(boolean mirrored) {
         return Commands.sequence(
                         SpectrumAuton("W3A-Start", mirrored),
-                        autonAimScoreThenAlgae(1),
+                        autonAimScoreThenAlgae(1.5),
                         SpectrumAuton("W3A-End", mirrored))
                 .withName("W3A-Full");
     }
@@ -142,10 +142,12 @@ public class Auton {
     public Command practiceAuto() {
         return Commands.sequence(
                         SpectrumAuton("1", false),
-                        autonAimScoreThenAlgae(0.75),
+                        autonAimScoreThenAlgae(1.5),
                         SpectrumAuton("2", false),
                         autonAimScore(1.5),
-                        SpectrumAuton("3", false))
+                        Commands.waitSeconds(1),
+                        RobotStates.homeAll.toggleToTrue(),
+                        RobotStates.autonClearStates())
                 .withName("test");
     }
 
@@ -158,9 +160,7 @@ public class Auton {
 
     public Command autonAimScoreThenAlgae(double alignTime) {
         return Commands.sequence(
-                        SwerveStates.reefAimDriveVisionXY()
-                                .withTimeout(alignTime)
-                                .alongWith(autonScore()),
+                        autonAimScore(alignTime),
                         Commands.waitSeconds(0.5),
                         RobotStates.clearStates(),
                         RobotStates.l2.setTrue(),
@@ -181,7 +181,7 @@ public class Auton {
     }
 
     public Command autonScore() {
-        return Commands.sequence(Commands.waitSeconds(0.5), RobotStates.actionPrepState.setFalse())
+        return Commands.sequence(Commands.waitSeconds(1.25), RobotStates.actionPrepState.setFalse())
                 .withName("Auton.L4Score");
     }
 

@@ -49,7 +49,7 @@
     {
       "name": "poseUpdate",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.5454189506656258,
+      "endWaypointRelativePos": 0.451448707909168,
       "command": null
     },
     {
@@ -66,7 +66,7 @@
     },
     {
       "name": "actionOff",
-      "waypointRelativePos": 0.92,
+      "waypointRelativePos": 0.87,
       "endWaypointRelativePos": null,
       "command": null
     }

@@ -27,6 +27,12 @@
           "data": {
             "pathName": "4 - Center 3 Algae"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Leave Auto Line"
+          }
         }
       ]
     }

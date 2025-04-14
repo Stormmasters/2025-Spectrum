@@ -99,7 +99,7 @@
   "folder": "Houston 2 Coral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 126.5
+    "rotation": -53.5
   },
   "useDefaultConstraints": true
 }

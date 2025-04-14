@@ -19,25 +19,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Barage to Source"
+            "pathName": "Barge to Source"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "3L - W3C - Reversed"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4 - W3C - Reversed"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Feeder to IJ"
           }
         }
       ]
