@@ -64,7 +64,7 @@ public class Elbow extends Mechanism {
         @Getter private final double l3Algae = -86.0;
         @Getter private final double net = -180; // -170.0;
 
-        @Getter private final double tolerance = 2.05;
+        @Getter private final double tolerance = 3.5;
 
         @Getter private final double offset = -90.0;
         @Getter private final double initPosition = 180.0;
