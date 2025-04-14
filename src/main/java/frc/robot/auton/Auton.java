@@ -1,5 +1,7 @@
 package frc.robot.auton;
 
+import static frc.robot.RobotStates.autoScoreMode;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
@@ -50,6 +52,7 @@ public class Auton {
     public static final EventTrigger autonL4 = new EventTrigger("L4");
     public static final EventTrigger autonReverse = new EventTrigger("reverse");
     public static final EventTrigger autonPoseUpdate = new EventTrigger("poseUpdate");
+    public static final EventTrigger autonAutoScore = new EventTrigger("autoScore");
 
     private final SendableChooser<Command> pathChooser = new SendableChooser<>();
     private boolean autoMessagePrinted = true;
@@ -70,7 +73,7 @@ public class Auton {
         // pathChooser.addOption("Left | 2 L4 Coral", houston2coral(false));
         // pathChooser.addOption("Right | 2 L4 Coral", houston2coral(true));
 
-        pathChooser.addOption("test", practiceAuto());
+        pathChooser.addOption("test", test(false));
 
         pathChooser.addOption("Left | 3 L4 Coral", worlds3coral(false));
         pathChooser.addOption("Right | 3 L4 Coral", worlds3coral(true));
@@ -102,12 +105,18 @@ public class Auton {
         printAutoDuration();
     }
 
-    public Command test() {
+    public Command test(boolean mirrored) {
         return Commands.sequence(
-                        SpectrumAuton("W3A-Start", false),
-                        autonAimScoreThenAlgae(0.75),
-                        SpectrumAuton("W3A-Home-Field", false))
-                .withName("W3A-L-Full");
+                        SpectrumAuton("W3C-Start", mirrored),
+                        autonAutoScore(),
+                        Commands.waitSeconds(1),
+                        RobotStates.homeAll.toggleToTrue(),
+                        RobotStates.autonClearStates())
+                // SpectrumAuton("W3C-Leg1", mirrored),
+                // autonAutoScore(),
+                // SpectrumAuton("W3C-Leg2", mirrored),
+                // autonAutoScore())
+                .withName("Worlds 3 Coral");
     }
 
     public Command houston2coral(boolean mirrored) {
@@ -123,11 +132,11 @@ public class Auton {
     public Command worlds3coral(boolean mirrored) {
         return Commands.sequence(
                         SpectrumAuton("W3C-Start", mirrored, 2),
-                        autonAimScore(1),
+                        autonAutoScore(),
                         SpectrumAuton("W3C-Leg1", mirrored),
-                        autonAimScore(1),
+                        autonAutoScore(),
                         SpectrumAuton("W3C-Leg2", mirrored),
-                        autonAimScore(1))
+                        autonAutoScore())
                 .withName("Worlds 3 Coral");
     }
 
@@ -156,6 +165,19 @@ public class Auton {
                 .withTimeout(alignTime)
                 .alongWith(autonScore())
                 .withName("Auton.aimL4Score");
+    }
+
+    // vision aligns until autoScore scored or 3 seconds have passed without auto scoring
+    public Command autonAutoScore() {
+        return (SwerveStates.reefAimDriveVisionXY().withTimeout(3))
+                .until(autoScoreMode.not())
+                .andThen(
+                        Commands.sequence(
+                                        RobotStates.autoScoreMode.setFalse(),
+                                        Commands.waitSeconds(0.05),
+                                        RobotStates.actionPrepState.setFalse(),
+                                        Commands.waitSeconds(RobotStates.getScoreTime()))
+                                .onlyIf(autoScoreMode));
     }
 
     public Command autonAimScoreThenAlgae(double alignTime) {

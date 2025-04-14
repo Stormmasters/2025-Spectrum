@@ -32,11 +32,11 @@
     },
     {
       "anchor": {
-        "x": 5.1573205080757,
+        "x": 5.16,
         "y": 5.29
       },
       "prevControl": {
-        "x": 5.2823205080757,
+        "x": 5.285,
         "y": 5.50650635094611
       },
       "nextControl": null,
@@ -83,6 +83,12 @@
     {
       "name": "actionOn",
       "waypointRelativePos": 0.9,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "autoScore",
+      "waypointRelativePos": 1.203602192638988,
       "endWaypointRelativePos": null,
       "command": null
     }

@@ -77,6 +77,12 @@
       "command": null
     },
     {
+      "name": "autoScore",
+      "waypointRelativePos": 0.7,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "right",
       "waypointRelativePos": 0.8978073610023358,
       "endWaypointRelativePos": null,

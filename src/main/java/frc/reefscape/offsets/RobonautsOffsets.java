@@ -20,7 +20,8 @@ public class RobonautsOffsets {
     private static final TagProperties tag20Offset =
             new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180);
 
-    private static final TagProperties tag21Offset = new TagProperties(11.0, 11.0, -4.0, 0.0, 7.9, 180);
+    private static final TagProperties tag21Offset =
+            new TagProperties(11.0, 11.0, -4.0, 0.0, 7.9, 180);
 
     private static final TagProperties tag22Offset =
             new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180);

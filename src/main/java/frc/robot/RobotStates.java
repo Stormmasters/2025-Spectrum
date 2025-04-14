@@ -254,6 +254,7 @@ public class RobotStates {
         autonRight.onTrue(rightScore.setTrue());
         autonHome.onTrue(homeAll.toggleToTrue());
         autonReverse.whileTrue(reverse.setTrue());
+        autonAutoScore.onTrue(autoScoreMode.setTrue());
 
         // *********************************
         // Reversal States
@@ -332,11 +333,11 @@ public class RobotStates {
         pilot.reefAlignScore_B.and(stagedCoral).onTrue(autoScoreMode.setTrue());
         pilot.reefAlignScore_B
                 .not()
-                .and(actionPrepState.not(), autoScoreMode)
+                .and(actionPrepState.not(), autoScoreMode, Util.autoMode.not())
                 .onTrue(autoScoreMode.setFalse());
         pilot.reefAlignScore_B
                 .not()
-                .and(actionPrepState, autoScoreMode)
+                .and(actionPrepState, autoScoreMode, Util.autoMode.not())
                 .debounce(scoreTime)
                 .onTrue(autoScoreMode.setFalse());
         pilot.actionReady_RB.onTrue(autoScoreMode.setFalse());
