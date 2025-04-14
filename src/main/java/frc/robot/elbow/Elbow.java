@@ -52,11 +52,11 @@ public class Elbow extends Mechanism {
         @Getter private final double l4Score = -104.0; // -107.6;
 
         @Getter private final double exL1Coral = -130.6;
-        @Getter private final double exL2Coral = -128.7; // -123;
+        @Getter private final double exL2Coral = -127.1; // -124; // 128.7; // -123;
         @Getter private final double exL2Score = -116.0; // 109.6; // -127;
-        @Getter private final double exL3Coral = -120.6; // -143;
+        @Getter private final double exL3Coral = -127.1; // -143;
         @Getter private final double exL3Score = -106.4; // -127;
-        @Getter private final double exL4Coral = -126.6; // -135;
+        @Getter private final double exL4Coral = -131.6; // -126.6;
         @Getter private final double exL4Score = -105.0; // 6.9; // -104;
 
         @Getter private final double processorAlgae = 64.072;
@@ -64,7 +64,7 @@ public class Elbow extends Mechanism {
         @Getter private final double l3Algae = -86.0;
         @Getter private final double net = -180; // -170.0;
 
-        @Getter private final double tolerance = 0.95;
+        @Getter private final double tolerance = 3.5;
 
         @Getter private final double offset = -90.0;
         @Getter private final double initPosition = 180.0;

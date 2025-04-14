@@ -1,6 +1,8 @@
 package frc.robot.vision;
 
 import com.ctre.phoenix6.Utils;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,7 +17,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.reefscape.Field;
+import frc.reefscape.FieldHelpers;
+import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.spectrumLib.Telemetry;
@@ -24,6 +27,7 @@ import frc.spectrumLib.util.Util;
 import frc.spectrumLib.vision.Limelight;
 import frc.spectrumLib.vision.Limelight.LimelightConfig;
 import frc.spectrumLib.vision.LimelightHelpers.RawFiducial;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import lombok.Getter;
@@ -58,7 +62,7 @@ public class Vision implements NTSendable, Subsystem {
 
         @Getter double visionStdDevX = 0.5;
         @Getter double visionStdDevY = 0.5;
-        @Getter double visionStdDevTheta = 0.5;
+        @Getter double visionStdDevTheta = 0.2;
 
         @Getter
         final Matrix<N3, N1> visionStdMatrix =
@@ -67,6 +71,8 @@ public class Vision implements NTSendable, Subsystem {
 
     /** Limelights */
     @Getter public final Limelight frontLL;
+
+    private static HomeOffsets offsets;
 
     public final Limelight backLL;
 
@@ -80,6 +86,10 @@ public class Vision implements NTSendable, Subsystem {
 
     int[] blueTags = {17, 18, 19, 20, 21, 22};
     int[] redTags = {6, 7, 8, 9, 10, 11};
+
+    @Getter private static AprilTagFieldLayout tagLayout;
+
+    private static final HomeOffsets homeOffsets = new HomeOffsets();
 
     private VisionConfig config;
 
@@ -99,6 +109,15 @@ public class Vision implements NTSendable, Subsystem {
         for (Limelight limelight : allLimelights) {
             limelight.setLEDMode(false);
             limelight.setIMUmode(1);
+        }
+
+        /* Get the April Tag Field Layout */
+        try {
+            tagLayout =
+                    AprilTagFieldLayout.loadFromResource(
+                            AprilTagFields.k2025ReefscapeAndyMark.m_resourceFile);
+        } catch (IOException e) {
+            System.err.println(e);
         }
 
         this.register();
@@ -611,7 +630,7 @@ public class Vision implements NTSendable, Subsystem {
 
     private boolean rejectionCheck(Pose2d pose, double targetSize) {
         /* rejections */
-        if (Field.poseOutOfField(pose)) {
+        if (FieldHelpers.poseOutOfField(pose)) {
             return true;
         }
 
@@ -671,7 +690,7 @@ public class Vision implements NTSendable, Subsystem {
             Pose2d pose;
 
             // Check if the vision pose is bad and don't trust it
-            if (Field.poseOutOfField(botpose3D)) { // pose out of field
+            if (FieldHelpers.poseOutOfField(botpose3D)) { // pose out of field
                 Telemetry.log("Pose out of field", reject);
                 reject = true;
             } else if (Math.abs(botpose3D.getZ()) > 0.25) { // when in air
@@ -746,44 +765,6 @@ public class Vision implements NTSendable, Subsystem {
         return closetTag != -1 && closestTagIDBack == closetTag;
     }
 
-    // ------------------------------------------------------------------------------
-    // Calculation Functions
-    // ------------------------------------------------------------------------------
-
-    /**
-     * Get the angle the robot should turn to based on the id the limelight is seeing.
-     *
-     * @return
-     */
-    public double getReefTagAngle() {
-        double[][] reefFrontAngles = {
-            {17, 60}, {18, 0}, {19, -60}, {20, -120}, {21, 180}, {22, 120},
-            {6, 120}, {7, 180}, {8, -120}, {9, -60}, {10, 0}, {11, 60}
-        };
-
-        int closestTag = getClosestTagID();
-        boolean rearTag = isRearTagClosest();
-
-        if (closestTag == -1) {
-            // Return current angle if no tag seen before going through the array
-            Pose2d currentPose = Robot.getSwerve().getRobotPose();
-            int tagID = Field.Reef.getReefZoneTagID(Field.flipIfRed(currentPose));
-            closestTag = tagID;
-        }
-
-        for (int i = 0; i < reefFrontAngles.length; i++) {
-            if (closestTag == reefFrontAngles[i][0]) {
-                if (rearTag) {
-                    return Math.toRadians(reefFrontAngles[i][1] + 180);
-                }
-                return Math.toRadians(reefFrontAngles[i][1]);
-            }
-        }
-
-        // Return current angle if no tag is found
-        return Robot.getSwerve().getRobotPose().getRotation().getRadians();
-    }
-
     public boolean tagsInView() {
 
         DriverStation.Alliance alliance =
@@ -832,6 +813,23 @@ public class Vision implements NTSendable, Subsystem {
         } else {
             return 0;
         }
+    }
+
+    public Pose2d getReefOffsetFromTag() {
+        int closestTagID = Robot.getVision().getClosestTagID();
+
+        if (closestTagID < 6 || closestTagID == 16 || closestTagID > 22) {
+            closestTagID = FieldHelpers.getReefZoneTagID(Robot.getSwerve().getRobotPose());
+            if (closestTagID < 0) {
+                return Robot.getSwerve().getRobotPose();
+            }
+        }
+
+        double reefTagDistanceOffset = offsets.getReefTagDistanceOffset(closestTagID);
+        double reefTagCenterOffset = offsets.getReefTagCenterOffset(closestTagID);
+
+        return FieldHelpers.getXYOffsetFromTag(
+                closestTagID, reefTagDistanceOffset, reefTagCenterOffset);
     }
 
     // ------------------------------------------------------------------------------
