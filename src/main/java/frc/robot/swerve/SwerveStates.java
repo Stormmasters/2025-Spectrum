@@ -206,7 +206,7 @@ public class SwerveStates {
 
         final double tagAreaOffset = tagAreaOffsets[tagIndex].getTaGoal();
 
-        System.out.println("Tag Area Offset: " + tagAreaOffset);
+        // System.out.println("Tag Area Offset: " + tagAreaOffset);
         SmartDashboard.putNumber("Tag Area Offset: ", tagAreaOffset);
         return swerve.calculateTagDistanceAlignController(() -> tagAreaOffset);
     }

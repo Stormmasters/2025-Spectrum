@@ -94,7 +94,7 @@ public class ShoulderStates {
                 .onFalse(home());
 
         stagedCoral
-                .and(actionState.not(), actionPrepState.not().and(Util.autoMode.not()))
+                .and(actionState.not(), actionPrepState.not().debounce(getActionPrepToActionTime()))
                 .whileTrue(move(config::getHome, "Shoulder.Stage"));
 
         L1Coral.and(actionState.or(actionPrepState))
