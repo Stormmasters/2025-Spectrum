@@ -107,6 +107,7 @@ public class Auton {
 
     public Command test(boolean mirrored) {
         return Commands.sequence(
+                        autonCoralL4Stage(),
                         SpectrumAuton("W3C-Start", mirrored),
                         autonAutoScore(),
                         Commands.waitSeconds(1),
@@ -221,6 +222,10 @@ public class Auton {
                                         Commands.waitSeconds(0.5),
                                         RobotStates.homeAll.toggleToTrue(),
                                         Commands.waitSeconds(0.5)));
+    }
+
+    public Command autonCoralL4Stage() {
+        return Commands.sequence(RobotStates.coral.setTrue(), RobotStates.l4.setTrue());
     }
 
     /**

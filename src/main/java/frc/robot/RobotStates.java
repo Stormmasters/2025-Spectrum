@@ -308,10 +308,10 @@ public class RobotStates {
         // *********************************
         // Align States
         SwerveStates.isAlignedToReef
-                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A))
+                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A, Util.autoMode))
                 .onTrue(aligned.setTrue());
         SwerveStates.isAlignedToReef
-                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A))
+                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A, Util.autoMode))
                 .onFalse(aligned.setFalse());
 
         // *********************************
@@ -319,7 +319,7 @@ public class RobotStates {
         pilot.reefAlignScore_B.and(stagedCoral).onTrue(autoScoreMode.setTrue());
         pilot.reefAlignScore_B
                 .not()
-                .and(autoScoreMode)
+                .and(autoScoreMode, Util.autoMode.not())
                 .debounce(actionPrepToActionTime)
                 .onTrue(Commands.waitUntil(actionState.not()), autoScoreMode.setFalse());
 
