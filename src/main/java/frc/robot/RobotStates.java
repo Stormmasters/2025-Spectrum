@@ -4,6 +4,7 @@ import static frc.robot.auton.Auton.*;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.reefscape.FieldHelpers;
 import frc.reefscape.Zones;
@@ -27,6 +28,7 @@ public class RobotStates {
     @Getter private static double scoreTime = 2.0;
     @Getter private static double twistAtReefDelay = 0.2;
     @Getter private static double scoreAfterAlignTime = 0.03;
+    @Getter private static double actionPrepToActionTime = 0.05;
 
     // Robot States
     // These are states that aren't directly tied to hardware or buttons, etc.
@@ -167,8 +169,7 @@ public class RobotStates {
         actionPrepState.or(autonActionOn).onTrue(actionState.setFalse());
         actionPrepState.onChangeToFalse(
                 actionState
-                        .setTrueForTimeWithCancel(
-                                RobotStates::getScoreTime, actionPrepState)
+                        .setTrueForTimeWithCancel(RobotStates::getScoreTime, actionPrepState)
                         .onlyIf(autoScoreMode.not()));
 
         autonActionOff.onChangeToFalse(actionState.setTrueForTime(RobotStates::getScoreTime));
@@ -309,13 +310,7 @@ public class RobotStates {
         climbPrep.onTrue(reverse.setFalse());
 
         // *********************************
-        // Autoscore States
-        Zones.isCloseToReef
-                .and(pilot.reefAlignScore_B, stagedCoral)
-                .onTrue(actionPrepState.setTrue());
-        Zones.isCloseToReef
-                .and(pilot.reefAlignScore_B, stagedCoral)
-                .onFalse(actionPrepState.setFalse().onlyIf(pilot.actionReady_RB.not()));
+        // Align States
         SwerveStates.isAlignedToReef
                 .and(pilot.reefAlignScore_B.or(pilot.reefVision_A))
                 .onTrue(aligned.setTrue());
@@ -323,11 +318,31 @@ public class RobotStates {
                 .and(pilot.reefAlignScore_B.or(pilot.reefVision_A))
                 .onFalse(aligned.setFalse());
 
+        // *********************************
+        // Autoscore States
+        pilot.reefAlignScore_B.and(stagedCoral).onTrue(autoScoreMode.setTrue());
+        pilot.reefAlignScore_B
+                .not()
+                .and(autoScoreMode)
+                .debounce(actionPrepToActionTime)
+                .onTrue(Commands.waitUntil(actionState.not()), autoScoreMode.setFalse());
+
+        pilot.actionReady_RB.onTrue(autoScoreMode.setFalse());
+
+        // prep before autoscoring
+        Zones.isCloseToReef
+                .and(pilot.reefAlignScore_B, stagedCoral)
+                .onTrue(actionPrepState.setTrue());
+        Zones.isCloseToReef
+                .and(pilot.reefAlignScore_B, stagedCoral)
+                .onFalse(actionPrepState.setFalse().onlyIf(pilot.actionReady_RB.not()));
+
+        // scoring action
         aligned.debounce(scoreAfterAlignTime)
                 .and(
                         autoScoreMode,
                         actionPrepState,
-                        completeStagedCoral.or(completeStagedAlgae),
+                        completeStagedCoral,
                         pilot.actionReady_RB.not())
                 .onTrue(
                         actionPrepState.setFalse(),
@@ -335,22 +350,6 @@ public class RobotStates {
                                 .setTrueForTimeWithCancel(
                                         RobotStates::getScoreTime, actionPrepState)
                                 .andThen(autoScoreMode.setFalse().onlyIf(actionPrepState.not())));
-        pilot.reefAlignScore_B.and(stagedCoral).onTrue(autoScoreMode.setTrue());
-        pilot.reefAlignScore_B
-                .not()
-                .and(actionPrepState.not(), autoScoreMode)
-                .onTrue(autoScoreMode.setFalse());
-        pilot.reefAlignScore_B
-                .not()
-                .and(actionPrepState, autoScoreMode)
-                .debounce(scoreTime)
-                .onTrue(autoScoreMode.setFalse());
-        pilot.actionReady_RB.onTrue(autoScoreMode.setFalse());
-        // pilot.reefAlignScore_B
-        //         .not()
-        //         .onTrue(
-        //                 homeAll.toggleToTrue()
-        //                         .onlyIf(pilot.actionReady_RB.not().and(actionState.not())));
     }
 
     private RobotStates() {
