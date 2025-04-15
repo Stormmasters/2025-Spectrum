@@ -433,7 +433,7 @@ public class Vision implements NTSendable, Subsystem {
 
             /* integrations */
             // if almost stationary and extremely close to tag
-            if (targetSize > 4) {
+            if (targetSize > 2) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
                 degStds = 0.1;
@@ -588,7 +588,7 @@ public class Vision implements NTSendable, Subsystem {
 
             /* integrations */
             // if almost stationary and extremely close to tag
-            if (targetSize > 4) {
+            if (targetSize > 2) {
                 ll.sendValidStatus("Stationary close integration");
                 xyStds = 0.1;
             } else if (multiTags && targetSize > 2) {

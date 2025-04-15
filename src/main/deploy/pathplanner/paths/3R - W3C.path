@@ -1,0 +1,111 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.2077949438202247,
+        "y": 7.048595505617977
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.9210523950737786,
+        "y": 6.636796124135232
+      },
+      "isLocked": false,
+      "linkedName": "feeder"
+    },
+    {
+      "anchor": {
+        "x": 3.75,
+        "y": 5.28
+      },
+      "prevControl": {
+        "x": 3.1500000000000012,
+        "y": 6.319230484541327
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Align Override",
+      "minWaypointRelativePos": 0.45,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "clearStates",
+      "waypointRelativePos": 0.20242756460454345,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "coral",
+      "waypointRelativePos": 0.29953014878621353,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "L4",
+      "waypointRelativePos": 0.46725185685346987,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "poseUpdate",
+      "waypointRelativePos": 0.600234925606883,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "actionOn",
+      "waypointRelativePos": 0.6428089128966888,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "autoScore",
+      "waypointRelativePos": 0.7,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "right",
+      "waypointRelativePos": 0.8978073610023358,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 10.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -59.99999999999999
+  },
+  "reversed": false,
+  "folder": "Worlds 3 Coral",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -53.5
+  },
+  "useDefaultConstraints": true
+}

@@ -13,8 +13,8 @@ public class TagProperties {
     /**
      * @param offsetInchesLeft
      * @param offsetInchesRight
-     * @param centerOffsetInchesRight
      * @param centerOffsetInchesLeft
+     * @param centerOffsetInchesRight
      * @param taGoal
      * @param angle
      */

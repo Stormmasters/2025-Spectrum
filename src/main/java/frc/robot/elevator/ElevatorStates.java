@@ -90,9 +90,9 @@ public class ElevatorStates {
         L4Coral.and(actionState)
                 .whileTrue(move(config::getL4Score, config::getExl4Score, "Elevator.L4CoralScore"));
 
-        // L4Coral.and(actionPrepState, Util.autoMode)
-        //         .whileTrue(slowMove(config::getL4Coral, config::getExl4Coral,
-        // "Elevator.L4Coral"));
+        L4Coral.and(actionPrepState, Util.autoMode)
+                .whileTrue(
+                        slowMove(config::getL4Coral, config::getExl4Coral, "Elevator.slowL4Coral"));
         // L4Coral.and(actionState, Util.autoMode)
         //         .whileTrue(
         //                 slowMove(
@@ -110,6 +110,8 @@ public class ElevatorStates {
         L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Elevator.L3Algae"));
         L3Algae.and(actionState).whileTrue(move(config::getHome, "Elevator.L3AlgaeHome"));
         netAlgae.and(actionPrepState).whileTrue(move(config::getNetAlgae, "Elevator.NetAlgae"));
+        // netAlgae.and(actionPrepState, Util.autoMode)
+        //         .whileTrue(slowMove(config::getNetAlgae, "Elevator.NetAlgae"));
 
         Robot.getPilot().reZero_start.onTrue(elevator.resetToInitialPos());
     }
@@ -144,7 +146,7 @@ public class ElevatorStates {
     }
 
     private static Command slowHome() {
-        return slowMove(() -> config.getHome(), "Elevator.slowHome");
+        return slowMove(config::getHome, "Elevator.slowHome");
     }
 
     private static Command coastMode() {

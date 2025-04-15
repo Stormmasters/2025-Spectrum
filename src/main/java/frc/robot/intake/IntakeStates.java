@@ -1,7 +1,6 @@
 package frc.robot.intake;
 
 import static frc.robot.RobotStates.*;
-import static frc.robot.auton.Auton.autonScore;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -95,17 +94,6 @@ public class IntakeStates {
                                         //         config::getCoralScoreSupplyCurrent,
                                         //         config::getCoralScoreTorqueCurrent));
                                         intake.runTorqueFOC(config::getCoralScoreTorqueCurrent)));
-
-        autonScore
-                .and(photon)
-                .onTrue(
-                        new WaitCommand(2.0)
-                                .andThen(
-                                        runVoltageCurrentLimits(
-                                                        config::getCoralScoreVoltage,
-                                                        config::getCoralScoreSupplyCurrent,
-                                                        config::getCoralScoreTorqueCurrent)
-                                                .repeatedly()));
 
         coastMode.whileTrue(log(coastMode()));
         coastMode.onFalse(log(ensureBrakeMode()));

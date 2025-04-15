@@ -119,8 +119,8 @@ public class ElbowStates {
         L4Coral.and(actionState)
                 .whileTrue(move(config::getL4Score, config::getExL4Score, "Elbow.l4Score"));
 
-        // L4Coral.and(actionPrepState, ElevatorStates.isL4Coral, Util.autoMode)
-        //         .whileTrue(slowMove(config::getExL4Coral, "Elbow.l4Coral"));
+        L4Coral.and(actionPrepState, ElevatorStates.isL4Coral, Util.autoMode)
+                .whileTrue(slowMove(config::getExL4Coral, "Elbow.slowL4Coral"));
         // L4Coral.and(actionState, Util.autoMode)
         //         .whileTrue(slowMove(config::getExL4Score, "Elbow.l4Score"));
 
@@ -146,7 +146,7 @@ public class ElbowStates {
     }
 
     private static Command slowHome() {
-        return slowMove(config::getHome, "Elbow.home");
+        return slowMove(config::getHome, "Elbow.slowHome");
     }
 
     // missing auton Elbow commands, add when auton is added

@@ -91,18 +91,33 @@ public class SwerveStates {
     }
 
     /** Pilot Commands ************************************************************************ */
-    /**
-     * Drive the robot using left stick and control orientation using the right stick Only Cardinal
-     * directions are allowed
-     *
-     * @return
-     */
+    /** Drive the robot using left stick and control orientation using the right stick. */
+    protected static Command pilotDrive() {
+        return drive(
+                        pilot::getDriveFwdPositive,
+                        pilot::getDriveLeftPositive,
+                        pilot::getDriveCCWPositive)
+                .withName("Swerve.PilotDrive");
+    }
+
+    public static Command autonAlgaeDriveIntake(double timeout) {
+        return fpvAimDrive(() -> 0.75, () -> 0, FieldHelpers::getReefTagAngle).withTimeout(timeout);
+    }
+
     public static Command reefAimDriveVisionTA() {
         return fpvAimDrive(
                         SwerveStates::getTagDistanceVelocity,
                         SwerveStates::getTagTxVelocity,
                         () -> FieldHelpers.getReefTagAngle())
                 .withName("Swerve.reefAimDriveVisionTA");
+    }
+
+    public static Command autonAlgaeReefAimDriveVisionXY() {
+        return alignDrive(
+                        () -> FieldHelpers.getReefOffsetFromTagX() + 0.05,
+                        () -> FieldHelpers.getReefOffsetFromTagY(),
+                        () -> FieldHelpers.getReefTagAngle())
+                .withName("Swerve.reefAimDriveVisionXY");
     }
 
     public static Command reefAimDriveVisionXY() {
@@ -214,14 +229,6 @@ public class SwerveStates {
                         pilot::getDriveLeftPositive,
                         pilot::chooseCardinalDirections)
                 .withName("Swerve.PilotStickSteer");
-    }
-
-    protected static Command pilotDrive() {
-        return drive(
-                        pilot::getDriveFwdPositive,
-                        pilot::getDriveLeftPositive,
-                        pilot::getDriveCCWPositive)
-                .withName("Swerve.PilotDrive");
     }
 
     protected static Command fpvDrive() {

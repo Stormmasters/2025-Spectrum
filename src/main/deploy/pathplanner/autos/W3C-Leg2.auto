@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2 Alt - L4 Trough Rush"
+            "pathName": "4 - W3C"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3L - L4 Trough Rush"
+            "pathName": "3R - W3C"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Houston 2 Coral",
+  "folder": "Worlds 3 Coral",
   "choreoAuto": false
 }

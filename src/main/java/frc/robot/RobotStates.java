@@ -77,7 +77,7 @@ public class RobotStates {
 
     // mechanism preset Triggers (Wrist, Elevator, etc.)
     public static final Trigger shrink = pilot.fn.or(shrinkState);
-    public static final Trigger processorAlgae = (l1.and(algae)).or(autonProcessor);
+    public static final Trigger processorAlgae = l1.and(algae);
     public static final Trigger L2Algae = (l2.and(algae)).or(autonLowAlgae);
     public static final Trigger L3Algae = (l3.and(algae)).or(autonHighAlgae);
     public static final Trigger netAlgae = (l4.and(algae)).or(autonNet);
@@ -99,7 +99,8 @@ public class RobotStates {
     public static final Trigger atL3Coral =
             ElbowStates.isL3Coral.and(ShoulderStates.isL3Coral, ElevatorStates.isL3Coral);
     public static final Trigger atL4Coral =
-            ElbowStates.isL4Coral.and(ShoulderStates.isL4Coral, ElevatorStates.isL4Coral);
+            (ElbowStates.isL4Coral.and(ShoulderStates.isL4Coral, ElevatorStates.isL4Coral))
+                    .or(autonAtL4Coral);
 
     public static final Trigger atL2Algae =
             ElbowStates.isL2Algae.and(ShoulderStates.isL2Algae, ElevatorStates.isL2Algae);
@@ -117,9 +118,6 @@ public class RobotStates {
                     () -> FieldHelpers.reverseRotationBlue() == Zones.blueFieldSide.getAsBoolean());
 
     // auton Triggers
-    public static final Trigger shoulderL4 = autonShoulderL4;
-    public static final Trigger twistL4R = autonTwistL4R;
-    public static final Trigger twistL4L = autonTwistL4L;
     public static final Trigger poseUpdate = autonPoseUpdate;
 
     public static final Trigger isAtHome =
@@ -145,7 +143,7 @@ public class RobotStates {
         // HOME Commands and States
         pilot.home_select.or(operator.home_select).whileTrue(homeAll.toggleToTrue());
         pilot.home_select.or(operator.home_select).onFalse(clearStates());
-        autonClearStates.whileTrue(clearStates());
+        autonClearStates.onTrue(autonClearStates());
 
         actionState
                 .or(operator.staged)
@@ -215,19 +213,17 @@ public class RobotStates {
         operator.coralStage.or(autonCoral).onTrue(coral.setTrue(), algae.setFalse());
 
         // Set algae if we are staging algae
-        operator.algaeStage
-                .or(autonHighAlgae, autonLowAlgae, autonProcessor, autonNet)
-                .onTrue(algae.setTrue(), coral.setFalse());
+        operator.algaeStage.or(autonAlgae).onTrue(algae.setTrue(), coral.setFalse());
 
         // Set Levels
         (operator.L1.and(operator.staged))
                 .or(autonL1)
                 .onTrue(l1.setTrue(), l2.setFalse(), l3.setFalse(), l4.setFalse());
-        operator.L2
-                .and(operator.staged)
+        (operator.L2.and(operator.staged))
+                .or(autonL2)
                 .onTrue(l2.setTrue(), l1.setFalse(), l3.setFalse(), l4.setFalse());
-        operator.L3
-                .and(operator.staged)
+        (operator.L3.and(operator.staged))
+                .or(autonL3)
                 .onTrue(l3.setTrue(), l1.setFalse(), l2.setFalse(), l4.setFalse());
         (operator.L4.and(operator.staged))
                 .or(autonL4)
@@ -256,7 +252,6 @@ public class RobotStates {
         // Auton States
         autonSourceIntakeOn.onTrue(autonStationIntake.setTrue());
         autonSourceIntakeOff.onTrue(autonStationIntake.setFalse());
-        autonHomeOff.onTrue(homeAll.setFalse());
         autonLeft.onTrue(rightScore.setFalse());
         autonRight.onTrue(rightScore.setTrue());
         autonHome.onTrue(homeAll.toggleToTrue());
@@ -312,10 +307,10 @@ public class RobotStates {
         // *********************************
         // Align States
         SwerveStates.isAlignedToReef
-                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A))
+                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A, Util.autoMode))
                 .onTrue(aligned.setTrue());
         SwerveStates.isAlignedToReef
-                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A))
+                .and(pilot.reefAlignScore_B.or(pilot.reefVision_A, Util.autoMode))
                 .onFalse(aligned.setFalse());
 
         // *********************************
@@ -323,7 +318,7 @@ public class RobotStates {
         pilot.reefAlignScore_B.and(stagedCoral).onTrue(autoScoreMode.setTrue());
         pilot.reefAlignScore_B
                 .not()
-                .and(autoScoreMode)
+                .and(autoScoreMode, Util.autoMode.not())
                 .debounce(actionPrepToActionTime)
                 .onTrue(Commands.waitUntil(actionState.not()), autoScoreMode.setFalse());
 
@@ -349,6 +344,18 @@ public class RobotStates {
                         actionState
                                 .setTrueForTimeWithCancel(
                                         RobotStates::getScoreTime, actionPrepState)
+                                .andThen(autoScoreMode.setFalse().onlyIf(actionPrepState.not())));
+
+        aligned.debounce(scoreAfterAlignTime)
+                .and(
+                        autonAutoScore,
+                        actionPrepState,
+                        completeStagedCoral,
+                        pilot.actionReady_RB.not())
+                .onTrue(
+                        actionPrepState.setFalse(),
+                        actionState
+                                .setTrueForTimeWithCancel(() -> 0.5, actionPrepState)
                                 .andThen(autoScoreMode.setFalse().onlyIf(actionPrepState.not())));
     }
 
@@ -383,5 +390,17 @@ public class RobotStates {
                         autoScoreMode.setFalse(),
                         coralScoring.setFalse())
                 .withName("Clear States");
+    }
+
+    // clears states without stopping homing sequence
+    public static Command autonClearStates() {
+        return clearStaged()
+                .alongWith(
+                        reverse.setFalse(),
+                        actionPrepState.setFalse(),
+                        actionState.setFalse(),
+                        coastMode.setFalse(),
+                        twistAtReef.setFalse())
+                .withName("Auton Clear States");
     }
 }

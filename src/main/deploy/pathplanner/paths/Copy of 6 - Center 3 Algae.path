@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.21,
-        "y": 5.28
+        "x": 5.162,
+        "y": 2.863
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.21,
-        "y": 6.28
+        "x": 6.606482312233031,
+        "y": 2.7366241730158958
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.2077949438202247,
-        "y": 7.048595505617977
+        "x": 6.6305477528089884,
+        "y": 4.164676966292135
       },
       "prevControl": {
-        "x": 1.8815308988764041,
-        "y": 6.3912921348314615
+        "x": 6.6305477528089884,
+        "y": 3.7646769662921353
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "feeder"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,27 +33,21 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "clearStates",
-      "waypointRelativePos": 0.2478465152701622,
-      "endWaypointRelativePos": null,
+      "name": "poseUpdate",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0000000000000293,
       "command": null
     },
     {
-      "name": "reverse",
-      "waypointRelativePos": 0.2979639780736014,
+      "name": "home",
+      "waypointRelativePos": 0.15113547376665382,
       "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "sourceIntakeOn",
-      "waypointRelativePos": 0.39663273296789026,
-      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -61,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.5
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Houston 2 Coral",
+  "folder": "Worlds 3 Algae",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": 119.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

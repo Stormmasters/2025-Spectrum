@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2077949438202247,
-        "y": 7.048595505617977
+        "x": 7.2,
+        "y": 5.13
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9210523950737786,
-        "y": 6.636796124135232
+        "x": 6.58633426966292,
+        "y": 5.4778792134831455
       },
       "isLocked": false,
-      "linkedName": "feeder"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.77,
-        "y": 5.25
+        "x": 5.169899759519642,
+        "y": 5.204643312827361
       },
       "prevControl": {
-        "x": 3.1700000000000013,
-        "y": 6.289230484541327
+        "x": 5.669899759519642,
+        "y": 6.0706687166118
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,12 +31,12 @@
   "rotationTargets": [],
   "constraintZones": [
     {
-      "name": "Align Override",
-      "minWaypointRelativePos": 0.6519185591229496,
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.805403288958495,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 3.5,
-        "maxAcceleration": 1.1,
+        "maxVelocity": 4.0,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,51 +47,45 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "sourceIntakeOff",
-      "waypointRelativePos": 0.1523101018010971,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "clearStates",
-      "waypointRelativePos": 0.20242756460454345,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "coral",
-      "waypointRelativePos": 0.29953014878621353,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "L4",
-      "waypointRelativePos": 0.3042286609240332,
+      "name": "home",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "poseUpdate",
-      "waypointRelativePos": 0.3496476115896634,
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": 1.0,
       "command": null
     },
     {
-      "name": "actionOn",
-      "waypointRelativePos": 0.5532498042286635,
+      "name": "clearStates",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
-      "name": "actionOff",
-      "waypointRelativePos": 0.99,
+      "name": "L3",
+      "waypointRelativePos": 0.10062646828504239,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "algae",
+      "waypointRelativePos": 0.10375880971025843,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "actionOn",
+      "waypointRelativePos": 0.6018010963194997,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -99,13 +93,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -64.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Blue Left Source",
+  "folder": "Worlds 3 Algae",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -53.5
+    "rotation": 180.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

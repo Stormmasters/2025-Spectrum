@@ -17,6 +17,8 @@ public class ShoulderStates {
     private static ShoulderConfig config = Robot.getConfig().shoulder;
     public static final Trigger isHome = shoulder.atDegrees(config::getHome, config::getTolerance);
     public static final Trigger isNetPosition = shoulder.atDegrees(config::getNetAlgae, () -> 90);
+    public static final Trigger isAutonNetPosition =
+            shoulder.aboveDegrees(config::getAutonShoulderNetChecker, config::getTolerance);
 
     public static final Trigger isL1Coral =
             shoulder.atDegrees(config::getExL1Coral, config::getTolerance)
@@ -157,8 +159,8 @@ public class ShoulderStates {
                                 config::getExL4Score,
                                 config::getScoreDelay,
                                 "Shoulder.L4Coral.score"));
-        // L4Coral.and(actionPrepState, Util.autoMode)
-        //         .whileTrue(slowMove(config::getExl4Coral, "Shoulder.L4Coral.prescore"));
+        L4Coral.and(actionPrepState, Util.autoMode)
+                .whileTrue(slowMove(config::getExL4Coral, "Shoulder.L4Coral.slowPrescore"));
         // L4Coral.and(actionState, Util.autoMode)
         //         .whileTrue(
         //                 slowMove(
@@ -166,9 +168,6 @@ public class ShoulderStates {
         //                         config::getExl4Score,
         //                         config::getScoreDelay,
         //                         "Shoulder.L4Coral.score"));
-
-        shoulderL4.whileTrue(
-                move(config::getL4Coral, config::getExL4Coral, "Shoulder.L4Coral.prescore"));
 
         // algae
         processorAlgae
@@ -201,7 +200,7 @@ public class ShoulderStates {
     }
 
     public static Command slowHome() {
-        return shoulder.slowMove(() -> config.getHome()).withName("Shoulder.slowHome");
+        return shoulder.slowMove(config::getHome).withName("Shoulder.slowHome");
     }
 
     public static DoubleSupplier getPosition() {
@@ -222,14 +221,14 @@ public class ShoulderStates {
 
     public static Command move(
             DoubleSupplier degrees, DoubleSupplier exDegrees, DoubleSupplier delay, String name) {
-        return new WaitCommand(delay.getAsDouble())
-                .andThen(move(degrees, exDegrees, name).withName(name));
+        return (new WaitCommand(delay.getAsDouble())
+                .andThen(move(degrees, exDegrees, name))
+                .withName(name));
     }
 
     public static Command slowMove(
             DoubleSupplier degrees, DoubleSupplier exDegrees, DoubleSupplier delay, String name) {
-        return new WaitCommand(delay.getAsDouble())
-                .andThen(move(degrees, exDegrees, name).withName(name));
+        return new WaitCommand(delay.getAsDouble()).andThen(slowMove(degrees, name).withName(name));
     }
 
     public static Command coastMode() {

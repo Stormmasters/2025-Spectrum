@@ -55,7 +55,7 @@ public class Elevator extends Mechanism {
         @Getter @Setter private double exl3Coral = 16.9; // 20; // 12.8;
         @Getter @Setter private double exl3Score = 14.6; // 17.6; // 11.8;
         @Getter @Setter private double exl4Coral = fullExtend;
-        @Getter @Setter private double exl4Score = exl4Coral - 3;
+        @Getter @Setter private double exl4Score = exl4Coral;
 
         @Getter private double triggerTolerance = 1.15;
         @Getter private double elevatorIsUpHeight = 5;
@@ -74,8 +74,8 @@ public class Elevator extends Mechanism {
         @Getter private final double mmCruiseVelocity = 70;
         @Getter private final double mmAcceleration = 400;
         @Getter private final double mmJerk = 4500;
-        @Getter private final double slowMmAcceleration = 75;
-        @Getter private final double slowMmJerk = 750;
+        @Getter private final double slowMmAcceleration = 55;
+        @Getter private final double slowMmJerk = 550;
 
         @Getter private double currentLimit = 60;
         @Getter private double torqueCurrentLimit = 160;

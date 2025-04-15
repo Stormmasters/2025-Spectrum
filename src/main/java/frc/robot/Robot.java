@@ -9,12 +9,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.auton.Auton;
 import frc.robot.climb.Climb;
@@ -51,6 +53,7 @@ import frc.spectrumLib.util.CrashTracker;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import org.json.simple.parser.ParseException;
@@ -233,20 +236,14 @@ public class Robot extends SpectrumRobot {
         resetCommandsAndButtons();
 
         if (!commandInit) {
-            Command AutonStartCommand =
-                    (FollowPathCommand.warmupCommand()
-                                    .andThen(
-                                            PathfindingCommand.warmupCommand(),
-                                            auton.SpectrumAuton("Side Start L4", false)
-                                                    .withTimeout(.5),
-                                            new InstantCommand(
-                                                    () -> {
-                                                        SmartDashboard.putBoolean(
-                                                                "Initialized?", true);
-                                                        clearCommandsAndButtons();
-                                                    })))
+            Command autonStartCommand =
+                    Commands.sequence(
+                                    FollowPathCommand.warmupCommand(),
+                                    PathfindingCommand.warmupCommand(),
+                                    new InstantCommand(
+                                            () -> SmartDashboard.putBoolean("Initialized?", true)))
                             .ignoringDisable(true);
-            AutonStartCommand.schedule();
+            autonStartCommand.schedule();
             commandInit = true;
         }
 
@@ -259,14 +256,27 @@ public class Robot extends SpectrumRobot {
         String newAutoName;
         List<PathPlannerPath> pathPlannerPaths = new ArrayList<>();
         newAutoName = (auton.getAutonomousCommand()).getName();
+
         if (!autoName.equals(newAutoName)) {
             autoName = newAutoName;
+
             if (AutoBuilder.getAllAutoNames().contains(autoName)) {
                 try {
                     pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
                 } catch (IOException | ParseException e) {
                     Telemetry.print("Could not load path planner paths");
                 }
+
+                // Flip the paths if on red alliance
+                Optional<Alliance> alliance = DriverStation.getAlliance();
+                if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+                    pathPlannerPaths =
+                            pathPlannerPaths.stream()
+                                    .map(PathPlannerPath::flipPath)
+                                    .collect(Collectors.toList());
+                }
+
+                // Convert path points to poses
                 List<Pose2d> poses = new ArrayList<>();
                 for (PathPlannerPath path : pathPlannerPaths) {
                     poses.addAll(
@@ -300,12 +310,7 @@ public class Robot extends SpectrumRobot {
     @Override
     public void autonomousInit() {
         try {
-            // Telemetry.print("@@@ Auton Init Starting @@@ ");
-            clearCommandsAndButtons();
-
             auton.init();
-
-            // Telemetry.print("@@@ Auton Init Complete @@@ ");
         } catch (Throwable t) {
             // intercept error and log it
             CrashTracker.logThrowableCrash(t);

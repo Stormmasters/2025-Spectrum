@@ -7,25 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4 - L4 Trough Rush"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "1 - Center 3 Algae"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "5 - L4 Trough Rush"
+            "pathName": "2 - Center 3 Algae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Barge to Source"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3L - W3C - Reversed"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Houston 2 Coral",
+  "folder": "118 Practice Field Test",
   "choreoAuto": false
 }

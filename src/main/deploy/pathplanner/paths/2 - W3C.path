@@ -1,0 +1,99 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.16,
+        "y": 5.29
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.195818585470191,
+        "y": 6.4390666646784664
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.2077949438202247,
+        "y": 7.048595505617977
+      },
+      "prevControl": {
+        "x": 1.8026177305715654,
+        "y": 6.24473864500076
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "feeder"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.3010963194988258,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 2.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "poseUpdate",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 0.49843382928738567,
+      "command": null
+    },
+    {
+      "name": "home",
+      "waypointRelativePos": 0.09906029757243397,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "reverse",
+      "waypointRelativePos": 0.29639780736101107,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "clearStates",
+      "waypointRelativePos": 0.6487862176977188,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "sourceIntakeOn",
+      "waypointRelativePos": 0.7036021926389873,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 10.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -53.5
+  },
+  "reversed": false,
+  "folder": "Worlds 3 Coral",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -119.99999999999999
+  },
+  "useDefaultConstraints": true
+}

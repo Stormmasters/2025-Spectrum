@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1 Alt - L4 Trough Rush"
+            "pathName": "2 - L4 Trough Rush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3L - L4 Trough Rush"
           }
         }
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Houston 2 Coral",
   "choreoAuto": false
 }

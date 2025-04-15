@@ -40,7 +40,7 @@ public class Elbow extends Mechanism {
         @Getter private final double stationIntake = -158.7;
         @Getter private final double stationExtendedIntake = -154.4;
         @Getter private final double groundAlgaeIntake = 64;
-        @Getter private final double groundCoralIntake = 77;
+        @Getter private final double groundCoralIntake = 76;
 
         @Getter private final double stage = 180; // -160;
         @Getter private final double l1Coral = -121.4;
@@ -57,7 +57,7 @@ public class Elbow extends Mechanism {
         @Getter private final double exL3Coral = -127.1; // -143;
         @Getter private final double exL3Score = -106.4; // -127;
         @Getter private final double exL4Coral = -131.6; // -126.6;
-        @Getter private final double exL4Score = -105.0; // 6.9; // -104;
+        @Getter private final double exL4Score = -90.0; // 6.9; // -104;
 
         @Getter private final double processorAlgae = 64.072;
         @Getter private final double l2Algae = -86.0;
@@ -84,7 +84,7 @@ public class Elbow extends Mechanism {
         @Getter private final double mmCruiseVelocity = 1;
         @Getter private final double mmAcceleration = 20;
         @Getter private final double mmJerk = 100;
-        @Getter private final double slowMmAcceleration = 7;
+        @Getter private final double slowMmAcceleration = 5;
         @Getter private final double slowMmJerk = 60;
         @Getter private final double groundMmAcceleration = 3;
         @Getter private final double groundMmJerk = 60;
@@ -350,7 +350,7 @@ public class Elbow extends Mechanism {
         return run(
                 () ->
                         setDynMMPositionFoc(
-                                getOffsetRotations(degrees),
+                                getIfReversedOffsetInRotations(degrees),
                                 config::getMmCruiseVelocity,
                                 config::getSlowMmAcceleration,
                                 config::getSlowMmJerk));
