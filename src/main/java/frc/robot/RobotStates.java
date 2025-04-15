@@ -256,7 +256,6 @@ public class RobotStates {
         autonRight.onTrue(rightScore.setTrue());
         autonHome.onTrue(homeAll.toggleToTrue());
         autonReverse.whileTrue(reverse.setTrue());
-        autonAutoScore.onTrue(autoScoreMode.setTrue());
 
         // *********************************
         // Reversal States
@@ -345,6 +344,18 @@ public class RobotStates {
                         actionState
                                 .setTrueForTimeWithCancel(
                                         RobotStates::getScoreTime, actionPrepState)
+                                .andThen(autoScoreMode.setFalse().onlyIf(actionPrepState.not())));
+
+        aligned.debounce(scoreAfterAlignTime)
+                .and(
+                        autonAutoScore,
+                        actionPrepState,
+                        completeStagedCoral,
+                        pilot.actionReady_RB.not())
+                .onTrue(
+                        actionPrepState.setFalse(),
+                        actionState
+                                .setTrueForTimeWithCancel(() -> 0.5, actionPrepState)
                                 .andThen(autoScoreMode.setFalse().onlyIf(actionPrepState.not())));
     }
 

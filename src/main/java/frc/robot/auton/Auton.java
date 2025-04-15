@@ -110,13 +110,13 @@ public class Auton {
                         autonCoralL4Stage(),
                         SpectrumAuton("W3C-Start", mirrored),
                         autonAutoScore(),
+                        SpectrumAuton("W3C-Leg1", mirrored),
+                        autonAutoScore(),
+                        SpectrumAuton("W3C-Leg2", mirrored),
+                        autonAutoScore(),
                         Commands.waitSeconds(1),
                         RobotStates.homeAll.toggleToTrue(),
                         RobotStates.autonClearStates())
-                // SpectrumAuton("W3C-Leg1", mirrored),
-                // autonAutoScore(),
-                // SpectrumAuton("W3C-Leg2", mirrored),
-                // autonAutoScore())
                 .withName("Worlds 3 Coral");
     }
 
@@ -137,7 +137,10 @@ public class Auton {
                         SpectrumAuton("W3C-Leg1", mirrored),
                         autonAutoScore(),
                         SpectrumAuton("W3C-Leg2", mirrored),
-                        autonAutoScore())
+                        autonAutoScore(),
+                        Commands.waitSeconds(1),
+                        RobotStates.homeAll.toggleToTrue(),
+                        RobotStates.autonClearStates())
                 .withName("Worlds 3 Coral");
     }
 
@@ -174,11 +177,18 @@ public class Auton {
                 .until(autoScoreMode.not())
                 .andThen(
                         Commands.sequence(
-                                        RobotStates.autoScoreMode.setFalse(),
-                                        Commands.waitSeconds(0.05),
                                         RobotStates.actionPrepState.setFalse(),
-                                        Commands.waitSeconds(RobotStates.getScoreTime()))
-                                .onlyIf(autoScoreMode));
+                                        RobotStates.actionState
+                                                .setTrueForTimeWithCancel(
+                                                        RobotStates::getScoreTime,
+                                                        RobotStates.actionPrepState)
+                                                .andThen(
+                                                        autoScoreMode
+                                                                .setFalse()
+                                                                .onlyIf(
+                                                                        RobotStates.actionPrepState
+                                                                                .not())))
+                                .onlyWhile(autoScoreMode));
     }
 
     public Command autonAimScoreThenAlgae(double alignTime) {

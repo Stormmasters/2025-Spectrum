@@ -15,7 +15,7 @@ public class HomeOffsets {
             new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 177);
 
     private static final TagProperties tag19Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 177);
+            new TagProperties(10.33, 10.33, 0.0, -9.0, 7.9, 177);
 
     private static final TagProperties tag20Offset =
             new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180);

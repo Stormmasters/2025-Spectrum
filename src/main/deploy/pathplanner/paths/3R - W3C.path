@@ -60,13 +60,7 @@
     },
     {
       "name": "L4",
-      "waypointRelativePos": 0.3042286609240332,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "actionOn",
-      "waypointRelativePos": 0.5532498042286635,
+      "waypointRelativePos": 0.46725185685346987,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -74,6 +68,12 @@
       "name": "poseUpdate",
       "waypointRelativePos": 0.600234925606883,
       "endWaypointRelativePos": 1.0,
+      "command": null
+    },
+    {
+      "name": "actionOn",
+      "waypointRelativePos": 0.6428089128966888,
+      "endWaypointRelativePos": null,
       "command": null
     },
     {

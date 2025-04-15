@@ -60,13 +60,19 @@
     },
     {
       "name": "reverse",
-      "waypointRelativePos": 0.19616288175411215,
+      "waypointRelativePos": 0.19716407832545566,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "clearStates",
+      "waypointRelativePos": 0.3484132343011386,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "sourceIntakeOn",
-      "waypointRelativePos": 0.6989036805011735,
+      "waypointRelativePos": 0.4564483457123656,
       "endWaypointRelativePos": null,
       "command": null
     }
