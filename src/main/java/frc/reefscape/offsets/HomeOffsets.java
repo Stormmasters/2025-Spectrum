@@ -9,22 +9,22 @@ public class HomeOffsets {
     // TagProperty: offsetLeft, offsetRight, centerLeft, centerRight, taGoal, AngleOffset
     // Blue Tags (17–22)
     private static final TagProperties tag17Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 175);
+            new TagProperties(10.33, 10.33, 0.0, -5.0, 7.9, 175);
 
     private static final TagProperties tag18Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 177);
+            new TagProperties(10.33, 11.33, -5.0, -3.5, 7.9, 177);
 
     private static final TagProperties tag19Offset =
-            new TagProperties(10.33, 10.33, 0.0, -9.0, 7.9, 177);
+            new TagProperties(11.33, 14.33, -4.0, -5.0, 7.9, 177);
 
     private static final TagProperties tag20Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180);
+            new TagProperties(10.33, 10.33, -5.0, -5.0, 7.9, 180);
 
     private static final TagProperties tag21Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180);
+            new TagProperties(10.0, 10.0, -1.0, -3.0, 7.9, 180); // right looked too far...off center?
 
     private static final TagProperties tag22Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180);
+            new TagProperties(10.23, 10.33, -4.0, -5.0, 7.9, 176);
 
     // Red Tags (6–11)
     private static final TagProperties tag6Offset =

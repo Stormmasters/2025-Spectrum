@@ -27,6 +27,6 @@ public class FM2025 extends Config {
                 -0.126221 + 0.208333333333); // add 0.208333333 to the inverse of the position
         // //-0.12988
         twist.setCANcoderAttached(true);
-        twist.setCANcoderOffset(0.267578);
+        twist.setCANcoderOffset(0.266846); // 0.267578);
     }
 }
