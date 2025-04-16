@@ -7,13 +7,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.reefscape.Field.Reef;
-import frc.reefscape.offsets.HomeOffsets;
+import frc.reefscape.offsets.WorldChampsOffsets;
 import frc.robot.Robot;
 
 public class FieldHelpers {
 
     private static Zones zones = new Zones();
-    private static final HomeOffsets homeOffsets = new HomeOffsets();
+    // private static final HomeOffsets offsets = new HomeOffsets();
+    private static final WorldChampsOffsets offsets = new WorldChampsOffsets();
 
     // -----------------------------------------------------------------------
     // Field Helper Methods
@@ -429,8 +430,7 @@ public class FieldHelpers {
         tagPose = Robot.getVision().getTagLayout().getTagPose(tagID).get().toPose2d();
 
         Rotation2d rotationOffsetParallel =
-                tagPose.getRotation()
-                        .plus(new Rotation2d(homeOffsets.getReefTagAngleOffset(tagID)));
+                tagPose.getRotation().plus(new Rotation2d(offsets.getReefTagAngleOffset(tagID)));
         Rotation2d rotationOffsetPerpendicular = tagPose.getRotation().plus(new Rotation2d(90));
 
         Translation2d offsetPose =
