@@ -6,46 +6,44 @@ import lombok.Getter;
 
 public class WorldChampsOffsets {
 
-    // TODO: Upload new world champs offsets when at worlds
-
     // TagProperty: offsetLeft, offsetRight, centerLeft, centerRight, taGoal, AngleOffset
     // Blue Tags (17–22)
     private static final TagProperties tag17Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag18Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag19Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag20Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag21Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag22Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     // Red Tags (6–11)
     private static final TagProperties tag6Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag7Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag8Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag9Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag10Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag11Offset =
-            new TagProperties(10.33, 10.33, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     // tag offsets ordered from blue tags to red tags due to centerFaces index values
 
@@ -89,10 +87,17 @@ public class WorldChampsOffsets {
             return 0.0;
         }
 
-        if (RobotStates.rightScore.getAsBoolean()) {
-            return reefTagOffsets[offsetIndex].getOffset()[1];
+        if (RobotStates.reverse.getAsBoolean()) {
+            if (RobotStates.rightScore.getAsBoolean()) {
+                return reefTagOffsets[offsetIndex].getRearOffset()[1];
+            }
+            return reefTagOffsets[offsetIndex].getRearOffset()[0];
+        } else {
+            if (RobotStates.rightScore.getAsBoolean()) {
+                return reefTagOffsets[offsetIndex].getFrontOffset()[1];
+            }
+            return reefTagOffsets[offsetIndex].getFrontOffset()[0];
         }
-        return reefTagOffsets[offsetIndex].getOffset()[0];
     }
 
     public static double getReefTagCenterOffset(int tagID) {
@@ -100,10 +105,17 @@ public class WorldChampsOffsets {
         if (offsetIndex == -1) {
             return 0.0;
         }
-        if (RobotStates.rightScore.getAsBoolean()) {
-            return reefTagOffsets[offsetIndex].getCenterOffset()[1];
+        if (RobotStates.reverse.getAsBoolean()) {
+            if (RobotStates.rightScore.getAsBoolean()) {
+                return reefTagOffsets[offsetIndex].getRearCenterOffset()[1];
+            }
+            return reefTagOffsets[offsetIndex].getRearCenterOffset()[0];
+        } else {
+            if (RobotStates.rightScore.getAsBoolean()) {
+                return reefTagOffsets[offsetIndex].getFrontCenterOffset()[1];
+            }
+            return reefTagOffsets[offsetIndex].getFrontCenterOffset()[0];
         }
-        return reefTagOffsets[offsetIndex].getCenterOffset()[0];
     }
 
     public static double getReefTagAngleOffset(int tagID) {

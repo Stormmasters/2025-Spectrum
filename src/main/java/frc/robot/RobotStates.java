@@ -50,6 +50,7 @@ public class RobotStates {
     public static final SpectrumState twistAtReef = new SpectrumState("twistCoralReef");
     public static final SpectrumState aligned = new SpectrumState("aligned");
     public static final SpectrumState autoScoreMode = new SpectrumState("autoScoreMode");
+    public static final SpectrumState autonAutoScoreMode = new SpectrumState("autonAutoScoreMode");
     public static final SpectrumState coralScoring = new SpectrumState("coralScoring");
 
     /**
@@ -256,6 +257,7 @@ public class RobotStates {
         autonRight.onTrue(rightScore.setTrue());
         autonHome.onTrue(homeAll.toggleToTrue());
         autonReverse.whileTrue(reverse.setTrue());
+        autonAutoScore.onTrue(autonAutoScoreMode.setTrue());
 
         // *********************************
         // Reversal States
@@ -348,7 +350,7 @@ public class RobotStates {
 
         aligned.debounce(scoreAfterAlignTime)
                 .and(
-                        autonAutoScore,
+                        autonAutoScoreMode,
                         actionPrepState,
                         completeStagedCoral,
                         pilot.actionReady_RB.not())
@@ -356,7 +358,10 @@ public class RobotStates {
                         actionPrepState.setFalse(),
                         actionState
                                 .setTrueForTimeWithCancel(() -> 0.5, actionPrepState)
-                                .andThen(autoScoreMode.setFalse().onlyIf(actionPrepState.not())));
+                                .andThen(
+                                        autonAutoScoreMode
+                                                .setFalse()
+                                                .onlyIf(actionPrepState.not())));
     }
 
     private RobotStates() {
@@ -388,6 +393,7 @@ public class RobotStates {
                         twistAtReef.setFalse(),
                         aligned.setFalse(),
                         autoScoreMode.setFalse(),
+                        autonAutoScoreMode.setFalse(),
                         coralScoring.setFalse())
                 .withName("Clear States");
     }
@@ -400,7 +406,11 @@ public class RobotStates {
                         actionPrepState.setFalse(),
                         actionState.setFalse(),
                         coastMode.setFalse(),
-                        twistAtReef.setFalse())
+                        twistAtReef.setFalse(),
+                        aligned.setFalse(),
+                        autoScoreMode.setFalse(),
+                        autonAutoScoreMode.setFalse(),
+                        coralScoring.setFalse())
                 .withName("Auton Clear States");
     }
 }

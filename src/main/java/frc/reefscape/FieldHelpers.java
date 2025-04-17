@@ -458,7 +458,7 @@ public class FieldHelpers {
      *
      * @return
      */
-    public static double getReefTagAngle() { // TODO: put these in a constants file
+    public static double getReefTagAngle() {
         double[][] reefFrontAngles = {
             {17, 60}, {18, 0}, {19, -60}, {20, -120}, {21, 180}, {22, 120},
             {6, 120}, {7, 180}, {8, -120}, {9, -60}, {10, 0}, {11, 60}

@@ -752,6 +752,14 @@ public class Vision implements NTSendable, Subsystem {
         int closestTagIDFront = (int) frontLL.getClosestTagID();
         int closestTagIDBack = (int) backLL.getClosestTagID();
 
+        if (frontLL.getTagTA() < 2) {
+            closestTagIDFront = -1;
+        }
+
+        if (backLL.getTagTA() < 2) {
+            closestTagIDBack = -1;
+        }
+
         if (closestTagIDFront == -1) {
             return closestTagIDBack;
         }
