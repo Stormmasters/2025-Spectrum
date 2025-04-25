@@ -73,6 +73,8 @@ public class Auton {
         // pathChooser.addOption("Left | 2 L4 Coral", houston2coral(false));
         // pathChooser.addOption("Right | 2 L4 Coral", houston2coral(true));
 
+        pathChooser.addOption("Finals Auto", finalsAuto());
+
         pathChooser.addOption("Left | 3 L4 Coral", worlds3coral(false));
         pathChooser.addOption("Right | 3 L4 Coral", worlds3coral(true));
 
@@ -123,7 +125,6 @@ public class Auton {
                         autoScore(),
                         SpectrumAuton("W3C-Leg2", mirrored),
                         autoScore(),
-                        Commands.waitSeconds(1),
                         RobotStates.homeAll.toggleToTrue(),
                         RobotStates.autonClearStates())
                 .withName("Worlds 3 Coral");
@@ -140,13 +141,22 @@ public class Auton {
     public Command practiceAuto() {
         return Commands.sequence(
                         SpectrumAuton("1", false),
-                        aimScoreThenAlgae(1.5),
+                        autoScore(),
+                        RobotStates.homeAll.toggleToTrue(),
+                        RobotStates.autonClearStates(),
                         SpectrumAuton("2", false),
-                        aimScore(1.5),
-                        Commands.waitSeconds(1),
+                        autoScore(),
                         RobotStates.homeAll.toggleToTrue(),
                         RobotStates.autonClearStates())
                 .withName("test");
+    }
+
+    public Command finalsAuto() {
+        return Commands.sequence(
+                SpectrumAuton("W3A-Start", false),
+                autoScore(),
+                RobotStates.homeAll.toggleToTrue(),
+                RobotStates.autonClearStates());
     }
 
     public Command aimScore(double alignTime) {
@@ -156,16 +166,16 @@ public class Auton {
                 .withName("Auton.aimL4Score");
     }
 
-    // vision aligns until autoScore scored or 3 seconds have passed without auto scoring
+    // vision aligns until autoScore scored or 5 seconds have passed without auto scoring
     public Command autoScore() {
-        return (SwerveStates.reefAimDriveVisionXY().withTimeout(3))
+        return (SwerveStates.reefAimDriveVisionXY().withTimeout(5))
                 .until(autonAutoScoreMode.not())
                 .andThen(
                         Commands.sequence(
                                         RobotStates.actionPrepState.setFalse(),
                                         RobotStates.actionState
                                                 .setTrueForTimeWithCancel(
-                                                        () -> 1, RobotStates.actionPrepState)
+                                                        () -> 0.75, RobotStates.actionPrepState)
                                                 .andThen(
                                                         autonAutoScoreMode
                                                                 .setFalse()
@@ -201,7 +211,7 @@ public class Auton {
                         SwerveStates.autonAlgaeReefAimDriveVisionXY().withTimeout(.25),
                         RobotStates.actionPrepState.setTrue(),
                         Commands.waitSeconds(0.2),
-                        SwerveStates.autonAlgaeDriveIntake(0.4))
+                        SwerveStates.autonAlgaeDriveIntake(0.5))
                 .withName("Auton.autoL4ScoreThenAlgae");
     }
 

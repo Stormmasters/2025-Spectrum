@@ -15,35 +15,35 @@ public class WorldChampsOffsets {
             new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag19Offset =
-            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.75, 9.33, 0.0, 0.0, -1.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag20Offset =
             new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag21Offset =
-            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.0, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag22Offset =
-            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, -1.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     // Red Tags (6–11)
     private static final TagProperties tag6Offset =
-            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.0, 9.0, 9.0, 9.0, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag7Offset =
-            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag8Offset =
-            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.0, 9.0, 9.33, 9.33, -1.0, -1.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag9Offset =
-            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, -1.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag10Offset =
-            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.0, 9.0, 9.0, 9.0, -1.0, -1.0, 0.0, 0.0, 7.9, 180.0);
 
     private static final TagProperties tag11Offset =
-            new TagProperties(10.33, 10.33, 10.33, 10.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
+            new TagProperties(9.33, 9.33, 9.33, 9.33, 0.0, 0.0, 0.0, 0.0, 7.9, 180.0);
 
     // tag offsets ordered from blue tags to red tags due to centerFaces index values
 

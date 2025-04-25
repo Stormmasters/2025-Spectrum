@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 7.82,
+        "x": 7.85,
         "y": 5.6000000000000005
       },
       "prevControl": {
-        "x": 7.07,
+        "x": 7.1,
         "y": 5.6000000000000005
       },
       "nextControl": null,
@@ -66,7 +66,7 @@
     },
     {
       "name": "actionOff",
-      "waypointRelativePos": 0.9,
+      "waypointRelativePos": 0.87,
       "endWaypointRelativePos": null,
       "command": null
     }

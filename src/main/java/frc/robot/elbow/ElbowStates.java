@@ -136,7 +136,8 @@ public class ElbowStates {
         L3Algae.and(actionPrepState).whileTrue(move(config::getL3Algae, "Elbow.l3Algae"));
         L3Algae.and(actionState).whileTrue(move(config::getHome, "Elbow.l3AlgaeHome"));
 
-        netAlgae.whileTrue(move(config::getNet, "Elbow.netAlgae"));
+        netAlgae.and(Util.autoMode.not()).whileTrue(move(config::getNet, "Elbow.netAlgae"));
+        netAlgae.and(Util.autoMode).whileTrue(slowMove(config::getNet, "Elbow.slowNetAlgae"));
 
         climbPrep.whileTrue(move(config::getClimbPrep, "Elbow.climbPrep"));
     }

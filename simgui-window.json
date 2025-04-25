@@ -54,7 +54,7 @@
     "###/SmartDashboard/States": {
       "Collapsed": "0",
       "Pos": "950,1194",
-      "Size": "378,150"
+      "Size": "378,195"
     },
     "###/SmartDashboard/Swerve Field": {
       "Collapsed": "0",
@@ -79,7 +79,7 @@
     "###FMS": {
       "Collapsed": "0",
       "Pos": "368,30",
-      "Size": "202,214"
+      "Size": "210,214"
     },
     "###Joysticks": {
       "Collapsed": "0",

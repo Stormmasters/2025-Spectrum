@@ -119,7 +119,7 @@ public class RobotStates {
                     () -> FieldHelpers.reverseRotationBlue() == Zones.blueFieldSide.getAsBoolean());
 
     // auton Triggers
-    public static final Trigger poseUpdate = autonPoseUpdate;
+    public static final Trigger poseUpdate = autonPoseUpdate.or(autonAutoScoreMode);
 
     public static final Trigger isAtHome =
             ElevatorStates.isHome.and(ElbowStates.isHome, ShoulderStates.isHome);
