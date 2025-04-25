@@ -36,7 +36,7 @@
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 4.0,
-        "maxAcceleration": 2.5,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -49,7 +49,7 @@
     {
       "name": "poseUpdate",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 0.49843382928738567,
+      "endWaypointRelativePos": 0.5532498042286584,
       "command": null
     },
     {

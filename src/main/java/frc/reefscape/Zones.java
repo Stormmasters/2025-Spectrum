@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.reefscape.offsets.HomeOffsets;
+import frc.reefscape.offsets.WorldChampsOffsets;
 import frc.robot.Robot;
 import frc.robot.swerve.Swerve;
 import lombok.Getter;
@@ -19,9 +19,9 @@ public class Zones {
     @Getter private static final double netAlgaeX = 9.618; // red coordinates
     @Getter private static final double netAlgaeZoneTolerance = 0.3;
 
-    // TODO: Change HomeOffsets to WorldsChampsOffsets at Worlds
     private static final Swerve swerve = Robot.getSwerve();
-    private static final HomeOffsets offsets = new HomeOffsets();
+    // private static final HomeOffsets offsets = new HomeOffsets();
+    private static final WorldChampsOffsets offsets = new WorldChampsOffsets();
     private static final double reefRangeRadius =
             Field.Reef.apothem + Field.Reef.faceToZoneLine + Units.inchesToMeters(30);
 
@@ -76,41 +76,10 @@ public class Zones {
      * @return
      */
     public double getTagOffset(int tag) {
-        // double[][] tagOffsetsArray = homeOffsets.getReefTagOffsets();
-        // int indexOfTag = tag;
-        // if (tag < 0 || tag > 22) {
-        //     return 0;
-        // }
-
-        // if (tag >= 17) {
-        //     indexOfTag = indexOfTag - 17;
-        // }
-
-        // if (indexOfTag < 0 || indexOfTag > 16) {
-        //     return 0;
-        // }
-
-        // // System.out.println("Tag Index: " + indexOfTag);
-        // return tagOffsetsArray[indexOfTag][1];
-
         return offsets.getReefTagDistanceOffset(tag);
     }
 
     public double getTagAngleOffset(int tag) {
-        // double[][] tagOffsetsArray = offsets.getReefTagOffsets();
-        // int indexOfTag = tag;
-        // if (tag < 0 || tag > 22) {
-        //     return 0;
-        // }
-
-        // if (tag >= 17) {
-        //     indexOfTag -= 17;
-        // }
-
-        // if (indexOfTag < 0) {
-        //     return 0;
-        // }
-
         return offsets.getReefTagAngleOffset(tag);
     }
 

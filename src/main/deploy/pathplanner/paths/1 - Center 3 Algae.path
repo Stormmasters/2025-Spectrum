@@ -39,7 +39,7 @@
         "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
+        "nominalVoltage": 10.0,
         "unlimited": false
       }
     }
@@ -71,8 +71,8 @@
       "command": null
     },
     {
-      "name": "atL4Coral",
-      "waypointRelativePos": 1.0,
+      "name": "autoScore",
+      "waypointRelativePos": 0.5986687548942766,
       "endWaypointRelativePos": null,
       "command": null
     }

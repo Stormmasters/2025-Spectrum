@@ -1,6 +1,6 @@
 package frc.robot.auton;
 
-import static frc.robot.RobotStates.autoScoreMode;
+import static frc.robot.RobotStates.autonAutoScoreMode;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -73,12 +73,14 @@ public class Auton {
         // pathChooser.addOption("Left | 2 L4 Coral", houston2coral(false));
         // pathChooser.addOption("Right | 2 L4 Coral", houston2coral(true));
 
-        pathChooser.addOption("test", test(false));
+        pathChooser.addOption("Finals Auto", finalsAuto());
 
         pathChooser.addOption("Left | 3 L4 Coral", worlds3coral(false));
         pathChooser.addOption("Right | 3 L4 Coral", worlds3coral(true));
 
         pathChooser.addOption("Center | 3 Net Algae", worlds3algae(false));
+
+        pathChooser.addOption("test", practiceAuto());
 
         pathChooser.addOption("Drive Forward", SpectrumAuton("Drive Forward", false));
 
@@ -105,27 +107,12 @@ public class Auton {
         printAutoDuration();
     }
 
-    public Command test(boolean mirrored) {
-        return Commands.sequence(
-                        autonCoralL4Stage(),
-                        SpectrumAuton("W3C-Start", mirrored),
-                        autonAutoScore(),
-                        SpectrumAuton("W3C-Leg1", mirrored),
-                        autonAutoScore(),
-                        SpectrumAuton("W3C-Leg2", mirrored),
-                        autonAutoScore(),
-                        Commands.waitSeconds(1),
-                        RobotStates.homeAll.toggleToTrue(),
-                        RobotStates.autonClearStates())
-                .withName("Worlds 3 Coral");
-    }
-
     public Command houston2coral(boolean mirrored) {
         return Commands.sequence(
                         SpectrumAuton("H2C-Start", mirrored, 2),
-                        fullSequenceAimL4score(1.5),
+                        fullSequenceAimL4Score(1.5),
                         SpectrumAuton("H2C-Leg1", mirrored),
-                        fullSequenceAimL4score(1.5),
+                        fullSequenceAimL4Score(1.5),
                         SpectrumAuton("H2C-Leg2", mirrored))
                 .withName("Houston 2 Coral");
     }
@@ -133,12 +120,11 @@ public class Auton {
     public Command worlds3coral(boolean mirrored) {
         return Commands.sequence(
                         SpectrumAuton("W3C-Start", mirrored, 2),
-                        autonAutoScore(),
+                        autoScore(),
                         SpectrumAuton("W3C-Leg1", mirrored),
-                        autonAutoScore(),
+                        autoScore(),
                         SpectrumAuton("W3C-Leg2", mirrored),
-                        autonAutoScore(),
-                        Commands.waitSeconds(1),
+                        autoScore(),
                         RobotStates.homeAll.toggleToTrue(),
                         RobotStates.autonClearStates())
                 .withName("Worlds 3 Coral");
@@ -147,7 +133,7 @@ public class Auton {
     public Command worlds3algae(boolean mirrored) {
         return Commands.sequence(
                         SpectrumAuton("W3A-Start", mirrored),
-                        autonAimScoreThenAlgae(1.5),
+                        autoScoreThenAlgae(),
                         SpectrumAuton("W3A-End", mirrored))
                 .withName("W3A-Full");
     }
@@ -155,45 +141,54 @@ public class Auton {
     public Command practiceAuto() {
         return Commands.sequence(
                         SpectrumAuton("1", false),
-                        autonAimScoreThenAlgae(1.5),
+                        autoScore(),
+                        RobotStates.homeAll.toggleToTrue(),
+                        RobotStates.autonClearStates(),
                         SpectrumAuton("2", false),
-                        autonAimScore(1.5),
-                        Commands.waitSeconds(1),
+                        autoScore(),
                         RobotStates.homeAll.toggleToTrue(),
                         RobotStates.autonClearStates())
                 .withName("test");
     }
 
-    public Command autonAimScore(double alignTime) {
+    public Command finalsAuto() {
+        return Commands.sequence(
+                SpectrumAuton("W3A-Start", false),
+                autoScore(),
+                RobotStates.homeAll.toggleToTrue(),
+                RobotStates.autonClearStates());
+    }
+
+    public Command aimScore(double alignTime) {
         return SwerveStates.reefAimDriveVisionXY()
                 .withTimeout(alignTime)
                 .alongWith(autonScore())
                 .withName("Auton.aimL4Score");
     }
 
-    // vision aligns until autoScore scored or 3 seconds have passed without auto scoring
-    public Command autonAutoScore() {
-        return (SwerveStates.reefAimDriveVisionXY().withTimeout(3))
-                .until(autoScoreMode.not())
+    // vision aligns until autoScore scored or 5 seconds have passed without auto scoring
+    public Command autoScore() {
+        return (SwerveStates.reefAimDriveVisionXY().withTimeout(5))
+                .until(autonAutoScoreMode.not())
                 .andThen(
                         Commands.sequence(
                                         RobotStates.actionPrepState.setFalse(),
                                         RobotStates.actionState
                                                 .setTrueForTimeWithCancel(
-                                                        RobotStates::getScoreTime,
-                                                        RobotStates.actionPrepState)
+                                                        () -> 0.75, RobotStates.actionPrepState)
                                                 .andThen(
-                                                        autoScoreMode
+                                                        autonAutoScoreMode
                                                                 .setFalse()
                                                                 .onlyIf(
                                                                         RobotStates.actionPrepState
                                                                                 .not())))
-                                .onlyWhile(autoScoreMode));
+                                .onlyWhile(autonAutoScoreMode))
+                .withName("Auton.autoScore");
     }
 
-    public Command autonAimScoreThenAlgae(double alignTime) {
+    public Command aimScoreThenAlgae(double alignTime) {
         return Commands.sequence(
-                        autonAimScore(alignTime),
+                        aimScore(alignTime),
                         Commands.waitSeconds(0.5),
                         RobotStates.clearStates(),
                         RobotStates.l2.setTrue(),
@@ -206,7 +201,21 @@ public class Auton {
                 .withName("Auton.aimL4ScoreThenAlgae");
     }
 
-    public Command fullSequenceAimL4score(double alignTime) {
+    public Command autoScoreThenAlgae() {
+        return Commands.sequence(
+                        autoScore(),
+                        RobotStates.clearStates(),
+                        RobotStates.l2.setTrue(),
+                        RobotStates.algae.setTrue(),
+                        Commands.waitSeconds(0.05),
+                        SwerveStates.autonAlgaeReefAimDriveVisionXY().withTimeout(.25),
+                        RobotStates.actionPrepState.setTrue(),
+                        Commands.waitSeconds(0.2),
+                        SwerveStates.autonAlgaeDriveIntake(0.5))
+                .withName("Auton.autoL4ScoreThenAlgae");
+    }
+
+    public Command fullSequenceAimL4Score(double alignTime) {
         return SwerveStates.reefAimDriveVisionXY()
                 .withTimeout(alignTime)
                 .alongWith(fullSequenceL4score())
@@ -214,7 +223,7 @@ public class Auton {
     }
 
     public Command autonScore() {
-        return Commands.sequence(Commands.waitSeconds(1.25), RobotStates.actionPrepState.setFalse())
+        return Commands.sequence(Commands.waitSeconds(.75), RobotStates.actionPrepState.setFalse())
                 .withName("Auton.L4Score");
     }
 

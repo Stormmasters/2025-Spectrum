@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.reefscape.FieldHelpers;
-import frc.reefscape.offsets.HomeOffsets;
+import frc.reefscape.offsets.WorldChampsOffsets;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.spectrumLib.Telemetry;
@@ -72,7 +72,8 @@ public class Vision implements NTSendable, Subsystem {
     /** Limelights */
     @Getter public final Limelight frontLL;
 
-    private static HomeOffsets offsets;
+    // private static final HomeOffsets offsets;
+    private static final WorldChampsOffsets offsets = new WorldChampsOffsets();
 
     public final Limelight backLL;
 
@@ -88,8 +89,6 @@ public class Vision implements NTSendable, Subsystem {
     int[] redTags = {6, 7, 8, 9, 10, 11};
 
     @Getter private static AprilTagFieldLayout tagLayout;
-
-    private static final HomeOffsets homeOffsets = new HomeOffsets();
 
     private VisionConfig config;
 
@@ -752,6 +751,14 @@ public class Vision implements NTSendable, Subsystem {
     public int getClosestTagID() {
         int closestTagIDFront = (int) frontLL.getClosestTagID();
         int closestTagIDBack = (int) backLL.getClosestTagID();
+
+        if (frontLL.getTagTA() < 2) {
+            closestTagIDFront = -1;
+        }
+
+        if (backLL.getTagTA() < 2) {
+            closestTagIDBack = -1;
+        }
 
         if (closestTagIDFront == -1) {
             return closestTagIDBack;

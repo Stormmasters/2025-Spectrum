@@ -39,7 +39,7 @@
         "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
+        "nominalVoltage": 10.0,
         "unlimited": false
       }
     }
@@ -47,8 +47,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "clearStates",
-      "waypointRelativePos": 0.20242756460454345,
+      "name": "sourceIntakeOff",
+      "waypointRelativePos": 0.10062646828504618,
       "endWaypointRelativePos": null,
       "command": null
     },

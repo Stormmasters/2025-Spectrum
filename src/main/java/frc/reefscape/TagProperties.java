@@ -5,31 +5,45 @@ import frc.robot.Robot;
 import lombok.Getter;
 
 public class TagProperties {
-    @Getter private final double[] offset = new double[2];
-    @Getter private final double[] centerOffset = new double[2];
+    @Getter private final double[] frontOffset = new double[2];
+    @Getter private final double[] rearOffset = new double[2];
+    @Getter private final double[] frontCenterOffset = new double[2];
+    @Getter private final double[] rearCenterOffset = new double[2];
     @Getter private final double taGoal;
     @Getter private final double angle;
 
     /**
-     * @param offsetInchesLeft
-     * @param offsetInchesRight
-     * @param centerOffsetInchesLeft
-     * @param centerOffsetInchesRight
+     * @param frontOffsetInchesLeft
+     * @param frontOffsetInchesRight
+     * @param rearOffsetInchesLeft
+     * @param rearOffsetInchesRight
+     * @param frontCenterOffsetInchesLeft
+     * @param frontCenterOffsetInchesRight
+     * @param rearCenterOffsetInchesLeft
+     * @param rearCenterOffsetInchesRight
      * @param taGoal
      * @param angle
      */
     public TagProperties(
-            double offsetInchesLeft,
-            double offsetInchesRight,
-            double centerOffsetInchesLeft,
-            double centerOffsetInchesRight,
+            double frontOffsetInchesLeft,
+            double frontOffsetInchesRight,
+            double rearOffsetInchesLeft,
+            double rearOffsetInchesRight,
+            double frontCenterOffsetInchesLeft,
+            double frontCenterOffsetInchesRight,
+            double rearCenterOffsetInchesLeft,
+            double rearCenterOffsetInchesRight,
             double taGoal,
             double angleDegrees) {
 
-        offset[0] = meterOffsetWithRobot(offsetInchesLeft);
-        offset[1] = meterOffsetWithRobot(offsetInchesRight);
-        centerOffset[0] = Units.inchesToMeters(centerOffsetInchesLeft);
-        centerOffset[1] = Units.inchesToMeters(centerOffsetInchesRight);
+        frontOffset[0] = meterOffsetWithRobot(frontOffsetInchesLeft);
+        frontOffset[1] = meterOffsetWithRobot(frontOffsetInchesRight);
+        rearOffset[0] = meterOffsetWithRobot(rearOffsetInchesLeft);
+        rearOffset[1] = meterOffsetWithRobot(rearOffsetInchesRight);
+        frontCenterOffset[0] = Units.inchesToMeters(frontCenterOffsetInchesLeft);
+        frontCenterOffset[1] = Units.inchesToMeters(frontCenterOffsetInchesRight);
+        rearCenterOffset[0] = Units.inchesToMeters(rearCenterOffsetInchesLeft);
+        rearCenterOffset[1] = Units.inchesToMeters(rearCenterOffsetInchesRight);
         this.taGoal = taGoal;
         this.angle = radianConverter(angleDegrees);
     }
