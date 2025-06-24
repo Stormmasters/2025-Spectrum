@@ -12,7 +12,7 @@ import frc.reefscape.Field;
 import frc.reefscape.FieldHelpers;
 import frc.reefscape.TagProperties;
 import frc.reefscape.Zones;
-import frc.reefscape.offsets.WorldChampsOffsets;
+import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 import frc.robot.pilot.Pilot;
 import frc.spectrumLib.SpectrumState;
@@ -196,8 +196,7 @@ public class SwerveStates {
     }
 
     private static double getTagDistanceVelocity() {
-        TagProperties[] tagAreaOffsets =
-                WorldChampsOffsets.getReefTagOffsets(); // TODO: change back to home after worlds
+        TagProperties[] tagAreaOffsets = HomeOffsets.getReefTagOffsets();
         int tagIndex = Robot.getVision().getClosestTagID();
         if (tagIndex < 0) {
             return 0.0;

@@ -97,7 +97,10 @@ public class ElbowStates {
 
         // stages elbow
         stagedCoral
-                .and(actionPrepState.not().debounce(getActionPrepToActionTime()), actionState.not())
+                .and(
+                        actionPrepState.not().debounce(getActionPrepToActionTime()),
+                        actionState.not(),
+                        Util.autoMode.not())
                 .whileTrue(move(config::getStage, "Elbow.Stage"));
 
         L1Coral.and(actionPrepState)

@@ -73,8 +73,6 @@ public class Auton {
         // pathChooser.addOption("Left | 2 L4 Coral", houston2coral(false));
         // pathChooser.addOption("Right | 2 L4 Coral", houston2coral(true));
 
-        pathChooser.addOption("Finals Auto", finalsAuto());
-
         pathChooser.addOption("Left | 3 L4 Coral", worlds3coral(false));
         pathChooser.addOption("Right | 3 L4 Coral", worlds3coral(true));
 
@@ -149,14 +147,6 @@ public class Auton {
                         RobotStates.homeAll.toggleToTrue(),
                         RobotStates.autonClearStates())
                 .withName("test");
-    }
-
-    public Command finalsAuto() {
-        return Commands.sequence(
-                SpectrumAuton("W3A-Start", false),
-                autoScore(),
-                RobotStates.homeAll.toggleToTrue(),
-                RobotStates.autonClearStates());
     }
 
     public Command aimScore(double alignTime) {
