@@ -7,14 +7,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.reefscape.Field.Reef;
-import frc.reefscape.offsets.WorldChampsOffsets;
+import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 
 public class FieldHelpers {
 
     private static Zones zones = new Zones();
     // private static final HomeOffsets offsets = new HomeOffsets();
-    private static final WorldChampsOffsets offsets = new WorldChampsOffsets();
+    private static final HomeOffsets offsets = new HomeOffsets();
 
     // -----------------------------------------------------------------------
     // Field Helper Methods
