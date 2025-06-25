@@ -59,13 +59,13 @@ public class SwerveConfig {
     @Getter private double kPRotationController = 1.85; // 4.5 // 6.5 // 8.0;
     @Getter private double kIRotationController = 0.0;
     @Getter private double kDRotationController = 0.0; // 0.2
-    @Getter private double rotationTolerance = Units.degreesToRadians(0.3); // rads
+    @Getter private double rotationTolerance = Units.degreesToRadians(0.2); // rads
 
     @Getter private double kPHoldController = 12.0;
     @Getter private double kIHoldController = 0.0;
     @Getter private double kDHoldController = 0.0;
 
-    @Getter private double kPTranslationController = 2;
+    @Getter private double kPTranslationController = 1.7;
     @Getter private double kITranslationController = 0.0;
     @Getter private double kDTranslationController = 0.0;
 

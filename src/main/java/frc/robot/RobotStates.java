@@ -28,6 +28,7 @@ public class RobotStates {
     @Getter private static double scoreTime = 2.0;
     @Getter private static double twistAtReefDelay = 0.2;
     @Getter private static double scoreAfterAlignTime = 0.03;
+    @Getter private static double autonScoreAfterAlignTime = 0.05;
     @Getter private static double actionPrepToActionTime = 0.05;
 
     // Robot States
@@ -348,7 +349,7 @@ public class RobotStates {
                                         RobotStates::getScoreTime, actionPrepState)
                                 .andThen(autoScoreMode.setFalse().onlyIf(actionPrepState.not())));
 
-        aligned.debounce(scoreAfterAlignTime)
+        aligned.debounce(autonScoreAfterAlignTime)
                 .and(
                         autonAutoScoreMode,
                         actionPrepState,

@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.reefscape.FieldHelpers;
-import frc.reefscape.offsets.WorldChampsOffsets;
+import frc.reefscape.offsets.HomeOffsets;
 import frc.robot.Robot;
 import frc.robot.RobotStates;
 import frc.spectrumLib.Telemetry;
@@ -73,7 +73,7 @@ public class Vision implements NTSendable, Subsystem {
     @Getter public final Limelight frontLL;
 
     // private static final HomeOffsets offsets;
-    private static final WorldChampsOffsets offsets = new WorldChampsOffsets();
+    private static final HomeOffsets offsets = new HomeOffsets();
 
     public final Limelight backLL;
 
