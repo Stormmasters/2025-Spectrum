@@ -1,4 +1,4 @@
-name: Deploy JavaDoc to GitHub Pages
+name: Generate JavaDoc and deploy to GitHub Pages
 
 on:
   push:
@@ -26,4 +26,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/docs/javadoc  # adjust to where your javadoc output is
+          publish_dir: ./build/docs/javadoc
