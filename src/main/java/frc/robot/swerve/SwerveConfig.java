@@ -106,6 +106,7 @@ public class SwerveConfig {
                     .withKV(1.5)
                     .withKA(0)
                     .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+
     // new Slot0Configs().withKP(100).withKI(0).withKD(0.5).withKS(0.1).withKV(1.91).withKA(0);
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
@@ -118,6 +119,7 @@ public class SwerveConfig {
                     .withKS(2.261118000000002)
                     .withKA(0.0)
                     .withKV(0.0);
+
     // new Slot0Configs().withKP(0.1).withKI(0).withKD(0).withKS(0).withKV(0.124).withKA(0);
 
     // The closed-loop output type to use for the steer motors;
@@ -125,6 +127,7 @@ public class SwerveConfig {
     @Getter
     private ClosedLoopOutputType steerClosedLoopOutput =
             ClosedLoopOutputType.TorqueCurrentFOC; // .Voltage;
+
     // The closed-loop output type to use for the drive motors;
     // This affects the PID/FF gains for the drive motors
     @Getter
@@ -243,7 +246,8 @@ public class SwerveConfig {
 
     @SuppressWarnings("unchecked")
     public SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
-            [] getModules() {
+            []
+            getModules() {
         if (frontLeft != null && frontRight != null && backLeft != null && backRight != null) {
             modules = new SwerveModuleConstants[] {frontLeft, frontRight, backLeft, backRight};
         } else {

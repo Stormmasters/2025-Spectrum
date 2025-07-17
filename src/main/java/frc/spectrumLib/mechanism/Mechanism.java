@@ -846,6 +846,7 @@ public abstract class Mechanism implements NTSendable, SpectrumSubsystem {
         private DutyCycleOut percentOutput =
                 new DutyCycleOut(
                         0); // Percent Output control using percentage of supply voltage //Should
+
         // normally use VoltageOut
 
         public Config(String name, int id, String canbus) {

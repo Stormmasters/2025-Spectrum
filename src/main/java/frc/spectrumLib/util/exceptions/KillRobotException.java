@@ -22,6 +22,7 @@ public class KillRobotException extends RuntimeException {
         // call appropriate parent constructor
         super(cause);
     }
+
     /*
      * Required when we want both the above
      * as catch(ArrayIndexOutOfBoundsException e) {

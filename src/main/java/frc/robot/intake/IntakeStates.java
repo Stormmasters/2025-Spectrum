@@ -23,6 +23,7 @@ public class IntakeStates {
             hasGamePiece.and(intake.aboveVelocityRPM(() -> 0, () -> 0));
     public static final Trigger hasAlgae =
             algae.and(netAlgae.not(), intake.aboveCurrent(config::getHasAlgaeCurrent, () -> 0));
+
     // hasGamePiece.and(intake.belowVelocityRPM(() -> 0, () -> 0));
 
     public static void setupDefaultCommand() {

@@ -95,6 +95,7 @@ public class Shoulder extends Mechanism {
         /* Cancoder config settings */
         @Getter @Setter
         private double CANcoderRotorToSensorRatio = 61.71428571 * 1.2; // 102.857 * 1.2;
+
         // CANcoderSensorToMechanismRatio / sensorToMechanismRatio;
 
         @Getter @Setter

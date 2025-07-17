@@ -1,7 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2025.3.2"
-    id 'com.diffplug.spotless' version '6.12.0'
+    id 'com.diffplug.spotless' version '6.25.0'
     id "com.peterabeles.gversion" version "1.10.3"
     id "io.freefair.lombok" version "8.14"
     id("com.github.spotbugs") version "6.0.24"
@@ -109,7 +109,11 @@ wpi.sim.addDriverstation()
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
     from sourceSets.main.allSource
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE //Edited to allow overloading WPILib Triggers
@@ -147,8 +151,8 @@ spotless {
             exclude '**/build/**', '**/build-*/**'
         }
         toggleOffOn()
-        googleJavaFormat("1.7").aosp()
-        removeUnusedImports()
+        googleJavaFormat("1.28.0").aosp()
+        // removeUnusedImports() //TEMPORARILY COMMENT THIS
         trimTrailingWhitespace()
         endWithNewline()
     }
@@ -200,4 +204,15 @@ tasks.spotbugsMain {
         outputLocation = file("$buildDir/reports/spotbugs.html")
         setStylesheet("fancy-hist.xsl")
     }
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(Javadoc).configureEach {
+    options.encoding = 'UTF-8'
+    classpath += sourceSets.main.compileClasspath
+    options.addStringOption('Xdoclint:none', '-quiet')
+    // failOnError = false // Uncomment if you need to force success
 }

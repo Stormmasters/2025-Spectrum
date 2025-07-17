@@ -371,6 +371,7 @@ public class Twist extends Mechanism {
                                 () -> adjustTargetToReverse(degrees),
                                 RobotStates.reverse.getAsBoolean()));
     }
+
     // @deprecated
     public double netTurretDegrees() {
         // uses the robot pose to always point the twist away from the driver station
